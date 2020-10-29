@@ -363,16 +363,16 @@ namespace ButiEngine {
 		}
 
 		inline Vector3 GetFront() {
-			return Vector3(0, 0, 1) * GetWorldRotation();
+			return Vector3::ZAxis* GetWorldRotation();
 		}
 
 		inline Vector3 GetRight() {
-			return  Vector3(1, 0, 0) * GetWorldRotation();
+			return  Vector3::XAxis * GetWorldRotation();
 
 		}
 
 		inline Vector3 GetUp() {
-			return Vector3(0, 1, 0) *= GetWorldRotation();
+			return  Vector3::YAxis  * GetWorldRotation();
 		}
 
 		inline void GetRotatedVector(Vector3& arg_vector3) {

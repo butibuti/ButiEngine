@@ -5,6 +5,7 @@
 
 void ButiEngine::Scene::Update() {
 	shp_gameObjectManager->Update();
+	if(shp_collisionManager)
 	shp_collisionManager->Update();
 	OnUpdate();
 	shp_soundManager->Update();
@@ -58,7 +59,6 @@ void ButiEngine::Scene::Release()
 void ButiEngine::Scene::Initialize()
 {
 	shp_gameObjectManager = ObjectFactory::Create<GameObjectManager>(GetThis<IScene>());
-	shp_collisionManager = ObjectFactory::Create<Collision::CollisionManager>(1);
 
 	shp_renderer = ObjectFactory::Create<Renderer>(GetThis<IScene>());
 	
@@ -77,6 +77,11 @@ void ButiEngine::Scene::Initialize()
 	auto prop3 = CameraProjProperty(windowSize.x, windowSize.y, 0, 0, true, 2);
 	AddCamera(prop3, "backGround", true);
 	OnInitialize();
+}
+
+void ButiEngine::Scene::ActiveCollision(const UINT arg_layerCount)
+{
+	shp_collisionManager = ObjectFactory::Create<Collision::CollisionManager>(arg_layerCount);
 }
 
 void ButiEngine::Scene::PreInitialize()

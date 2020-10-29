@@ -1,6 +1,7 @@
 #pragma once
 //
 #include"Common/ButiMath.h"
+#include "Device/Easing.h"
 #include"Device/Calculator.h"
 #include"Device/Helper/StringHelper.h"
 #include"Device/BinaryReader.h"

@@ -36,9 +36,18 @@ int main() {
 
 	}
 	
-	for (auto itr = vec_filePathes.begin(); itr != vec_filePathes.end(); itr++) {
-		ButiEngine::ShaderHelper::Compile(*itr, compileType);
+	int isLoop = 1;
+
+	while (isLoop)
+	{
+
+		for (auto itr = vec_filePathes.begin(); itr != vec_filePathes.end(); itr++) {
+			ButiEngine::ShaderHelper::Compile(*itr, compileType);
+		}
+		std::cout << "0‚ÅI—¹A1‚ÅŒp‘±" << std::endl;
+		std::cin >> isLoop;
 	}
+
 
 	std::system("pause");
 	return 0;

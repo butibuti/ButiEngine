@@ -37,6 +37,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\CSV\CSVReader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\CSV\CSVWriter.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\DescriptorHeapManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\Easing.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\FBXNodeStructure.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\GameDevice.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\GraphicResourceUtil_Dx12.h" />

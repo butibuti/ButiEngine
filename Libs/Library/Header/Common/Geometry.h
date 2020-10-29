@@ -256,53 +256,53 @@ namespace ButiEngine {
             }
 
             static inline bool IsHitBox_AABB(const Box_AABB& arg_box, const Box_AABB& arg_otherBox) {
-                Vector3 xAxis = Vector3(1, 0, 0), Ae1 = xAxis * arg_box.GetLength(0);
-                Vector3 yAxis = Vector3(0, 1, 0), Ae2 = yAxis * arg_box.GetLength(1);
-                Vector3 zAxis = Vector3(0, 0, 1), Ae3 = zAxis * arg_box.GetLength(2);
-                Vector3 Be1 = xAxis * arg_otherBox.GetLength(0);
-                Vector3 Be2 = yAxis * arg_otherBox.GetLength(1);
-                Vector3 Be3 = zAxis * arg_otherBox.GetLength(2);
+                Vector3  Ae1 = Vector3::XAxis * arg_box.GetLength(0);
+                Vector3  Ae2 = Vector3::YAxis * arg_box.GetLength(1);
+                Vector3 Ae3 = Vector3:: ZAxis * arg_box.GetLength(2);
+                Vector3 Be1 = Vector3::XAxis* arg_otherBox.GetLength(0);
+                Vector3 Be2 = Vector3::YAxis * arg_otherBox.GetLength(1);
+                Vector3 Be3 = Vector3::ZAxis * arg_otherBox.GetLength(2);
                 Vector3 Interval = arg_box.position - arg_otherBox.position;
 
                 // •ª—£Ž² : Ae1
                 float rA = Ae1.GetLength();
-                float rB = GetLengthSeparatedAxis(xAxis, Be1, Be2, &Be3);
-                float L = fabs(Interval.Dot(xAxis));
+                float rB = GetLengthSeparatedAxis(Vector3::XAxis, Be1, Be2, &Be3);
+                float L = fabs(Interval.Dot(Vector3::XAxis));
                 if (L > rA + rB)
                     return false; // Õ“Ë‚µ‚Ä‚¢‚È‚¢
 
                  // •ª—£Ž² : Ae2
                 rA = Ae2.GetLength();
-                rB = GetLengthSeparatedAxis(yAxis, Be1, Be2, &Be3);
-                L = fabs(Interval.Dot(yAxis));
+                rB = GetLengthSeparatedAxis(Vector3::YAxis, Be1, Be2, &Be3);
+                L = fabs(Interval.Dot(Vector3::YAxis));
                 if (L > rA + rB)
                     return false;
 
                 // •ª—£Ž² : Ae3
                 rA = Ae3.GetLength();
-                rB = GetLengthSeparatedAxis(zAxis, Be1, Be2, &Be3);
-                L = fabs(Interval.Dot(zAxis));
+                rB = GetLengthSeparatedAxis(Vector3::ZAxis, Be1, Be2, &Be3);
+                L = fabs(Interval.Dot(Vector3::ZAxis));
                 if (L > rA + rB)
                     return false;
 
                 // •ª—£Ž² : Be1
-                rA = GetLengthSeparatedAxis(xAxis, Ae1, Ae2, &Ae3);
+                rA = GetLengthSeparatedAxis(Vector3::XAxis, Ae1, Ae2, &Ae3);
                 rB = Be1.GetLength();
-                L = fabs(Interval.Dot(xAxis));
+                L = fabs(Interval.Dot(Vector3::XAxis));
                 if (L > rA + rB)
                     return false;
 
                 // •ª—£Ž² : Be2
-                rA = GetLengthSeparatedAxis(yAxis, Ae1, Ae2, &Ae3);
+                rA = GetLengthSeparatedAxis(Vector3::YAxis, Ae1, Ae2, &Ae3);
                 rB = Be2.GetLength();
-                L = fabs(Interval.Dot(yAxis));
+                L = fabs(Interval.Dot(Vector3::YAxis));
                 if (L > rA + rB)
                     return false;
 
                 // •ª—£Ž² : Be3
-                rA = GetLengthSeparatedAxis(zAxis, Ae1, Ae2, &Ae3);
+                rA = GetLengthSeparatedAxis(Vector3::ZAxis, Ae1, Ae2, &Ae3);
                 rB = Be3.GetLength();
-                L = fabs(Interval.Dot(zAxis));
+                L = fabs(Interval.Dot(Vector3::ZAxis));
                 if (L > rA + rB)
                     return false;
 
@@ -310,9 +310,9 @@ namespace ButiEngine {
             }
 
             static inline bool IsHitBox_OBBBox_AABB(const Box_AABB& arg_box, const Box_OBB_Static& arg_otherBox) {
-                Vector3 xAxis = Vector3(1, 0, 0), Ae1 = xAxis * arg_box.GetLength(0);
-                Vector3 yAxis = Vector3(0, 1, 0), Ae2 = yAxis * arg_box.GetLength(1);
-                Vector3 zAxis = Vector3(0, 0, 1), Ae3 = zAxis * arg_box.GetLength(2);
+                Vector3 Ae1 = Vector3::XAxis * arg_box.GetLength(0);
+                Vector3 Ae2 = Vector3::YAxis * arg_box.GetLength(1);
+                Vector3 Ae3 = Vector3::ZAxis * arg_box.GetLength(2);
                 Vector3 NBe1 = arg_otherBox.GetDirect(0), Be1 = NBe1 * arg_otherBox.GetLength(0);
                 Vector3 NBe2 = arg_otherBox.GetDirect(1), Be2 = NBe2 * arg_otherBox.GetLength(1);
                 Vector3 NBe3 = arg_otherBox.GetDirect(2), Be3 = NBe3 * arg_otherBox.GetLength(2);
@@ -320,22 +320,22 @@ namespace ButiEngine {
 
                 // •ª—£Ž² : Ae1
                 float rA = Ae1.GetLength();
-                float rB = GetLengthSeparatedAxis(xAxis, Be1, Be2, &Be3);
-                float L = fabs(Interval.Dot(xAxis));
+                float rB = GetLengthSeparatedAxis(Vector3::XAxis, Be1, Be2, &Be3);
+                float L = fabs(Interval.Dot(Vector3::XAxis));
                 if (L > rA + rB)
                     return false; // Õ“Ë‚µ‚Ä‚¢‚È‚¢
 
                  // •ª—£Ž² : Ae2
                 rA = Ae2.GetLength();
-                rB = GetLengthSeparatedAxis(yAxis, Be1, Be2, &Be3);
-                L = fabs(Interval.Dot(yAxis));
+                rB = GetLengthSeparatedAxis(Vector3::YAxis, Be1, Be2, &Be3);
+                L = fabs(Interval.Dot(Vector3::YAxis));
                 if (L > rA + rB)
                     return false;
 
                 // •ª—£Ž² : Ae3
                 rA = Ae3.GetLength();
-                rB = GetLengthSeparatedAxis(zAxis, Be1, Be2, &Be3);
-                L = fabs(Interval.Dot(zAxis));
+                rB = GetLengthSeparatedAxis(Vector3::ZAxis, Be1, Be2, &Be3);
+                L = fabs(Interval.Dot(Vector3::ZAxis));
                 if (L > rA + rB)
                     return false;
 
@@ -364,14 +364,11 @@ namespace ButiEngine {
                 return true;
             }
             static inline Vector3 GetBox_OBBContainAABBLength(const Box_OBB_Static& arg_box) {
-                Vector3 xAxis = Vector3(1, 0, 0);
-                Vector3 yAxis = Vector3(0, 1, 0);
-                Vector3 zAxis = Vector3(0, 0, 1);
                 Vector3 Be1 = arg_box.GetDirect(0) * arg_box.GetLength(0);
                 Vector3 Be2 = arg_box.GetDirect(1) * arg_box.GetLength(1);
                 Vector3 Be3 = arg_box.GetDirect(2) * arg_box.GetLength(2);
 
-                return Vector3(GetLengthSeparatedAxis(xAxis, Be1, Be2, &Be3), GetLengthSeparatedAxis(yAxis, Be1, Be2, &Be3), GetLengthSeparatedAxis(zAxis, Be1, Be2, &Be3));
+                return Vector3(GetLengthSeparatedAxis(Vector3::XAxis, Be1, Be2, &Be3), GetLengthSeparatedAxis(Vector3::YAxis, Be1, Be2, &Be3), GetLengthSeparatedAxis(Vector3::ZAxis, Be1, Be2, &Be3));
             }
 
             static inline bool IsHitBox_OBB(const Box_OBB_Static& arg_box, const Box_OBB_Static& arg_otherBox) {

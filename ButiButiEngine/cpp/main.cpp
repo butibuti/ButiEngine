@@ -17,7 +17,7 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 #endif
 	auto app = ObjectFactory::Create<Application>();
 
-	app->CreateInstances();
+	app->CreateInstances("ButiSampleApp", WindowPopType::max , 840, 480);
 
 	GameDevice::input.Initialize(app);
 

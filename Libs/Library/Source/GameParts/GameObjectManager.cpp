@@ -11,16 +11,19 @@ ButiEngine::GameObjectManager::GameObjectManager(std::weak_ptr<IScene> arg_wkp_s
 
 void ButiEngine::GameObjectManager::Update()
 {
-	for (auto itr = vec_newGameObjects.begin(); itr != vec_newGameObjects.end(); itr++) {
+	auto  endNewItr= vec_newGameObjects.end();
+	for (auto itr = vec_newGameObjects.begin(); itr !=endNewItr; itr++) {
 		vec_gameObjects.push_back(*itr);
 		(*itr)->Start();
 	}
 	vec_newGameObjects.clear();
 	auto itr = vec_gameObjects.begin();
-	while (itr != vec_gameObjects.end()) {
+	auto endItr = vec_gameObjects.end();
+	while (itr !=endItr) {
 		if ((*itr)->GetIsRemove()) {
 			(*itr)->Release();
 			itr = vec_gameObjects.erase(itr);
+			endItr = vec_gameObjects.end();
 		}
 		else {
 			(*itr)->Update();

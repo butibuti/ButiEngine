@@ -5,9 +5,10 @@ ButiEngine::Window::Window()
 {
 }
 
-void ButiEngine::Window::Initialize(UINT width , UINT height)
+void ButiEngine::Window::Initialize(const std::string arg_windowName, const WindowPopType arg_popType, UINT width , UINT height)
 {
-	const wchar_t* name = L"Buti";
+	std::wstring wName;
+	Util::MultiBytetoWString(arg_windowName, wName);
 
 	HINSTANCE instance = GetModuleHandleW(nullptr);
 
@@ -17,17 +18,17 @@ void ButiEngine::Window::Initialize(UINT width , UINT height)
 	windowClass.hCursor = (HCURSOR)LoadImageW(nullptr, MAKEINTRESOURCEW(32512)
 		, IMAGE_CURSOR, 0, 0, LR_SHARED
 	);
-	windowClass.lpszClassName = name;
+	windowClass.lpszClassName = wName.c_str();
 	RegisterClassW(&windowClass);
 
-	handle = CreateWindowW(name, name,
+	handle = CreateWindowW(wName.c_str(), wName.c_str(),
 		WS_OVERLAPPEDWINDOW
 		//	WS_POPUP
 		, 0, 0, 0, 0, nullptr, nullptr, instance, nullptr);
 	SetSize(width, height);
 	ShowWindow(handle,
-		SW_SHOWNORMAL
-		//	SW_SHOWMAXIMIZED
+		//SW_SHOWNORMAL
+			(int)arg_popType
 	);
 
 }

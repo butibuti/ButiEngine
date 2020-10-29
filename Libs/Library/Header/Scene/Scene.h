@@ -14,6 +14,7 @@ namespace ButiEngine {
 		virtual void OnInitialize() {}
 		virtual void  OnUpdate() {}
 		virtual void  OnSceneEnd() {}
+		void ActiveCollision(const UINT arg_layerCount=1);
 		void PreInitialize()override;
 		std::unique_ptr<Window>& GetWindow()override;
 

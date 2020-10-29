@@ -97,7 +97,8 @@ void ButiEngine::Collision::CollisionLayer::HitCheck()
 
     CreateCollisionObjectList(0, vec_collisionObjects, list_objStack);
     //std::cout << vec_collisionObjects.size()/2 << std::endl;
-    for (auto itr = vec_collisionObjects.begin(); itr != vec_collisionObjects.end();itr+=2) {
+    auto endItr = vec_collisionObjects.end();
+    for (auto itr = vec_collisionObjects.begin(); itr != endItr;itr+=2) {
         auto hit = (*itr)->wkp_coliisionPrim.lock()->IsHit((*(itr+1))->wkp_coliisionPrim);
         if (hit) {
             (*itr)->wkp_gameObj.lock()->Hit((*(itr + 1))->wkp_gameObj.lock());

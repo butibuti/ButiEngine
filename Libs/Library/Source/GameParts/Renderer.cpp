@@ -27,9 +27,10 @@ void ButiEngine::Renderer::RenderingStart()
 
 void ButiEngine::Renderer::Rendering(const UINT arg_layer)
 {
-	auto drawObj = vec_drawLayers.at(arg_layer);
-	ZSort(drawObj);
-	for (auto itr = drawObj.begin(); itr != drawObj.end(); itr++) {
+	auto drawObjects = vec_drawLayers.at(arg_layer);
+	ZSort(drawObjects);
+	auto endDrawItr = drawObjects.end();
+	for (auto itr = drawObjects.begin(); itr != endDrawItr; itr++) {
 		(*itr).lock()->Draw();
 	}
 	

@@ -315,6 +315,10 @@ namespace ButiEngine {
 
 	struct  Vector3 :public DirectX::XMFLOAT3
 	{
+		static Vector3 XAxis;
+		static Vector3 YAxis;
+		static Vector3 ZAxis;
+
 		inline Vector3(const DirectX::XMVECTOR other)
 		{
 			DirectX::XMVECTOR temp = other;

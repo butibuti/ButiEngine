@@ -2,11 +2,16 @@
 #include"stdafx.h"
 
 namespace ButiEngine {
+
+	enum class WindowPopType {
+		normal=SW_SHOWNORMAL,max=SW_SHOWMAXIMIZED
+	};
+
 	class Window
 	{
 	public:
 		Window();
-		void Initialize(UINT width=0, UINT height = 0);
+		void Initialize(const std::string arg_windowName,const WindowPopType arg_popType ,  UINT width=0, UINT height = 0);
 		HWND GetHandle();
 		DirectX::XMUINT2 GetSize();
 		Vector2 GetWindowCenterPosition();

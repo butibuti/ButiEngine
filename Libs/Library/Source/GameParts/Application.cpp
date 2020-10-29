@@ -7,13 +7,18 @@
 
 std::string ButiEngine::GlobalSettings::resourceDirectory = "Resources/";
 ButiEngine::Matrix4x4 ButiEngine::Transform::x90Rotate;
-void ButiEngine::Application::CreateInstances()
+ButiEngine::Vector3 ButiEngine::Vector3::XAxis = ButiEngine::Vector3(1, 0, 0);
+ButiEngine::Vector3 ButiEngine::Vector3::YAxis = ButiEngine::Vector3(0, 1, 0);
+ButiEngine::Vector3 ButiEngine::Vector3::ZAxis = ButiEngine::Vector3(0, 0, 1);
+
+
+void ButiEngine::Application::CreateInstances(const std::string windowName, const WindowPopType arg_windowPopType, const UINT windowWidth , const UINT windowHeight, const bool isFullScreen )
 {
 	if (!unq_window) {
 		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 		CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
 		unq_window = std::make_unique<Window>();
-		unq_window->Initialize(720, 480);
+		unq_window->Initialize(windowName,arg_windowPopType, windowWidth, windowHeight);
 	}
 
 	shp_graphicDevice = ObjectFactory::Create<GraphicDevice_Dx12>(GetThis<Application>());

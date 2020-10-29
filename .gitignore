@@ -35,6 +35,7 @@
 *.db
 *.opendb
 
-/.vs/
-/Temp/
-/output/
+.vs/
+Temp/
+output/
+ButiButiEngine/Resources/

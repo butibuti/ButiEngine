@@ -150,7 +150,7 @@ namespace ButiEngine {
 				auto num= (maxSpace >> ((level)*3 ));
 				
 				num += OctPowSevenDevided[maxLevel - level];
-				return num;
+				return (unsigned short)num;
 			}
 			inline void CreateCollisionObjectList(const unsigned short arg_cellNum, std::vector<std::shared_ptr< CollisionObject>>& arg_output, std::list<std::shared_ptr< CollisionObject>>& arg_stack) {
 				

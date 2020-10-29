@@ -242,7 +242,7 @@ std::vector<ButiEngine::Vector3> ButiEngine::FBXAnalyze::FBXNode_DoubleArrayProp
 
 	out.resize(nodeProperty.size()/2 / 3 );
 
-	int halfOffset = nodeProperty.size() / 2;
+	int halfOffset = ((int)nodeProperty.size()) / 2;
 
 	for (int i = 0; i < out.size(); i++) {
 		out.at(i) = Vector3((float)nodeProperty.at(i * 3+halfOffset + 1), (float)nodeProperty.at(i * 3+halfOffset + 2), (float)nodeProperty.at(i * 3+halfOffset + 0));

@@ -85,7 +85,7 @@ ButiEngine::Vector2 ButiEngine::Window::GetWindowPosition()
 {
 	RECT rect;
 	GetWindowRect(handle, &rect);
-	return Vector2(rect.left, rect.top);
+	return Vector2((float)rect.left,(float) rect.top);
 }
 
 void ButiEngine::Window::Release()

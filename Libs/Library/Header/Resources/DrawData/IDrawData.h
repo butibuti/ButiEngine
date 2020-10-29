@@ -13,7 +13,7 @@ namespace ButiEngine {
 		void Initialize()override {}
 		void PreInitialize()override {}
 		std::vector<std::shared_ptr<ICBuffer>> vec_exCBuffer;
-		bool isUseMaterial;
+		bool isUseMaterial=true;
 	};
 	struct DrawData {
 		

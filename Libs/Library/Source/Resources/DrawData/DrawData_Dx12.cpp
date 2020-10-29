@@ -1,16 +1,16 @@
 #include "stdafx.h"
 
-#include"Header/Resources/DrawData/DrawData_Dx12.h"
 #include"Header/GameParts/ResourceContainer.h"
 #include"Header/Device/GraphicResourceUtil_Dx12.h"
 #include"Header/Device/PipelineStateManager.h"
+#include "..\..\..\Header\Resources\DrawData\DrawData_Dx12.h"
 
-ButiEngine::MeshDrawData_Dx12::MeshDrawData_Dx12(const MeshTag& arg_meshTag, const ShaderTag& arg_shader, const MaterialTag& arg_materialTag,  std::shared_ptr<IRenderer> arg_shp_renderer, std::weak_ptr<GraphicDevice_Dx12> arg_wkp_graphicDevice, std::shared_ptr< DrawInformation >arg_shp_drawInfo)
-	:MeshDrawData_Dx12(arg_meshTag, arg_shader, std::vector<MaterialTag>{arg_materialTag}, arg_shp_renderer,arg_wkp_graphicDevice,arg_shp_drawInfo)
+ButiEngine::MeshDrawData_Dx12::MeshDrawData_Dx12(const MeshTag& arg_meshTag, const ShaderTag& arg_shader, const MaterialTag& arg_materialTag,  std::shared_ptr<IRenderer> arg_shp_renderer, std::weak_ptr<GraphicDevice_Dx12> arg_wkp_graphicDevice, std::shared_ptr< DrawInformation >arg_shp_drawInfo, std::shared_ptr<Transform> arg_shp_transform)
+	:MeshDrawData_Dx12(arg_meshTag, arg_shader, std::vector<MaterialTag>{arg_materialTag}, arg_shp_renderer,arg_wkp_graphicDevice,arg_shp_drawInfo, arg_shp_transform)
 {
 }
 
-ButiEngine::MeshDrawData_Dx12::MeshDrawData_Dx12(const MeshTag & arg_meshTag,  const ShaderTag & arg_shader, const std::vector<MaterialTag>& arg_materialTag,  std::shared_ptr<IRenderer> arg_shp_renderer, std::weak_ptr<GraphicDevice_Dx12> arg_wkp_graphicDevice, std::shared_ptr< DrawInformation >arg_shp_drawInfo)
+ButiEngine::MeshDrawData_Dx12::MeshDrawData_Dx12(const MeshTag & arg_meshTag,  const ShaderTag & arg_shader, const std::vector<MaterialTag>& arg_materialTag,  std::shared_ptr<IRenderer> arg_shp_renderer, std::weak_ptr<GraphicDevice_Dx12> arg_wkp_graphicDevice, std::shared_ptr< DrawInformation >arg_shp_drawInfo, std::shared_ptr<Transform> arg_shp_transform)
 {
 	shp_renderer = arg_shp_renderer;
 	meshTag = arg_meshTag;
@@ -20,15 +20,17 @@ ButiEngine::MeshDrawData_Dx12::MeshDrawData_Dx12(const MeshTag & arg_meshTag,  c
 	subset.push_back(wkp_graphicDevice.lock()->GetApplication().lock()-> GetResourceContainer()->GetMesh(meshTag).lock()->GetIndexCount());
 	boxEightCorner = wkp_graphicDevice.lock()->GetApplication().lock()->GetResourceContainer()->GetMesh(meshTag).lock()->GetBackUpdata().GetBoxEightCorner();
 	shp_drawInfo = arg_shp_drawInfo;
+	transform = arg_shp_transform;
 }
 
-ButiEngine::MeshDrawData_Dx12::MeshDrawData_Dx12(const ModelTag & arg_model, const ShaderTag & arg_shader,  std::shared_ptr<IRenderer> arg_shp_renderer, std::weak_ptr<GraphicDevice_Dx12> arg_wkp_graphicDevice, std::shared_ptr< DrawInformation >arg_shp_drawInfo)
+ButiEngine::MeshDrawData_Dx12::MeshDrawData_Dx12(const ModelTag & arg_model, const ShaderTag & arg_shader,  std::shared_ptr<IRenderer> arg_shp_renderer, std::weak_ptr<GraphicDevice_Dx12> arg_wkp_graphicDevice, std::shared_ptr< DrawInformation >arg_shp_drawInfo, std::shared_ptr<Transform> arg_shp_transform)
 	:MeshDrawData_Dx12(arg_wkp_graphicDevice.lock()->GetApplication().lock()->GetResourceContainer()->GetModel(arg_model).lock()->GetMeshTag(),arg_shader,
-		arg_wkp_graphicDevice.lock()->GetApplication().lock()->GetResourceContainer()->GetModel(arg_model).lock()->GetMaterialTags(), arg_shp_renderer,arg_wkp_graphicDevice, arg_shp_drawInfo)
+		arg_wkp_graphicDevice.lock()->GetApplication().lock()->GetResourceContainer()->GetModel(arg_model).lock()->GetMaterialTags(), arg_shp_renderer,arg_wkp_graphicDevice, arg_shp_drawInfo,arg_shp_transform)
 {
 	shp_drawInfo = arg_shp_drawInfo;
 	modelTag =arg_model;
 	subset = wkp_graphicDevice.lock()->GetApplication().lock()->GetResourceContainer()->GetModel(arg_model).lock()->GetSubset();
+	
 }
 
 
@@ -92,6 +94,7 @@ void ButiEngine::MeshDrawData_Dx12::Initialize()
 	CommandListHelper::BundleReset(pipelineState, commandList,wkp_graphicDevice.lock());
 	CommandSet();
 
+
 }
 
 
@@ -132,6 +135,27 @@ void ButiEngine::DrawData_Dx12::Initialize()
 	commandList = CommandListHelper::CreateBundleCommandList( wkp_graphicDevice.lock());
 	CommandListHelper::Close(commandList);
 
+	switch (shp_drawInfo->drawSettings.billboardMode)
+	{
+	case BillBoardMode::full:
+		shp_worldMatrixUpdater = std::make_shared<MatrixUpdater_billBoard>(cbuffer, transform,wkp_graphicDevice);
+		break;
+	case BillBoardMode::x:
+		shp_worldMatrixUpdater = std::make_shared<MatrixUpdater_billBoardX>(cbuffer, transform,wkp_graphicDevice);
+		break;
+	case BillBoardMode::y:
+		shp_worldMatrixUpdater = std::make_shared<MatrixUpdater_billBoardY>(cbuffer, transform, wkp_graphicDevice);
+		break;
+	case BillBoardMode::z:
+		shp_worldMatrixUpdater = std::make_shared<MatrixUpdater_billBoardZ>(cbuffer, transform, wkp_graphicDevice);
+		break;
+	case BillBoardMode::none:
+		shp_worldMatrixUpdater = std::make_shared<MatrixUpdater_default>(cbuffer, transform, wkp_graphicDevice);
+		break;
+	default:
+		shp_worldMatrixUpdater = std::make_shared<MatrixUpdater_default>(cbuffer, transform,wkp_graphicDevice);
+		break;
+	}
 }
 
 void ButiEngine::DrawData_Dx12::CreatePipeLineState(const UINT arg_exCBuffer)
@@ -185,12 +209,11 @@ void ButiEngine::DrawData_Dx12::BufferUpdate()
 		cbuffer->Get().View =(XMMATRIX)wkp_graphicDevice.lock()->GetCameraViewMatrix();
 		cbuffer->Get().Projection = wkp_graphicDevice.lock()->GetProjectionMatrix();
 	}*/
-	 {
-
-		cbuffer->Get().World = transform->ToMatrix();
-		cbuffer->Get().View = wkp_graphicDevice.lock()->GetCameraViewMatrix();
-		cbuffer->Get().Projection = wkp_graphicDevice.lock()->GetProjectionMatrix();
-	}
+	 
+	shp_worldMatrixUpdater->WorldMatrixUpdate();
+	cbuffer->Get().View = wkp_graphicDevice.lock()->GetCameraViewMatrix();
+	cbuffer->Get().Projection = wkp_graphicDevice.lock()->GetProjectionMatrix();
+	
 
 	cbuffer->Update();
 
@@ -245,4 +268,64 @@ std::shared_ptr<ButiEngine::ICBuffer> ButiEngine::DrawData_Dx12::AddICBuffer(std
 	CommandListHelper::BundleReset(pipelineState, commandList,wkp_graphicDevice.lock());
 	CommandSet();
 	return output;
+}
+
+void ButiEngine::MatrixUpdater_default::WorldMatrixUpdate()
+{
+	cbuffer->Get().World = transform->ToMatrix();
+}
+
+void ButiEngine::MatrixUpdater_billBoard::WorldMatrixUpdate()
+{
+	auto billboard = wkp_graphicDevice.lock()->GetCameraViewMatrix();
+	billboard._14 = 0.0f;
+	billboard._24 = 0.0f;
+	billboard._34 = 0.0f;
+
+	(XMMATRIX)billboard.Inverse();
+	/*billboard._12 = 0.0f;
+	billboard._22 = 1.0f;
+	billboard._32 = 0.0f;*/
+
+
+	cbuffer->Get().World = (XMMATRIX)transform->ToMatrix() * billboard;
+}
+
+void ButiEngine::MatrixUpdater_billBoardX::WorldMatrixUpdate()
+{
+	auto billboard = wkp_graphicDevice.lock()->GetCameraViewMatrix();
+	billboard._14 = 0.0f;
+	billboard._24 = 0.0f;
+	billboard._34 = 0.0f;
+
+	(XMMATRIX)billboard.Inverse();
+
+	cbuffer->Get().World = (XMMATRIX)transform->ToMatrix() * billboard.GetInValidYZ();
+}
+
+void ButiEngine::MatrixUpdater_billBoardY::WorldMatrixUpdate()
+{
+	auto billboard = wkp_graphicDevice.lock()->GetCameraViewMatrix();
+	billboard._14 = 0.0f;
+	billboard._24 = 0.0f;
+	billboard._34 = 0.0f;
+
+	(XMMATRIX)billboard.Inverse();
+
+
+	cbuffer->Get().World = (XMMATRIX)transform->ToMatrix() * billboard.GetInValidXZ();
+}
+
+void ButiEngine::MatrixUpdater_billBoardZ::WorldMatrixUpdate()
+{
+	auto billboard = wkp_graphicDevice.lock()->GetCameraViewMatrix();
+	billboard._14 = 0.0f;
+	billboard._24 = 0.0f;
+	billboard._34 = 0.0f;
+
+	(XMMATRIX)billboard.Inverse();
+	
+
+
+	cbuffer->Get().World = (XMMATRIX)transform->ToMatrix() * billboard.GetInValidXY();
 }

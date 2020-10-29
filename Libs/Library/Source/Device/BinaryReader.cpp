@@ -70,7 +70,7 @@ std::wstring ButiEngine::BinaryReader::ReadWCharactor(const UINT count)
 
 	std::wstring out;
 
-	for (int i = 0; i < count; i++) {
+	for (UINT i = 0; i < count; i++) {
 		if (!readChars[i]) {
 			break;
 		}

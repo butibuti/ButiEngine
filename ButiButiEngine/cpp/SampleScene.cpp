@@ -110,12 +110,12 @@ void ButiEngine::SampleScene::OnInitialize()
 		);
 
 
-	auto gsSphere = shp_gameObjectManager->AddObject(ObjectFactory::Create<Transform>( Vector3(5,1,0),Vector3(), Vector3(3,3,3)), "test");
+	auto gsSphere = shp_gameObjectManager->AddObject(ObjectFactory::Create<Transform>( Vector3(5,1,0),Vector3(0,0,0), Vector3(1,1,1)), "test");
 
 	auto sphereInfo = ObjectFactory::Create<DrawInformation>();
-	sphereInfo->drawSettings.topologyType = TopologyType::pointList;
+	sphereInfo->drawSettings.billboardMode = BillBoardMode::x;
 	gsSphere.lock()->AddGameComponent<MeshDrawComponent>(
-		GetResourceContainer()->GetMeshTag("TestCapsule"), GetResourceContainer()->GetShaderTag("DefaultMesh_test"), GetResourceContainer()->GetMaterialTag("blueMaterial.bma", "Material/"), sphereInfo, 0);
+		GetResourceContainer()->GetMeshTag("Floor"), GetResourceContainer()->GetShaderTag("DefaultMesh"), GetResourceContainer()->GetMaterialTag("blueMaterial.bma", "Material/"), sphereInfo, 0);
 
 	auto player = shp_gameObjectManager->AddObject(
 		ObjectFactory::Create<Transform>(Vector3(0.0f, 1.0f, 0.0f)), "player");

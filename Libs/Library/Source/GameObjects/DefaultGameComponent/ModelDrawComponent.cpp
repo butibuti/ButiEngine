@@ -31,16 +31,15 @@ void ButiEngine::ModelDrawComponent::OnSet()
 		shp_drawInfo = ObjectFactory::Create<DrawInformation>();
 	}
 	auto renderer = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetRenderer();
-	
-	auto modelData = ObjectFactory::Create<ModelDrawData_Dx12>(modelTag, shaderTag,renderer, gameObject.lock()->GetGraphicDevice()->GetThis<GraphicDevice_Dx12>(),shp_drawInfo);
+
+	if (!shp_transform) {
+		shp_transform = gameObject.lock()->transform;
+	}
+
+	auto modelData = ObjectFactory::Create<ModelDrawData_Dx12>(modelTag, shaderTag,renderer, gameObject.lock()->GetGraphicDevice()->GetThis<GraphicDevice_Dx12>(),shp_drawInfo,shp_transform);
 
 	data = modelData;
 	
-	if (!shp_transform) {
-		shp_transform= gameObject.lock()->transform;
-	}
-
-	data->SetTransform(shp_transform);
 	for (auto itr =modelData-> vec_bone.begin(); itr != modelData->vec_bone.end(); itr++) {
 		if (!((*itr)->parentBone)) {
 

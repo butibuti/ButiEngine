@@ -28,7 +28,7 @@ namespace ButiEngine {
 	using MaterialTag = ID<IResource_Material>;
 
 	class ModelAnimation;
-	class MotionKeyFrameData;
+	struct MotionKeyFrameData;
 	class BackupDataBase;
 	struct Bone;
 	struct WaveDatas;

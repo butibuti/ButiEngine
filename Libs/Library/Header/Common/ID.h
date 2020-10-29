@@ -58,7 +58,7 @@ namespace ButiEngine {
 				return map_values.at(arg_directory + arg_key);
 			}
 			vec_p_resource.push_back(arg_value);
-			vec_p_id.push_back(new UINT(vec_p_resource.size() - 1));
+			vec_p_id.push_back(new UINT((UINT)vec_p_resource.size() - 1));
 			ID<T> output((vec_p_id.at(vec_p_id.size() - 1)));
 
 			map_values.emplace(arg_directory + arg_key, output);

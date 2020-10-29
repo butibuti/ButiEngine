@@ -52,8 +52,8 @@ void ButiEngine::Camera_Dx12::Initialize()
 
 	projectionMatrix.Transpose();
 
-	viewport.TopLeftX = cameraViewProp.left;
-	viewport.TopLeftY = cameraViewProp.top;
+	viewport.TopLeftX = (float)cameraViewProp.left;
+	viewport.TopLeftY = (float)cameraViewProp.top;
 	viewport.Width = static_cast<FLOAT>(cameraViewProp.width);
 	viewport.Height = static_cast<FLOAT>(cameraViewProp.height);
 	viewport.MinDepth = cameraViewProp.front;

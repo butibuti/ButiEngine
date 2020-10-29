@@ -470,7 +470,7 @@ namespace ButiEngine {
 			ranges[1].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, 1, 0);
 			ranges[2].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
 
-			for (int i = 0; i < materialCount; i++) {
+			for (UINT i = 0; i < materialCount; i++) {
 
 				CD3DX12_DESCRIPTOR_RANGE in;
 				in.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 1 + i);
@@ -485,7 +485,7 @@ namespace ButiEngine {
 			rootParameters[0].InitAsDescriptorTable(1, &ranges[0], D3D12_SHADER_VISIBILITY_PIXEL);
 			rootParameters[1].InitAsDescriptorTable(1, &ranges[1], D3D12_SHADER_VISIBILITY_PIXEL);
 			rootParameters[2].InitAsDescriptorTable(1, &ranges[2], D3D12_SHADER_VISIBILITY_ALL);
-			for (int i = 0; i < materialCount; i++) {
+			for (UINT i = 0; i < materialCount; i++) {
 				CD3DX12_ROOT_PARAMETER in;
 				in.InitAsDescriptorTable(1, &ranges[3 + i], D3D12_SHADER_VISIBILITY_ALL);
 				rootParameters.push_back(in);

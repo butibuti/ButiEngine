@@ -18,7 +18,7 @@ namespace ButiEngine {
 			char frontAxisSign = -1;
 			char coordAxis = 0;
 			char coordAxisSign = -1;
-			float frameRate;
+			float frameRate=30.0f;
 		};
 		struct FBXNodeStructure :public IObject
 		{

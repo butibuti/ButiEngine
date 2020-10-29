@@ -29,7 +29,7 @@ namespace ButiEngine {
 		MotionKeyFrameData( const UINT arg_endFrame, const Vector3& arg_position, const Vector3& arg_rotation);
 		MotionKeyFrameData(const UINT arg_endFrame, const Pose& arg_pose);
 
-		UINT endFrame;
+		UINT endFrame=0;
 		Pose pose;
 		LarpData larp;
 	};

@@ -84,6 +84,45 @@ namespace ButiEngine {
 		inline Matrix4x4 GetInverse()const {
 			return (Matrix4x4)XMMatrixInverse(nullptr, *this);
 		}
+		inline Matrix4x4 GetInValidYZ()const {
+			Matrix4x4 output = *this;
+			output._11 = 1.0f;
+			output._21 = 0.0f;
+			output._31 = 0.0f;
+			return output;
+		}
+		inline Matrix4x4 GetInValidXZ()const {
+			Matrix4x4 output = *this;
+			output._12 = 0.0f;
+			output._22 = 1.0f;
+			output._32 = 0.0f;
+			return output;
+		}
+		inline Matrix4x4 GetInValidXY()const {
+			Matrix4x4 output = *this;
+			output._13 = 0.0f;
+			output._23 = 0.0f;
+			output._33 = 1.0f;
+			return output;
+		}inline Matrix4x4& InValidYZ() {
+			this->_11 = 1.0f;
+			this->_21 = 0.0f;
+			this->_31 = 0.0f;
+			return *this;
+		}
+		inline Matrix4x4& InValidXZ(){
+			this->_12 = 0.0f;
+			this->_22 = 1.0f;
+			this->_32 = 0.0f;
+			return *this;
+		}
+		inline Matrix4x4& InValidXY() {
+			
+			 this->_13 = 0.0f;
+			 this->_23 = 0.0f;
+			 this->_33 = 1.0f;
+			return *this;
+		}
 		inline Quat ToQuat()const;
 
 		inline void Decompose(Vector3& rScaling, Quat& rQt, Vector3& rTranslation)const;

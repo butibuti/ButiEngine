@@ -70,7 +70,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> ButiEngine::DescriptorHeapManager::GetCon
 ButiEngine::HandleInformation ButiEngine::DescriptorHeapManager::CreateConstantBufferView(void* p_value, const bool isKeep, const int size )
 {
 	UINT sizeAligned = (size + 0xff) & ~0xff;
-	int numRequired = sizeAligned / 0x100;
+	UINT numRequired = sizeAligned / 0x100;
 
 
 	UINT top;
@@ -123,7 +123,7 @@ ButiEngine::HandleInformation ButiEngine::DescriptorHeapManager::CreateConstantB
 
 	D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
 
-	BackUpConstantBufferData backUpData;
+	BackUpConstantBufferData backUpData = {};
 
 	cbvDesc.BufferLocation = constantBufferUploadHeap->GetGPUVirtualAddress() + ((UINT64)top * 0x100);
 

@@ -4,7 +4,7 @@
 
 namespace ButiEngine {
 	class ModelAnimation;
-	class ModelDrawData;
+	struct ModelDrawData;
 	class ModelDrawComponent :public MeshDrawComponent
 	{
 	public:

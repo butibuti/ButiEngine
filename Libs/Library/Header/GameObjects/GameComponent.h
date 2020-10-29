@@ -34,8 +34,8 @@ namespace ButiEngine {
 		std::weak_ptr<GameObjectManager> GetManager();
 		std::weak_ptr<Collision::CollisionManager> GetCollisionManager();
 		std::weak_ptr<GameObject> gameObject;
-		bool isActive;
-		bool isRemove;
+		bool isActive=true;
+		bool isRemove=false;
 	};
 
 }

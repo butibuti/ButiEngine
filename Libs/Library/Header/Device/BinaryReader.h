@@ -98,7 +98,7 @@ namespace ButiEngine {
 
 		inline void Skip(int skipByte) {
 			auto currentPos = fin.tellg();
-			fin.seekg(((int)currentPos + skipByte), std::ios_base::beg);
+			fin.seekg((((int)currentPos) + skipByte), std::ios_base::beg);
 		}
 
 		inline bool Skip(std::string skipSource) {
@@ -118,7 +118,7 @@ namespace ButiEngine {
 				}
 			}
 			if (find == skipSource) {
-				int size = skipSource.size();
+				int size =(int) skipSource.size();
 				Skip(-(size));
 				return true;
 			}

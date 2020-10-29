@@ -71,21 +71,20 @@ void ButiEngine::MeshDrawComponent::OnSet()
 		shp_drawInfo = ObjectFactory::Create<DrawInformation>();
 	}
 	auto renderer = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetRenderer();
-	if (!modelTag.IsEmpty()) {												 
-			auto graphicDevice = gameObject.lock()->GetGraphicDevice()->GetThis<GraphicDevice_Dx12>();
-			data = ObjectFactory::Create<MeshDrawData_Dx12>(modelTag, shaderTag,renderer,graphicDevice,shp_drawInfo );
-
-	}
-	else {
-			data = ObjectFactory::Create<MeshDrawData_Dx12>(meshTag, shaderTag, materialTag, renderer, gameObject.lock()->GetGraphicDevice()->GetThis<GraphicDevice_Dx12>(), shp_drawInfo);
-
-		
-	}
 	if (!shp_transform) {
 		shp_transform = gameObject.lock()->transform;
 	}
+	if (!modelTag.IsEmpty()) {												 
+			auto graphicDevice = gameObject.lock()->GetGraphicDevice()->GetThis<GraphicDevice_Dx12>();
+			data = ObjectFactory::Create<MeshDrawData_Dx12>(modelTag, shaderTag,renderer,graphicDevice,shp_drawInfo,shp_transform );
 
-	data->SetTransform(shp_transform);
+	}
+	else {
+			data = ObjectFactory::Create<MeshDrawData_Dx12>(meshTag, shaderTag, materialTag, renderer, gameObject.lock()->GetGraphicDevice()->GetThis<GraphicDevice_Dx12>(), shp_drawInfo,shp_transform);
+
+		
+	}
+
 	index = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetRenderer()->RegistDrawObject(data,layer);
 }
 

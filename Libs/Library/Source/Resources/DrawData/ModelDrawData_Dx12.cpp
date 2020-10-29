@@ -6,7 +6,7 @@
 #include"Header/GameParts/ResourceContainer.h"
 
 
-ButiEngine::ModelDrawData_Dx12::ModelDrawData_Dx12(const ModelTag& arg_model, const ShaderTag& arg_shader, std::shared_ptr<IRenderer> arg_shp_renderer, std::weak_ptr<GraphicDevice_Dx12> arg_wkp_graphicDevice, std::shared_ptr< DrawInformation >arg_shp_drawInfo)
+ButiEngine::ModelDrawData_Dx12::ModelDrawData_Dx12(const ModelTag& arg_model, const ShaderTag& arg_shader, std::shared_ptr<IRenderer> arg_shp_renderer, std::weak_ptr<GraphicDevice_Dx12> arg_wkp_graphicDevice, std::shared_ptr< DrawInformation >arg_shp_drawInfo, std::shared_ptr<Transform>arg_shp_transform)
 {
 	wkp_graphicDevice = arg_wkp_graphicDevice;
 	shp_renderer = arg_shp_renderer;
@@ -19,6 +19,7 @@ ButiEngine::ModelDrawData_Dx12::ModelDrawData_Dx12(const ModelTag& arg_model, co
 	shaderTag = arg_shader;
 	subset = wkp_graphicDevice.lock()->GetApplication().lock()->GetResourceContainer()->GetModel(modelTag).lock()->GetSubset();
 	shp_drawInfo = arg_shp_drawInfo;
+	transform = arg_shp_transform;
 }
 
 void ButiEngine::ModelDrawData_Dx12::Initialize()

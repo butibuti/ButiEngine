@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="SucideComponent.cpp" />
+    <ClCompile Include="Shooting\BulletBehavior.cpp">
+      <Filter>ShootingGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Shooting\HavokBehavior.cpp">
+      <Filter>ShootingGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Shooting\MaguroBehavior.cpp">
+      <Filter>ShootingGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Shooting\ShootingScene.cpp">
+      <Filter>ShootingGame</Filter>
+    </ClCompile>
+    <ClCompile Include="ChaseComponent.cpp">
+      <Filter>SampleScene</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\FPSViewBehavior.cpp">
+      <Filter>SampleScene</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\HitTestBehavior.cpp">
+      <Filter>SampleScene</Filter>
+    </ClCompile>
+    <ClCompile Include="LookAtComponent.cpp">
+      <Filter>SampleScene</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\main.cpp">
+      <Filter>SampleScene</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\SampleScene.cpp">
+      <Filter>SampleScene</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="SucideComponent.h" />
+    <ClInclude Include="Shooting\BulletBehavior.h">
+      <Filter>ShootingGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Shooting\HavokBehavior.h">
+      <Filter>ShootingGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Shooting\MaguroBehavior.h">
+      <Filter>ShootingGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Shooting\ShootingScene.h">
+      <Filter>ShootingGame</Filter>
+    </ClInclude>
+    <ClInclude Include="ChaseComponent.h">
+      <Filter>SampleScene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FPSViewBehavior.h">
+      <Filter>SampleScene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\HitTestBehavior.h">
+      <Filter>SampleScene</Filter>
+    </ClInclude>
+    <ClInclude Include="LookAtComponent.h">
+      <Filter>SampleScene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SampleScene.h">
+      <Filter>SampleScene</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="ShootingGame">
+      <UniqueIdentifier>{f9bac54e-71c4-4f79-bfcf-509e9617d31c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SampleScene">
+      <UniqueIdentifier>{31cd7029-72aa-4a50-9e5c-6e4d16dfb5ca}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

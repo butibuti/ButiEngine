@@ -1,0 +1,58 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ButiLibrary", "Libs\Library\Library.vcxitems", "{9AE3373A-703B-4893-9376-0AF3BB6083D1}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ButiButiEngine", "ButiButiEngine\ButiButiEngine.vcxproj", "{A4318165-9BEC-44BB-9D05-E4CD87655928}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ShaderCompileTool", "ShaderCompileTool\ShaderCompileTool.vcxproj", "{B301AE8C-110C-4AFD-8E8C-3DFE89D5D79A}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Libs\Library\Library.vcxitems*{9ae3373a-703b-4893-9376-0af3bb6083d1}*SharedItemsImports = 9
+		Libs\Library\Library.vcxitems*{a4318165-9bec-44bb-9d05-e4cd87655928}*SharedItemsImports = 4
+		Libs\Library\Library.vcxitems*{b301ae8c-110c-4afd-8e8c-3dfe89d5d79a}*SharedItemsImports = 4
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Dx11_Debug|x64 = Dx11_Debug|x64
+		Dx11_Debug|x86 = Dx11_Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A4318165-9BEC-44BB-9D05-E4CD87655928}.Debug|x64.ActiveCfg = Debug|x64
+		{A4318165-9BEC-44BB-9D05-E4CD87655928}.Debug|x64.Build.0 = Debug|x64
+		{A4318165-9BEC-44BB-9D05-E4CD87655928}.Debug|x86.ActiveCfg = Debug|Win32
+		{A4318165-9BEC-44BB-9D05-E4CD87655928}.Debug|x86.Build.0 = Debug|Win32
+		{A4318165-9BEC-44BB-9D05-E4CD87655928}.Dx11_Debug|x64.ActiveCfg = Debug|x64
+		{A4318165-9BEC-44BB-9D05-E4CD87655928}.Dx11_Debug|x64.Build.0 = Debug|x64
+		{A4318165-9BEC-44BB-9D05-E4CD87655928}.Dx11_Debug|x86.ActiveCfg = Debug|Win32
+		{A4318165-9BEC-44BB-9D05-E4CD87655928}.Dx11_Debug|x86.Build.0 = Debug|Win32
+		{A4318165-9BEC-44BB-9D05-E4CD87655928}.Release|x64.ActiveCfg = Release|x64
+		{A4318165-9BEC-44BB-9D05-E4CD87655928}.Release|x64.Build.0 = Release|x64
+		{A4318165-9BEC-44BB-9D05-E4CD87655928}.Release|x86.ActiveCfg = Release|Win32
+		{A4318165-9BEC-44BB-9D05-E4CD87655928}.Release|x86.Build.0 = Release|Win32
+		{B301AE8C-110C-4AFD-8E8C-3DFE89D5D79A}.Debug|x64.ActiveCfg = Debug|x64
+		{B301AE8C-110C-4AFD-8E8C-3DFE89D5D79A}.Debug|x64.Build.0 = Debug|x64
+		{B301AE8C-110C-4AFD-8E8C-3DFE89D5D79A}.Debug|x86.ActiveCfg = Debug|Win32
+		{B301AE8C-110C-4AFD-8E8C-3DFE89D5D79A}.Debug|x86.Build.0 = Debug|Win32
+		{B301AE8C-110C-4AFD-8E8C-3DFE89D5D79A}.Dx11_Debug|x64.ActiveCfg = Debug|x64
+		{B301AE8C-110C-4AFD-8E8C-3DFE89D5D79A}.Dx11_Debug|x64.Build.0 = Debug|x64
+		{B301AE8C-110C-4AFD-8E8C-3DFE89D5D79A}.Dx11_Debug|x86.ActiveCfg = Debug|Win32
+		{B301AE8C-110C-4AFD-8E8C-3DFE89D5D79A}.Dx11_Debug|x86.Build.0 = Debug|Win32
+		{B301AE8C-110C-4AFD-8E8C-3DFE89D5D79A}.Release|x64.ActiveCfg = Release|x64
+		{B301AE8C-110C-4AFD-8E8C-3DFE89D5D79A}.Release|x64.Build.0 = Release|x64
+		{B301AE8C-110C-4AFD-8E8C-3DFE89D5D79A}.Release|x86.ActiveCfg = Release|Win32
+		{B301AE8C-110C-4AFD-8E8C-3DFE89D5D79A}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0F48904B-D586-4128-9FF1-EE49B5B886EF}
+	EndGlobalSection
+EndGlobal

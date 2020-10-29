@@ -1,0 +1,215 @@
+#include "BinaryIO.h"
+
+
+
+bool ButiEngine::BinaryReader::ReadStart(const std::string& filePath)
+{
+	fin = std::ifstream(filePath, std::ios::in | std::ios::binary);
+	if (!fin) {
+		std::cout << "ファイルが見つかりません\n";
+
+		return false;
+	}
+	return true;
+}
+
+void ButiEngine::BinaryReader::ReadEnd()
+{
+	fin.close();
+}
+
+std::string ButiEngine::BinaryReader::ReadCharactor(const UINT& count)
+{
+	char* readChars = (char*)malloc(count);
+
+	fin.read(readChars, count);
+
+	std::string out;
+
+	for (int i = 0; i < count; i++) {
+		if (readChars[i] > 9) {
+			out += readChars[i];
+			continue;
+		}
+		out += std::to_string(readChars[i]);
+	}
+	delete readChars;
+	return out;
+}
+
+char* ButiEngine::BinaryReader::ReadCharactor()
+{
+	auto all = std::string(std::istreambuf_iterator<char>(fin),
+		std::istreambuf_iterator<char>());
+	char* out = (char*)malloc(all.size());
+	memcpy(out, all.c_str(), all.size());
+
+	return out;
+}
+
+std::wstring ButiEngine::BinaryReader::ReadWCharactor(const UINT& count)
+{
+	wchar_t* readChars = (wchar_t*)malloc(count * sizeof(wchar_t));
+
+	fin.read((char*)readChars, count * sizeof(wchar_t));
+
+	std::wstring out;
+
+	for (int i = 0; i < count; i++) {
+		if (!readChars[i]) {
+			break;
+		}
+		out += readChars[i];
+	}
+	delete readChars;
+	return out;
+}
+
+int ButiEngine::BinaryHelper::SwapByte(const int& arg_int)
+{
+	return Swap32bit(arg_int);
+}
+
+UINT ButiEngine::BinaryHelper::SwapByte(const UINT& arg_UINT)
+{
+	return Swap32bit(arg_UINT);
+}
+
+float ButiEngine::BinaryHelper::SwapByte(const float& arg_float)
+{
+	float output;
+	UINT reverseValue;
+	memcpy(&reverseValue, &arg_float, sizeof(arg_float));
+	reverseValue = Swap32bit(reverseValue);
+	memcpy(&output, &reverseValue, sizeof(reverseValue));
+	return output;
+}
+
+double ButiEngine::BinaryHelper::SwapByte(const double& arg_double)
+{
+	float output;
+	ulongLong reverseValue;
+	memcpy(&reverseValue, &arg_double, sizeof(arg_double));
+	reverseValue = Swap64bit(reverseValue);
+	memcpy(&output, &reverseValue, sizeof(reverseValue));
+	return output;
+}
+
+short ButiEngine::BinaryHelper::Swap16bit(const short& input)
+{
+	short output;
+	char* conv = (char*)&input;
+	char* ret = (char*)&output;
+
+
+	ret[0] = conv[1];
+	ret[1] = conv[0];
+	return output;
+}
+
+int ButiEngine::BinaryHelper::Swap32bit(const int& input)
+{
+	int output;
+	char* conv = (char*)&input;
+	char* ret = (char*)&output;
+
+
+	ret[0] = conv[3];
+	ret[1] = conv[2];
+	ret[2] = conv[1];
+	ret[3] = conv[0];
+	return output;
+}
+
+ButiEngine::longLong ButiEngine::BinaryHelper::Swap64bit(const longLong& input)
+{
+	longLong output;
+	char* conv = (char*)&input;
+	char* ret = (char*)&output;
+
+
+	ret[0] = conv[7];
+	ret[1] = conv[6];
+	ret[2] = conv[5];
+	ret[3] = conv[4];
+	ret[4] = conv[3];
+	ret[5] = conv[2];
+	ret[6] = conv[1];
+	ret[7] = conv[0];
+	return output;
+}
+
+ButiEngine::ushort ButiEngine::BinaryHelper::Swap16bit(const ushort& input)
+{
+	ushort output;
+	char* conv = (char*)&input;
+	char* ret = (char*)&output;
+
+
+	ret[0] = conv[1];
+	ret[1] = conv[0];
+	return output;
+}
+
+UINT ButiEngine::BinaryHelper::Swap32bit(const UINT& input)
+{
+	int output;
+	char* conv = (char*)&input;
+	char* ret = (char*)&output;
+
+
+	ret[0] = conv[3];
+	ret[1] = conv[2];
+	ret[2] = conv[1];
+	ret[3] = conv[0];
+	return output;
+}
+
+ButiEngine::ulongLong ButiEngine::BinaryHelper::Swap64bit(const ulongLong& input)
+{
+	ulongLong output;
+	char* conv = (char*)&input;
+	char* ret = (char*)&output;
+
+
+	ret[0] = conv[7];
+	ret[1] = conv[6];
+	ret[2] = conv[5];
+	ret[3] = conv[4];
+	ret[4] = conv[3];
+	ret[5] = conv[2];
+	ret[6] = conv[1];
+	ret[7] = conv[0];
+	return output;
+}
+
+
+bool ButiEngine::BinaryWriter::WriteStart(const std::string& filePath)
+{
+	fout = std::ofstream(filePath, std::ios::out | std::ios::binary);
+	if (!fout) {
+		std::cout << "ファイルが見つかりません\n";
+		return false;
+	}
+	return true;
+}
+
+void ButiEngine::BinaryWriter::WriteEnd()
+{
+	fout.close();
+}
+
+void ButiEngine::BinaryWriter::WriteCharactor(const std::string& write)
+{
+	fout.write(write.c_str(), write.size());
+}
+
+void ButiEngine::BinaryWriter::WriteCharactor(const char* write, const UINT& size)
+{
+	fout.write(write, size);
+}
+
+void ButiEngine::BinaryWriter::WriteWCharactor(const std::wstring& write)
+{
+	fout.write((char*)write.c_str(), write.size() * sizeof(wchar_t));
+}

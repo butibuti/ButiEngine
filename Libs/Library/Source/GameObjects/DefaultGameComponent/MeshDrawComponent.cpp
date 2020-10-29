@@ -90,10 +90,24 @@ void ButiEngine::MeshDrawComponent::OnSet()
 
 void ButiEngine::MeshDrawComponent::OnRemove()
 {
+	if (index)
 	gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetRenderer()->UnRegistDrawObject(index,layer);
 }
 
 void ButiEngine::MeshDrawComponent::SetBlendMode(const BlendMode& arg_blendMode)
 {
 	data->SetBlendMode(arg_blendMode);
+}
+
+void ButiEngine::MeshDrawComponent::Regist()
+{
+
+	if (!index)
+	index = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetRenderer()->RegistDrawObject(data, layer);
+}
+
+void ButiEngine::MeshDrawComponent::UnRegist()
+{
+	if(index)
+	gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetRenderer()->UnRegistDrawObject(index, layer);
 }

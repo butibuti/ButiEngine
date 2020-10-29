@@ -24,6 +24,10 @@ namespace ButiEngine {
 		void OnSet()override;
 		void OnRemove() override;
 		void SetBlendMode(const BlendMode& arg_blendMode);
+
+		void Regist();
+		void UnRegist();
+
 		template <class T>
 		std::shared_ptr<CBuffer< T>> CreateCBuffer(const std::string& arg_cBufferName, const UINT arg_slot,  std::weak_ptr<GraphicDevice> arg_wkp_graphicDevice) {
 			std::shared_ptr<CBuffer< T>> out = nullptr;

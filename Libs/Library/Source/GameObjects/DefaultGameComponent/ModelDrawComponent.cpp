@@ -23,7 +23,6 @@ void ButiEngine::ModelDrawComponent::OnUpdate()
 	}
 #endif
 }
-
 void ButiEngine::ModelDrawComponent::OnSet()
 {
 

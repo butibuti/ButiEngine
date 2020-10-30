@@ -10,10 +10,15 @@ ButiEngine::SimpleBoneAnimatorComponent::SimpleBoneAnimatorComponent(std::shared
 
 void ButiEngine::SimpleBoneAnimatorComponent::OnUpdate()
 {
-	if (shp_animation && GameDevice::input.TriggerKey(Keys::Q))
+	ImGui::Begin("Motion Active");
+	ImGui::Checkbox("check", &isMotionActive);
+	ImGui::End();
+
+	if (isMotionActive) {
+
 		shp_animation->Motion();
-	if (shp_animation && GameDevice::input.CheckKey(Keys::Z))
 		shp_animation->IKTest();
+	}
 }
 
 

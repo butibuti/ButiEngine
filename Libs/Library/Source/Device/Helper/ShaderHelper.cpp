@@ -54,7 +54,7 @@ void ButiEngine::ShaderHelper::Compile(const std::string& filePath, const Compil
 		{
 		case CompileType::Dx11:
 
-			InputLayoutCompileDx11(source, filePath);
+			//InputLayoutCompileDx11(source, filePath);
 			break;
 		case CompileType::Dx12:
 			InputLayoutCompileDx12(source, filePath);
@@ -111,39 +111,39 @@ void ButiEngine::ShaderHelper::Compile(const std::string& filePath, const std::s
 	shaderWriter.WriteCharactor((char*)buffer->GetBufferPointer(), buffer->GetBufferSize());
 	shaderWriter.WriteEnd();
 }
-
-void ButiEngine::ShaderHelper::InputLayoutCompileDx11(const std::string& source, const std::string& filePath)
-{
-	std::vector<D3D11_INPUT_ELEMENT_DESC> vec_inputElementDesc;
-	ShaderHelper::CreateDx11InputElementVector(filePath, source, vec_inputElementDesc);
-
-	auto dirPath = StringHelper::GetDirectory(filePath) + "Compiled/";
-
-	auto fileName = StringHelper::GetFileName(filePath, false);
-	BinaryWriter inputLayoutWriter;
-	inputLayoutWriter.WriteStart(dirPath + fileName + ".dx11ied");
-	inputLayoutWriter.WriteVariable<int>(vec_inputElementDesc.size());
-	for (int i = 0; i < vec_inputElementDesc.size(); i++) {
-		auto write = vec_inputElementDesc.at(i);
-		std::string semantic = write.SemanticName;
-		inputLayoutWriter.WriteVariable<int>(semantic.size());
-		inputLayoutWriter.WriteCharactor(semantic);
-		inputLayoutWriter.WriteVariable<DXGI_FORMAT>(write.Format);
-		inputLayoutWriter.WriteVariable<UINT>(write.InputSlot);
-		inputLayoutWriter.WriteVariable<UINT>(write.AlignedByteOffset);
-		inputLayoutWriter.WriteVariable<D3D11_INPUT_CLASSIFICATION>(write.InputSlotClass);
-		inputLayoutWriter.WriteVariable<UINT>(write.InstanceDataStepRate);
-		inputLayoutWriter.WriteVariable<UINT>(write.SemanticIndex);
-	}
-	inputLayoutWriter.WriteEnd();
-
-	for (int i = 0; i < vec_inputElementDesc.size(); i++) {
-
-		delete (vec_inputElementDesc.at(i).SemanticName);
-	}
-	vec_inputElementDesc.clear();
-
-}
+//
+//void ButiEngine::ShaderHelper::InputLayoutCompileDx11(const std::string& source, const std::string& filePath)
+//{
+//	std::vector<D3D11_INPUT_ELEMENT_DESC> vec_inputElementDesc;
+//	ShaderHelper::CreateDx11InputElementVector(filePath, source, vec_inputElementDesc);
+//
+//	auto dirPath = StringHelper::GetDirectory(filePath) + "Compiled/";
+//
+//	auto fileName = StringHelper::GetFileName(filePath, false);
+//	BinaryWriter inputLayoutWriter;
+//	inputLayoutWriter.WriteStart(dirPath + fileName + ".dx11ied");
+//	inputLayoutWriter.WriteVariable<int>(vec_inputElementDesc.size());
+//	for (int i = 0; i < vec_inputElementDesc.size(); i++) {
+//		auto write = vec_inputElementDesc.at(i);
+//		std::string semantic = write.SemanticName;
+//		inputLayoutWriter.WriteVariable<int>(semantic.size());
+//		inputLayoutWriter.WriteCharactor(semantic);
+//		inputLayoutWriter.WriteVariable<DXGI_FORMAT>(write.Format);
+//		inputLayoutWriter.WriteVariable<UINT>(write.InputSlot);
+//		inputLayoutWriter.WriteVariable<UINT>(write.AlignedByteOffset);
+//		inputLayoutWriter.WriteVariable<D3D11_INPUT_CLASSIFICATION>(write.InputSlotClass);
+//		inputLayoutWriter.WriteVariable<UINT>(write.InstanceDataStepRate);
+//		inputLayoutWriter.WriteVariable<UINT>(write.SemanticIndex);
+//	}
+//	inputLayoutWriter.WriteEnd();
+//
+//	for (int i = 0; i < vec_inputElementDesc.size(); i++) {
+//
+//		delete (vec_inputElementDesc.at(i).SemanticName);
+//	}
+//	vec_inputElementDesc.clear();
+//
+//}
 
 void ButiEngine::ShaderHelper::InputLayoutCompileDx12(const std::string& source, const std::string& filePath)
 {
@@ -238,18 +238,18 @@ void ButiEngine::ShaderHelper::ShaderFileInclude(const std::string& filePath, st
 			std::istreambuf_iterator<char>()) + source;
 	}
 }
-
-void ButiEngine::ShaderHelper::CreateDx11InputElementVector(const std::string& filePath, const std::string& source, std::vector<D3D11_INPUT_ELEMENT_DESC>& arg_vec_elementDesc)
-{
-
-	auto inputLayoutDatas = CreateInputLayoutDataVector(filePath, source);
-	for (auto itr = inputLayoutDatas.begin(); itr != inputLayoutDatas.end(); itr++) {
-		char* out = (char*)malloc(itr->SemanticName.size() + 1);
-		strncpy_s(out, itr->SemanticName.size() + 1, itr->SemanticName.c_str(), itr->SemanticName.size());
-		arg_vec_elementDesc.push_back(D3D11_INPUT_ELEMENT_DESC{ out,0,itr->Format,0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 });
-
-	}
-}
+//
+//void ButiEngine::ShaderHelper::CreateDx11InputElementVector(const std::string& filePath, const std::string& source, std::vector<D3D11_INPUT_ELEMENT_DESC>& arg_vec_elementDesc)
+//{
+//
+//	auto inputLayoutDatas = CreateInputLayoutDataVector(filePath, source);
+//	for (auto itr = inputLayoutDatas.begin(); itr != inputLayoutDatas.end(); itr++) {
+//		char* out = (char*)malloc(itr->SemanticName.size() + 1);
+//		strncpy_s(out, itr->SemanticName.size() + 1, itr->SemanticName.c_str(), itr->SemanticName.size());
+//		arg_vec_elementDesc.push_back(D3D11_INPUT_ELEMENT_DESC{ out,0,itr->Format,0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 });
+//
+//	}
+//}
 
 void ButiEngine::ShaderHelper::CreateDx12InputElementVector(const std::string& filePath, const std::string& source, std::vector<D3D12_INPUT_ELEMENT_DESC>& arg_vec_elementDesc)
 {

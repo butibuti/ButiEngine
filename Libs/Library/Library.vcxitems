@@ -75,6 +75,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameParts\GameTime.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameParts\GraphicDevice.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameParts\GraphicDevice_Dx12.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameParts\imguiComtroller.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameParts\Renderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameParts\ResourceContainer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameParts\ResourceFactory.h" />
@@ -113,6 +114,11 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Scene\SceneManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)imGUI\imgui.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)imGUI\imgui_draw.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)imGUI\imgui_impl_dx12.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)imGUI\imgui_impl_win32.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)imGUI\imgui_widgets.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Common\Camera.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Common\Camera_Dx12.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Common\CollisionPrimitive.cpp" />
@@ -153,6 +159,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameParts\GameTime.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameParts\GraphicDevice.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameParts\GraphicDevice_Dx12.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameParts\imguiComtroller.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameParts\Renderer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameParts\ResourceContainer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameParts\ResourceFactory.cpp" />

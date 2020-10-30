@@ -14,5 +14,8 @@ namespace ButiEngine {
 		void PreInitialize()override;
 		void OnSceneEnd()override;
 		std::weak_ptr< CBuffer_Dx12< TestGSVariable>> shp_testGSVariable;
+		CubicBezierCurve curve;
+		float t = 0;
+		int dir = 1;
 	};
 }

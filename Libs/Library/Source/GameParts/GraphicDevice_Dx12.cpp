@@ -227,6 +227,10 @@ void ButiEngine::GraphicDevice_Dx12::Initialize()
 	hr = device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocator[frameIndex].Get(), nullptr, IID_PPV_ARGS(drawCommandList.GetAddressOf()));
 
 	hr = drawCommandList->Close();
+	//gui処理用
+	hr = device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocator[frameIndex].Get(), nullptr, IID_PPV_ARGS(guiCommandList.GetAddressOf()));
+
+	hr = guiCommandList->Close();
 
 	// シザー矩形を設定.
 	scissorRect.left = 0;
@@ -449,10 +453,16 @@ void ButiEngine::GraphicDevice_Dx12::Set()
 	CommandListHelper::Close(drawCommandList);
 	InsertCommandList();
 
-	commandQueue->ExecuteCommandLists((UINT)vec_drawCommandLists.size(), &(vec_drawCommandLists[0]));
+	//commandQueue->ExecuteCommandLists((UINT)vec_drawCommandLists.size(), &(vec_drawCommandLists[0]));
 
-	WaitGPU();
-	vec_drawCommandLists.clear();
+	//WaitGPU();
+	//vec_drawCommandLists.clear();
+}
+
+void ButiEngine::GraphicDevice_Dx12::SetGUICommand()
+{
+	CommandListHelper::Close(guiCommandList);
+	InsertCommandList();
 }
 
 void ButiEngine::GraphicDevice_Dx12::ClearWindow()
@@ -546,6 +556,16 @@ void ButiEngine::GraphicDevice_Dx12::DrawStart()
 	ID3D12DescriptorHeap* ppHeaps[] = { shp_descripterManager->GetDescriptorHeap().Get(), shp_descripterManager->GetSamplerHeap().Get() };
 	auto heapCount = _countof(ppHeaps);
 	currentCommandList->SetDescriptorHeaps(heapCount, ppHeaps);
+}
+
+void ButiEngine::GraphicDevice_Dx12::GUIDrawStart()
+{
+	CommandListHelper::Reset(pipelineState, guiCommandList, GetThis<GraphicDevice_Dx12>());
+	SetCommandList(guiCommandList.Get());
+	ID3D12DescriptorHeap* ppHeaps[] = { shp_descripterManager->GetDescriptorHeap().Get(), shp_descripterManager->GetSamplerHeap().Get() };
+	auto heapCount = _countof(ppHeaps);
+	currentCommandList->SetDescriptorHeaps(heapCount, ppHeaps);
+
 }
 
 

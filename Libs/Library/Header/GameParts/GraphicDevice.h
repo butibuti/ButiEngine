@@ -82,7 +82,6 @@ namespace ButiEngine {
 
 		virtual void Update() = 0;
 
-		ID3D11DepthStencilView* hpDepthStencilView;
 
 		virtual void Release() = 0;
 

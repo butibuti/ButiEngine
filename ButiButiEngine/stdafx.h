@@ -56,13 +56,11 @@
 #include <type_traits>
 #include <typeindex>
 
-#include <d3d11_2.h>
 #include<dxgi1_6.h>
 #include <d3d12.h>
 #include <d3dx12.h>
 #include <D3dx12.h>
 #include <d2d1_2.h>
-#include <d2d1effects_1.h>
 #include <dwrite_2.h>
 #include <wincodec.h>
 
@@ -76,7 +74,6 @@
 #include <xinput.h>
 
 
-#pragma comment( lib, "d3d11.lib" )
 #pragma comment( lib, "d3d12.lib" )
 #pragma comment( lib, "DXGI.lib" )
 #pragma comment( lib, "d2d1.lib" )
@@ -99,6 +96,12 @@
 #pragma comment(lib,"ZDll.lib")
 
 #pragma warning(disable:4192)
+
+//imgui
+
+#include "imgui.h"
+#include "./backends/imgui_impl_win32.h"
+#include "./backends/imgui_impl_dx12.h"
 
 using namespace DirectX;
 #include"Header/Common.h"

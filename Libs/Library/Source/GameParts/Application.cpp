@@ -22,6 +22,9 @@ void ButiEngine::Application::CreateInstances(const std::string windowName, cons
 	}
 
 	shp_graphicDevice = ObjectFactory::Create<GraphicDevice_Dx12>(GetThis<Application>());
+
+	unq_imguiController = std::make_unique<ButiimguiController>(unq_window, shp_graphicDevice->GetThis<GraphicDevice_Dx12>());
+
 	
 	if (!shp_resourceContainer) {
 		shp_resourceContainer = ObjectFactory::Create<ResourceContainer>(shp_graphicDevice);
@@ -190,5 +193,6 @@ void ButiEngine::Application::Exit()
 	shp_sceneManager->Release();
 	unq_window->Release();
 	shp_resourceContainer->Release();
+	unq_imguiController->Release();
 	shp_graphicDevice->Release();
 }

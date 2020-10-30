@@ -15,9 +15,14 @@ namespace ButiEngine {
 		return shp_resourceContainer;
 	}
 	inline bool Application::Update() {
+		unq_imguiController->Start();
 		shp_sceneManager->Update();
 		shp_sceneManager->Draw();
 		return unq_window->Update();
+	}
+	inline std::unique_ptr<ButiimguiController>& ButiEngine::Application::GetGUIController()
+	{
+		return unq_imguiController;
 	}
 	inline int Application::Run()
 	{

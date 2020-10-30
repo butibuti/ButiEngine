@@ -73,6 +73,9 @@
     <Filter Include="source\Resources\DrawData">
       <UniqueIdentifier>{f106ff55-6ee9-4de9-af04-35d4e39c044f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="imgui">
+      <UniqueIdentifier>{a14c97c3-4154-4899-8c58-72410311a18e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Common\ButiMath.h">
@@ -363,6 +366,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\Easing.h">
       <Filter>header\Device</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameParts\imguiComtroller.h">
+      <Filter>header\GameParts</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Common\Camera.cpp">
@@ -571,6 +577,24 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Resources\Resource_Motion.cpp">
       <Filter>source\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)imGUI\imgui.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)imGUI\imgui_draw.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)imGUI\imgui_impl_dx12.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)imGUI\imgui_impl_win32.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)imGUI\imgui_widgets.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameParts\imguiComtroller.cpp">
+      <Filter>source\GameParts</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

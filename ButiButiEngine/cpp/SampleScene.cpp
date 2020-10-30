@@ -13,7 +13,8 @@
 #include"Header/Resources/ModelAnimation.h"
 
 ButiEngine::SampleScene::SampleScene(std::weak_ptr<ISceneManager> arg_wkp_sceneManager, SceneInformation sceneInformation) 
-	:Scene(arg_wkp_sceneManager, sceneInformation)
+	:Scene(arg_wkp_sceneManager, sceneInformation),
+	curve(CubicBezierCurve(Vector3(-5, 1, 0), Vector3(-3,10, 0), Vector3(4,2, 0), Vector3(5, 1, 0)))
 {
 
 }
@@ -25,21 +26,22 @@ ButiEngine::SampleScene::~SampleScene()
 
 void ButiEngine::SampleScene::OnUpdate()
 {
-	if (GameDevice::input.CheckKey(Keys::Y)) {
-		shp_testGSVariable.lock()->Get().pushPower.w += 0.01f;
-	}
-	else  if (GameDevice::input.CheckKey(Keys::U)) {
-		shp_testGSVariable.lock()->Get().pushPower.w -= 0.01f;
-		if (shp_testGSVariable.lock()->Get().pushPower.w < 0) {
-			shp_testGSVariable.lock()->Get().pushPower.w = 0;
-		}
-	}
+
+	ImGui::Begin("Bara Bara Slider");
+	ImGui::SliderFloat("pushPower", &t, 0, 1.0f);
+	ImGui::End();
+	
+	
+	shp_testGSVariable.lock()->Get().pushPower.w =t*2;
+	
 	if (GameDevice::input.CheckKey(Keys::H)) {
 		shp_testGSVariable.lock()->Get().bottom += 0.02f;
 	}
 	else  if (GameDevice::input.CheckKey(Keys::J)) {
 		shp_testGSVariable.lock()->Get().bottom -= 0.02f;
 	}
+
+
 }
 
 void ButiEngine::SampleScene::OnInitialize()
@@ -89,19 +91,9 @@ void ButiEngine::SampleScene::OnInitialize()
 
 	auto animator= hikari.lock()->AddGameComponent<SimpleBoneAnimatorComponent>(hikariModelComponent->GetModelData());
 
-	animator->AddAnimation(GetResourceContainer()->GetMotionTag("bakutyuu.bmd", "Motion/"));
+	animator->AddAnimation(GetResourceContainer()->GetMotionTag("slash.bmd", "Motion/"));
 	animator->SetLoop(true);
 
-	auto checker = shp_gameObjectManager->AddObject(ObjectFactory::Create<Transform>(), "boneView");
-
-
-	auto testTransform = ObjectFactory::Create<Transform>(Vector3(),  Vector3(),Vector3(2, 2, 2));
-	auto hidarihiji = hikariModelComponent->GetModelData()->SerchBoneByName(L"¶‚Ð‚¶")->transform;
-	hidarihiji->RollLocalRotationX_Degrees(45);
-	testTransform->SetBaseTransform(	hidarihiji,true);
-	checker.lock()->AddGameComponent<MeshDrawComponent>(
-		GetResourceContainer()->GetMeshTag("TestCube"), GetResourceContainer()->GetShaderTag("DefaultMesh"), GetResourceContainer()->GetMaterialTag("blueMaterial.bma", "Material/"), nullptr, 0,testTransform
-		); 
 	
 	auto floor = shp_gameObjectManager->AddObject(ObjectFactory::Create<Transform>(Vector3(0, -0.1, 0), Vector3(90, 0, 0), Vector3(50.0f, 50.0f, 50.0f)), "floor");
 
@@ -110,10 +102,9 @@ void ButiEngine::SampleScene::OnInitialize()
 		);
 
 
-	auto gsSphere = shp_gameObjectManager->AddObject(ObjectFactory::Create<Transform>( Vector3(5,1,0),Vector3(0,0,0), Vector3(1,1,1)), "test");
+	auto gsSphere = shp_gameObjectManager->AddObject(ObjectFactory::Create<Transform>( Vector3(5,2,0),Vector3(0,0,0), Vector3(1,1,1)), "test");
 
 	auto sphereInfo = ObjectFactory::Create<DrawInformation>();
-	sphereInfo->drawSettings.billboardMode = BillBoardMode::x;
 	gsSphere.lock()->AddGameComponent<MeshDrawComponent>(
 		GetResourceContainer()->GetMeshTag("Floor"), GetResourceContainer()->GetShaderTag("DefaultMesh"), GetResourceContainer()->GetMaterialTag("blueMaterial.bma", "Material/"), sphereInfo, 0);
 
@@ -121,7 +112,6 @@ void ButiEngine::SampleScene::OnInitialize()
 		ObjectFactory::Create<Transform>(Vector3(0.0f, 1.0f, 0.0f)), "player");
 
 	player.lock()->AddBehavior<FPSViewBehavior>();
-
 
 
 }

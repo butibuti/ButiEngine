@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include"Header/Device/DescriptorHeapManager.h"
 #include"Header/Device/GraphicResourceUtil_Dx12.h"
-#include "..\..\Header\Device\DescriptorHeapManager.h"
 
 ButiEngine::DescriptorHeapManager::DescriptorHeapManager( std::weak_ptr<GraphicDevice_Dx12> arg_wkp_graphicDevice,const UINT arg_max , const UINT arg_addUint )
 {
@@ -156,20 +155,42 @@ void ButiEngine::DescriptorHeapManager::ConstantBufferUpdate(void* p_value, cons
 
 ButiEngine::HandleInformation ButiEngine::DescriptorHeapManager::GetNowHandle()
 {
+	UINT sizeAligned = 256;
+	UINT numRequired = sizeAligned / 0x100;
+
+
 	UINT top;
+	bool isUseSpace = false;
 	if (vec_space.size()) {
-		auto space = vec_space.begin();
-		top = space->index;
-		space-> index++;
-		space->size--;
-		if (space->size == 0) {
-			vec_space.erase(space);
+		auto itr = vec_space.begin();
+		for (; itr != vec_space.end(); itr++) {
+			if (itr->size >= numRequired) {
+				isUseSpace = true;
+
+				top = itr->index;
+				itr->index + numRequired;
+				itr->size -= numRequired;
+				if (itr->size == 0) {
+					vec_space.erase(itr);
+				}
+
+				break;
+
+			}
 		}
 	}
-	else {
+
+	if ((!isUseSpace) && index + numRequired > maxCbv) {
+		AddHeapRange();
 		top = index;
-		index++;
+		index += numRequired;
+		//throw ButiException(L"", L"", L"");
 	}
+	else if ((!isUseSpace)) {
+		top = index;
+		index += numRequired;
+	}
+
 
 	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle(
 		cbvSrvUavDescriptorHeap->GetGPUDescriptorHandleForHeapStart(),
@@ -182,8 +203,6 @@ ButiEngine::HandleInformation ButiEngine::DescriptorHeapManager::GetNowHandle()
 		cbvSrvDescriptorHandleIncrementSize
 	);
 	HandleInformation out{ gpuHandle,cpuHandle,top };
-
-	index++;
 	return out;
 }
 

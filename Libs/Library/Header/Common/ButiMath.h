@@ -1300,7 +1300,7 @@ namespace ButiEngine {
 			return endPos;
 		}
 		inline Vector3 GetPoint(float t) const override {
-			return(endPos - point) * t;
+			return point+ (endPos - point) * t;
 		}
 		Vector3 endPos;
 	};

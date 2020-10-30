@@ -65,6 +65,7 @@ namespace ButiEngine {
 		void Update() override;
 
 		void Set();
+		void SetGUICommand();
 
 		void ClearWindow() override;
 
@@ -79,6 +80,7 @@ namespace ButiEngine {
 		void ResourceUpload()override;
 
 		void DrawStart()override;
+		void GUIDrawStart();
 
 		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> GetRtvHeap() const;
 
@@ -119,6 +121,8 @@ namespace ButiEngine {
 		std::vector<Resource*> vec_uploadResources;
 
 		Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> drawCommandList;
+
+		Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> guiCommandList;
 
 		std::shared_ptr<DescriptorHeapManager> shp_descripterManager;
 

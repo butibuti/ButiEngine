@@ -92,10 +92,27 @@ ButiEngine::Vector2 ButiEngine::Window::GetWindowPosition()
 void ButiEngine::Window::Release()
 {
 }
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 LRESULT ButiEngine::Window::ProceedMessage(HWND window, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	if (message == WM_DESTROY)PostQuitMessage(0);
+
+	if (ImGui_ImplWin32_WndProcHandler(window, message, wParam, lParam))
+		return true;
+
+	switch (message)
+	{
+	case WM_SIZE:
+		return 0;
+	case WM_SYSCOMMAND:
+		if ((wParam & 0xfff0) == SC_KEYMENU) // Disable ALT application menu
+			return 0;
+		break;
+	case WM_DESTROY:
+		::PostQuitMessage(0);
+		return 0;
+	}
 
 	return DefWindowProcW(window, message, wParam, lParam);
 }

@@ -35,6 +35,7 @@
 #include"Resources/IResources.h"
 #include"GameParts/GamePartsInterface.h"
 #include"Common/Camera.h"
+#include "GameParts/imguiComtroller.h"
 #include"GameParts/ApplicationBeffor.h"
 
 #include"GameObjects/GameObject.h"

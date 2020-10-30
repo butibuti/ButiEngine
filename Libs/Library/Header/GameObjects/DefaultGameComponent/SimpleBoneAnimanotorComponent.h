@@ -19,6 +19,7 @@ namespace ButiEngine {
 	private:
 		std::shared_ptr<ModelAnimation> shp_animation;
 		std::shared_ptr< ModelDrawData > shp_modelData;
+		bool isMotionActive=true;
 	};
 
 }

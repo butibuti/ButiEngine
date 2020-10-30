@@ -36,9 +36,19 @@ void ButiEngine::Scene::Draw()
 		(*cameraItr)->Start();
 
 		(*cameraItr)->Draw();
+		shp_sceneManager->GetApplication().lock()->GetGUIController()->Draw();
 
 		(*cameraItr)->Stop();
 	}
+
+
+	mainCam->Start();
+
+	mainCam->Draw();
+	shp_sceneManager->GetApplication().lock()->GetGUIController()->Draw();
+
+	mainCam->Stop();
+
 	shp_renderer->RenderingEnd();
 }
 
@@ -64,18 +74,18 @@ void ButiEngine::Scene::Initialize()
 	
 	shp_soundManager = ObjectFactory::Create<SoundManager>(GetThis<IScene>());
 	
-	auto windowSize = GetWindow()->GetSize();
+	auto windowSize = GetWindow()->GetSize();/*
 	shp_renderer->AddLayer();
 	shp_renderer->AddLayer();
 	auto prop2 = CameraProjProperty(windowSize.x, windowSize.y, 0, 0,true,1);
-	AddCamera(prop2, "backGround", true);
+	AddCamera(prop2, "backGround", true);*/
 
 	auto prop = CameraProjProperty(windowSize.x, windowSize.y, 0, 0);
 	prop.farClip = 100.0f;
 	AddCamera(prop, "main", true);
 
-	auto prop3 = CameraProjProperty(windowSize.x, windowSize.y, 0, 0, true, 2);
-	AddCamera(prop3, "backGround", true);
+	//auto prop3 = CameraProjProperty(windowSize.x, windowSize.y, 0, 0, true, 2);
+	//AddCamera(prop3, "backGround", true);
 	OnInitialize();
 }
 
@@ -95,6 +105,11 @@ std::unique_ptr<ButiEngine::Window>& ButiEngine::Scene::GetWindow()
 
 std::weak_ptr<ButiEngine::ICamera> ButiEngine::Scene::GetCamera(const std::string& arg_camName)
 {
+
+	if (arg_camName == "main") {
+		return mainCam;
+	}
+
 	for (auto itr = vec_cameras.begin(); itr != vec_cameras.end(); itr++) {
 		if ((*itr)->GetName() == arg_camName) {
 			return (*itr);
@@ -111,6 +126,14 @@ std::weak_ptr<ButiEngine::ICamera> ButiEngine::Scene::GetCamera(const UINT arg_c
 
 std::weak_ptr<ButiEngine::ICamera> ButiEngine::Scene::AddCamera(const CameraProjProperty& arg_prop, const std::string arg_cameraName, const bool arg_initActive)
 {
+
+	if (arg_cameraName == "main") {
+
+		auto out = CameraCreater::CreateCamera(arg_prop, arg_cameraName, arg_initActive, shp_renderer, shp_sceneManager->GetApplication().lock()->GetGraphicDevice());
+		mainCam = out;
+		return out;
+	}
+
 	auto out = CameraCreater::CreateCamera(arg_prop, arg_cameraName, arg_initActive,shp_renderer,shp_sceneManager->GetApplication().lock()->GetGraphicDevice());
 	vec_cameras.push_back(out);
 	return out;

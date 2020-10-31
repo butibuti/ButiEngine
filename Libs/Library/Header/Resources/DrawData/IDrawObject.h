@@ -1,6 +1,10 @@
 
 #include"stdafx.h"
 #include"../Bone.h"
+
+#ifndef IDRAWOBJ_H
+#define IDRAWOBJ_H
+
 namespace ButiEngine {
 
 
@@ -79,3 +83,5 @@ namespace ButiEngine {
 	};
 
 }
+
+#endif // !IDRAWOBJ_H

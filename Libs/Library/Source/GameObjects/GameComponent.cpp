@@ -4,6 +4,7 @@
 
 void ButiEngine::GameComponent::Update()
 {
+	if(isActive)
 	OnUpdate();
 }
 

@@ -45,6 +45,26 @@ void ButiEngine::GraphicDevice::SetRawViewMatrix(const Matrix4x4& arg_viewMatrix
 	rawViewMatrix = arg_viewMatrix;
 }
 
+void ButiEngine::GraphicDevice::SetViewMatrix_billBoard(const Matrix4x4& arg_viewMatrix)
+{
+	viewMatrix_billBoard = arg_viewMatrix;
+}
+
+void ButiEngine::GraphicDevice::SetViewMatrix_billBoardX(const Matrix4x4& arg_viewMatrix)
+{
+	viewMatrix_billBoardX = arg_viewMatrix;
+}
+
+void ButiEngine::GraphicDevice::SetViewMatrix_billBoardY(const Matrix4x4& arg_viewMatrix)
+{
+	viewMatrix_billBoardY = arg_viewMatrix;
+}
+
+void ButiEngine::GraphicDevice::SetViewMatrix_billBoardZ(const Matrix4x4& arg_viewMatrix)
+{
+	viewMatrix_billBoardZ = arg_viewMatrix;
+}
+
 void ButiEngine::GraphicDevice::SetClearColor(const Vector4& arg_clearColor)
 {
 	color = arg_clearColor;

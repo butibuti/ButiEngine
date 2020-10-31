@@ -13,13 +13,13 @@ namespace ButiEngine {
 		void AddAnimation(std::shared_ptr<ModelAnimation> arg_shp_animation); 
 		void AddAnimation(MotionTag arg_motionTag);
 		void SetLoop(const bool arg_isLoop);
+		void OnShowUI()override;
 		std::string GetGameComponentName()override {
 			return "SimpleBoneAnimatorComponent";
 		}
 	private:
 		std::shared_ptr<ModelAnimation> shp_animation;
 		std::shared_ptr< ModelDrawData > shp_modelData;
-		bool isMotionActive=true;
 	};
 
 }

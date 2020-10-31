@@ -28,6 +28,8 @@ namespace ButiEngine {
 		bool GetMouseButton(const MouseButtons button);
 		bool GetMouseTrigger(const MouseButtons button);
 		bool GetMouseReleaseTrigger(const MouseButtons button);
+		bool GetMouseWheel();
+		float GetMouseWheelMove();
 
 
 		Vector2 GetLeftStick();

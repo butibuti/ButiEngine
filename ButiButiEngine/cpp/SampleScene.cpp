@@ -13,8 +13,7 @@
 #include"Header/Resources/ModelAnimation.h"
 
 ButiEngine::SampleScene::SampleScene(std::weak_ptr<ISceneManager> arg_wkp_sceneManager, SceneInformation sceneInformation) 
-	:Scene(arg_wkp_sceneManager, sceneInformation),
-	curve(CubicBezierCurve(Vector3(-5, 1, 0), Vector3(-3,10, 0), Vector3(4,2, 0), Vector3(5, 1, 0)))
+	:Scene(arg_wkp_sceneManager, sceneInformation)
 {
 
 }
@@ -105,6 +104,7 @@ void ButiEngine::SampleScene::OnInitialize()
 	auto gsSphere = shp_gameObjectManager->AddObject(ObjectFactory::Create<Transform>( Vector3(5,2,0),Vector3(0,0,0), Vector3(1,1,1)), "test");
 
 	auto sphereInfo = ObjectFactory::Create<DrawInformation>();
+	sphereInfo->drawSettings.billboardMode = BillBoardMode::y;
 	gsSphere.lock()->AddGameComponent<MeshDrawComponent>(
 		GetResourceContainer()->GetMeshTag("Floor"), GetResourceContainer()->GetShaderTag("DefaultMesh"), GetResourceContainer()->GetMaterialTag("blueMaterial.bma", "Material/"), sphereInfo, 0);
 

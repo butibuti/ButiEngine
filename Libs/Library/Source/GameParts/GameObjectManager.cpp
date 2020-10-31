@@ -11,12 +11,6 @@ ButiEngine::GameObjectManager::GameObjectManager(std::weak_ptr<IScene> arg_wkp_s
 
 void ButiEngine::GameObjectManager::Update()
 {
-	auto  endNewItr= vec_newGameObjects.end();
-	for (auto itr = vec_newGameObjects.begin(); itr !=endNewItr; itr++) {
-		vec_gameObjects.push_back(*itr);
-		(*itr)->Start();
-	}
-	vec_newGameObjects.clear();
 	auto itr = vec_gameObjects.begin();
 	auto endItr = vec_gameObjects.end();
 	while (itr !=endItr) {
@@ -33,12 +27,46 @@ void ButiEngine::GameObjectManager::Update()
 
 }
 
+void ButiEngine::GameObjectManager::RegistNewGameObject()
+{
+	auto  endNewItr = vec_newGameObjects.end();
+	for (auto itr = vec_newGameObjects.begin(); itr != endNewItr; itr++) {
+		vec_gameObjects.push_back(*itr);
+		(*itr)->Start();
+	}
+	vec_newGameObjects.clear();
+}
+
 void ButiEngine::GameObjectManager::Initialize()
 {
 }
 
 void ButiEngine::GameObjectManager::PreInitialize()
 {
+}
+
+void ButiEngine::GameObjectManager::ShowUI()
+{
+	ImGui::Begin("hieralchy");
+
+	auto endItr = vec_gameObjects.end();
+
+
+
+	for (auto itr = vec_gameObjects.begin(); itr != vec_gameObjects.end(); itr++) {
+		if (ImGui::Button((*itr)->GetObjectName().c_str())) {
+			selectedGameObject = (*itr);
+		}
+	}
+
+	ImGui::End();
+	ImGui::Begin("SelectedObj");
+	if (selectedGameObject.lock()) {
+
+		selectedGameObject.lock()->ShowUI();
+	}
+
+	ImGui::End();
 }
 
 std::weak_ptr<ButiEngine::GameObject> ButiEngine::GameObjectManager::AddObject(std::shared_ptr<GameObject> arg_gameObject)

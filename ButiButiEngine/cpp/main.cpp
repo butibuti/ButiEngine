@@ -17,7 +17,7 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 #endif
 	auto app = ObjectFactory::Create<Application>();
 
-	app->CreateInstances("ButiSampleApp", WindowPopType::normal, 840, 480);
+	app->CreateInstances("ButiSampleApp", WindowPopType::max, 1260, 720);
 
 	GameDevice::input.Initialize(app);
 
@@ -28,7 +28,7 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//app->GetSceneManager()->SetScene_Init("playScene", ObjectFactory::Create<ShootingScene>(app->GetSceneManager(),SceneInformation()));
 
 
-	app->GetSceneManager()->SetScene_Init("sampleScene", ObjectFactory::Create<SampleScene>(app->GetSceneManager(),SceneInformation()));
+	app->GetSceneManager()->SetScene_Init("sampleScene", ObjectFactory::Create<EditScene>(app->GetSceneManager(),SceneInformation()));
 
 	int returnCode = app->Run();
 

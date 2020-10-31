@@ -369,6 +369,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameParts\imguiComtroller.h">
       <Filter>header\GameParts</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\Scene\EditScene.h">
+      <Filter>header\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Common\Camera.cpp">
@@ -595,6 +598,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameParts\imguiComtroller.cpp">
       <Filter>source\GameParts</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Source\Scene\EditScene.cpp">
+      <Filter>source\Scene</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

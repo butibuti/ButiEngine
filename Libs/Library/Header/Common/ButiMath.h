@@ -74,7 +74,7 @@ namespace ButiEngine {
 			*this = (Matrix4x4)XMMatrixTranspose(*this);
 			return *this;
 		}
-		inline Matrix4x4 GetTranspose() const{
+		inline Matrix4x4 GetTranspose() const {
 			return  (Matrix4x4)XMMatrixTranspose(*this);
 		}
 		inline Matrix4x4& Inverse() {
@@ -110,17 +110,17 @@ namespace ButiEngine {
 			this->_31 = 0.0f;
 			return *this;
 		}
-		inline Matrix4x4& InValidXZ(){
+		inline Matrix4x4& InValidXZ() {
 			this->_12 = 0.0f;
 			this->_22 = 1.0f;
 			this->_32 = 0.0f;
 			return *this;
 		}
 		inline Matrix4x4& InValidXY() {
-			
-			 this->_13 = 0.0f;
-			 this->_23 = 0.0f;
-			 this->_33 = 1.0f;
+
+			this->_13 = 0.0f;
+			this->_23 = 0.0f;
+			this->_33 = 1.0f;
 			return *this;
 		}
 		inline Quat ToQuat()const;
@@ -130,10 +130,10 @@ namespace ButiEngine {
 		inline Vector3 GetEuler(const bool arg_reverse = false)const;
 		inline Vector3 GetEulerOneValue()const;
 
-		inline Vector3 GetEulerDegrees(const bool arg_reverse=false)const;
+		inline Vector3 GetEulerDegrees(const bool arg_reverse = false)const;
 
 		inline Matrix4x4& CreateFromEuler(const float arg_x, const float arg_y, const float arg_z) {
-			*this= DirectX::XMMatrixRotationX(
+			*this = DirectX::XMMatrixRotationX(
 				arg_x
 			) *
 				DirectX::XMMatrixRotationY(
@@ -144,11 +144,11 @@ namespace ButiEngine {
 				);
 			return *this;
 		}
-		inline bool Same(const Matrix4x4& other,const float epsilon=0.001f) const{
+		inline bool Same(const Matrix4x4& other, const float epsilon = 0.001f) const {
 
 			for (int i = 0; i < 4; i++) {
 				for (int j = 0; j < 4; j++) {
-					if (abs(this->m[i][j] - other.m[i][j])>epsilon) {
+					if (abs(this->m[i][j] - other.m[i][j]) > epsilon) {
 						return false;
 					}
 				}
@@ -255,7 +255,6 @@ namespace ButiEngine {
 			return Vector2();
 		}
 
-
 		inline Vector2& Floor(int len)
 		{
 			// TODO: return ステートメントをここに挿入します
@@ -344,17 +343,12 @@ namespace ButiEngine {
 		inline ~Vector3()
 		{
 		}
-		inline  float* GetData() {
-			float output[3] = { x,y,z };
-			return output;
-		}
 
-		inline  void GetData(float* out)
+		inline  void GetData(float out[3])
 		{
-			auto data = GetData();
-			for (int i = 0; i < 3; i++) {
-				out[i] = data[i];
-			}
+			out[0] = x;
+			out[1] = y;
+			out[2] = z;
 		}
 		inline Vector3& operator=(const DirectX::XMVECTOR other)
 		{
@@ -474,6 +468,7 @@ namespace ButiEngine {
 			return *((&x) + index);
 		}
 
+
 		inline Vector3& Floor(int len)
 		{
 			// TODO: return ステートメントをここに挿入します
@@ -524,7 +519,7 @@ namespace ButiEngine {
 		}
 		inline  Vector3 GetDegrees() {
 			Vector3 output = Vector3(XMConvertToDegrees(x), XMConvertToDegrees(y), XMConvertToDegrees(z));
-			
+
 
 			return output;
 		}
@@ -735,11 +730,11 @@ namespace ButiEngine {
 		}
 		inline Vector4& RemoveNan() {
 			if (XMVector4IsNaN(*this)) {
-				
+
 				if (isnan((*this).x)) {
 					(*this).x = 0;
 				}
-				if (isnan( (*this).y )) {
+				if (isnan((*this).y)) {
 					(*this).y = 0;
 				}
 				if (isnan((*this).z)) {
@@ -1056,7 +1051,7 @@ namespace ButiEngine {
 			return (Quat)XMVectorMultiply(*this, temp);
 		}
 
-		inline const Quat& CreateFromAxisRotate(const Vector3& arg_axis,const  float angle) {
+		inline const Quat& CreateFromAxisRotate(const Vector3& arg_axis, const  float angle) {
 			*this = XMQuaternionRotationAxis(arg_axis, angle);
 			return *this;
 		}
@@ -1066,7 +1061,7 @@ namespace ButiEngine {
 		}
 		inline Quat& CreateFromEular(const Vector3& arg_eular) {
 
-			Matrix4x4 rotationMatrix= DirectX::XMMatrixRotationX(
+			Matrix4x4 rotationMatrix = DirectX::XMMatrixRotationX(
 				arg_eular.x
 			) *
 				DirectX::XMMatrixRotationY(
@@ -1300,7 +1295,7 @@ namespace ButiEngine {
 			return endPos;
 		}
 		inline Vector3 GetPoint(float t) const override {
-			return point+ (endPos - point) * t;
+			return point + (endPos - point) * t;
 		}
 		Vector3 endPos;
 	};
@@ -1437,9 +1432,9 @@ namespace ButiEngine {
 			return  GetPoint(t2).y;
 		}
 
-		inline float GetYFromHalf(const float x,const char testCount=12) {
+		inline float GetYFromHalf(const float x, const char testCount = 12) {
 
-			Vector2 a = curveABC.lineBC.endPos; 
+			Vector2 a = curveABC.lineBC.endPos;
 			Vector2 b = curveABC.lineAB.endPos;
 			if (a.x == a.y && b.x == b.y) {
 				return x;
@@ -1617,29 +1612,29 @@ namespace ButiEngine {
 			float yTheta = asin(-this->m[0][2]);///-90~90
 
 
-				auto yThetaCos = cos(yTheta);
+			auto yThetaCos = cos(yTheta);
 
-				float xTheta = atan2(this->_23 / yThetaCos, this->m[2][2] / yThetaCos);///-90~90
-
-
-				float zTheta = atan2(this->m[0][1] / yThetaCos, this->m[0][0] / yThetaCos);///-90~90
+			float xTheta = atan2(this->_23 / yThetaCos, this->m[2][2] / yThetaCos);///-90~90
 
 
-				Matrix4x4 test;
-				test.CreateFromEuler(xTheta, yTheta, zTheta);
+			float zTheta = atan2(this->m[0][1] / yThetaCos, this->m[0][0] / yThetaCos);///-90~90
 
-				if(this->Same(test))
+
+			Matrix4x4 test;
+			test.CreateFromEuler(xTheta, yTheta, zTheta);
+
+			if (this->Same(test))
 				return  Vector3(xTheta, yTheta, zTheta);
 
 
-			
-				float yTheta2 = XM_PI - yTheta;        ///90~180,-180~-90
 
-				yThetaCos = cos(yTheta2);
-				float xTheta2 = atan2(this->_23 / yThetaCos, this->m[2][2] / yThetaCos);///90~180,-180~-90));
-				float zTheta2 = atan2(this->m[0][1] / yThetaCos, this->m[0][0] / yThetaCos);///90~180,-180~-90
-				return Vector3(xTheta2, yTheta2, zTheta2);
-			
+			float yTheta2 = XM_PI - yTheta;        ///90~180,-180~-90
+
+			yThetaCos = cos(yTheta2);
+			float xTheta2 = atan2(this->_23 / yThetaCos, this->m[2][2] / yThetaCos);///90~180,-180~-90));
+			float zTheta2 = atan2(this->m[0][1] / yThetaCos, this->m[0][0] / yThetaCos);///90~180,-180~-90
+			return Vector3(xTheta2, yTheta2, zTheta2);
+
 		}
 		else {
 			float xTheta = 0;

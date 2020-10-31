@@ -8,8 +8,10 @@ namespace ButiEngine {
 	public:
 		GameObjectManager(std::weak_ptr<IScene> arg_wkp_scene);
 		void Update();
+		void RegistNewGameObject();
 		void Initialize()override;
 		void PreInitialize()override;
+		void ShowUI();
 		std::weak_ptr<GameObject> AddObject(std::shared_ptr<GameObject> arg_gameObject);
 		std::weak_ptr<GameObject> AddObject(std::shared_ptr<Transform> arg_transform,  std::string arg_objectName = "GameObject");
 		
@@ -26,8 +28,9 @@ namespace ButiEngine {
 		void UnRegistGameObject(std::shared_ptr<GameObject> arg_gameObject);
 		std::vector<std::shared_ptr< GameObject>> vec_gameObjects;
 		std::vector<std::shared_ptr< GameObject>> vec_newGameObjects;
-		std::map<std::string, std::weak_ptr< GameObject>> map_gameObjects;
+		std::unordered_map<std::string, std::weak_ptr< GameObject>> map_gameObjects;
 		std::weak_ptr<IScene> wkp_scene;
+		std::weak_ptr<GameObject> selectedGameObject;
 	};
 
 }

@@ -49,4 +49,5 @@
 #include"Scene/IScene.h"
 #include"Scene/SceneManager.h"
 #include"Scene/Scene.h"
+#include"Scene/EditScene.h"
 #include"GameParts/Application.h"

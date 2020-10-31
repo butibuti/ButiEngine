@@ -17,6 +17,12 @@ namespace ButiEngine {
 		void SetIsActive(bool arg_isActive) {
 			isActive = arg_isActive;
 		}
+		void ShowUI() {
+
+			ImGui::Checkbox("check", &isActive);
+			OnShowUI();
+		}
+		virtual void OnShowUI() {}
 		virtual void OnSet();
 		virtual void OnRemove();
 		virtual std::string GetGameComponentName() = 0;

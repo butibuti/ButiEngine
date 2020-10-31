@@ -277,55 +277,24 @@ void ButiEngine::MatrixUpdater_default::WorldMatrixUpdate()
 
 void ButiEngine::MatrixUpdater_billBoard::WorldMatrixUpdate()
 {
-	auto billboard = wkp_graphicDevice.lock()->GetCameraViewMatrix();
-	billboard._14 = 0.0f;
-	billboard._24 = 0.0f;
-	billboard._34 = 0.0f;
-
-	(XMMATRIX)billboard.Inverse();
-	/*billboard._12 = 0.0f;
-	billboard._22 = 1.0f;
-	billboard._32 = 0.0f;*/
-
-
-	cbuffer->Get().World = (XMMATRIX)transform->ToMatrix() * billboard;
+	cbuffer->Get().World = (XMMATRIX)transform->ToMatrix() * wkp_graphicDevice.lock()->GetViewMatrixBillBoard();
 }
 
 void ButiEngine::MatrixUpdater_billBoardX::WorldMatrixUpdate()
 {
-	auto billboard = wkp_graphicDevice.lock()->GetCameraViewMatrix();
-	billboard._14 = 0.0f;
-	billboard._24 = 0.0f;
-	billboard._34 = 0.0f;
+	
 
-	(XMMATRIX)billboard.Inverse();
-
-	cbuffer->Get().World = (XMMATRIX)transform->ToMatrix() * billboard.GetInValidYZ();
+	cbuffer->Get().World = (XMMATRIX)transform->ToMatrix() * wkp_graphicDevice.lock()->GetViewMatrixBillBoardX();
 }
 
 void ButiEngine::MatrixUpdater_billBoardY::WorldMatrixUpdate()
 {
-	auto billboard = wkp_graphicDevice.lock()->GetCameraViewMatrix();
-	billboard._14 = 0.0f;
-	billboard._24 = 0.0f;
-	billboard._34 = 0.0f;
-
-	(XMMATRIX)billboard.Inverse();
 
 
-	cbuffer->Get().World = (XMMATRIX)transform->ToMatrix() * billboard.GetInValidXZ();
+	cbuffer->Get().World = (XMMATRIX)transform->ToMatrix() * wkp_graphicDevice.lock()->GetViewMatrixBillBoardY();
 }
 
 void ButiEngine::MatrixUpdater_billBoardZ::WorldMatrixUpdate()
 {
-	auto billboard = wkp_graphicDevice.lock()->GetCameraViewMatrix();
-	billboard._14 = 0.0f;
-	billboard._24 = 0.0f;
-	billboard._34 = 0.0f;
-
-	(XMMATRIX)billboard.Inverse();
-	
-
-
-	cbuffer->Get().World = (XMMATRIX)transform->ToMatrix() * billboard.GetInValidXY();
+	cbuffer->Get().World = (XMMATRIX)transform->ToMatrix() * wkp_graphicDevice.lock()->GetViewMatrixBillBoardZ();
 }

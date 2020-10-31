@@ -100,6 +100,24 @@ namespace ButiEngine {
 		void SetProjectionMatrix(const Matrix4x4& arg_projectionMatrix);
 		void SetViewMatrix(const Matrix4x4& arg_viewMatrix);
 		void SetRawViewMatrix(const Matrix4x4& arg_viewMatrix);
+		void SetViewMatrix_billBoard(const Matrix4x4& arg_viewMatrix);
+		void SetViewMatrix_billBoardX(const Matrix4x4& arg_viewMatrix);
+		void SetViewMatrix_billBoardY(const Matrix4x4& arg_viewMatrix);
+		void SetViewMatrix_billBoardZ(const Matrix4x4& arg_viewMatrix);
+
+
+		const Matrix4x4& GetViewMatrixBillBoard() {
+			return viewMatrix_billBoard;
+		}
+		const Matrix4x4& GetViewMatrixBillBoardX() {
+			return viewMatrix_billBoardX;
+		}
+		const Matrix4x4& GetViewMatrixBillBoardY() {
+			return viewMatrix_billBoardY;
+		}
+		const Matrix4x4& GetViewMatrixBillBoardZ() {
+			return viewMatrix_billBoardZ;
+		}
 
 		void SetClearColor(const Vector4& arg_clearColor);
 		Vector4 GetClearColor();
@@ -110,6 +128,10 @@ namespace ButiEngine {
 		Matrix4x4 projectionMatrix;
 
 		Matrix4x4 viewMatrix;
+		Matrix4x4 viewMatrix_billBoard;
+		Matrix4x4 viewMatrix_billBoardX;
+		Matrix4x4 viewMatrix_billBoardY;
+		Matrix4x4 viewMatrix_billBoardZ;
 		Matrix4x4 rawViewMatrix;
 
 		Vector4 color=Vector4(0,1,0,1);

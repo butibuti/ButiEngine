@@ -4,6 +4,7 @@
 #include"Header/GameParts/Renderer.h"
 
 void ButiEngine::Scene::Update() {
+	shp_gameObjectManager->RegistNewGameObject();
 	shp_gameObjectManager->Update();
 	if(shp_collisionManager)
 	shp_collisionManager->Update();

@@ -175,6 +175,63 @@ void ButiEngine::GameObject::RemoveGameComponent(const std::string& arg_key)
 	}
 }
 
+void ButiEngine::GameObject::ShowUI()
+{
+	ImGui::Text(objectName.c_str());
+	if (ImGui::TreeNode("Transform")) {
+
+		ImGui::BulletText("Position");
+		float pos[] = { transform->GetLocalPosition().x,transform->GetLocalPosition().y,transform->GetLocalPosition().z };
+		if (ImGui::DragFloat3("p", pos, 0.02f, -500.0f, 500.0f)) {
+			transform->SetLocalPosition(Vector3(pos[0], pos[1], pos[2]));
+		}
+		ImGui::BulletText("Scale");
+		float scale[] = { transform->GetLocalScale().x,transform->GetLocalScale().y,transform->GetLocalScale().z };
+		if (ImGui::DragFloat3("s", scale, 0.01f, -500.0, 500.0f)) {
+			transform->SetLocalScale(Vector3(scale[0], scale[1], scale[2]));
+		}
+		ImGui::BulletText("Rotation");
+		float euler[] = { 0,0,0 };
+		if (ImGui::DragFloat3("R", euler, 1.0f, -500.0, 500.0f)) {
+			transform->RollLocalRotation(Vector3(euler[0], euler[1], euler[2]));
+		}
+		if (ImGui::Button("Identity"))
+		{
+			transform->RollIdentity();
+		}
+
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("GameComponent")) {
+
+		auto endItr = vec_gameComponents.end();
+
+		for (auto itr = vec_gameComponents.begin(); itr != endItr; itr++) {
+			if (ImGui::TreeNode((*itr)->GetGameComponentName().c_str())) {
+				(*itr)->ShowUI();
+
+				ImGui::TreePop();
+			}
+		}
+
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNode("Behaivior")) {
+		auto endItr = vec_behaviors.end();
+
+		for (auto itr = vec_behaviors.begin(); itr != endItr; itr++) {
+			if (ImGui::TreeNode((*itr)->GetBehaviorName().c_str())) {
+				(*itr)->ShowUI();
+
+				ImGui::TreePop();
+			}
+		}
+
+		ImGui::TreePop();
+	}
+}
+
 std::weak_ptr< ButiEngine::GameObjectManager> ButiEngine::GameObject::GetGameObjectManager()
 {
 	return wkp_gameObjManager;

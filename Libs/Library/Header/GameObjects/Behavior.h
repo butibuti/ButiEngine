@@ -20,6 +20,8 @@ namespace ButiEngine {
 		virtual void OnCollision(std::weak_ptr<GameObject> arg_other);
 		virtual void OnCollisionEnter(std::weak_ptr<GameObject> arg_other);
 		virtual void OnCollisionEnd(std::weak_ptr<GameObject> arg_other);
+		void ShowUI();
+		virtual void OnShowUI(){}
 		virtual std::string GetBehaviorName() = 0;
 		bool IsRemove() {
 			return isRemove;
@@ -34,7 +36,7 @@ namespace ButiEngine {
 		std::weak_ptr<ICamera>& GetCamera(const UINT arg_camNum);
 		std::weak_ptr<ICamera>& GetCamera(const std::string& arg_camName);
 		std::weak_ptr<GameObjectManager> GetManager();
-		bool isActive;
+		bool isActive=true;
 		bool isRemove;
 	};
 

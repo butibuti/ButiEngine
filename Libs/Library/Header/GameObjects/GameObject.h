@@ -57,12 +57,28 @@ namespace ButiEngine {
 			return addBehavior;
 		}
 
+		template<class T, typename... Ts>
+		inline std::shared_ptr<T> AddBehavior_Init(Ts&&... params) {
+			auto addBehavior = ObjectFactory::Create<T>(params...);
+			vec_behaviors.push_back(addBehavior);
+			addBehavior->Set(GetThis<GameObject>());
+			return addBehavior;
+		}
+
 		std::shared_ptr<GameComponent> AddGameComponent(std::shared_ptr<GameComponent> arg_shp_gameComponent);
 
-		template<class T,  typename... Ts>
+		template<class T, typename... Ts>
 		inline std::shared_ptr<T> AddGameComponent(Ts&&... params) {
 			auto addComponet = ObjectFactory::Create<T>(params...);
 			vec_newGameComponent.push_back(addComponet);
+			addComponet->Set(GetThis<GameObject>());
+			return addComponet;
+		}
+		
+		template<class T, typename... Ts>
+			inline std::shared_ptr<T> AddGameComponent_Init(Ts&&... params) {
+			auto addComponet = ObjectFactory::Create<T>(params...);
+			vec_gameComponents.push_back(addComponet);
 			addComponet->Set(GetThis<GameObject>());
 			return addComponet;
 		}
@@ -84,6 +100,8 @@ namespace ButiEngine {
 		std::weak_ptr<GameObject> GetBaseTransform() {
 			return parent;
 		}
+
+		void ShowUI();
 
 		std::weak_ptr<GameObject> SetParent(std::weak_ptr<GameObject> arg_parent) {
 			parent = arg_parent;

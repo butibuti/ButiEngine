@@ -69,7 +69,22 @@ void ButiEngine::Camera_Dx12::Start()
 
 	wkp_graphicDevice.lock()->SetProjectionMatrix(projectionMatrix);
 	wkp_graphicDevice.lock()->SetRawViewMatrix(viewMatrix);
-	wkp_graphicDevice.lock()->SetViewMatrix(viewMatrix.Transpose());
+
+	auto transposed = viewMatrix.Transpose();
+
+	wkp_graphicDevice.lock()->SetViewMatrix(transposed);
+
+	auto billboard= transposed;
+	billboard._14 = 0.0f;
+	billboard._24 = 0.0f;
+	billboard._34 = 0.0f;
+
+	(XMMATRIX)billboard.Inverse();
+
+	wkp_graphicDevice.lock()->SetViewMatrix_billBoard(billboard);
+	wkp_graphicDevice.lock()->SetViewMatrix_billBoardX(billboard.GetInValidYZ());
+	wkp_graphicDevice.lock()->SetViewMatrix_billBoardY(billboard.GetInValidXZ());
+	wkp_graphicDevice.lock()->SetViewMatrix_billBoardZ(billboard.GetInValidXY());
 
 	wkp_graphicDevice.lock()->GetCommandList().RSSetViewports(1, &viewport);
 

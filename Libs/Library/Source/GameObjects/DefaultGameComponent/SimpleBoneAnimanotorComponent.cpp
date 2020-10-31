@@ -10,15 +10,8 @@ ButiEngine::SimpleBoneAnimatorComponent::SimpleBoneAnimatorComponent(std::shared
 
 void ButiEngine::SimpleBoneAnimatorComponent::OnUpdate()
 {
-	ImGui::Begin("Motion Active");
-	ImGui::Checkbox("check", &isMotionActive);
-	ImGui::End();
-
-	if (isMotionActive) {
-
-		shp_animation->Motion();
-		shp_animation->IKTest();
-	}
+	shp_animation->Motion();
+	shp_animation->IKTest();
 }
 
 
@@ -40,4 +33,9 @@ void ButiEngine::SimpleBoneAnimatorComponent::AddAnimation(MotionTag arg_motionT
 void ButiEngine::SimpleBoneAnimatorComponent::SetLoop(const bool arg_isLoop)
 {
 	shp_animation->SetLoop(arg_isLoop);
+}
+
+void ButiEngine::SimpleBoneAnimatorComponent::OnShowUI()
+{
+
 }

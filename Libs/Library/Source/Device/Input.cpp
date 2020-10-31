@@ -68,6 +68,20 @@ bool Input::GetMouseReleaseTrigger(const MouseButtons num)
 	return (beforeMouseState.rgbButtons[(int)num] == 128) && mouseState.rgbButtons[(int)num] != 128;
 }
 
+bool ButiEngine::Input::GetMouseWheel()
+{
+	if(mouseState.lZ!=0)
+	return true;
+	else {
+		return false;
+	}
+}
+
+float ButiEngine::Input::GetMouseWheelMove()
+{
+	return mouseState.lZ;
+}
+
 
 
 Vector2 Input::GetLeftStick()

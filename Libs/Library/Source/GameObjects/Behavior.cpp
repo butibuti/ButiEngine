@@ -2,6 +2,7 @@
 #include "..\..\Header\GameObjects\Behavior.h"
 void ButiEngine::Behavior::Update()
 {
+	if(isActive)
 	OnUpdate();
 }
 
@@ -33,6 +34,14 @@ void ButiEngine::Behavior::OnCollisionEnter(std::weak_ptr<GameObject> arg_other)
 
 void ButiEngine::Behavior::OnCollisionEnd(std::weak_ptr<GameObject> arg_other)
 {
+}
+
+void ButiEngine::Behavior::ShowUI()
+{
+
+	ImGui::Checkbox("check", &isActive);
+
+	OnShowUI();
 }
 
 std::weak_ptr< ButiEngine::ICamera>& ButiEngine::Behavior::GetCamera()

@@ -236,7 +236,8 @@ namespace ButiEngine {
 				DirectX::XMMatrixRotationZ(
 					DirectX::XMConvertToRadians(arg_vec3_rotation.z)
 				) * (XMMATRIX)rotation;
-		}inline const Matrix4x4& RollWorldRotation(const Vector3& arg_vec3_rotation)
+		}
+		inline const Matrix4x4& RollWorldRotation(const Vector3& arg_vec3_rotation)
 		{
 			if (localMatrix) {
 				localMatrix = nullptr;
@@ -252,7 +253,44 @@ namespace ButiEngine {
 				);
 		}
 
+		inline void RollIdentity() {
+			if (localMatrix) {
+				localMatrix = nullptr;
+			}
+			rotation.Identity();
+		}
 
+		inline const Vector3& Translate(const Vector3& arg_velocity) {
+			if (localMatrix) {
+				localMatrix->_41 += arg_velocity.x;
+				localMatrix->_42 += arg_velocity.y;
+				localMatrix->_43 += arg_velocity.z;
+			}
+
+			return  localPosition+=arg_velocity;
+		}inline const Vector3& TranslateX(const float arg_moveX) {
+			if (localMatrix) {
+				localMatrix->_41 += arg_moveX;
+			}
+			localPosition.x += arg_moveX;
+			return  localPosition;
+		}
+
+		inline const Vector3& TranslateY(const float arg_moveY) {
+			if (localMatrix) {
+				localMatrix->_42 += arg_moveY;
+			}
+			localPosition.y += arg_moveY;
+			return  localPosition;
+		}
+
+		inline const Vector3& TranslateZ(const float arg_moveZ) {
+			if (localMatrix) {
+				localMatrix->_43 += arg_moveZ;
+			}
+			localPosition.z += arg_moveZ;
+			return  localPosition;
+		}
 
 
 		inline const Matrix4x4& RollLocalRotation(const Matrix4x4& arg_rotation) {

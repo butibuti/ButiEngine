@@ -17,6 +17,19 @@ namespace ButiEngine {
 			std::shared_ptr<T> Ptr = std::make_shared<T>(value);
 			return Ptr;
 		};
+
+		template<typename T, typename... Ts>
+		static inline std::shared_ptr<T> CreateFromCereal(const std::string& arg_filePath) {
+			std::shared_ptr<T> Ptr = std::shared_ptr<T>();
+
+			InputCereal(Ptr, arg_filePath);
+			//‰¼‘zŠÖ”ŒÄ‚Ño‚µ
+			Ptr->PreInitialize();
+			Ptr->Initialize();
+			Ptr->SetCreated(true);
+			return Ptr;
+		}; 
+
 	};
 
 	class IObject :public std::enable_shared_from_this<IObject>

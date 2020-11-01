@@ -1,19 +1,15 @@
 #include"stdafx.h"
 #include "..\..\Header\GameObjects\GameObject.h"
 
-
-
-ButiEngine::GameObject::GameObject(const std::string& arg_objectName)
+ButiEngine::GameObject::GameObject()
 {
-	gameObjectTag = GameObjectTagManager::CreateGameObjectTag("none");
-	objectName = arg_objectName;
 }
 
-ButiEngine::GameObject::GameObject(std::shared_ptr<Transform> arg_transform, const std::string& arg_objectName)
+ButiEngine::GameObject::GameObject(std::shared_ptr<Transform> arg_transform, const std::string& arg_objectName, const std::string& arg_tagName )
 {
 	transform = arg_transform;
 	objectName = arg_objectName;
-	gameObjectTag = GameObjectTagManager::CreateGameObjectTag("none");
+	tagName = arg_tagName;
 }
 
 void ButiEngine::GameObject::Update()
@@ -88,6 +84,7 @@ void ButiEngine::GameObject::Release()
 
 void ButiEngine::GameObject::Initialize()
 {
+	gameObjectTag = GameObjectTagManager::CreateGameObjectTag(tagName);
 }
 
 void ButiEngine::GameObject::PreInitialize()
@@ -247,6 +244,11 @@ std::shared_ptr<ButiEngine::GraphicDevice> ButiEngine::GameObject::GetGraphicDev
 	return wkp_gameObjManager.lock()->GetScene().lock()->GetSceneManager().lock()->GetApplication().lock()->GetGraphicDevice();
 }
 
+void ButiEngine::GameObject::UpdateTagName()
+{
+	tagName = GameObjectTagManager::GetTagName(gameObjectTag);
+}
+
 std::shared_ptr<ButiEngine::Behavior> ButiEngine::GameObject::RegisterBehavior(std::shared_ptr<Behavior> arg_shp_behavior)
 {
 	vec_behaviors.push_back(arg_shp_behavior);
@@ -348,4 +350,36 @@ void ButiEngine::GameObject::BehaviorHit()
 	vec_befCollisionObject = vec_collisionObject;
 	vec_collisionObject.clear();
 	vec_collisionObject.reserve(vec_befCollisionObject.size());
+}
+
+
+void ButiEngine::OutputCereal(const std::shared_ptr<GameObject>& v)
+{
+	std::stringstream stream;
+
+
+	cereal::BinaryOutputArchive binOutArchive(stream);
+	v->UpdateTagName();
+	binOutArchive(v);
+
+	std::ofstream outputFile(GlobalSettings::GetResourceDirectory()+"GameObject/"+ v->GetGameObjectName()+".gameObject", std::ios::out);
+
+	outputFile << stream.str();
+
+	outputFile.close();
+	stream.clear();
+}
+
+void ButiEngine::InputCereal(std::shared_ptr<GameObject>& v, const std::string& path)
+{
+	std::stringstream stream;
+
+	std::ifstream inputFile(path, std::ios::in);
+
+	stream << inputFile.rdbuf();
+
+	cereal::BinaryInputArchive binInputArchive(stream);
+
+
+	binInputArchive(v);
 }

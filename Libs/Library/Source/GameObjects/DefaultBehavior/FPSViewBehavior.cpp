@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "include/FPSViewBehavior.h"
+#include "Header/GameObjects/DefaultBehavior/FPSViewBehavior.h"
 #include"Header/GameParts/ResourceContainer.h"
 #include"Header/GameObjects/DefaultGameComponent/MeshDrawComponent.h"
 #include"Header/GameParts/SoundManager.h"
@@ -34,7 +34,7 @@ void ButiEngine::FPSViewBehavior::OnUpdate()
 		moveForce += head.lock()->transform->GetRight();
 
 	}
-	if (GameDevice::input.TriggerKey(Keys::F) ) {
+	if (GameDevice::input.TriggerKey(Keys::F)) {
 
 		isCenter = !isCenter;
 	}
@@ -50,6 +50,6 @@ void ButiEngine::FPSViewBehavior::OnSet()
 {
 	auto headTransform = ObjectFactory::Create<Transform>(Vector3(0, 2.0f, -2.0f));
 	headTransform->SetBaseTransform(gameObject.lock()->transform);
-	head = GetManager().lock()->AddObject(ObjectFactory::Create<GameObject>(headTransform, "head"));
+	head = GetManager().lock()->AddObject(headTransform, "head");
 	gameObject.lock()->AddChildGameObject(head);
 }

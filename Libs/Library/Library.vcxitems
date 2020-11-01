@@ -56,6 +56,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\ResourceFileCreater.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\Timer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\Behavior.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultBehavior\FPSViewBehavior.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultBehavior\SampleBehavior.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\ColliderComponent.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\MeshDrawComponent.h" />
@@ -120,6 +121,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)imGUI\imgui_impl_dx12.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)imGUI\imgui_impl_win32.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)imGUI\imgui_widgets.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Source\Common\ButiMath.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Common\Camera.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Common\Camera_Dx12.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Common\CollisionPrimitive.cpp" />
@@ -144,6 +146,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Device\ResourceFileCreater.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Device\Timer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\Behavior.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\DefaultBehavior\FPSViewBehavior.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\DefaultBehavior\SampleBehavior.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\DefaultGameComponent\ColliderComponent.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\DefaultGameComponent\MeshDrawComponent.cpp" />

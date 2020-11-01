@@ -1,7 +1,7 @@
 #pragma once
 #include"stdafx.h"
 #include"../include/SampleScene.h"
-#include"include/FPSViewBehavior.h"
+#include"Header/GameObjects/DefaultBehavior/FPSViewBehavior.h"
 #include"include/HitTestBehavior.h"
 #include"Header/GameParts/ResourceContainer.h"
 #include"Header/GameObjects/DefaultGameComponent/MeshDrawComponent.h"

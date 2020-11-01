@@ -18,9 +18,6 @@
     <ClCompile Include="ChaseComponent.cpp">
       <Filter>SampleScene</Filter>
     </ClCompile>
-    <ClCompile Include="cpp\FPSViewBehavior.cpp">
-      <Filter>SampleScene</Filter>
-    </ClCompile>
     <ClCompile Include="cpp\HitTestBehavior.cpp">
       <Filter>SampleScene</Filter>
     </ClCompile>
@@ -50,9 +47,6 @@
       <Filter>ShootingGame</Filter>
     </ClInclude>
     <ClInclude Include="ChaseComponent.h">
-      <Filter>SampleScene</Filter>
-    </ClInclude>
-    <ClInclude Include="include\FPSViewBehavior.h">
       <Filter>SampleScene</Filter>
     </ClInclude>
     <ClInclude Include="include\HitTestBehavior.h">

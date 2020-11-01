@@ -19,7 +19,7 @@ namespace ButiEngine {
 		}
 		void ShowUI() {
 
-			ImGui::Checkbox("check", &isActive);
+			ImGui::Checkbox("IsActive", &isActive);
 			OnShowUI();
 		}
 		virtual void OnShowUI() {}

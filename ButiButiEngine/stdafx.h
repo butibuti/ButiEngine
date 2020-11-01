@@ -103,6 +103,18 @@
 #include "./backends/imgui_impl_win32.h"
 #include "./backends/imgui_impl_dx12.h"
 
+//cerial
+#include "cereal/include/cereal/cereal.hpp"
+#include "cereal/include/cereal/archives/binary.hpp"
+#include "cereal/include/cereal/types/polymorphic.hpp"
+#include "cereal/include/cereal/types/map.hpp"
+#include "cereal/include/cereal/types/string.hpp"
+#include "cereal/include/cereal/types/unordered_map.hpp"
+#include "cereal/include/cereal/types/vector.hpp"
+#include "cereal/include/cereal/types/array.hpp"
+
+
+
 using namespace DirectX;
 #include"Header/Common.h"
 

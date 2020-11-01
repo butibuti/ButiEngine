@@ -22,11 +22,11 @@ void ButiEngine::HitTestBehavior::OnCollision(std::weak_ptr<GameObject> arg_othe
 
 void ButiEngine::HitTestBehavior::OnCollisionEnter(std::weak_ptr<GameObject> arg_other)
 {
-	std::cout << "OnCollisionEnter:" << gameObject.lock()->GetObjectName() << std::endl;
+	std::cout << "OnCollisionEnter:" << gameObject.lock()->GetGameObjectName() << std::endl;
 	gameObject.lock()->SetIsRemove(true);
 }
 
 void ButiEngine::HitTestBehavior::OnCollisionEnd(std::weak_ptr<GameObject> arg_other)
 {
-	std::cout << "OnCollisionEnd:" << gameObject.lock()->GetObjectName() << std::endl;
+	std::cout << "OnCollisionEnd:" << gameObject.lock()->GetGameObjectName() << std::endl;
 }

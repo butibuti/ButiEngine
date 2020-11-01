@@ -132,6 +132,16 @@ namespace ButiEngine {
 				map_values.emplace(arg_directory + arg_key, output);
 				return output;
 			}
+			std::string GetIDName(ID<T> arg_id) {
+				if (arg_id.IsEmpty()) {
+					return "none";
+				}
+				auto index = *arg_id.GetID();
+				auto mapItr = map_values.begin();
+				for (auto i = 0; i < index; i++)
+					mapItr++;
+				return mapItr->first;
+			}
 			void Remove(const std::string& arg_key, const std::string& arg_directory = "") {
 				if (!map_values.count(arg_directory + arg_key)) {
 					return;

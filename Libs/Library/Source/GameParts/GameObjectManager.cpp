@@ -54,7 +54,7 @@ void ButiEngine::GameObjectManager::ShowUI()
 
 
 	for (auto itr = vec_gameObjects.begin(); itr != vec_gameObjects.end(); itr++) {
-		if (ImGui::Button((*itr)->GetObjectName().c_str())) {
+		if (ImGui::Button((*itr)->GetGameObjectName().c_str())) {
 			selectedGameObject = (*itr);
 		}
 	}
@@ -64,32 +64,17 @@ void ButiEngine::GameObjectManager::ShowUI()
 	if (selectedGameObject.lock()) {
 
 		selectedGameObject.lock()->ShowUI();
+
+		if (ImGui::Button("Save!", ImVec2(200, 30))) {
+			OutputCereal(selectedGameObject.lock());
+		}
 	}
+
+	
 
 	ImGui::End();
 }
 
-std::weak_ptr<ButiEngine::GameObject> ButiEngine::GameObjectManager::AddObject(std::shared_ptr<GameObject> arg_gameObject)
-{
-	if (!map_gameObjects.count(arg_gameObject->GetObjectName())) {
-		map_gameObjects.emplace(arg_gameObject->GetObjectName(), arg_gameObject);
-		vec_newGameObjects.push_back(arg_gameObject);
-		arg_gameObject->SetGameObjectManager(GetThis<GameObjectManager>());
-	}
-	else {
-		UINT count = 1;
-		while (!map_gameObjects.count(arg_gameObject->GetObjectName()+"_"+std::to_string( count))) {
-			count++;
-		}
-		arg_gameObject->SetObjectName(arg_gameObject->GetObjectName() + "_" + std::to_string(count));
-
-		map_gameObjects.emplace(arg_gameObject->GetObjectName(), arg_gameObject);
-		vec_newGameObjects.push_back(arg_gameObject);
-		arg_gameObject->SetGameObjectManager(GetThis<GameObjectManager>());
-	}
-
-	return arg_gameObject;
-}
 
 std::weak_ptr<ButiEngine::GameObject> ButiEngine::GameObjectManager::AddObject(std::shared_ptr<Transform> arg_transform,  std::string arg_objectName)
 {
@@ -114,6 +99,34 @@ std::weak_ptr<ButiEngine::GameObject> ButiEngine::GameObjectManager::AddObject(s
 		out->SetGameObjectManager(GetThis<GameObjectManager>());
 	}
 	return out;
+}
+
+std::weak_ptr<ButiEngine::GameObject> ButiEngine::GameObjectManager::AddObjectFromCereal(std::string filePath, std::shared_ptr<Transform> arg_transform)
+{
+	auto gameObject = ObjectFactory::CreateFromCereal<GameObject>(filePath);
+
+	if (arg_transform) {
+		gameObject->transform = arg_transform;
+	}
+
+	if (!map_gameObjects.count(gameObject->GetGameObjectName())) {
+		map_gameObjects.emplace(gameObject->GetGameObjectName(), gameObject);
+		vec_newGameObjects.push_back(gameObject);
+		gameObject->SetGameObjectManager(GetThis<GameObjectManager>());
+	}
+	else {
+		UINT count = 1;
+		while (!map_gameObjects.count(gameObject->GetGameObjectName() + "_" + std::to_string(count))) {
+			count++;
+		}
+		gameObject->SetObjectName(gameObject->GetGameObjectName() + "_" + std::to_string(count));
+
+		map_gameObjects.emplace(gameObject->GetGameObjectName(), gameObject);
+		vec_newGameObjects.push_back(gameObject);
+		gameObject->SetGameObjectManager(GetThis<GameObjectManager>());
+	}
+
+	return gameObject;
 }
 
 
@@ -149,8 +162,8 @@ std::vector<std::weak_ptr<ButiEngine::GameObject>> ButiEngine::GameObjectManager
 	return output;
 }
 
-void ButiEngine::GameObjectManager::UnRegistGameObject(std::shared_ptr<GameObject> arg_gameObject)
+void ButiEngine::GameObjectManager::UnRegistGameObject(std::shared_ptr<GameObject> gameObject)
 {
-	if (map_gameObjects.count(arg_gameObject->GetObjectName()))
-		map_gameObjects.erase(arg_gameObject->GetObjectName());
+	if (map_gameObjects.count(gameObject->GetGameObjectName()))
+		map_gameObjects.erase(gameObject->GetGameObjectName());
 }

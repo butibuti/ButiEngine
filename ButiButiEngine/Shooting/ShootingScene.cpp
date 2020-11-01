@@ -3,7 +3,6 @@
 #include"MaguroBehavior.h"
 #include"include/HitTestBehavior.h"
 #include"SucideComponent.h"
-#include"include/FPSViewBehavior.h"
 #include"Header/GameParts/ResourceContainer.h"
 #include"Header/GameObjects/DefaultGameComponent/MeshDrawComponent.h"
 #include"Header/GameObjects/DefaultGameComponent/ModelDrawComponent.h"

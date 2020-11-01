@@ -433,7 +433,16 @@ namespace ButiEngine {
 			return baseTransform->GetThis<Transform>();
 		}
 
-		static std::unique_ptr<Transform> WorldTransform;
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(localPosition);
+			archive(scale);
+			archive(rotation);
+			archive(baseTransform);
+
+		}
+
 	protected:
 		Vector3 localPosition = Vector3(0.0f, 0.0f, 0.0f);
 		Matrix4x4 rotation;
@@ -479,5 +488,10 @@ namespace ButiEngine {
 	private:
 		std::shared_ptr<BoneTransform> parentBoneTransform = nullptr;
 	};
+
+
+	void OutputCereal(std::shared_ptr<Transform>& v, const std::string& path);
+
+	void InputCereal(std::shared_ptr<Transform>& v, const std::string& path);
 }
 

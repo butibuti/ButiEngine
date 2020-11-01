@@ -4,6 +4,8 @@
 
 using namespace::ButiEngine;
 
+
+
 #ifdef DEBUG
 
 int main(){
@@ -15,6 +17,8 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 //int main()
 {
 #endif
+
+
 	auto app = ObjectFactory::Create<Application>();
 
 	app->CreateInstances("ButiSampleApp", WindowPopType::max, 1260, 720);

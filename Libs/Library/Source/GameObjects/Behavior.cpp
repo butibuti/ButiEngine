@@ -39,7 +39,7 @@ void ButiEngine::Behavior::OnCollisionEnd(std::weak_ptr<GameObject> arg_other)
 void ButiEngine::Behavior::ShowUI()
 {
 
-	ImGui::Checkbox("check", &isActive);
+	ImGui::Checkbox("IsActive", &isActive);
 
 	OnShowUI();
 }

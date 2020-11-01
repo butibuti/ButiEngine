@@ -372,6 +372,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Scene\EditScene.h">
       <Filter>header\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultBehavior\FPSViewBehavior.h">
+      <Filter>header\GameObjects\DefaultBehavior</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Common\Camera.cpp">
@@ -601,6 +604,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Scene\EditScene.cpp">
       <Filter>source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Source\Common\ButiMath.cpp">
+      <Filter>source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\DefaultBehavior\FPSViewBehavior.cpp">
+      <Filter>source\GameObjects\DefaultBehavior</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

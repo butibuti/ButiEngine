@@ -1,4 +1,5 @@
 #include"stdafx.h"
+#include "..\..\Header\GameObjects\GameObjectTagManager.h"
 
 ButiEngine::IDManager<ButiEngine::GameObject> ButiEngine::GameObjectTagManager::idManager;
 
@@ -10,4 +11,9 @@ ButiEngine::GameObjectTag ButiEngine::GameObjectTagManager::CreateGameObjectTag(
 ButiEngine::GameObjectTag ButiEngine::GameObjectTagManager::GetObjectTag(std::string arg_tagName)
 {
 	return idManager.GetTag(arg_tagName);
+}
+
+std::string ButiEngine::GameObjectTagManager::GetTagName(const GameObjectTag& arg_gameObjtag)
+{
+	return idManager.GetIDName(arg_gameObjtag);
 }

@@ -17,6 +17,12 @@ namespace ButiEngine {
 			x = 0;
 			y = 0;
 		}
+
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(x, y);
+		}
 	};
 
 	struct Matrix4x4 :public DirectX::XMFLOAT4X4
@@ -157,6 +163,16 @@ namespace ButiEngine {
 			return true;
 		}
 		~Matrix4x4() {}
+
+
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(this->_11, this->_12, this->_13, this->_14);
+			archive(this->_21, this->_22, this->_23, this->_24);
+			archive(this->_31, this->_32, this->_33, this->_34);
+			archive(this->_41, this->_42, this->_43, this->_44);
+		}
 	};
 	struct Vector2 :public DirectX::XMFLOAT2
 	{
@@ -309,6 +325,11 @@ namespace ButiEngine {
 		inline void Normalize()
 		{
 			*this = DirectX::XMVector2Normalize(DirectX::XMVECTOR(*this));
+		}
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(x, y);
 		}
 	};
 
@@ -594,6 +615,14 @@ namespace ButiEngine {
 		{
 			return DirectX::XMVector3Normalize(DirectX::XMVECTOR(*this));
 		}
+
+
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(x, y, z); 
+		}
+
 	};
 
 	struct Vector4 :public DirectX::XMFLOAT4
@@ -761,6 +790,13 @@ namespace ButiEngine {
 		inline void Normalize()
 		{
 			*this = DirectX::XMVector4Normalize(DirectX::XMVECTOR(*this));
+		}
+
+
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(x, y, z,w);
 		}
 	};
 
@@ -1284,6 +1320,14 @@ namespace ButiEngine {
 		inline virtual Vector3 GetPoint(float t) const {
 			return point + velocity * t;
 		}
+
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(point);
+			archive(velocity);
+
+		}
 	};
 
 	struct Segment : public Line {
@@ -1750,6 +1794,26 @@ namespace ButiEngine {
 		}
 	};
 
+
+	void OutputCereal(const Vector2& v, const std::string& path);
+
+	void InputCereal(Vector2& v, const std::string& path);
+
+	void OutputCereal(const Vector3& v, const std::string& path);
+
+	void InputCereal(Vector3& v, const std::string& path);
+
+	void OutputCereal(const Vector4& v, const std::string& path);
+
+	void InputCereal(Vector4& v, const std::string& path);
+
+	void OutputCereal(const Matrix4x4& v, const std::string& path);
+
+	void InputCereal(Matrix4x4& v, const std::string& path);
+
+	void OutputCereal(const Line& v, const std::string& path);
+
+	void InputCereal(Line& v, const std::string& path);
 
 
 

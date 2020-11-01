@@ -14,9 +14,9 @@ namespace ButiEngine {
 		friend class Behavior;
 		friend class GameComponent;
 	public:
-		GameObject(const std::string& arg_objectName="GameObject");
+		GameObject();
 
-		GameObject(std::shared_ptr<Transform> arg_transform, const std::string& arg_objectName="GameObject");
+		GameObject(std::shared_ptr<Transform> arg_transform, const std::string& arg_objectName = "GameObject", const std::string& arg_tagName="none");
 
 		void Update();
 		void Translate(const Vector3& velocity);
@@ -113,7 +113,7 @@ namespace ButiEngine {
 			return arg_childGameObject;
 		}
 
-		std::string GetObjectName() const{
+		std::string GetGameObjectName() const{
 			return objectName;
 		}
 
@@ -134,6 +134,16 @@ namespace ButiEngine {
 		std::weak_ptr<GameObjectManager> GetGameObjectManager();
 		std::shared_ptr<ResourceContainer> GetResourceContainer();
 		std::shared_ptr<GraphicDevice> GetGraphicDevice();
+
+		void UpdateTagName();
+
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(transform);
+			archive(objectName);
+			archive(tagName);
+		}
 
 	protected:
 
@@ -158,6 +168,7 @@ namespace ButiEngine {
 		std::vector<std::shared_ptr<Behavior>>vec_newBehavior;
 
 		std::string objectName;
+		std::string tagName;
 		GameObjectTag gameObjectTag;
 
 		std::weak_ptr<GameObjectManager> wkp_gameObjManager;
@@ -166,4 +177,8 @@ namespace ButiEngine {
 		std::vector<std::shared_ptr<GameObject>> vec_befCollisionObject;
 	};
 
+
+	void OutputCereal(const std::shared_ptr<GameObject>& v);
+
+	void InputCereal(std::shared_ptr<GameObject>& v, const std::string& path);
 }

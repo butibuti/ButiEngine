@@ -3,7 +3,7 @@
 #include"Header/GameParts/Renderer.h"
 
 
-#include"include/FPSViewBehavior.h"
+#include"Header/GameObjects/DefaultBehavior/FPSViewBehavior.h"
 #include"include/HitTestBehavior.h"
 #include"Header/GameParts/ResourceContainer.h"
 #include"Header/GameObjects/DefaultGameComponent/MeshDrawComponent.h"
@@ -44,9 +44,7 @@ void ButiEngine::EditScene::OnSet()
 
 void ButiEngine::EditScene::OnInitialize()
 {
-	auto hikari = shp_gameObjectManager->AddObject(
-		ObjectFactory::Create<Transform>(Vector3(0.0f, 0.0f, 1.0), Vector3(0, 0, 0), Vector3(0.5f, 0.5f, 0.5f)), "hikari"
-	);
+	auto hikari = shp_gameObjectManager->AddObjectFromCereal("Resources/GameObject/hikari.gameObject");
 	auto info = ObjectFactory::Create<DrawInformation>();
 
 	auto testVar = ObjectFactory::Create<CBuffer_Dx12< TestGSVariable>>(4);
@@ -86,7 +84,10 @@ void ButiEngine::EditScene::OnInitialize()
 		);
 
 
-	auto gsSphere = shp_gameObjectManager->AddObject(ObjectFactory::Create<Transform>(Vector3(5, 2, 0), Vector3(0, 0, 0), Vector3(1, 1, 1)), "test");
+
+	auto inputTransform = ObjectFactory::Create<Transform>();
+
+	auto gsSphere = shp_gameObjectManager->AddObject(inputTransform, "test");
 
 	auto sphereInfo = ObjectFactory::Create<DrawInformation>();
 	sphereInfo->drawSettings.billboardMode = BillBoardMode::y;
@@ -118,7 +119,7 @@ void ButiEngine::EditScene::OnUpdate()
 void ButiEngine::EditScene::UIUpdate()
 {
 	ImGui::Begin("top");
-	ImGui::Checkbox("isStart", &isActive);
+	ImGui::Checkbox("Update", &isActive);
 	ImGui::End();
 
 

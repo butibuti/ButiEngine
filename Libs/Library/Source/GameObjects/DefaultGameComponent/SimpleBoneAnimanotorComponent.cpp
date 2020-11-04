@@ -39,3 +39,8 @@ void ButiEngine::SimpleBoneAnimatorComponent::OnShowUI()
 {
 
 }
+
+std::shared_ptr< ButiEngine::GameComponent> ButiEngine::SimpleBoneAnimatorComponent::Clone()
+{
+	return ObjectFactory::Create<SimpleBoneAnimatorComponent>(shp_modelData);
+}

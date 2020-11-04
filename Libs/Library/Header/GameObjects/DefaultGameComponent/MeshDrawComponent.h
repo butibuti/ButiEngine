@@ -24,7 +24,7 @@ namespace ButiEngine {
 		void OnSet()override;
 		void OnRemove() override;
 		void SetBlendMode(const BlendMode& arg_blendMode);
-
+		std::shared_ptr<GameComponent> Clone()override;
 		void Regist();
 		void UnRegist();
 
@@ -57,6 +57,19 @@ namespace ButiEngine {
 		std::shared_ptr<CBuffer<T>> GetCBuffer(const std::string& arg_cBufferName) {
 			return data->GetThis<DrawData>()->GetCBuffer<T>(arg_cBufferName);
 		}
+
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(layer);
+			archive(meshTag);
+			archive(shaderTag);
+			archive(modelTag);
+			archive(materialTag);
+			archive(isActive);
+			archive(shp_transform);
+			archive(shp_drawInfo);
+		}
 	protected:
 		std::shared_ptr< MeshDrawData > data;
 		UINT* index;
@@ -67,6 +80,5 @@ namespace ButiEngine {
 		std::shared_ptr<Transform> shp_transform;
 		std::shared_ptr< DrawInformation >shp_drawInfo = nullptr;
 		std::vector<MaterialTag> materialTag;
-		bool isYBillBoard = false;
 	};
 }

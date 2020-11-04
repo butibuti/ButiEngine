@@ -1,10 +1,12 @@
 #include "stdafx.h"
 #include"Header/GameObjects/DefaultGameComponent/ColliderComponent.h"
 #include"Header/GameParts/CollisionLayer.h"
+#include "..\..\..\Header\GameObjects\DefaultGameComponent\ColliderComponent.h"
 
 ButiEngine::Collision::ColliderComponent::ColliderComponent(std::shared_ptr<CollisionPrimitive> arg_shp_collisionPrim, const UINT arg_layerNum)
 {
 	shp_collisionPrim = arg_shp_collisionPrim;
+	layerNum = arg_layerNum;
 }
 
 void ButiEngine::Collision::ColliderComponent::OnSet()
@@ -41,4 +43,9 @@ void ButiEngine::Collision::ColliderComponent::CollisionStop()
 	}
 	GetCollisionManager().lock()->UnRegistCollisionObject(layerNum, p_index);
 	p_index = nullptr;
+}
+
+std::shared_ptr< ButiEngine::GameComponent> ButiEngine::Collision::ColliderComponent::Clone()
+{
+	return ObjectFactory::Create<ColliderComponent>(shp_collisionPrim,layerNum);
 }

@@ -10,11 +10,15 @@ namespace ButiEngine {
 		std::string GetBehaviorName()override {
 			return "PlayerBehavior";
 		};
+		std::shared_ptr<Behavior> Clone()override;
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(isActive);
+		}
 	private:
 		std::weak_ptr<GameObject> head;
-		std::shared_ptr<CBuffer<TestGSVariable>> shp_testGS;
-		int boneIndex = 0;
-		bool isCenter=true;
+		bool isCenter = true;
 	};
 
 }

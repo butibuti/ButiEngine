@@ -2,7 +2,7 @@
 #include "HavokBehavior.h"
 #include"Header/GameObjects/DefaultGameComponent/ColliderComponent.h"
 #include"BulletBehavior.h"
-#include"SucideComponent.h"
+#include"Header/GameObjects/DefaultGameComponent/SucideComponent.h"
 #include"Header/GameObjects/DefaultGameComponent/MeshDrawComponent.h"
 #include"Header/GameParts/ResourceContainer.h"
 
@@ -44,4 +44,9 @@ void ButiEngine::HavokBehavior::BulletShot()
 	bullet.lock()->AddGameComponent<Collision::ColliderComponent>(sphereCollision2, 0);
 
 	bullet.lock()->AddGameComponent<SucideComponent>(60.0f);
+}
+
+std::shared_ptr<ButiEngine::Behavior> ButiEngine::HavokBehavior::Clone()
+{
+	return ObjectFactory::Create<HavokBehavior>();
 }

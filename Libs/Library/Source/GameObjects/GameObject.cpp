@@ -1,6 +1,7 @@
 #include"stdafx.h"
 #include "..\..\Header\GameObjects\GameObject.h"
 
+
 ButiEngine::GameObject::GameObject()
 {
 }
@@ -105,14 +106,14 @@ std::shared_ptr<ButiEngine::GameComponent> ButiEngine::GameObject::AddGameCompon
 	return arg_shp_gameComponent;
 }
 
-std::shared_ptr<ButiEngine::Behavior> ButiEngine::GameObject::AddBehavior_Init(std::shared_ptr<Behavior> arg_shp_behavior)
+std::shared_ptr<ButiEngine::Behavior> ButiEngine::GameObject::AddBehavior_Insert(std::shared_ptr<Behavior> arg_shp_behavior)
 {
 	arg_shp_behavior->Set(GetThis<GameObject>());
 	RegisterBehavior(arg_shp_behavior);
 	return arg_shp_behavior;
 }
 
-std::shared_ptr<ButiEngine::GameComponent> ButiEngine::GameObject::AddGameComponent_Init(std::shared_ptr<GameComponent> arg_shp_gameComponent)
+std::shared_ptr<ButiEngine::GameComponent> ButiEngine::GameObject::AddGameComponent_Insert(std::shared_ptr<GameComponent> arg_shp_gameComponent)
 {
 	arg_shp_gameComponent->Set(GetThis<GameObject>());
 	RegisterGameComponent(arg_shp_gameComponent);
@@ -174,28 +175,13 @@ void ButiEngine::GameObject::RemoveGameComponent(const std::string& arg_key)
 
 void ButiEngine::GameObject::ShowUI()
 {
-	ImGui::Text(objectName.c_str());
-	if (ImGui::TreeNode("Transform")) {
 
-		ImGui::BulletText("Position");
-		float pos[] = { transform->GetLocalPosition().x,transform->GetLocalPosition().y,transform->GetLocalPosition().z };
-		if (ImGui::DragFloat3("p", pos, 0.02f, -500.0f, 500.0f)) {
-			transform->SetLocalPosition(Vector3(pos[0], pos[1], pos[2]));
-		}
-		ImGui::BulletText("Scale");
-		float scale[] = { transform->GetLocalScale().x,transform->GetLocalScale().y,transform->GetLocalScale().z };
-		if (ImGui::DragFloat3("s", scale, 0.01f, -500.0, 500.0f)) {
-			transform->SetLocalScale(Vector3(scale[0], scale[1], scale[2]));
-		}
-		ImGui::BulletText("Rotation");
-		float euler[] = { 0,0,0 };
-		if (ImGui::DragFloat3("R", euler, 1.0f, -500.0, 500.0f)) {
-			transform->RollLocalRotation(Vector3(euler[0], euler[1], euler[2]));
-		}
-		if (ImGui::Button("Identity"))
-		{
-			transform->RollIdentity();
-		}
+
+
+
+
+	if (ImGui::TreeNode("Transform")) {
+		transform->ShowUI();
 
 		ImGui::TreePop();
 	}
@@ -229,6 +215,12 @@ void ButiEngine::GameObject::ShowUI()
 	}
 }
 
+std::string ButiEngine::GameObject::SetObjectName(const std::string& arg_objectName)
+{
+	objectName = wkp_gameObjManager.lock()->ReNameGameObject(arg_objectName, objectName);
+
+	return objectName;
+}
 std::weak_ptr< ButiEngine::GameObjectManager> ButiEngine::GameObject::GetGameObjectManager()
 {
 	return wkp_gameObjManager;

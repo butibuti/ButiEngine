@@ -1,22 +1,23 @@
-#include"stdafx.h"
+
 #pragma once
 #include "../../Header/Device/Input.h"
 #include "../../Header/Device/Keys.h"
 #include "../../Header/Device/PadButtons.h"
+
+#include"stdafx.h"
 #pragma comment(lib,"dinput8.lib")
 #pragma comment(lib,"dxguid.lib")
 #pragma comment(lib,"xinput.lib")
-#define Release(X) {if((X)!=nullptr) (X)->Release();(X)=nullptr;}
-using namespace::ButiEngine;
+using namespace::ButiEngine; 
 
 
 Input::Input() :result(S_OK), input(nullptr), key(nullptr)
 {
 }
 Input::~Input() {
-	Release(key);
-	Release(mouse);
-	Release(input);
+	key->Release();
+	mouse->Release();
+	input->Release();;
 }
 void ButiEngine::Input::Initialize(std::weak_ptr<Application> arg_wkp_app)
 {
@@ -250,8 +251,12 @@ void Input::PadUpdate()
 void Input::MouseUpdate()
 {
 	beforeMouseState = mouseState;
-	mouse->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState);
+	auto hr= mouse->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState);
 
+	if (hr !=S_OK) {
+		mouse->Acquire();
+		hr = mouse->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState);
+	}
 	GetCursorPos(&mousePoint);
 	mouseMove.x =   mousePos.x- mousePoint.x;
 	mouseMove.y =   mousePos.y- mousePoint.y;

@@ -11,8 +11,14 @@ namespace ButiEngine {
 		std::string GetGameComponentName()override {
 			return "LookAtComponent";
 		}
+		std::shared_ptr<GameComponent> Clone()override;
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(shp_lookTarget);
+			archive(isActive);
+		}
 	private:
-
 		std::shared_ptr<Transform> shp_lookTarget;
 	};
 

@@ -20,6 +20,7 @@ namespace ButiEngine {
 		virtual void OnCollision(std::weak_ptr<GameObject> arg_other);
 		virtual void OnCollisionEnter(std::weak_ptr<GameObject> arg_other);
 		virtual void OnCollisionEnd(std::weak_ptr<GameObject> arg_other);
+		virtual std::shared_ptr<Behavior> Clone() = 0;
 		void ShowUI();
 		virtual void OnShowUI(){}
 		virtual std::string GetBehaviorName() = 0;

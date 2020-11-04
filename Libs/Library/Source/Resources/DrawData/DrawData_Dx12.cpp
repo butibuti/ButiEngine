@@ -84,10 +84,9 @@ void ButiEngine::MeshDrawData_Dx12::Initialize()
 		shp_drawInfo->vec_exCBuffer.push_back(lightBuffer_Dx12);
 
 		auto light = LightVariable();
-		light.LightDir = Vector4(Vector3(-1.0f, -1.0f, 0.0f), 10);
+		light.LightDir = Vector4(Vector3(-1.0f, -1.0f, 0.0f), 1);
 
 		lightBuffer_Dx12->Get() = light;
-
 	}
 	DrawData_Dx12::Initialize();
 	
@@ -216,6 +215,7 @@ void ButiEngine::DrawData_Dx12::BufferUpdate()
 	
 
 	cbuffer->Update();
+
 
 	for (auto itr =shp_drawInfo-> vec_exCBuffer.begin(); itr !=shp_drawInfo-> vec_exCBuffer.end(); itr++) {
 		(*itr)->Update();

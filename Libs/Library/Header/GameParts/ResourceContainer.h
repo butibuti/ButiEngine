@@ -16,8 +16,20 @@ namespace ButiEngine {
 			std::string pixelShaderDirectory = "";
 			std::string geometryShaderName = "none";
 			std::string geometryShaderDirectory = "";
+			template<class Archive>
+			void serialize(Archive& archive)
+			{
+				archive(shaderName);
+				archive(vertexShaderName);
+				archive(pixelShaderName);
+				archive(vertexShaderDirectory);
+				archive(pixelShaderDirectory);
+				archive(geometryShaderName);
+				archive(geometryShaderDirectory);
+			}
 		};
-		ResourceContainer(std::weak_ptr<GraphicDevice> shp_graphicDevice);
+		ResourceContainer();
+		void SetGraphicDevice(std::weak_ptr<GraphicDevice> arg_shp_graphicDevice);
 		void Initialize()override;
 		void PreInitialize()override;
 		template<typename T>
@@ -99,7 +111,47 @@ namespace ButiEngine {
 				return nullptr;
 			}
 		}
+
+		void Reload();
+
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(container_meshes);
+			archive(container_textures);
+			archive(container_materials);
+			archive(container_shaders);
+			archive(container_vertexShaders);
+			archive(container_geometryShaders);
+			archive(container_pixelShaders);
+			archive(container_motions);
+			archive(container_sounds);
+			archive(container_models);
+
+			archive(vec_filePathAndDirectory_mat);
+			archive(vec_filePathAndDirectory_tex);
+			archive(vec_filePathAndDirectory_ps);
+			archive(vec_filePathAndDirectory_vs);
+			archive(vec_filePathAndDirectory_gs);
+			archive(vec_filePathAndDirectory_sound);
+			archive(vec_filePathAndDirectory_model);
+			archive(vec_filePathAndDirectory_motion);
+			archive(vec_shaderNames);
+		}
+
 	private:
+
+		//backupdata
+		std::vector<std::string> vec_filePathAndDirectory_mat;
+		std::vector<std::string> vec_filePathAndDirectory_tex;
+		std::vector<std::string> vec_filePathAndDirectory_ps;
+		std::vector<std::string> vec_filePathAndDirectory_vs;
+		std::vector<std::string> vec_filePathAndDirectory_gs;
+		std::vector<std::string> vec_filePathAndDirectory_sound;
+		std::vector<std::string> vec_filePathAndDirectory_model;
+		std::vector<std::string> vec_filePathAndDirectory_motion;
+		std::vector<ShaderName> vec_shaderNames;
+
 
 		std::weak_ptr<GraphicDevice> wkp_graphicDevice;
 
@@ -122,6 +174,7 @@ namespace ButiEngine {
 
 
 		std::shared_ptr<ResourceFactory> unq_resourceFactory = nullptr;
+
 	};
 
 	template<typename T>
@@ -129,4 +182,9 @@ namespace ButiEngine {
 	{		
 		return container_meshes.AddValue(unq_resourceFactory->GetThis<ResourceFactory_Dx12>()->CreateMesh(inputMeshData), filePath);
 	}
+
+	void OutputCereal(const std::shared_ptr<ResourceContainer>& v);
+
+	void InputCereal(std::shared_ptr<ResourceContainer>& v, const std::string& path, std::weak_ptr<GraphicDevice> arg_shp_graphicDevice);
 }
+

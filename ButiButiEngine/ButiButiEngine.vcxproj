@@ -206,11 +206,9 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ChaseComponent.cpp" />
     <ClCompile Include="cpp\HitTestBehavior.cpp" />
     <ClCompile Include="cpp\main.cpp" />
     <ClCompile Include="cpp\SampleScene.cpp" />
-    <ClCompile Include="LookAtComponent.cpp" />
     <ClCompile Include="Shooting\BulletBehavior.cpp" />
     <ClCompile Include="Shooting\HavokBehavior.cpp" />
     <ClCompile Include="Shooting\MaguroBehavior.cpp" />
@@ -223,19 +221,15 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Dx11_Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Dx11_Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="SucideComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ChaseComponent.h" />
     <ClInclude Include="include\HitTestBehavior.h" />
     <ClInclude Include="include\SampleScene.h" />
-    <ClInclude Include="LookAtComponent.h" />
     <ClInclude Include="Shooting\BulletBehavior.h" />
     <ClInclude Include="Shooting\HavokBehavior.h" />
     <ClInclude Include="Shooting\MaguroBehavior.h" />
     <ClInclude Include="Shooting\ShootingScene.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="SucideComponent.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

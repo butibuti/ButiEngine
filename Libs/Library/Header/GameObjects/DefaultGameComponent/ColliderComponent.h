@@ -18,6 +18,14 @@ namespace ButiEngine {
 			std::string GetGameComponentName() {
 				return "ColliderComponent";
 			}
+			std::shared_ptr<GameComponent> Clone()override;
+			template<class Archive>
+			void serialize(Archive& archive)
+			{
+				archive(shp_collisionPrim);
+				archive(layerNum);
+				archive(isActive);
+			}
 		private:
 			UINT* p_index=nullptr;
 			UINT layerNum;

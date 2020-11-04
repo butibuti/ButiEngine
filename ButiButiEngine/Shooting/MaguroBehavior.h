@@ -11,6 +11,8 @@ namespace ButiEngine {
 		std::string GetBehaviorName()override {
 			return "MaguroBehavior";
 		};
+
+		std::shared_ptr<Behavior> Clone()override;
 	private:
 		std::shared_ptr<Transform> targetTrans;
 		std::shared_ptr<HavokBehavior> shp_havokBehavior;

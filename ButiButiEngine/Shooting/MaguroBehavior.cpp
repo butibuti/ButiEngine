@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "MaguroBehavior.h"
-#include"ChaseComponent.h"
-#include"LookAtComponent.h"
+#include"Header/GameObjects/DefaultGameComponent/ChaseComponent.h"
+#include"Header/GameObjects/DefaultGameComponent/LookAtComponent.h"
 #include"Header/GameObjects/DefaultGameComponent/MeshDrawComponent.h"
 #include"Header/GameObjects/DefaultGameComponent/ModelDrawComponent.h"
 #include"Header/GameParts/ResourceContainer.h"
@@ -86,4 +86,9 @@ void ButiEngine::MaguroBehavior::OnSet()
 		gameObject.lock()->GetResourceContainer()->GetModelTag("gun.b3m", "Model/Maguro/"), gameObject.lock()->GetResourceContainer() ->GetShaderTag("DefaultMesh")
 		);
 	shp_havokBehavior = havok.lock()->AddBehavior<HavokBehavior>();
+}
+
+std::shared_ptr< ButiEngine::Behavior> ButiEngine::MaguroBehavior::Clone()
+{
+	return ObjectFactory::Create<MaguroBehavior>();
 }

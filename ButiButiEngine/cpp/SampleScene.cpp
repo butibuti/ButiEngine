@@ -6,7 +6,6 @@
 #include"Header/GameParts/ResourceContainer.h"
 #include"Header/GameObjects/DefaultGameComponent/MeshDrawComponent.h"
 #include"Header/GameObjects/DefaultGameComponent/ModelDrawComponent.h"
-#include"Header/GameObjects/DefaultGameComponent/PararellDrawComponent.h"
 #include"Header/GameObjects/DefaultBehavior/SampleBehavior.h"
 #include"Header/GameObjects/DefaultGameComponent/ColliderComponent.h"
 #include"Header/GameObjects/DefaultGameComponent/SimpleBoneAnimanotorComponent.h"

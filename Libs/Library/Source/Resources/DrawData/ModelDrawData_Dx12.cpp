@@ -30,11 +30,10 @@ void ButiEngine::ModelDrawData_Dx12::Initialize()
 		shp_drawInfo->vec_exCBuffer.push_back(lightBuffer_Dx12);
 
 		auto light = LightVariable();
-		light.LightDir = Vector4(Vector3(-1.0f, -1.0f, 0.0f), 10);
+		light.LightDir = Vector4(Vector3(-1.0f, -1.0f, 0.0f), 1);
 
 
 		lightBuffer_Dx12->Get() = light;
-
 	}
 
 	auto cb_bone_Dx12 = ObjectFactory::Create<CArrayBuffer_Dx12<Matrix4x4>>(3, vec_bone.size());

@@ -26,6 +26,7 @@ namespace ButiEngine {
 		virtual void OnSet();
 		virtual void OnRemove();
 		virtual std::string GetGameComponentName() = 0;
+		virtual std::shared_ptr<GameComponent> Clone()=0;
 		bool IsRemove() {
 			return isRemove;
 		}

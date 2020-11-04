@@ -2,8 +2,6 @@
 #include "..\..\Header\GameParts\GameObjectManager.h"
 
 
-
-
 ButiEngine::GameObjectManager::GameObjectManager(std::weak_ptr<IScene> arg_wkp_scene)
 {
 	wkp_scene = arg_wkp_scene;
@@ -58,21 +56,14 @@ void ButiEngine::GameObjectManager::ShowUI()
 			selectedGameObject = (*itr);
 		}
 	}
-
 	ImGui::End();
-	ImGui::Begin("SelectedObj");
-	if (selectedGameObject.lock()) {
 
-		selectedGameObject.lock()->ShowUI();
 
-		if (ImGui::Button("Save!", ImVec2(200, 30))) {
-			OutputCereal(selectedGameObject.lock());
-		}
-	}
+}
 
-	
-
-	ImGui::End();
+std::weak_ptr<ButiEngine::GameObject> ButiEngine::GameObjectManager::GetSelectedUI()
+{
+	return selectedGameObject;
 }
 
 
@@ -103,6 +94,7 @@ std::weak_ptr<ButiEngine::GameObject> ButiEngine::GameObjectManager::AddObject(s
 
 std::weak_ptr<ButiEngine::GameObject> ButiEngine::GameObjectManager::AddObjectFromCereal(std::string filePath, std::shared_ptr<Transform> arg_transform)
 {
+
 	auto gameObject = ObjectFactory::CreateFromCereal<GameObject>(filePath);
 
 	if (arg_transform) {
@@ -127,6 +119,28 @@ std::weak_ptr<ButiEngine::GameObject> ButiEngine::GameObjectManager::AddObjectFr
 	}
 
 	return gameObject;
+}
+
+std::string ButiEngine::GameObjectManager::ReNameGameObject(const std::string& arg_ObjectName, const std::string& arg_befObjectName)
+{
+	auto object = map_gameObjects.at(arg_befObjectName);
+	map_gameObjects.erase(arg_befObjectName);
+
+	auto nowName = arg_ObjectName;
+	if (!map_gameObjects.count(nowName)) {
+
+		map_gameObjects.emplace(nowName, object);
+
+	}
+	else {
+		UINT count = 1;
+		while (!map_gameObjects.count(nowName + "_" + std::to_string(count))) {
+			count++;
+		}
+		nowName += "_" + std::to_string(count);
+		map_gameObjects.emplace(nowName, object);
+	}
+	return nowName;
 }
 
 

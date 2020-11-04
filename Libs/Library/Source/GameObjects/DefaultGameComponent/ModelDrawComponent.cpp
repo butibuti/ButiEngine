@@ -52,3 +52,8 @@ std::shared_ptr<ButiEngine::ModelDrawData> ButiEngine::ModelDrawComponent::GetMo
 {
 	return data->GetThis<ModelDrawData>();
 }
+
+std::shared_ptr<ButiEngine::GameComponent> ButiEngine::ModelDrawComponent::Clone()
+{
+	return ObjectFactory::Create<ModelDrawComponent>(modelTag,shaderTag,shp_drawInfo,layer,shp_transform);
+}

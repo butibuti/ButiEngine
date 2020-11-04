@@ -12,8 +12,13 @@ namespace ButiEngine {
 		void Initialize()override;
 		void PreInitialize()override;
 		void ShowUI();
+
+		std::weak_ptr<GameObject> GetSelectedUI();
+
 		std::weak_ptr<GameObject> AddObject(std::shared_ptr<Transform> arg_transform,  std::string arg_objectName = "GameObject");
 		std::weak_ptr<GameObject>AddObjectFromCereal(std::string filePath, std::shared_ptr<Transform> arg_transform=nullptr);
+
+		std::string ReNameGameObject(const std::string& arg_ObjectName,const std::string& arg_befObjectName);
 
 		std::weak_ptr<GameObject> GetGameObject(const std::string& arg_objectName);
 		std::weak_ptr<GameObject> GetGameObject(const GameObjectTag& arg_objectTag);

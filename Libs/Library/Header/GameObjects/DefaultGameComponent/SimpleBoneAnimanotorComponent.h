@@ -17,6 +17,7 @@ namespace ButiEngine {
 		std::string GetGameComponentName()override {
 			return "SimpleBoneAnimatorComponent";
 		}
+		std::shared_ptr<GameComponent> Clone()override;
 	private:
 		std::shared_ptr<ModelAnimation> shp_animation;
 		std::shared_ptr< ModelDrawData > shp_modelData;

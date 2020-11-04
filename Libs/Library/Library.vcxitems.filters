@@ -324,9 +324,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\PipelineStateManager.h">
       <Filter>header\Device</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\PararellDrawComponent.h">
-      <Filter>header\GameObjects\DefaultGameComponent</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Common\CollisionPrimitive.h">
       <Filter>header\Common</Filter>
     </ClInclude>
@@ -374,6 +371,15 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultBehavior\FPSViewBehavior.h">
       <Filter>header\GameObjects\DefaultBehavior</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\ChaseComponent.h">
+      <Filter>header\GameObjects\DefaultGameComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\LookAtComponent.h">
+      <Filter>header\GameObjects\DefaultGameComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\SucideComponent.h">
+      <Filter>header\GameObjects\DefaultGameComponent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -560,9 +566,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Device\PipelineStateManager.cpp">
       <Filter>source\Device</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\DefaultGameComponent\PararellDrawComponent.cpp">
-      <Filter>source\GameObjects\DefaultGameComponent</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Common\CollisionPrimitive.cpp">
       <Filter>source\Common</Filter>
     </ClCompile>
@@ -610,6 +613,15 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\DefaultBehavior\FPSViewBehavior.cpp">
       <Filter>source\GameObjects\DefaultBehavior</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\DefaultGameComponent\ChaseComponent.cpp">
+      <Filter>source\GameObjects\DefaultGameComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\DefaultGameComponent\LookAtComponent.cpp">
+      <Filter>source\GameObjects\DefaultGameComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\DefaultGameComponent\SucideComponent.cpp">
+      <Filter>source\GameObjects\DefaultGameComponent</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

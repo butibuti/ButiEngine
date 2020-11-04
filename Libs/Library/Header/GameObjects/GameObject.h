@@ -58,7 +58,7 @@ namespace ButiEngine {
 		}
 
 		template<class T, typename... Ts>
-		inline std::shared_ptr<T> AddBehavior_Init(Ts&&... params) {
+		inline std::shared_ptr<T> AddBehavior_Insert(Ts&&... params) {
 			auto addBehavior = ObjectFactory::Create<T>(params...);
 			vec_behaviors.push_back(addBehavior);
 			addBehavior->Set(GetThis<GameObject>());
@@ -76,16 +76,16 @@ namespace ButiEngine {
 		}
 		
 		template<class T, typename... Ts>
-			inline std::shared_ptr<T> AddGameComponent_Init(Ts&&... params) {
+			inline std::shared_ptr<T> AddGameComponent_Insert(Ts&&... params) {
 			auto addComponet = ObjectFactory::Create<T>(params...);
 			vec_gameComponents.push_back(addComponet);
 			addComponet->Set(GetThis<GameObject>());
 			return addComponet;
 		}
 
-		std::shared_ptr<Behavior> AddBehavior_Init(std::shared_ptr<Behavior> arg_shp_behavior);
+		std::shared_ptr<Behavior> AddBehavior_Insert(std::shared_ptr<Behavior> arg_shp_behavior);
 
-		std::shared_ptr<GameComponent> AddGameComponent_Init(std::shared_ptr<GameComponent> arg_shp_gameComponent);
+		std::shared_ptr<GameComponent> AddGameComponent_Insert(std::shared_ptr<GameComponent> arg_shp_gameComponent);
 
 		std::shared_ptr<Behavior> GetBehavior(const std::string& arg_behaviorName);
 
@@ -117,10 +117,7 @@ namespace ButiEngine {
 			return objectName;
 		}
 
-		std::string SetObjectName(const std::string& arg_objectName) {
-			objectName = arg_objectName;
-			return objectName;
-		}
+		std::string SetObjectName(const std::string& arg_objectName);
 
 		GameObjectTag SetGameObjectTag(GameObjectTag arg_tag) {
 			gameObjectTag = arg_tag;

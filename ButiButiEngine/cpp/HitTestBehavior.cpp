@@ -30,3 +30,8 @@ void ButiEngine::HitTestBehavior::OnCollisionEnd(std::weak_ptr<GameObject> arg_o
 {
 	std::cout << "OnCollisionEnd:" << gameObject.lock()->GetGameObjectName() << std::endl;
 }
+
+std::shared_ptr<ButiEngine::Behavior> ButiEngine::HitTestBehavior::Clone()
+{
+	return ObjectFactory::Create<HitTestBehavior>();
+}

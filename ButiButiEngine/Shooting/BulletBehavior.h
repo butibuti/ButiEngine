@@ -12,9 +12,11 @@ namespace ButiEngine {
 		void OnUpdate()override;
 		void OnSet()override;
 		void OnCollisionEnter(std::weak_ptr<GameObject> arg_other)override;
+
+		std::shared_ptr<Behavior> Clone()override;
 	private:
 		SoundTag bulletSoundTag;
-		float speed;
+		float count;
 		Vector3 bulletVelocity;
 		std::vector<GameObjectTag> vec_hitTags;
 	};

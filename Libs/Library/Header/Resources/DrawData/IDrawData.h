@@ -13,7 +13,12 @@ namespace ButiEngine {
 		void Initialize()override {}
 		void PreInitialize()override {}
 		std::vector<std::shared_ptr<ICBuffer>> vec_exCBuffer;
-		bool isUseMaterial=true;
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(isLightUp);
+			archive(drawSettings);
+		}
 	};
 	struct DrawData {
 		

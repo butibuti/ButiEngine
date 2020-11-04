@@ -99,6 +99,17 @@ void ButiEngine::MeshDrawComponent::SetBlendMode(const BlendMode& arg_blendMode)
 	data->SetBlendMode(arg_blendMode);
 }
 
+std::shared_ptr<ButiEngine:: GameComponent> ButiEngine::MeshDrawComponent::Clone()
+{
+	if (modelTag.IsEmpty()) {
+		return ObjectFactory::Create<MeshDrawComponent>(meshTag, shaderTag,materialTag, shp_drawInfo, layer, shp_transform);
+	}
+	else {
+		return ObjectFactory::Create<MeshDrawComponent>(modelTag,shaderTag,shp_drawInfo,layer,shp_transform);
+	}
+
+}
+
 void ButiEngine::MeshDrawComponent::Regist()
 {
 

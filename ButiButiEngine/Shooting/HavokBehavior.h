@@ -11,6 +11,7 @@ namespace ButiEngine {
 		std::string GetBehaviorName()override {
 			return"HavokBehavior";
 		}
+		std::shared_ptr<Behavior> Clone()override;
 	private:
 		std::shared_ptr<TimeBomb<HavokBehavior>> shp_coolTimer;
 

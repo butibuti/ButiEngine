@@ -1,8 +1,8 @@
 #include "stdafx.h"
-#include "Header/GameObjects/DefaultBehavior/FPSViewBehavior.h"
 #include"Header/GameParts/ResourceContainer.h"
 #include"Header/GameObjects/DefaultGameComponent/MeshDrawComponent.h"
 #include"Header/GameParts/SoundManager.h"
+#include "..\..\..\Header\GameObjects\DefaultBehavior\FPSViewBehavior.h"
 void ButiEngine::FPSViewBehavior::Start()
 {
 	auto camera = GetCamera("main");
@@ -48,8 +48,13 @@ void ButiEngine::FPSViewBehavior::OnUpdate()
 
 void ButiEngine::FPSViewBehavior::OnSet()
 {
-	auto headTransform = ObjectFactory::Create<Transform>(Vector3(0, 2.0f, -2.0f));
+	auto headTransform = ObjectFactory::Create<Transform>(Vector3(0, 2.0f, 0.0f));
 	headTransform->SetBaseTransform(gameObject.lock()->transform);
 	head = GetManager().lock()->AddObject(headTransform, "head");
 	gameObject.lock()->AddChildGameObject(head);
+}
+
+std::shared_ptr<ButiEngine::Behavior> ButiEngine::FPSViewBehavior::Clone()
+{
+	return ObjectFactory::Create<FPSViewBehavior>();
 }

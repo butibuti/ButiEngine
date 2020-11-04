@@ -2,11 +2,10 @@
 #include "ShootingScene.h"
 #include"MaguroBehavior.h"
 #include"include/HitTestBehavior.h"
-#include"SucideComponent.h"
+#include"Header/GameObjects/DefaultGameComponent/SucideComponent.h"
 #include"Header/GameParts/ResourceContainer.h"
 #include"Header/GameObjects/DefaultGameComponent/MeshDrawComponent.h"
 #include"Header/GameObjects/DefaultGameComponent/ModelDrawComponent.h"
-#include"Header/GameObjects/DefaultGameComponent/PararellDrawComponent.h"
 #include"Header/GameObjects/DefaultBehavior/SampleBehavior.h"
 #include"Header/GameObjects/DefaultGameComponent/ColliderComponent.h"
 

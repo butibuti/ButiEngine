@@ -27,7 +27,8 @@ void ButiEngine::Application::CreateInstances(const std::string windowName, cons
 
 	
 	if (!shp_resourceContainer) {
-		shp_resourceContainer = ObjectFactory::Create<ResourceContainer>(shp_graphicDevice);
+		shp_resourceContainer = ObjectFactory::Create<ResourceContainer>();
+		shp_resourceContainer->SetGraphicDevice(shp_graphicDevice);
 	}
 	
 	if (!shp_sceneManager) {
@@ -109,8 +110,6 @@ void ButiEngine::Application::InitLoadResources()
 
 	std::vector<ResourceContainer::ShaderName> vec_names = {
 		{"DefaultMesh","DefaultMeshVS","DefaultMeshPS", "Shader/Compiled/", "Shader/Compiled/"},
-		{"DefaultMesh_test","VertexUVNormalAttributeVS","DefaultMeshPS", "Shader/Compiled/", "Shader/Compiled/","PointToPolygonGS","Shader/Compiled/"},
-		{"BillBoardMesh","LookAtInverseMeshVS","DefaultMeshPS", "Shader/Compiled/", "Shader/Compiled/"},
 		{"OnlyMaterial","DefaultMeshVS","AmbientPS", "Shader/Compiled/", "Shader/Compiled/"},
 		{"HalfAlphaPMX","PMXVS","HalfAlphaPS", "Shader/Compiled/", "Shader/Compiled/"},
 		{"GSMesh","VertexUVNormalAttributeVS","DefaultMeshPS", "Shader/Compiled/", "Shader/Compiled/","TestGS","Shader/Compiled/"},
@@ -125,7 +124,7 @@ void ButiEngine::Application::InitLoadResources()
 
 
 
-	//ModelFileConverter::FBXtoB3M("rock.fbx", "rock.b3m", "Model/FBX/");
+	//ModelFileConverter::FBXtoB3M("ball.fbx", "sphere.b3m", "Model/FBX/");
 	//ModelFileConverter::FBXtoB3M("sango_another.fbx", "sango_another.b3m", "Model/FBX/");
 	//ModelFileConverter::FBXtoB3M("coin.fbx", "coin.b3m", "Model/FBX/");
 	//ModelFileConverter::FBXtoB3M("gun.fbx", "gun.b3m", "Model/Maguro/");
@@ -139,8 +138,8 @@ void ButiEngine::Application::InitLoadResources()
 		//{"tatami.b3m", "Model/畳/"},
 		//{"driver.b3m", "Model/"},
 		{"hikari.b3m", "Model/aomoti式_ウルトラマンヒカリ/"},
-		//{"maguro.b3m", "Model/Maguro/"},
-		//{"gun.b3m", "Model/Maguro/"},
+		{"maguro.b3m", "Model/Maguro/"},
+		{"sphere.b3m", "Model/FBX/"},
 	};
 
 	Application::GetResourceContainer()->LoadModel(vec_modelPath);
@@ -173,10 +172,10 @@ void ButiEngine::Application::InitLoadResources()
 
 	Application::GetResourceContainer()->LoadMaterial(vec_materialPath);
 
-	MaterialVariable materialVar;
+	//MaterialVariable materialVar;
 
-	Application::GetResourceContainer()->LoadMaterial(materialVar, vec_textureTag.at(2), "sorena");
-	Application::GetResourceContainer()->LoadMaterial(materialVar,vec_textureTag.at(3),"haikei");
+	//Application::GetResourceContainer()->LoadMaterial(materialVar, vec_textureTag.at(2), "sorena");
+	//Application::GetResourceContainer()->LoadMaterial(materialVar,vec_textureTag.at(3),"haikei");
 
 	std::vector<std::pair<std::string, std::string>> vec_soundPath = {
 		{"se_maoudamashii_jingle13.wav","Sound/"},

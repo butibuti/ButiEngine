@@ -8,12 +8,58 @@
 #include"Header/GameParts/ResourceContainer.h"
 #include"Header/GameObjects/DefaultGameComponent/MeshDrawComponent.h"
 #include"Header/GameObjects/DefaultGameComponent/ModelDrawComponent.h"
-#include"Header/GameObjects/DefaultGameComponent/PararellDrawComponent.h"
+#include"Header/GameObjects/DefaultGameComponent/ChaseComponent.h"
 #include"Header/GameObjects/DefaultBehavior/SampleBehavior.h"
 #include"Header/GameObjects/DefaultGameComponent/ColliderComponent.h"
 #include"Header/GameObjects/DefaultGameComponent/SimpleBoneAnimanotorComponent.h"
+#include "Header/GameObjects/DefaultGameComponent/LookAtComponent.h"
+#include "Header/GameObjects/DefaultGameComponent/SucideComponent.h"
 #include"Header/Resources/ModelAnimation.h"
 //#include "..\..\Header\Scene\EditScene.h"
+
+
+
+
+namespace CallBacks
+{
+	static int ImguiCallBack(ImGuiInputTextCallbackData* data)
+	{
+		if (data->EventFlag == ImGuiInputTextFlags_CallbackCompletion)
+		{
+			data->InsertChars(data->CursorPos, "..");
+		}
+		else if (data->EventFlag == ImGuiInputTextFlags_CallbackHistory)
+		{
+			if (data->EventKey == ImGuiKey_UpArrow)
+			{
+				data->DeleteChars(0, data->BufTextLen);
+				data->InsertChars(0, "Pressed Up!");
+				data->SelectAll();
+			}
+			else if (data->EventKey == ImGuiKey_DownArrow)
+			{
+				data->DeleteChars(0, data->BufTextLen);
+				data->InsertChars(0, "Pressed Down!");
+				data->SelectAll();
+			}
+		}
+		else if (data->EventFlag == ImGuiInputTextFlags_CallbackEdit)
+		{
+			// Toggle casing of first character
+			char c = data->Buf[0];
+			if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) data->Buf[0] ^= 32;
+			data->BufDirty = true;
+
+			// Increment a counter
+			int* p_int = (int*)data->UserData;
+			*p_int = *p_int + 1;
+		}
+		return 0;
+	}
+
+
+	static char objectName[128];
+};
 
 
 void ButiEngine::EditScene::Update() {
@@ -48,10 +94,11 @@ void ButiEngine::EditScene::OnInitialize()
 	auto info = ObjectFactory::Create<DrawInformation>();
 
 	auto testVar = ObjectFactory::Create<CBuffer_Dx12< TestGSVariable>>(4);
+	testVar->Get().bottom = -5.0;
 	shp_testGSVariable = testVar;
 	info->vec_exCBuffer.push_back(shp_testGSVariable.lock());
 	//info->drawSettings.topologyType = TopologyType::point;
-	auto hikariModelComponent = hikari.lock()->AddGameComponent_Init<ModelDrawComponent>(
+	auto hikariModelComponent = hikari.lock()->AddGameComponent_Insert<ModelDrawComponent>(
 		GetResourceContainer()->GetModelTag("hikari.b3m", "Model/aomoti式_ウルトラマンヒカリ/"), GetResourceContainer()->GetShaderTag("PMXModel_GS"), info
 		);
 
@@ -71,40 +118,58 @@ void ButiEngine::EditScene::OnInitialize()
 
 
 
-	auto animator = hikari.lock()->AddGameComponent_Init<SimpleBoneAnimatorComponent>(hikariModelComponent->GetModelData());
+	//auto animator = hikari.lock()->AddGameComponent_Insert<SimpleBoneAnimatorComponent>(hikariModelComponent->GetModelData());
 
-	animator->AddAnimation(GetResourceContainer()->GetMotionTag("slash.bmd", "Motion/"));
-	animator->SetLoop(true);
+	//animator->AddAnimation(GetResourceContainer()->GetMotionTag("slash.bmd", "Motion/"));
+	//animator->SetLoop(true);
 
 
 	auto floor = shp_gameObjectManager->AddObject(ObjectFactory::Create<Transform>(Vector3(0, -0.1, 0), Vector3(90, 0, 0), Vector3(50.0f, 50.0f, 50.0f)), "floor");
 
-	floor.lock()->AddGameComponent_Init<MeshDrawComponent>(
+	floor.lock()->AddGameComponent_Insert<MeshDrawComponent>(
 		GetResourceContainer()->GetMeshTag("Floor"), GetResourceContainer()->GetShaderTag("Glid"), GetResourceContainer()->GetMaterialTag("blueMaterial.bma", "Material/"), nullptr, 0
+		); 
+	
+	
+	auto sample = shp_gameObjectManager->AddObjectFromCereal("Resources/GameObject/sample.gameObject");
+
+	/*ball.lock()->AddGameComponent_Insert<MeshDrawComponent>(
+		GetResourceContainer()->GetModelTag("sphere.b3m", "Model/FBX/"), GetResourceContainer()->GetShaderTag("DefaultMesh")
+		);*/
+
+
+	auto maguro = shp_gameObjectManager->AddObjectFromCereal("Resources/GameObject/maguro.gameObject");
+
+	maguro.lock()->AddGameComponent_Insert<ModelDrawComponent>(
+		GetResourceContainer()->GetModelTag("maguro.b3m", "Model/Maguro/"), GetResourceContainer()->GetShaderTag("QuadModel"), nullptr
+		); 
+	
+	auto maguro2 = shp_gameObjectManager->AddObjectFromCereal("Resources/GameObject/maguro2.gameObject");
+
+	maguro2.lock()->AddGameComponent_Insert<ModelDrawComponent>(
+		GetResourceContainer()->GetModelTag("maguro.b3m", "Model/Maguro/"), GetResourceContainer()->GetShaderTag("QuadModel"), nullptr
 		);
 
-
-
-	auto inputTransform = ObjectFactory::Create<Transform>();
-
-	auto gsSphere = shp_gameObjectManager->AddObject(inputTransform, "test");
-
-	auto sphereInfo = ObjectFactory::Create<DrawInformation>();
-	sphereInfo->drawSettings.billboardMode = BillBoardMode::y;
-	gsSphere.lock()->AddGameComponent_Init<MeshDrawComponent>(
-		GetResourceContainer()->GetMeshTag("Floor"), GetResourceContainer()->GetShaderTag("DefaultMesh"), GetResourceContainer()->GetMaterialTag("blueMaterial.bma", "Material/"), sphereInfo, 0);
 
 	auto player = shp_gameObjectManager->AddObject(
 		ObjectFactory::Create<Transform>(Vector3(0.0f, 1.0f, 0.0f)), "player");
 
-	player.lock()->AddBehavior_Init<FPSViewBehavior>();
+	player.lock()->AddBehavior_Insert<FPSViewBehavior>();
+
+	vec_shp_addComponents.push_back(ObjectFactory::Create<ModelDrawComponent>(
+		GetResourceContainer()->GetModelTag("maguro.b3m", "Model/Maguro/"), GetResourceContainer()->GetShaderTag("QuadModel"),nullptr
+		));
+	vec_shp_addComponents.push_back(ObjectFactory::Create<ChaseComponent>(player.lock()->transform));
+	vec_shp_addComponents.push_back(ObjectFactory::Create<LookAtComponent>(player.lock()->transform));
+	vec_shp_addComponents.push_back(ObjectFactory::Create<SucideComponent>(60.0f));
+
+
+	vec_shp_addBehavior.push_back(ObjectFactory::Create<SampleBehavior>());
+	vec_shp_addBehavior.push_back(ObjectFactory::Create<HitTestBehavior>());
 }
 
 void ButiEngine::EditScene::OnUpdate()
 {
-	
-
-
 	shp_testGSVariable.lock()->Get().pushPower.w = t * 2;
 
 	if (GameDevice::input.CheckKey(Keys::H)) {
@@ -128,6 +193,61 @@ void ButiEngine::EditScene::UIUpdate()
 	ImGui::End();*/
 
 	shp_gameObjectManager->ShowUI();
+
+	auto selectedGameObject = shp_gameObjectManager->GetSelectedUI();
+
+
+	ImGui::Begin("SelectedObj");
+	if (selectedGameObject.lock()) {
+
+
+		ImGui::InputTextWithHint("Name", selectedGameObject.lock()->GetGameObjectName().c_str(), CallBacks::objectName, 64, 64, CallBacks::ImguiCallBack);
+		ImGui::SameLine();
+
+		if (ImGui::Button("Change")) {
+			selectedGameObject.lock()->SetObjectName(CallBacks::objectName);
+		}
+
+		selectedGameObject.lock()->ShowUI();
+
+
+		if (ImGui::TreeNode("Add Behavior")) {
+
+
+			if (ImGui::ListBox("Behaviors", &currentIndex_behaviorList, behaviorNameList,behaviorNameListSize, 5)) {
+			}
+
+			if (ImGui::Button("Add!")) {
+				auto behavior = vec_shp_addBehavior.at(currentIndex_behaviorList)->Clone();
+				selectedGameObject.lock()->AddBehavior_Insert(behavior);
+			}
+
+			ImGui::TreePop();
+		}
+
+		if (ImGui::TreeNode("Add GameComponent")) {
+			if (ImGui::ListBox("GameComponents", &currentIndex_componentList, componentNameList, componentNameListSize, 5)) {
+			}
+
+
+			if (ImGui::Button("Add!")) {
+				auto component = vec_shp_addComponents.at(currentIndex_componentList)->Clone();
+				selectedGameObject.lock()->AddGameComponent_Insert(component);
+			}
+
+			ImGui::TreePop();
+		}
+
+
+
+		if (ImGui::Button("Save!", ImVec2(200, 30))) {
+			OutputCereal(selectedGameObject.lock());
+		}
+	}
+
+
+
+	ImGui::End();
 
 }
 
@@ -204,6 +324,15 @@ ButiEngine::EditScene::EditScene(std::weak_ptr<ISceneManager> arg_wkp_sceneManag
 
 void ButiEngine::EditScene::Release()
 {
+	for (int i = 0; i < componentNameListSize; i++) {
+		delete componentNameList[i];
+	}
+	delete componentNameList;
+
+	for (int i = 0; i < behaviorNameListSize; i++) {
+		delete behaviorNameList[i];
+	}
+	delete behaviorNameList;
 	shp_gameObjectManager = nullptr;
 	shp_soundManager->Release();
 	shp_renderer->Release();
@@ -219,7 +348,8 @@ void ButiEngine::EditScene::Initialize()
 
 	shp_soundManager = ObjectFactory::Create<SoundManager>(GetThis<IScene>());
 
-	auto windowSize = GetWindow()->GetSize();/*
+	auto windowSize = GetWindow()->GetSize();
+	/*
 	shp_renderer->AddLayer();
 	shp_renderer->AddLayer();
 	auto prop2 = CameraProjProperty(windowSize.x, windowSize.y, 0, 0,true,1);
@@ -237,6 +367,29 @@ void ButiEngine::EditScene::Initialize()
 	//auto prop3 = CameraProjProperty(windowSize.x, windowSize.y, 0, 0, true, 2);
 	//AddCamera(prop3, "backGround", true);
 	OnInitialize();
+
+	componentNameListSize = vec_shp_addComponents.size();
+	componentNameList = (char**)malloc(sizeof(char*) * componentNameListSize);
+
+	for (int i = 0; i < componentNameListSize; i++) {
+		auto name = vec_shp_addComponents.at(i)->GetGameComponentName();
+		int size =name.size();
+		componentNameList[i] =( char*)malloc(size*sizeof(char)+1) ; 
+		auto name_c_str = name.c_str();
+		strcpy_s( componentNameList[i],size+1,name_c_str );
+	}
+
+	behaviorNameListSize = vec_shp_addBehavior.size();
+
+	behaviorNameList = (char**)malloc(sizeof(char*) *behaviorNameListSize);
+
+	for (int i = 0; i <behaviorNameListSize; i++) {
+		auto name = vec_shp_addBehavior.at(i)->GetBehaviorName();
+		int size = name.size();
+		behaviorNameList[i] = (char*)malloc(size * sizeof(char) + 1);
+		auto name_c_str = name.c_str();
+		strcpy_s(behaviorNameList[i], size + 1, name_c_str);
+	}
 }
 
 void ButiEngine::EditScene::ActiveCollision(const UINT arg_layerCount)

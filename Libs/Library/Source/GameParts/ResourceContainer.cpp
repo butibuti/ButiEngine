@@ -4,13 +4,20 @@
 #include"Header/Resources/Resource_Sound_XAudio2.h"
 #include "..\..\Header\GameParts\ResourceContainer.h"
 
-ButiEngine::ResourceContainer::ResourceContainer(std::weak_ptr<GraphicDevice> arg_weak_graphicDevice)
+
+ButiEngine::ResourceContainer::ResourceContainer()
 {
-	wkp_graphicDevice = arg_weak_graphicDevice;
-	
-		unq_resourceFactory = ObjectFactory::Create <ResourceFactory_Dx12>(wkp_graphicDevice);
-	
-	container_geometryShaders.AddValue(nullptr,"none");
+
+}
+
+void ButiEngine::ResourceContainer::SetGraphicDevice(std::weak_ptr<GraphicDevice> arg_shp_graphicDevice)
+{
+
+	wkp_graphicDevice = arg_shp_graphicDevice;
+
+	unq_resourceFactory = ObjectFactory::Create <ResourceFactory_Dx12>(wkp_graphicDevice);
+
+	container_geometryShaders.AddValue(nullptr, "none");
 }
 
 void ButiEngine::ResourceContainer::Initialize()
@@ -40,6 +47,7 @@ ButiEngine::MaterialTag ButiEngine::ResourceContainer::LoadMaterial(const std::s
 	if (container_materials.ContainValue(arg_fileDirectory + arg_filePath)) {
 		return container_materials.GetTag(arg_fileDirectory + arg_filePath);
 	}
+	vec_filePathAndDirectory_mat.push_back(arg_fileDirectory + arg_filePath);
 	return container_materials.AddValue(unq_resourceFactory->CreateMaterial(arg_filePath, arg_fileDirectory), arg_fileDirectory + arg_filePath);
 }
 
@@ -67,6 +75,8 @@ ButiEngine::TextureTag ButiEngine::ResourceContainer::LoadTexture(const std::str
 	if (container_textures.ContainValue(arg_fileDirectory + arg_filePath)) {
 		return container_textures.GetTag(arg_fileDirectory + arg_filePath);
 	}
+
+	vec_filePathAndDirectory_tex.push_back(arg_fileDirectory + arg_filePath);
 	auto tex= unq_resourceFactory->CreateTextureFromFile(GlobalSettings::GetResourceDirectory() + arg_fileDirectory + arg_filePath);
 	tex->SetFilePath(arg_fileDirectory + arg_filePath);
 	return container_textures.AddValue(tex, arg_fileDirectory + arg_filePath);
@@ -89,6 +99,8 @@ ButiEngine::PixelShaderTag ButiEngine::ResourceContainer::LoadPixelShader(const 
 	if (container_pixelShaders.ContainValue(arg_fileDirectory + arg_filePath)) {
 		return container_pixelShaders.GetTag(arg_fileDirectory + arg_filePath);
 	}
+
+	vec_filePathAndDirectory_ps.push_back(arg_fileDirectory + arg_filePath);
 	return container_pixelShaders.AddValue(unq_resourceFactory->CreatePixelShaderFromFile(GlobalSettings::GetResourceDirectory() + arg_fileDirectory + arg_filePath),arg_fileDirectory+arg_filePath);
 }
 
@@ -109,6 +121,8 @@ ButiEngine::VertexShaderTag ButiEngine::ResourceContainer::LoadVertexShader(cons
 	if (container_vertexShaders.ContainValue(arg_fileDirectory + arg_filePath)) {
 		return container_vertexShaders.GetTag(arg_fileDirectory + arg_filePath);
 	}
+
+	vec_filePathAndDirectory_vs.push_back(arg_fileDirectory + arg_filePath);
 	return container_vertexShaders.AddValue(unq_resourceFactory->CreateVertexShaderFromFile(GlobalSettings::GetResourceDirectory() + arg_fileDirectory + arg_filePath), arg_fileDirectory + arg_filePath);
 }
 
@@ -129,6 +143,8 @@ ButiEngine::GeometryShaderTag ButiEngine::ResourceContainer::LoadGeometryShader(
 	if (container_geometryShaders.ContainValue(arg_fileDirectory + arg_filePath)) {
 		return container_geometryShaders.GetTag(arg_fileDirectory + arg_filePath);
 	}
+
+	vec_filePathAndDirectory_gs.push_back(arg_fileDirectory + arg_filePath);
 	return container_geometryShaders.AddValue(unq_resourceFactory->CreateGeometryShaderFromFile(GlobalSettings::GetResourceDirectory() + arg_fileDirectory + arg_filePath), arg_fileDirectory + arg_filePath);;
 }
 
@@ -146,7 +162,8 @@ std::vector< ButiEngine::GeometryShaderTag> ButiEngine::ResourceContainer::LoadG
 
 ButiEngine::ShaderTag ButiEngine::ResourceContainer::LoadShader(const  ShaderName& arg_shaderNames)
 {
-	
+
+	vec_shaderNames.push_back(arg_shaderNames);
 	return container_shaders.AddValue(ObjectFactory::Create<Resource_Shader>(container_vertexShaders.GetValue(arg_shaderNames.vertexShaderDirectory+arg_shaderNames.vertexShaderName), container_pixelShaders.GetValue(arg_shaderNames.pixelShaderDirectory + arg_shaderNames.pixelShaderName), container_geometryShaders.GetValue(arg_shaderNames.geometryShaderDirectory + arg_shaderNames.geometryShaderName)
 		, arg_shaderNames.vertexShaderDirectory + arg_shaderNames.vertexShaderName + arg_shaderNames.geometryShaderDirectory + arg_shaderNames.pixelShaderName + arg_shaderNames.geometryShaderDirectory + arg_shaderNames.geometryShaderName
 		), arg_shaderNames.shaderName);
@@ -170,6 +187,8 @@ ButiEngine::SoundTag ButiEngine::ResourceContainer::LoadSound(const std::string&
 	if (container_sounds.ContainValue(arg_fileDirectory + arg_filePath)) {
 		return container_sounds.GetTag(arg_fileDirectory + arg_filePath);
 	}
+
+	vec_filePathAndDirectory_sound.push_back(arg_fileDirectory + arg_filePath);
 	return container_sounds.AddValue(ObjectFactory::Create<Resource_Sound_XAudio2>(GlobalSettings::GetResourceDirectory() + arg_fileDirectory + arg_filePath),arg_fileDirectory+arg_filePath);
 }
 
@@ -190,6 +209,8 @@ ButiEngine::ModelTag ButiEngine::ResourceContainer::LoadModel(const std::string&
 	if (container_models.ContainValue(arg_fileDirectory + arg_filePath)) {
 		return container_models.GetTag(arg_fileDirectory + arg_filePath);
 	}
+
+	vec_filePathAndDirectory_model.push_back(arg_fileDirectory + arg_filePath);
 	return container_models.AddValue(unq_resourceFactory->CreateModel(arg_filePath, arg_fileDirectory), arg_fileDirectory + arg_filePath);
 }
 
@@ -218,6 +239,7 @@ ButiEngine::MotionTag ButiEngine::ResourceContainer::LoadMotion(const std::strin
 	if (container_motions.ContainValue(arg_fileDirectory + arg_filePath)) {
 		return container_motions.GetTag(arg_fileDirectory + arg_filePath);
 	}
+	vec_filePathAndDirectory_motion.push_back(arg_fileDirectory + arg_filePath);
 	return container_motions.AddValue(unq_resourceFactory->CreateMotion(arg_filePath, arg_fileDirectory), arg_fileDirectory + arg_filePath);
 }
 
@@ -306,4 +328,83 @@ ButiEngine::ModelTag ButiEngine::ResourceContainer::GetModelTag(const std::strin
 ButiEngine::MotionTag ButiEngine::ResourceContainer::GetMotionTag(const std::string& arg_key, const std::string& arg_fileDirectory)
 {
 	return container_motions.GetTag(arg_fileDirectory + arg_key);
+}
+
+void ButiEngine::ResourceContainer::Reload()
+{
+
+	for (auto itr = vec_filePathAndDirectory_mat.begin(); itr != vec_filePathAndDirectory_mat.end(); itr++) {
+		(LoadMaterial(*itr));
+	}
+
+	for (auto itr = vec_filePathAndDirectory_tex.begin(); itr != vec_filePathAndDirectory_tex.end(); itr++) {
+		(LoadTexture(*itr));
+	}
+
+	for (auto itr = vec_filePathAndDirectory_ps.begin(); itr != vec_filePathAndDirectory_ps.end(); itr++) {
+		(LoadPixelShader(*itr));
+	}
+
+	for (auto itr = vec_filePathAndDirectory_vs.begin(); itr != vec_filePathAndDirectory_vs.end(); itr++) {
+		(LoadVertexShader(*itr));
+	}
+
+	for (auto itr = vec_filePathAndDirectory_gs.begin(); itr != vec_filePathAndDirectory_gs.end(); itr++) {
+		(LoadGeometryShader(*itr));
+	}
+
+	for (auto itr = vec_shaderNames.begin(); itr != vec_shaderNames.end(); itr++) {
+		(LoadShader(*itr));
+	}
+
+	for (auto itr = vec_filePathAndDirectory_sound.begin(); itr != vec_filePathAndDirectory_sound.end(); itr++) {
+		(LoadSound(*itr));
+	}
+
+
+	for (auto itr = vec_filePathAndDirectory_model.begin(); itr != vec_filePathAndDirectory_model.end(); itr++) {
+		(LoadModel(*itr));
+	}
+
+	for (auto itr = vec_filePathAndDirectory_motion.begin(); itr != vec_filePathAndDirectory_motion.end(); itr++) {
+		(LoadMotion(*itr));
+	}
+
+
+}
+
+
+
+void ButiEngine::OutputCereal(const std::shared_ptr<ResourceContainer>& v)
+{
+	std::stringstream stream;
+
+
+	cereal::BinaryOutputArchive binOutArchive(stream);
+	binOutArchive(v);
+
+	std::ofstream outputFile(GlobalSettings::GetResourceDirectory() + "Application/resourceLoadData.resource", std::ios::out);
+
+	outputFile << stream.str();
+
+	outputFile.close();
+	stream.clear();
+}
+
+void ButiEngine::InputCereal(std::shared_ptr<ResourceContainer>& v, const std::string& path, std::weak_ptr<GraphicDevice> arg_shp_graphicDevice)
+{
+	std::stringstream stream;
+
+	std::ifstream inputFile(path, std::ios::in);
+
+	stream << inputFile.rdbuf();
+
+	cereal::BinaryInputArchive binInputArchive(stream);
+
+
+	binInputArchive(v);
+
+	v->SetGraphicDevice(arg_shp_graphicDevice);
+
+	v->Reload();
 }

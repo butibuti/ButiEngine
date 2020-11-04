@@ -16,8 +16,9 @@ namespace ButiEngine {
 
 		void OnSet()override;
 		std::shared_ptr<ModelDrawData> GetModelData();
+		std::shared_ptr<GameComponent> Clone()override;
+
 	private:
-		std::shared_ptr< DrawInformation >shp_drawInfo;
 	};
 
 }

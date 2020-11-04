@@ -738,6 +738,10 @@ namespace ButiEngine {
 
 		inline Vector4& Ceil(int len) {}
 
+		inline Vector3 GetVec3()const {
+			return Vector3(x, y, z);
+		}
+
 		inline float Dot(const Vector4& vec1) const
 		{
 			return ((Vector3)XMVector4Dot(*this, vec1)).x;

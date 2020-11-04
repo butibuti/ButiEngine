@@ -5,7 +5,7 @@
 ButiEngine::StraightBulletBehavior::StraightBulletBehavior(const Vector3& arg_velocity, const float arg_speed, const std::vector<GameObjectTag>& arg_vec_hitTags)
 {
 	bulletVelocity = arg_velocity.GetNormalize();
-	speed = arg_speed;
+	count = arg_speed;
 	vec_hitTags = arg_vec_hitTags;
 }
 
@@ -27,4 +27,9 @@ void ButiEngine::StraightBulletBehavior::OnCollisionEnter(std::weak_ptr<GameObje
 			break;
 		}
 	}
+}
+
+std::shared_ptr< ButiEngine::Behavior> ButiEngine::StraightBulletBehavior::Clone()
+{
+	return ObjectFactory::Create<StraightBulletBehavior>(bulletVelocity,count,vec_hitTags);
 }

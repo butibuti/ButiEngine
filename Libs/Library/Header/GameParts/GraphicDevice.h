@@ -43,6 +43,16 @@ namespace ButiEngine {
 		BillBoardMode billboardMode = BillBoardMode::none;
 		TopologyType topologyType = TopologyType::triangleList;
 
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(cullMode);
+			archive(isFill);
+			archive(blendMode);
+			archive(billboardMode);
+			archive(topologyType);
+		}
+
 		inline bool operator==(const DrawSettings& other)const {
 
 			if (cullMode == other.cullMode && isFill == other.isFill&&billboardMode==other.billboardMode) {

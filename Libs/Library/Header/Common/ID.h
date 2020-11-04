@@ -5,10 +5,10 @@ namespace ButiEngine {
 	class ID {
 	public:
 		ID() {}
-		ID(UINT* arg_id) :id(arg_id) {}
+		ID(std::shared_ptr<UINT> arg_id) { id = (arg_id); }
 
 		UINT* GetID()const {
-			return id;
+			return id.get();
 		}
 		bool operator == (const ID& other) {
 			return *other.id == *id;
@@ -16,8 +16,13 @@ namespace ButiEngine {
 		bool IsEmpty() const {
 			return id == nullptr;
 		}
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(id);
+		}
 	private:
-		UINT* id = nullptr;
+		std::shared_ptr<UINT> id = nullptr;
 	};
 
 	template <class T>
@@ -26,9 +31,6 @@ namespace ButiEngine {
 		void Clear() {
 			map_values.clear();
 			vec_p_resource.clear();
-			for (auto itr = vec_p_id.begin(); itr != vec_p_id.end(); itr++) {
-				delete* itr;
-			}
 			vec_p_id.clear();
 		}
 		ID<T> GetTag(const std::string& arg_key, const std::string& arg_directory = "")const {
@@ -54,18 +56,32 @@ namespace ButiEngine {
 		}
 		ID<T> AddValue(std::shared_ptr<T> arg_value, const std::string& arg_key, const std::string& arg_directory = "") {
 			if (map_values.count(arg_directory + arg_key)) {
-				std::cout << "This name is already registed." << std::endl;
+				auto index = *(map_values.at(arg_directory + arg_key).GetID());
+				if (index > vec_p_resource.size()) {
+					vec_p_resource.push_back(arg_value);
+				}
 				return map_values.at(arg_directory + arg_key);
 			}
 			vec_p_resource.push_back(arg_value);
-			vec_p_id.push_back(new UINT((UINT)vec_p_resource.size() - 1));
+			vec_p_id.push_back(std::make_shared<UINT> ((UINT)vec_p_resource.size() - 1));
 			ID<T> output((vec_p_id.at(vec_p_id.size() - 1)));
 
 			map_values.emplace(arg_directory + arg_key, output);
 			return output;
 		}
+
+		void RecoverValue(std::shared_ptr<T> arg_value) {
+			vec_p_resource.push_back(arg_value);
+		}
+
 		bool ContainValue(const std::string& arg_key, const std::string& arg_directory = "") {
 			if (map_values.count(arg_directory + arg_key)) {
+
+				auto index = *(map_values.at(arg_directory + arg_key).GetID());
+				if (index > vec_p_resource.size()) {
+					return false;
+				}else
+
 				return true;
 			}
 			return false;
@@ -77,7 +93,6 @@ namespace ButiEngine {
 			auto index = *(map_values.at(arg_directory + arg_key).GetID());
 			vec_p_resource.erase(vec_p_resource.begin() + index);
 			map_values.erase(arg_directory + arg_key);
-			delete vec_p_id.at(index);
 			vec_p_id.erase(vec_p_id.begin() + index);
 			for (int i = index; i < vec_p_id.size(); i++) {
 				(*vec_p_id.at(i)) = i;
@@ -90,16 +105,24 @@ namespace ButiEngine {
 				mapItr++;
 			map_values.erase(mapItr->first);
 			vec_p_resource.erase(vec_p_resource.begin() + index);
-			delete vec_p_id.at(index);
+
 			vec_p_id.erase(vec_p_id.begin() + index);
 			for (int i = index; i < vec_p_id.size(); i++) {
 				(*vec_p_id.at(i)) = i;
 			}
 		}
+
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(map_values);
+			archive(vec_p_id);
+		}
+
 	private:
-		std::map<std::string, ID<T>> map_values;
+		std::unordered_map<std::string, ID<T>> map_values;
 		std::vector< std::shared_ptr<T>> vec_p_resource;
-		std::vector<UINT*>vec_p_id;
+		std::vector<std::shared_ptr< UINT>>vec_p_id;
 
 	};
 	template <class T>
@@ -110,9 +133,7 @@ namespace ButiEngine {
 			}
 			void Clear() {
 				map_values.clear();
-				for (auto itr = vec_p_id.begin(); itr != vec_p_id.end(); itr++) {
-					delete* itr;
-				}
+				
 				vec_p_id.clear();
 			}
 			ID<T> GetTag(const std::string& arg_key, const std::string& arg_directory = "") {
@@ -125,7 +146,7 @@ namespace ButiEngine {
 				if (map_values.count(arg_directory + arg_key)) {
 					return map_values.at(arg_directory + arg_key);
 				}
-				auto p_id = new unsigned int(vec_p_id.size());
+				auto p_id = std::make_shared<UINT>(vec_p_id.size());
 				vec_p_id.push_back(p_id);
 				ID<T> output(p_id);
 
@@ -148,7 +169,6 @@ namespace ButiEngine {
 				}
 				auto index = *(map_values.at(arg_directory + arg_key).GetID());
 				map_values.erase(arg_directory + arg_key);
-				delete vec_p_id.at(index);
 				vec_p_id.erase(vec_p_id.begin() + index);
 				for (int i = index; i < vec_p_id.size(); i++) {
 					(*vec_p_id.at(i)) = i;
@@ -160,15 +180,20 @@ namespace ButiEngine {
 				for (auto i = 0; i < index; i++)
 					mapItr++;
 				map_values.erase(mapItr->first);
-				delete vec_p_id.at(index);
 				vec_p_id.erase(vec_p_id.begin() + index);
 				for (int i = index; i < vec_p_id.size(); i++) {
 					(*vec_p_id.at(i)) = i;
 				}
 			}
+			template<class Archive>
+			void serialize(Archive& archive)
+			{
+				archive(map_values);
+				archive(vec_p_id);
+			}
 		private:
-			std::map<std::string, ID<T>> map_values;
-			std::vector<UINT*>vec_p_id;
+			std::unordered_map<std::string, ID<T>> map_values;
+			std::vector<std::shared_ptr< UINT>>vec_p_id;
 
 	};
 }

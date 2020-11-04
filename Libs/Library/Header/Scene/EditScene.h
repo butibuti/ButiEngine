@@ -49,9 +49,26 @@ namespace ButiEngine {
 		std::shared_ptr<ICamera> mainCam;
 		std::shared_ptr<ICamera> editCam;
 
+		std::vector<std::shared_ptr<Behavior>>vec_shp_addBehavior;
+
+
+
+		std::vector<std::shared_ptr<GameComponent>>vec_shp_addComponents;
+
 		//////////////////////////////////////
 		bool isActive = false;
 
+		char** componentNameList;
+		char** behaviorNameList;
+
+		int componentNameListSize;
+		int behaviorNameListSize;
+
+		int currentIndex_componentList = 0;
+		int currentIndex_behaviorList = 0;
+
+
+		
 		std::weak_ptr< CBuffer_Dx12< TestGSVariable>> shp_testGSVariable;
 		float t = 0;
 		int dir = 1;

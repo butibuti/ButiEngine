@@ -6,7 +6,7 @@
 void ButiEngine::FPSViewBehavior::Start()
 {
 	auto headTransform = ObjectFactory::Create<Transform>(Vector3(0, 2.0f, 0.0f));
-	headTransform->SetBaseTransform(gameObject.lock()->transform);
+	headTransform->SetBaseTransform(gameObject.lock()->transform,true);
 	head = GetManager().lock()->AddObject(headTransform, "head");
 	gameObject.lock()->AddChildGameObject(head);
 

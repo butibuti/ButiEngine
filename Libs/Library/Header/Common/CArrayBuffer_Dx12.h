@@ -11,9 +11,8 @@ namespace ButiEngine {
 			this->slot = arg_slot;
 			size = (sizeof(T) + 255) & ~255;
 			instanceSize = sizeof(T) * count;
-
-			instance = (T*)malloc(instanceSize);
 		}
+		CArrayBuffer_Dx12(){}
 		~CArrayBuffer_Dx12() {
 
 			wkp_heapManager.lock()->Release(BlankSpace{ index,instanceSize / 0x100 });
@@ -26,7 +25,9 @@ namespace ButiEngine {
 			return instance[arg_index];
 		}
 
-		void Initialize() override{}
+		void Initialize() override{
+			instance = (T*)malloc(instanceSize);
+		}
 
 
 		void CreateBuffer(const bool arg_mapKeep = true) override{
@@ -49,6 +50,17 @@ namespace ButiEngine {
 		void Update()const override{
 
 			wkp_heapManager.lock()->ConstantBufferUpdate(instance, index, instanceSize);
+		}
+
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(this->slot);
+			archive(size);
+			archive(index);
+			archive(mapKeep);
+			archive(this->exName);
+			archive(instanceSize);
 		}
 
 	private:

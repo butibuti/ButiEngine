@@ -88,6 +88,8 @@ void ButiEngine::Scene::Initialize()
 	//auto prop3 = CameraProjProperty(windowSize.x, windowSize.y, 0, 0, true, 2);
 	//AddCamera(prop3, "backGround", true);
 	OnInitialize();
+
+	shp_gameObjectManager->Start();
 }
 
 void ButiEngine::Scene::ActiveCollision(const UINT arg_layerCount)

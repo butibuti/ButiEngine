@@ -10,31 +10,27 @@ namespace ButiEngine {
 		size = 0;
 		this->slot = arg_slot;
 	}
+	CBuffer_Dx12(){}
 	~CBuffer_Dx12() {
 		wkp_heapManager.lock()->Release(BlankSpace{index,size/0x100});
 		this->instance = nullptr;
-
 	}
 	T& Get() const override
 	{
 		return *instance.get();
 	}
-
 	void Initialize() {
 		size = (sizeof(T) + 255) & ~255;
-		this->instance=(std::make_shared<T>());
+		if(!this->instance)
+			this->instance=(std::make_shared<T>());
 		
 	}
-
-	
-
 	void CreateBuffer(const bool arg_mapKeep=true)override {
 		mapKeep = arg_mapKeep;
 		auto out= wkp_heapManager.lock()->CreateConstantBufferView(instance.get(), mapKeep, size);
 		index= out.index;
 		gpuDescriptorHandle = out.GPUHandle;
 	}
-
 	void SetGraphicDevice(std::shared_ptr<GraphicDevice> arg_graphicDevice) override{
 		wkp_graphicDevice = arg_graphicDevice->GetThis<GraphicDevice_Dx12>();
 		wkp_heapManager = wkp_graphicDevice.lock()->GetDescriptorHeapManager();
@@ -49,7 +45,20 @@ namespace ButiEngine {
 
 		wkp_heapManager.lock()->ConstantBufferUpdate(instance.get(), index, size);
 	}
-	
+
+	template<class Archive>
+	void serialize(Archive& archive)
+	{
+		archive(this->slot);
+		archive(size);
+		archive(index);
+		archive(mapKeep);
+		archive(this->exName);
+		archive(instance);
+	}
+	bool OnShowUI()override {
+		return instance->ShowUI();
+	}
 private:
 	void  UpdateResourceRelease()override {
 

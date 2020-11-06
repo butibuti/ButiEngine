@@ -24,24 +24,11 @@ ButiEngine::ModelDrawData_Dx12::ModelDrawData_Dx12(const ModelTag& arg_model, co
 
 void ButiEngine::ModelDrawData_Dx12::Initialize()
 {
-	{
-		auto lightBuffer_Dx12 = ObjectFactory::Create<CBuffer_Dx12<LightVariable>>(2);
+	
 
-		shp_drawInfo->vec_exCBuffer.push_back(lightBuffer_Dx12);
+	cbuffer_bone = GetCArrayBuffer<Matrix4x4>("bone");
 
-		auto light = LightVariable();
-		light.LightDir = Vector4(Vector3(-1.0f, -1.0f, 0.0f), 1);
-
-
-		lightBuffer_Dx12->Get() = light;
-	}
-
-	auto cb_bone_Dx12 = ObjectFactory::Create<CArrayBuffer_Dx12<Matrix4x4>>(3, vec_bone.size());
-
-	shp_drawInfo->vec_exCBuffer.push_back(cb_bone_Dx12);
-	cbuffer_bone = cb_bone_Dx12;
-
-	ModelUpdate();
+	//ModelUpdate();
 
 	commandList = CommandListHelper::CreateBundleCommandList(wkp_graphicDevice.lock());
 	CommandListHelper::Close(commandList);

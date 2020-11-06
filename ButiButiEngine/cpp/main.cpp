@@ -28,9 +28,6 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	
 	app->InitLoadResources();
 
-	//Application::GetGame()->GetSceneManager().lock()->SetScene_Init("startScene", ObjectFactory::Create<StartScene>(SceneInformation()));
-	//app->GetSceneManager()->SetScene_Init("playScene", ObjectFactory::Create<ShootingScene>(app->GetSceneManager(),SceneInformation()));
-
 
 	app->GetSceneManager()->SetScene_Init("sampleScene", ObjectFactory::Create<EditScene>(app->GetSceneManager(),SceneInformation()));
 

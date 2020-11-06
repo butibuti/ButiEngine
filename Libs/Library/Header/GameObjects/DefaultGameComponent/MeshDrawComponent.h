@@ -28,6 +28,8 @@ namespace ButiEngine {
 		void Regist();
 		void UnRegist();
 
+		void OnShowUI()override;
+
 		template <class T>
 		std::shared_ptr<CBuffer< T>> CreateCBuffer(const std::string& arg_cBufferName, const UINT arg_slot,  std::weak_ptr<GraphicDevice> arg_wkp_graphicDevice) {
 			std::shared_ptr<CBuffer< T>> out = nullptr;
@@ -80,6 +82,8 @@ namespace ButiEngine {
 		std::shared_ptr<Transform> shp_transform;
 		std::shared_ptr< DrawInformation >shp_drawInfo = nullptr;
 		std::vector<MaterialTag> materialTag;
+
+		bool isCereal = true;
 	};
 }
 

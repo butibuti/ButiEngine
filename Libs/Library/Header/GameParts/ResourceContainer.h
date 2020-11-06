@@ -71,7 +71,11 @@ namespace ButiEngine {
 		void UnLoadMesh(MeshTag arg_meshTag);
 		void UnLoadTexture(TextureTag arg_textureTag);
 		void UnLoadShader(ShaderTag arg_shaderTag);
+		void UnLoadPixelShader(PixelShaderTag arg_shaderTag);
+		void UnLoadVertexShader(VertexShaderTag arg_shaderTag);
+		void UnLoadGeometryShader(GeometryShaderTag arg_shaderTag);
 		void UnLoadSound(SoundTag arg_soundTag);
+		void UnLoadModel(ModelTag arg_soundTag);
 		void Release();
 
 		MeshTag GetMeshTag(const std::string& arg_key, const std::string& arg_fileDirectory = "");

@@ -27,3 +27,18 @@ namespace ButiEngine {
 CEREAL_REGISTER_TYPE(ButiEngine::ModelDrawComponent);
 
 CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::GameComponent, ButiEngine::ModelDrawComponent)
+
+
+
+CEREAL_REGISTER_TYPE(ButiEngine::CBuffer_Dx12<ButiEngine::TestGSVariable>);
+
+CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::ICBuffer, ButiEngine::CBuffer_Dx12<ButiEngine::TestGSVariable>);
+
+CEREAL_REGISTER_TYPE(ButiEngine::CBuffer_Dx12<ButiEngine::LightVariable>);
+
+CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::ICBuffer, ButiEngine::CBuffer_Dx12<ButiEngine::LightVariable>);
+
+
+CEREAL_REGISTER_TYPE(ButiEngine::CArrayBuffer_Dx12<ButiEngine::Matrix4x4>);
+
+CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::ICBuffer, ButiEngine::CArrayBuffer_Dx12<ButiEngine::Matrix4x4>);

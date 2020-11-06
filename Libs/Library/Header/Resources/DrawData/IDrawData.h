@@ -18,6 +18,7 @@ namespace ButiEngine {
 		{
 			archive(isLightUp);
 			archive(drawSettings);
+			archive(vec_exCBuffer);
 		}
 	};
 	struct DrawData {
@@ -74,8 +75,18 @@ namespace ButiEngine {
 		inline std::shared_ptr<CBuffer<T>> GetCBuffer(const std::string& arg_bufferName) {
 
 			auto out = GetICBuffer(arg_bufferName);
-			if (out&& out->IsThis<CBuffer<T>>()) {
+			if (out && out->IsThis<CBuffer<T>>()) {
 				return out->GetThis<CBuffer<T>>();
+			}
+
+			return nullptr;
+		}
+		template <class T>
+			inline std::shared_ptr<CArrayBuffer<T>> GetCArrayBuffer(const std::string& arg_bufferName) {
+
+			auto out = GetICBuffer(arg_bufferName);
+			if (out && out->IsThis<CArrayBuffer<T>>()) {
+				return out->GetThis<CArrayBuffer<T>>();
 			}
 
 			return nullptr;

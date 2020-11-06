@@ -58,6 +58,8 @@ namespace ButiEngine {
 		//////////////////////////////////////
 		bool isActive = false;
 
+		UINT startCount = 0;
+
 		char** componentNameList;
 		char** behaviorNameList;
 
@@ -68,9 +70,5 @@ namespace ButiEngine {
 		int currentIndex_behaviorList = 0;
 
 
-		
-		std::weak_ptr< CBuffer_Dx12< TestGSVariable>> shp_testGSVariable;
-		float t = 0;
-		int dir = 1;
 	};
 }

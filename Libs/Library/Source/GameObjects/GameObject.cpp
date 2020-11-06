@@ -382,7 +382,7 @@ void ButiEngine::InputCereal(std::shared_ptr<GameObject>& v, const std::string& 
 {
 	std::stringstream stream;
 
-	std::ifstream inputFile(GlobalSettings::GetResourceDirectory() + path, std::ios::binary);
+	std::ifstream inputFile( path, std::ios::binary);
 
 	stream << inputFile.rdbuf();
 

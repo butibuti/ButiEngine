@@ -54,6 +54,16 @@ namespace ButiEngine {
 			auto tag = GetTag(arg_key);
 			return vec_p_resource.at((*(tag.GetID())));
 		}
+		std::string GetIDName(ID<T> arg_id) {
+			if (arg_id.IsEmpty()) {
+				return "none";
+			}
+			auto index = *arg_id.GetID();
+			auto mapItr = map_values.begin();
+			for (auto i = 0; i < index; i++)
+				mapItr++;
+			return mapItr->first;
+		}
 		ID<T> AddValue(std::shared_ptr<T> arg_value, const std::string& arg_key, const std::string& arg_directory = "") {
 			if (map_values.count(arg_directory + arg_key)) {
 				auto index = *(map_values.at(arg_directory + arg_key).GetID());

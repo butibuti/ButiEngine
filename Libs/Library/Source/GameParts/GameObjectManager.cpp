@@ -94,7 +94,7 @@ std::weak_ptr<ButiEngine::GameObject> ButiEngine::GameObjectManager::AddObject(s
 std::weak_ptr<ButiEngine::GameObject> ButiEngine::GameObjectManager::AddObjectFromCereal(std::string filePath, std::shared_ptr<Transform> arg_transform)
 {
 
-	auto gameObject = ObjectFactory::CreateFromCereal<GameObject>(filePath);
+	auto gameObject = ObjectFactory::CreateFromCereal<GameObject>(GlobalSettings::GetResourceDirectory()+"GameObject/" +filePath);
 
 	if (arg_transform) {
 		gameObject->transform = arg_transform;
@@ -114,6 +114,37 @@ std::weak_ptr<ButiEngine::GameObject> ButiEngine::GameObjectManager::AddObjectFr
 
 		map_gameObjects.emplace(gameObject->GetGameObjectName(), gameObject);
 		vec_newGameObjects.push_back(gameObject);
+		gameObject->SetGameObjectManager(GetThis<GameObjectManager>());
+	}
+
+	gameObject->Init_RegistGameComponents();
+	gameObject->Init_RegistBehaviors();
+
+	return gameObject;
+}
+
+std::weak_ptr<ButiEngine::GameObject> ButiEngine::GameObjectManager::AddObjectFromCereal_Insert(std::string filePath, std::shared_ptr<Transform> arg_transform)
+{
+	auto gameObject = ObjectFactory::CreateFromCereal<GameObject>(GlobalSettings::GetResourceDirectory() + "GameObject/" + filePath);
+
+	if (arg_transform) {
+		gameObject->transform = arg_transform;
+	}
+
+	if (!map_gameObjects.count(gameObject->GetGameObjectName())) {
+		map_gameObjects.emplace(gameObject->GetGameObjectName(), gameObject);
+		vec_gameObjects.push_back(gameObject);
+		gameObject->SetGameObjectManager(GetThis<GameObjectManager>());
+	}
+	else {
+		UINT count = 1;
+		while (!map_gameObjects.count(gameObject->GetGameObjectName() + "_" + std::to_string(count))) {
+			count++;
+		}
+		gameObject->SetObjectName(gameObject->GetGameObjectName() + "_" + std::to_string(count));
+
+		map_gameObjects.emplace(gameObject->GetGameObjectName(), gameObject);
+		vec_gameObjects.push_back(gameObject);
 		gameObject->SetGameObjectManager(GetThis<GameObjectManager>());
 	}
 
@@ -158,7 +189,8 @@ std::weak_ptr<ButiEngine::GameObject> ButiEngine::GameObjectManager::GetGameObje
 std::weak_ptr<ButiEngine::GameObject> ButiEngine::GameObjectManager::GetGameObject(const GameObjectTag& arg_objectTag)
 {
 	auto output = std::weak_ptr<GameObject>();
-	for (auto itr = vec_gameObjects.begin(); itr != vec_gameObjects.end(); itr++) {
+	auto endItr = vec_gameObjects.end();
+	for (auto itr = vec_gameObjects.begin(); itr != endItr; itr++) {
 		if ((*itr)->GetGameObjectTag() == arg_objectTag) {
 			output = (*itr);
 		}
@@ -170,12 +202,21 @@ std::weak_ptr<ButiEngine::GameObject> ButiEngine::GameObjectManager::GetGameObje
 std::vector<std::weak_ptr<ButiEngine::GameObject>> ButiEngine::GameObjectManager::GetGameObjects(const GameObjectTag& arg_objectTag)
 {
 	auto output = std::vector<std::weak_ptr<GameObject>>();
-	for (auto itr = vec_gameObjects.begin(); itr != vec_gameObjects.end(); itr++) {
+	auto endItr = vec_gameObjects.end();
+	for (auto itr = vec_gameObjects.begin(); itr !=endItr; itr++) {
 		if ((*itr)->GetGameObjectTag() == arg_objectTag) {
 			output.push_back(*itr);
 		}
 	}
 	return output;
+}
+
+void ButiEngine::GameObjectManager::Start()
+{
+	auto endItr = vec_gameObjects.end();
+	for (auto itr = vec_gameObjects.begin(); itr != endItr; itr++) {
+		(*itr)->Start();
+	}
 }
 
 void ButiEngine::GameObjectManager::UnRegistGameObject(std::shared_ptr<GameObject> gameObject)

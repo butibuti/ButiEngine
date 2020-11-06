@@ -268,17 +268,94 @@ void ButiEngine::ResourceContainer::UnLoadMesh(MeshTag arg_meshTag)
 
 void ButiEngine::ResourceContainer::UnLoadTexture(TextureTag arg_textureTag)
 {
+	auto tagName = container_textures.GetIDName(arg_textureTag);
+
+	for (auto itr = vec_filePathAndDirectory_tex.begin(); itr != vec_filePathAndDirectory_tex.end(); itr++) {
+		if ((*itr)== tagName) {
+			vec_filePathAndDirectory_tex.erase(itr);
+			break;
+		}
+	}
 	container_textures.Remove(arg_textureTag);
 }
 
 void ButiEngine::ResourceContainer::UnLoadShader(ShaderTag arg_shaderTag)
 {
+	auto shaderName = container_shaders.GetIDName(arg_shaderTag);
+
+	for (auto itr = vec_shaderNames.begin(); itr != vec_shaderNames.end(); itr++) {
+		if ((*itr).shaderName == shaderName) {
+			vec_shaderNames.erase(itr);
+			break;
+		}
+	}
+
 	container_shaders.Remove(arg_shaderTag);
+}
+
+void ButiEngine::ResourceContainer::UnLoadPixelShader(PixelShaderTag arg_shaderTag)
+{
+	auto tagName = container_pixelShaders.GetIDName(arg_shaderTag);
+
+	for (auto itr = vec_filePathAndDirectory_ps.begin(); itr != vec_filePathAndDirectory_ps.end(); itr++) {
+		if ((*itr) == tagName) {
+			vec_filePathAndDirectory_ps.erase(itr);
+			break;
+		}
+	}
+	container_pixelShaders.Remove(arg_shaderTag);
+}
+
+void ButiEngine::ResourceContainer::UnLoadVertexShader(VertexShaderTag arg_shaderTag)
+{
+	auto tagName = container_vertexShaders.GetIDName(arg_shaderTag);
+
+	for (auto itr = vec_filePathAndDirectory_vs.begin(); itr != vec_filePathAndDirectory_vs.end(); itr++) {
+		if ((*itr) == tagName) {
+			vec_filePathAndDirectory_vs.erase(itr);
+			break;
+		}
+	}
+	container_vertexShaders.Remove(arg_shaderTag);
+}
+
+void ButiEngine::ResourceContainer::UnLoadGeometryShader(GeometryShaderTag arg_shaderTag)
+{
+	auto tagName = container_geometryShaders.GetIDName(arg_shaderTag);
+
+	for (auto itr = vec_filePathAndDirectory_gs.begin(); itr != vec_filePathAndDirectory_gs.end(); itr++) {
+		if ((*itr) == tagName) {
+			vec_filePathAndDirectory_gs.erase(itr);
+			break;
+		}
+	}
+	container_geometryShaders.Remove(arg_shaderTag);
 }
 
 void ButiEngine::ResourceContainer::UnLoadSound(SoundTag arg_soundTag)
 {
+	auto tagName = container_sounds.GetIDName(arg_soundTag);
+
+	for (auto itr = vec_filePathAndDirectory_sound.begin(); itr != vec_filePathAndDirectory_sound.end(); itr++) {
+		if ((*itr)== tagName) {
+			vec_filePathAndDirectory_sound.erase(itr);
+			break;
+		}
+	}
 	container_sounds.Remove(arg_soundTag);
+}
+
+void ButiEngine::ResourceContainer::UnLoadModel(ModelTag arg_modelTag)
+{
+	auto tagName = container_models.GetIDName(arg_modelTag);
+
+	for (auto itr = vec_filePathAndDirectory_model.begin(); itr != vec_filePathAndDirectory_model.end(); itr++) {
+		if ((*itr) == tagName) {
+			vec_filePathAndDirectory_model.erase(itr);
+			break;
+		}
+	}
+	container_models.Remove(arg_modelTag);
 }
 
 void ButiEngine::ResourceContainer::Release()

@@ -20,52 +20,13 @@
 
 
 
-namespace CallBacks
-{
-	static int ImguiCallBack(ImGuiInputTextCallbackData* data)
-	{
-		if (data->EventFlag == ImGuiInputTextFlags_CallbackCompletion)
-		{
-			data->InsertChars(data->CursorPos, "..");
-		}
-		else if (data->EventFlag == ImGuiInputTextFlags_CallbackHistory)
-		{
-			if (data->EventKey == ImGuiKey_UpArrow)
-			{
-				data->DeleteChars(0, data->BufTextLen);
-				data->InsertChars(0, "Pressed Up!");
-				data->SelectAll();
-			}
-			else if (data->EventKey == ImGuiKey_DownArrow)
-			{
-				data->DeleteChars(0, data->BufTextLen);
-				data->InsertChars(0, "Pressed Down!");
-				data->SelectAll();
-			}
-		}
-		else if (data->EventFlag == ImGuiInputTextFlags_CallbackEdit)
-		{
-			// Toggle casing of first character
-			char c = data->Buf[0];
-			if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) data->Buf[0] ^= 32;
-			data->BufDirty = true;
-
-			// Increment a counter
-			int* p_int = (int*)data->UserData;
-			*p_int = *p_int + 1;
-		}
-		return 0;
-	}
-
-
-	static char objectName[128];
-};
 
 
 void ButiEngine::EditScene::Update() {
 
 	shp_gameObjectManager->RegistNewGameObject();
 	if (isActive) {
+
 		shp_gameObjectManager->Update();
 		if (shp_collisionManager)
 			shp_collisionManager->Update();
@@ -90,54 +51,27 @@ void ButiEngine::EditScene::OnSet()
 
 void ButiEngine::EditScene::OnInitialize()
 {
-	auto hikari = shp_gameObjectManager->AddObject(ObjectFactory::Create<Transform>(),"hikari");
-	auto info = ObjectFactory::Create<DrawInformation>();
-
-	auto testVar = ObjectFactory::Create<CBuffer_Dx12< TestGSVariable>>(4);
-	testVar->Get().bottom = -5.0;
-	shp_testGSVariable = testVar;
-	info->vec_exCBuffer.push_back(shp_testGSVariable.lock());
-	//info->drawSettings.topologyType = TopologyType::point;
-	auto hikariModelComponent = hikari.lock()->AddGameComponent_Insert<ModelDrawComponent>(
-		GetResourceContainer()->GetModelTag("hikari.b3m", "Model/aomoti式_ウルトラマンヒカリ/"), GetResourceContainer()->GetShaderTag("PMXModel_GS"), info
-		);
-
+	auto hikari = shp_gameObjectManager->AddObjectFromCereal("hikari.gameObject");
 
 	
 
 
-	auto floor = shp_gameObjectManager->AddObject(ObjectFactory::Create<Transform>(Vector3(0, -0.1, 0), Vector3(90, 0, 0), Vector3(50.0f, 50.0f, 50.0f)), "floor");
-
-	floor.lock()->AddGameComponent_Insert<MeshDrawComponent>(
-		GetResourceContainer()->GetMeshTag("Floor"), GetResourceContainer()->GetShaderTag("Glid"), GetResourceContainer()->GetMaterialTag("blueMaterial.bma", "Material/"), nullptr, 0
-		); 
+	auto floor = shp_gameObjectManager->AddObjectFromCereal("floor.gameObject");
 	
 	
-	auto sample = shp_gameObjectManager->AddObject(ObjectFactory::Create<Transform>(), "sample");
-
+	auto sample = shp_gameObjectManager->AddObjectFromCereal("sample.gameObject");
 	/*ball.lock()->AddGameComponent_Insert<MeshDrawComponent>(
 		GetResourceContainer()->GetModelTag("sphere.b3m", "Model/FBX/"), GetResourceContainer()->GetShaderTag("DefaultMesh")
 		);*/
 
 
-	auto maguro = shp_gameObjectManager->AddObject(ObjectFactory::Create<Transform>(), "maguro");
+	auto maguro = shp_gameObjectManager->AddObjectFromCereal_Insert("maguro.gameObject");
 
-	maguro.lock()->AddGameComponent_Insert<ModelDrawComponent>(
-		GetResourceContainer()->GetModelTag("maguro.b3m", "Model/Maguro/"), GetResourceContainer()->GetShaderTag("QuadModel"), nullptr
-		); 
-	
-	auto maguro2 = shp_gameObjectManager->AddObject(ObjectFactory::Create<Transform>(), "maguro2");
+	auto maguro2 = shp_gameObjectManager->AddObjectFromCereal_Insert("maguro2.gameObject");
 
 
-	maguro2.lock()->AddGameComponent_Insert<ModelDrawComponent>(
-		GetResourceContainer()->GetModelTag("maguro.b3m", "Model/Maguro/"), GetResourceContainer()->GetShaderTag("QuadModel"), nullptr
-		);
 
-
-	auto player = shp_gameObjectManager->AddObject(
-		ObjectFactory::Create<Transform>(Vector3(0.0f, 1.0f, 0.0f)), "player");
-
-	player.lock()->AddBehavior_Insert<FPSViewBehavior>();
+	auto player = shp_gameObjectManager->AddObjectFromCereal_Insert("player.gameObject");
 
 	vec_shp_addComponents.push_back(ObjectFactory::Create<ModelDrawComponent>(
 		GetResourceContainer()->GetModelTag("maguro.b3m", "Model/Maguro/"), GetResourceContainer()->GetShaderTag("QuadModel"),nullptr
@@ -153,21 +87,20 @@ void ButiEngine::EditScene::OnInitialize()
 
 void ButiEngine::EditScene::OnUpdate()
 {
-	shp_testGSVariable.lock()->Get().pushPower.w = t * 2;
-
-	if (GameDevice::input.CheckKey(Keys::H)) {
-		shp_testGSVariable.lock()->Get().bottom += 0.02f;
-	}
-	else  if (GameDevice::input.CheckKey(Keys::J)) {
-		shp_testGSVariable.lock()->Get().bottom -= 0.02f;
-	}
 
 }
 
 void ButiEngine::EditScene::UIUpdate()
 {
 	ImGui::Begin("top");
-	ImGui::Checkbox("Update", &isActive);
+	if (ImGui::Checkbox("Update", &isActive)) {
+		if (isActive) {
+			startCount++;
+			if (startCount==1) {
+				shp_gameObjectManager->Start();
+			}
+		}
+	};
 	ImGui::End();
 
 

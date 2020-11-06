@@ -4,9 +4,6 @@
 #include "..\..\..\Header\GameObjects\DefaultGameComponent\MeshDrawComponent.h"
 
 
-
-
-
 ButiEngine::MeshDrawComponent::MeshDrawComponent(const MeshTag& arg_meshTag, const ShaderTag& arg_shaderTag, const MaterialTag& arg_materialTag, std::shared_ptr<DrawInformation> arg_shp_drawInfo, const UINT arg_layer, std::shared_ptr<Transform> arg_shp_transform)
 {
 	layer = arg_layer;
@@ -16,6 +13,7 @@ ButiEngine::MeshDrawComponent::MeshDrawComponent(const MeshTag& arg_meshTag, con
 
 	shp_transform = arg_shp_transform;
 	shp_drawInfo = arg_shp_drawInfo;
+	isCereal = false;
 }
 
 ButiEngine::MeshDrawComponent::MeshDrawComponent(const MeshTag& arg_meshTag, const ShaderTag& arg_shaderTag, const std::vector<MaterialTag>& arg_materialTag, std::shared_ptr<DrawInformation> arg_shp_drawInfo, const UINT arg_layer, std::shared_ptr<Transform> arg_shp_transform)
@@ -28,6 +26,7 @@ ButiEngine::MeshDrawComponent::MeshDrawComponent(const MeshTag& arg_meshTag, con
 	if (arg_shp_transform) {
 		shp_transform = arg_shp_transform;
 	}
+	isCereal = false;
 }
 
 ButiEngine::MeshDrawComponent::MeshDrawComponent(const ModelTag& arg_modelTag, const ShaderTag& arg_shaderTag, std::shared_ptr<DrawInformation> arg_shp_drawInfo, const UINT arg_layer, std::shared_ptr<Transform> arg_shp_transform)
@@ -39,6 +38,7 @@ ButiEngine::MeshDrawComponent::MeshDrawComponent(const ModelTag& arg_modelTag, c
 	if (arg_shp_transform) {
 		shp_transform = arg_shp_transform;
 	}
+	isCereal = false;
 }
 
 void ButiEngine::MeshDrawComponent::OnUpdate()
@@ -70,6 +70,25 @@ void ButiEngine::MeshDrawComponent::OnSet()
 	if (!shp_drawInfo) {
 		shp_drawInfo = ObjectFactory::Create<DrawInformation>();
 	}
+
+	if (!isCereal)
+	{
+		auto lightBuffer_Dx12 = ObjectFactory::Create<CBuffer_Dx12<LightVariable>>(2);
+
+		shp_drawInfo->vec_exCBuffer.push_back(lightBuffer_Dx12);
+
+		auto light = LightVariable();
+		light.lightDir = Vector4(Vector3(-1.0f, -1.0f, 0.0f), 1);
+		lightBuffer_Dx12->SetExName("LightBuffer");
+		lightBuffer_Dx12->Get() = light;
+	}
+	else {
+		auto endItr = shp_drawInfo->vec_exCBuffer.end();
+		for (auto itr = shp_drawInfo->vec_exCBuffer.begin(); itr != endItr; itr++) {
+			(*itr)->Initialize();
+		}
+	}
+
 	auto renderer = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetRenderer();
 	if (!shp_transform) {
 		shp_transform = gameObject.lock()->transform;
@@ -121,4 +140,12 @@ void ButiEngine::MeshDrawComponent::UnRegist()
 {
 	if(index)
 	gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetRenderer()->UnRegistDrawObject(index, layer);
+}
+
+void ButiEngine::MeshDrawComponent::OnShowUI()
+{
+	auto endItr = shp_drawInfo->vec_exCBuffer.end();
+	for (auto itr = shp_drawInfo->vec_exCBuffer.begin(); itr != endItr; itr++) {
+		(*itr)->ShowUI();
+	}
 }

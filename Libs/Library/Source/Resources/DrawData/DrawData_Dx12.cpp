@@ -78,16 +78,7 @@ void ButiEngine::MeshDrawData_Dx12::ChangeSwitchFillMode()
 void ButiEngine::MeshDrawData_Dx12::Initialize()
 {
 
-	{
-		auto lightBuffer_Dx12 = ObjectFactory::Create<CBuffer_Dx12<LightVariable>>(2);
-
-		shp_drawInfo->vec_exCBuffer.push_back(lightBuffer_Dx12);
-
-		auto light = LightVariable();
-		light.LightDir = Vector4(Vector3(-1.0f, -1.0f, 0.0f), 1);
-
-		lightBuffer_Dx12->Get() = light;
-	}
+	
 	DrawData_Dx12::Initialize();
 	
 	CommandListHelper::BundleReset(pipelineState, commandList,wkp_graphicDevice.lock());

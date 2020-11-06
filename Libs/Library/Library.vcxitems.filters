@@ -623,5 +623,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\DefaultGameComponent\SucideComponent.cpp">
       <Filter>source\GameObjects\DefaultGameComponent</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Source\Common\CBuffer.cpp">
+      <Filter>source\Common</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

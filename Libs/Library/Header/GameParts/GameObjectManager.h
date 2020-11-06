@@ -16,7 +16,8 @@ namespace ButiEngine {
 		std::weak_ptr<GameObject> GetSelectedUI();
 
 		std::weak_ptr<GameObject> AddObject(std::shared_ptr<Transform> arg_transform,  std::string arg_objectName = "GameObject");
-		std::weak_ptr<GameObject>AddObjectFromCereal(std::string filePath, std::shared_ptr<Transform> arg_transform=nullptr);
+		std::weak_ptr<GameObject>AddObjectFromCereal(std::string filePath, std::shared_ptr<Transform> arg_transform = nullptr);
+		std::weak_ptr<GameObject>AddObjectFromCereal_Insert(std::string filePath, std::shared_ptr<Transform> arg_transform=nullptr);
 
 		std::string ReNameGameObject(const std::string& arg_ObjectName,const std::string& arg_befObjectName);
 
@@ -24,6 +25,7 @@ namespace ButiEngine {
 		std::weak_ptr<GameObject> GetGameObject(const GameObjectTag& arg_objectTag);
 		std::vector<std::weak_ptr<GameObject>> GetGameObjects(const GameObjectTag& arg_objectTag);
 
+		void Start();
 
 		std::weak_ptr<IScene> GetScene() {
 			return wkp_scene;

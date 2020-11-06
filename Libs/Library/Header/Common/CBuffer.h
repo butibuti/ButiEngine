@@ -26,9 +26,15 @@ namespace ButiEngine {
 
 		virtual void CreateBuffer(const bool arg_mapKeep = true) = 0;
 		virtual void SetGraphicDevice(std::shared_ptr<GraphicDevice> arg_graphicDevice) = 0;
-	protected:
+
+		void ShowUI();
+		
+
+		virtual bool OnShowUI() { return false; }
+
 		UINT slot = 0;
 		std::string exName;
+	protected:
 	};
 
 	template <class T>

@@ -5,6 +5,7 @@ namespace ButiEngine {
 	{
 	public:
 		ChaseComponent(std::shared_ptr<Transform> arg_shp_target,const float arg_speed=0.1f);
+		ChaseComponent(){}
 		void OnUpdate() override;
 		void OnSet()override;
 		std::string GetGameComponentName()override {
@@ -28,3 +29,8 @@ namespace ButiEngine {
 	};
 
 }
+
+
+CEREAL_REGISTER_TYPE(ButiEngine::ChaseComponent);
+
+CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::GameComponent, ButiEngine::ChaseComponent)

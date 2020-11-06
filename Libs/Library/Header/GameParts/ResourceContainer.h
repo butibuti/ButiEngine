@@ -185,6 +185,6 @@ namespace ButiEngine {
 
 	void OutputCereal(const std::shared_ptr<ResourceContainer>& v);
 
-	void InputCereal(std::shared_ptr<ResourceContainer>& v, const std::string& path, std::weak_ptr<GraphicDevice> arg_shp_graphicDevice);
+	void InputCereal(std::shared_ptr<ResourceContainer>& v,  std::weak_ptr<GraphicDevice> arg_shp_graphicDevice);
 }
 

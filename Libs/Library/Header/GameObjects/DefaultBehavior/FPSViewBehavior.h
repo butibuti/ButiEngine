@@ -22,3 +22,6 @@ namespace ButiEngine {
 	};
 
 }
+CEREAL_REGISTER_TYPE(ButiEngine::FPSViewBehavior);
+
+CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::Behavior, ButiEngine::FPSViewBehavior)

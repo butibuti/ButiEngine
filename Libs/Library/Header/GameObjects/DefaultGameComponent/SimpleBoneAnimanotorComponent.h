@@ -9,6 +9,7 @@ namespace ButiEngine {
 	class SimpleBoneAnimatorComponent:public GameComponent {
 	public:
 		SimpleBoneAnimatorComponent(std::shared_ptr< ModelDrawData > arg_shp_modelData);
+		SimpleBoneAnimatorComponent(){}
 		void OnUpdate()override;
 		void AddAnimation(std::shared_ptr<ModelAnimation> arg_shp_animation); 
 		void AddAnimation(MotionTag arg_motionTag);

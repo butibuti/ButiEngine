@@ -190,25 +190,7 @@ void ButiEngine::DrawData_Dx12::CommandExecute()
 void ButiEngine::DrawData_Dx12::BufferUpdate()
 {
 
-	/*if (isYBillBoard)
-	{
-
-		auto billboard = wkp_graphicDevice.lock()->GetCameraViewMatrix();
-		billboard._14 = 0.0f;
-		billboard._24 = 0.0f;
-		billboard._34 = 0.0f;
-
-		(XMMATRIX)billboard.Inverse();
-		billboard._12 = 0.0f;
-		billboard._22 = 1.0f;
-		billboard._32 = 0.0f;
-
-
-		cbuffer->Get().World =  (XMMATRIX)transform->ToMatrix()* billboard;
-		cbuffer->Get().View =(XMMATRIX)wkp_graphicDevice.lock()->GetCameraViewMatrix();
-		cbuffer->Get().Projection = wkp_graphicDevice.lock()->GetProjectionMatrix();
-	}*/
-	 
+	
 	shp_worldMatrixUpdater->WorldMatrixUpdate();
 	cbuffer->Get().View = wkp_graphicDevice.lock()->GetCameraViewMatrix();
 	cbuffer->Get().Projection = wkp_graphicDevice.lock()->GetProjectionMatrix();

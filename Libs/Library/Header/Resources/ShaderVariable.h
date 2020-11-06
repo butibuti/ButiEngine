@@ -2,6 +2,7 @@
 #include"stdafx.h"
 namespace ButiEngine {
 
+
 	struct ShaderVariable
 	{
 		Matrix4x4 World;

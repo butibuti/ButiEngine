@@ -82,3 +82,9 @@ namespace ButiEngine {
 		std::vector<MaterialTag> materialTag;
 	};
 }
+
+
+
+CEREAL_REGISTER_TYPE(ButiEngine::MeshDrawComponent);
+
+CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::GameComponent, ButiEngine::MeshDrawComponent)

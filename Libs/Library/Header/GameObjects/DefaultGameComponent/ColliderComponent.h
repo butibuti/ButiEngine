@@ -10,6 +10,7 @@ namespace ButiEngine {
 		{
 		public:
 			ColliderComponent(std::shared_ptr<CollisionPrimitive> arg_shp_collisionPrim,const UINT arg_layerNum=0);
+			ColliderComponent(){}
 			void OnSet()override;
 			void OnUpdate()override;
 			void OnRemove()override;
@@ -33,3 +34,9 @@ namespace ButiEngine {
 		};
 	}
 }
+
+
+
+CEREAL_REGISTER_TYPE(ButiEngine::Collision::ColliderComponent);
+
+CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::GameComponent, ButiEngine::Collision::ColliderComponent)

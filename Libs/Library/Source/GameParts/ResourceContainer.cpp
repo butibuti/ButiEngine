@@ -333,40 +333,52 @@ ButiEngine::MotionTag ButiEngine::ResourceContainer::GetMotionTag(const std::str
 void ButiEngine::ResourceContainer::Reload()
 {
 
-	for (auto itr = vec_filePathAndDirectory_mat.begin(); itr != vec_filePathAndDirectory_mat.end(); itr++) {
-		(LoadMaterial(*itr));
-	}
+	auto copy = vec_filePathAndDirectory_ps;
+	vec_filePathAndDirectory_ps.clear();
 
-	for (auto itr = vec_filePathAndDirectory_tex.begin(); itr != vec_filePathAndDirectory_tex.end(); itr++) {
-		(LoadTexture(*itr));
-	}
-
-	for (auto itr = vec_filePathAndDirectory_ps.begin(); itr != vec_filePathAndDirectory_ps.end(); itr++) {
+	for (auto itr = copy.begin(); itr !=copy.end(); itr++) {
 		(LoadPixelShader(*itr));
 	}
-
-	for (auto itr = vec_filePathAndDirectory_vs.begin(); itr != vec_filePathAndDirectory_vs.end(); itr++) {
+	copy = vec_filePathAndDirectory_vs;
+	vec_filePathAndDirectory_vs.clear();
+	for (auto itr = copy.begin(); itr != copy.end(); itr++) {
 		(LoadVertexShader(*itr));
 	}
-
-	for (auto itr = vec_filePathAndDirectory_gs.begin(); itr != vec_filePathAndDirectory_gs.end(); itr++) {
+	copy = vec_filePathAndDirectory_gs;
+	vec_filePathAndDirectory_gs.clear();
+	for (auto itr = copy.begin(); itr != copy.end(); itr++) {
 		(LoadGeometryShader(*itr));
 	}
-
-	for (auto itr = vec_shaderNames.begin(); itr != vec_shaderNames.end(); itr++) {
+	auto  shaderNameCopy = vec_shaderNames;
+	vec_shaderNames.clear();
+	for (auto itr = shaderNameCopy.begin(); itr != shaderNameCopy.end(); itr++) {
 		(LoadShader(*itr));
 	}
-
-	for (auto itr = vec_filePathAndDirectory_sound.begin(); itr != vec_filePathAndDirectory_sound.end(); itr++) {
+	copy = vec_filePathAndDirectory_sound;
+	vec_filePathAndDirectory_sound.clear();
+	for (auto itr = copy.begin(); itr != copy.end(); itr++) {
 		(LoadSound(*itr));
 	}
 
-
-	for (auto itr = vec_filePathAndDirectory_model.begin(); itr != vec_filePathAndDirectory_model.end(); itr++) {
+	copy = vec_filePathAndDirectory_model;
+	vec_filePathAndDirectory_model.clear();
+	for (auto itr = copy.begin(); itr != copy.end(); itr++) {
 		(LoadModel(*itr));
 	}
-
-	for (auto itr = vec_filePathAndDirectory_motion.begin(); itr != vec_filePathAndDirectory_motion.end(); itr++) {
+	copy = vec_filePathAndDirectory_mat;
+	vec_filePathAndDirectory_mat.clear();
+	for (auto itr = copy.begin(); itr != copy.end(); itr++) {
+		auto fullPath = (*itr);
+		LoadMaterial(StringHelper::GetFileName(fullPath,true),StringHelper::GetDirectory(fullPath));
+	}
+	copy = vec_filePathAndDirectory_tex;
+	vec_filePathAndDirectory_tex.clear();
+	for (auto itr = copy.begin(); itr != copy.end(); itr++) {
+		(LoadTexture(*itr));
+	}
+	copy = vec_filePathAndDirectory_motion;
+	vec_filePathAndDirectory_motion.clear();
+	for (auto itr = copy.begin(); itr != copy.end(); itr++) {
 		(LoadMotion(*itr));
 	}
 
@@ -380,10 +392,10 @@ void ButiEngine::OutputCereal(const std::shared_ptr<ResourceContainer>& v)
 	std::stringstream stream;
 
 
-	cereal::BinaryOutputArchive binOutArchive(stream);
+	cereal::PortableBinaryOutputArchive binOutArchive(stream);
 	binOutArchive(v);
 
-	std::ofstream outputFile(GlobalSettings::GetResourceDirectory() + "Application/resourceLoadData.resource", std::ios::out);
+	std::ofstream outputFile(GlobalSettings::GetResourceDirectory() + "Application/resourceLoadData.resource", std::ios::binary);
 
 	outputFile << stream.str();
 
@@ -391,20 +403,20 @@ void ButiEngine::OutputCereal(const std::shared_ptr<ResourceContainer>& v)
 	stream.clear();
 }
 
-void ButiEngine::InputCereal(std::shared_ptr<ResourceContainer>& v, const std::string& path, std::weak_ptr<GraphicDevice> arg_shp_graphicDevice)
+void ButiEngine::InputCereal(std::shared_ptr<ResourceContainer>& v, std::weak_ptr<GraphicDevice> arg_shp_graphicDevice)
 {
 	std::stringstream stream;
 
-	std::ifstream inputFile(path, std::ios::in);
+	std::ifstream inputFile(GlobalSettings::GetResourceDirectory() + "Application/resourceLoadData.resource", std::ios::binary);
 
 	stream << inputFile.rdbuf();
 
-	cereal::BinaryInputArchive binInputArchive(stream);
+	cereal::PortableBinaryInputArchive binInputArchive(stream);
 
 
 	binInputArchive(v);
 
 	v->SetGraphicDevice(arg_shp_graphicDevice);
 
-	v->Reload();
+	//
 }

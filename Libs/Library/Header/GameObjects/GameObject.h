@@ -140,7 +140,13 @@ namespace ButiEngine {
 			archive(transform);
 			archive(objectName);
 			archive(tagName);
+
+			archive(vec_behaviors);
+			archive(vec_gameComponents);
 		}
+		void Init_RegistGameComponents();
+		void Init_RegistBehaviors();
+
 
 	protected:
 
@@ -177,5 +183,5 @@ namespace ButiEngine {
 
 	void OutputCereal(const std::shared_ptr<GameObject>& v);
 
-	void InputCereal(std::shared_ptr<GameObject>& v, const std::string& path);
+	void InputCereal(std::shared_ptr<GameObject>& v,  const std::string& path);
 }

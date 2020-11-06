@@ -90,7 +90,7 @@ void ButiEngine::EditScene::OnSet()
 
 void ButiEngine::EditScene::OnInitialize()
 {
-	auto hikari = shp_gameObjectManager->AddObjectFromCereal("Resources/GameObject/hikari.gameObject");
+	auto hikari = shp_gameObjectManager->AddObject(ObjectFactory::Create<Transform>(),"hikari");
 	auto info = ObjectFactory::Create<DrawInformation>();
 
 	auto testVar = ObjectFactory::Create<CBuffer_Dx12< TestGSVariable>>(4);
@@ -103,25 +103,7 @@ void ButiEngine::EditScene::OnInitialize()
 		);
 
 
-	//auto maguro = shp_gameObjectManager->AddObject(
-	//	ObjectFactory::Create<Transform>(Vector3(0, 1, 0), Vector3(0, 0, 0), Vector3(1.0f, 1.0f, 1.0f)), "maguro"
-	//);
-
-
-	//auto maguroDraw = maguro.lock()->AddGameComponent<ModelDrawComponent>(
-	//	GetResourceContainer()->GetModelTag("maguro.b3m", "Model/Maguro/"), GetResourceContainer()->GetShaderTag("QuadModel"),nullptr
-	//	);
-
-
-	//hikariModelComponent->GetModelData()->SerchBoneByName(L"¶‚Ð‚¶")->transform->RollLocalRotationX_Degrees(90);
-
-
-
-
-	//auto animator = hikari.lock()->AddGameComponent_Insert<SimpleBoneAnimatorComponent>(hikariModelComponent->GetModelData());
-
-	//animator->AddAnimation(GetResourceContainer()->GetMotionTag("slash.bmd", "Motion/"));
-	//animator->SetLoop(true);
+	
 
 
 	auto floor = shp_gameObjectManager->AddObject(ObjectFactory::Create<Transform>(Vector3(0, -0.1, 0), Vector3(90, 0, 0), Vector3(50.0f, 50.0f, 50.0f)), "floor");
@@ -131,20 +113,21 @@ void ButiEngine::EditScene::OnInitialize()
 		); 
 	
 	
-	auto sample = shp_gameObjectManager->AddObjectFromCereal("Resources/GameObject/sample.gameObject");
+	auto sample = shp_gameObjectManager->AddObject(ObjectFactory::Create<Transform>(), "sample");
 
 	/*ball.lock()->AddGameComponent_Insert<MeshDrawComponent>(
 		GetResourceContainer()->GetModelTag("sphere.b3m", "Model/FBX/"), GetResourceContainer()->GetShaderTag("DefaultMesh")
 		);*/
 
 
-	auto maguro = shp_gameObjectManager->AddObjectFromCereal("Resources/GameObject/maguro.gameObject");
+	auto maguro = shp_gameObjectManager->AddObject(ObjectFactory::Create<Transform>(), "maguro");
 
 	maguro.lock()->AddGameComponent_Insert<ModelDrawComponent>(
 		GetResourceContainer()->GetModelTag("maguro.b3m", "Model/Maguro/"), GetResourceContainer()->GetShaderTag("QuadModel"), nullptr
 		); 
 	
-	auto maguro2 = shp_gameObjectManager->AddObjectFromCereal("Resources/GameObject/maguro2.gameObject");
+	auto maguro2 = shp_gameObjectManager->AddObject(ObjectFactory::Create<Transform>(), "maguro2");
+
 
 	maguro2.lock()->AddGameComponent_Insert<ModelDrawComponent>(
 		GetResourceContainer()->GetModelTag("maguro.b3m", "Model/Maguro/"), GetResourceContainer()->GetShaderTag("QuadModel"), nullptr

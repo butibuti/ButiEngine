@@ -5,6 +5,12 @@
 #include "..\..\..\Header\GameObjects\DefaultBehavior\FPSViewBehavior.h"
 void ButiEngine::FPSViewBehavior::Start()
 {
+	auto headTransform = ObjectFactory::Create<Transform>(Vector3(0, 2.0f, 0.0f));
+	headTransform->SetBaseTransform(gameObject.lock()->transform);
+	head = GetManager().lock()->AddObject(headTransform, "head");
+	gameObject.lock()->AddChildGameObject(head);
+
+
 	auto camera = GetCamera("main");
 	camera.lock()->shp_transform = head.lock()->transform;
 }
@@ -48,10 +54,6 @@ void ButiEngine::FPSViewBehavior::OnUpdate()
 
 void ButiEngine::FPSViewBehavior::OnSet()
 {
-	auto headTransform = ObjectFactory::Create<Transform>(Vector3(0, 2.0f, 0.0f));
-	headTransform->SetBaseTransform(gameObject.lock()->transform);
-	head = GetManager().lock()->AddObject(headTransform, "head");
-	gameObject.lock()->AddChildGameObject(head);
 }
 
 std::shared_ptr<ButiEngine::Behavior> ButiEngine::FPSViewBehavior::Clone()

@@ -27,10 +27,9 @@ void ButiEngine::GameObjectManager::Update()
 
 void ButiEngine::GameObjectManager::RegistNewGameObject()
 {
-	auto  endNewItr = vec_newGameObjects.end();
-	for (auto itr = vec_newGameObjects.begin(); itr != endNewItr; itr++) {
-		vec_gameObjects.push_back(*itr);
-		(*itr)->Start();
+	for (int i=0; i<vec_newGameObjects.size(); i++) {
+		vec_gameObjects.push_back(vec_newGameObjects.at(i));
+		vec_newGameObjects.at(i)->Start();
 	}
 	vec_newGameObjects.clear();
 }
@@ -117,6 +116,9 @@ std::weak_ptr<ButiEngine::GameObject> ButiEngine::GameObjectManager::AddObjectFr
 		vec_newGameObjects.push_back(gameObject);
 		gameObject->SetGameObjectManager(GetThis<GameObjectManager>());
 	}
+
+	gameObject->Init_RegistGameComponents();
+	gameObject->Init_RegistBehaviors();
 
 	return gameObject;
 }

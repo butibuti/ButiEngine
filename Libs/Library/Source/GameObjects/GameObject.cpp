@@ -241,6 +241,22 @@ void ButiEngine::GameObject::UpdateTagName()
 	tagName = GameObjectTagManager::GetTagName(gameObjectTag);
 }
 
+void ButiEngine::GameObject::Init_RegistGameComponents()
+{
+	auto endItr = vec_gameComponents.end();
+	for (auto itr = vec_gameComponents.begin(); itr != endItr; itr++) {
+		(*itr)->Set(GetThis<GameObject>());
+	}
+}
+
+void ButiEngine::GameObject::Init_RegistBehaviors()
+{
+	auto endItr = vec_behaviors.end();
+	for (auto itr = vec_behaviors.begin(); itr != endItr; itr++) {
+		(*itr)->Set(GetThis<GameObject>());
+	}
+}
+
 std::shared_ptr<ButiEngine::Behavior> ButiEngine::GameObject::RegisterBehavior(std::shared_ptr<Behavior> arg_shp_behavior)
 {
 	vec_behaviors.push_back(arg_shp_behavior);
@@ -354,7 +370,7 @@ void ButiEngine::OutputCereal(const std::shared_ptr<GameObject>& v)
 	v->UpdateTagName();
 	binOutArchive(v);
 
-	std::ofstream outputFile(GlobalSettings::GetResourceDirectory()+"GameObject/"+ v->GetGameObjectName()+".gameObject", std::ios::out);
+	std::ofstream outputFile(GlobalSettings::GetResourceDirectory()+"GameObject/"+ v->GetGameObjectName()+".gameObject", std::ios::binary);
 
 	outputFile << stream.str();
 
@@ -366,7 +382,7 @@ void ButiEngine::InputCereal(std::shared_ptr<GameObject>& v, const std::string& 
 {
 	std::stringstream stream;
 
-	std::ifstream inputFile(path, std::ios::in);
+	std::ifstream inputFile(GlobalSettings::GetResourceDirectory() + path, std::ios::binary);
 
 	stream << inputFile.rdbuf();
 

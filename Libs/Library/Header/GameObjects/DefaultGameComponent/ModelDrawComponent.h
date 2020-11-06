@@ -9,6 +9,7 @@ namespace ButiEngine {
 	{
 	public:
 		ModelDrawComponent(const ModelTag& arg_modelTag, const ShaderTag& arg_shaderTag, std::shared_ptr< DrawInformation >arg_shp_drawInfo, const UINT arg_layer=0, std::shared_ptr<Transform> arg_shp_transform = nullptr);
+		ModelDrawComponent(){}
 		std::string GetGameComponentName() {
 			return "ModelDraw";
 		}
@@ -22,3 +23,7 @@ namespace ButiEngine {
 	};
 
 }
+
+CEREAL_REGISTER_TYPE(ButiEngine::ModelDrawComponent);
+
+CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::GameComponent, ButiEngine::ModelDrawComponent)

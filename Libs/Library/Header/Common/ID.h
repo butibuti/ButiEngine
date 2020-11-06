@@ -57,7 +57,7 @@ namespace ButiEngine {
 		ID<T> AddValue(std::shared_ptr<T> arg_value, const std::string& arg_key, const std::string& arg_directory = "") {
 			if (map_values.count(arg_directory + arg_key)) {
 				auto index = *(map_values.at(arg_directory + arg_key).GetID());
-				if (index > vec_p_resource.size()) {
+				if (index >= vec_p_resource.size()) {
 					vec_p_resource.push_back(arg_value);
 				}
 				return map_values.at(arg_directory + arg_key);
@@ -78,7 +78,7 @@ namespace ButiEngine {
 			if (map_values.count(arg_directory + arg_key)) {
 
 				auto index = *(map_values.at(arg_directory + arg_key).GetID());
-				if (index > vec_p_resource.size()) {
+				if (index >= vec_p_resource.size()) {
 					return false;
 				}else
 

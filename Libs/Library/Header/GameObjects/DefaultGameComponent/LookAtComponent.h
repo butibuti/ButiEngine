@@ -5,6 +5,7 @@ namespace ButiEngine {
 	{
 	public:
 		LookAtComponent(std::shared_ptr<Transform> arg_shp_lookTarget);
+		LookAtComponent(){}
 
 		void OnUpdate()override;
 		void OnSet()override;
@@ -23,3 +24,9 @@ namespace ButiEngine {
 	};
 
 }
+
+
+
+CEREAL_REGISTER_TYPE(ButiEngine::LookAtComponent);
+
+CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::GameComponent, ButiEngine::LookAtComponent)

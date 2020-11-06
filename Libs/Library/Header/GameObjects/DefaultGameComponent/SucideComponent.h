@@ -5,6 +5,7 @@ namespace ButiEngine {
 	{
 	public:
 		SucideComponent(const float arg_count);
+		SucideComponent() {}
 		void OnUpdate()override;
 		std::string GetGameComponentName()override {
 			return "SicideComponent";
@@ -23,3 +24,9 @@ namespace ButiEngine {
 	};
 
 }
+
+
+
+CEREAL_REGISTER_TYPE(ButiEngine::SucideComponent);
+
+CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::GameComponent, ButiEngine::SucideComponent)

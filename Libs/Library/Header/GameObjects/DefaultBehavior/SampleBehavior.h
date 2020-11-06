@@ -18,3 +18,8 @@ namespace ButiEngine {
 	};
 
 }
+
+
+CEREAL_REGISTER_TYPE(ButiEngine::SampleBehavior);
+
+CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::Behavior, ButiEngine::SampleBehavior)

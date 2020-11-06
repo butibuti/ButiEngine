@@ -40,11 +40,11 @@ ButiEngine::ResourceFactory::TextureResourceData ButiEngine::ResourceFactory::Ge
 	return output;
 }
 
-std::shared_ptr<ButiEngine::Resource_Material> ButiEngine::ResourceFactory::CreateMaterial(const std::string& arg_materialVar, const std::string& arg_fileDirectory)
+std::shared_ptr<ButiEngine::Resource_Material> ButiEngine::ResourceFactory::CreateMaterial(const std::string& arg_materialPath, const std::string& arg_fileDirectory)
 {
 	MaterialVariable var;
 	BinaryReader materialReader;
-	materialReader.ReadStart(GlobalSettings::GetResourceDirectory() + arg_fileDirectory + arg_materialVar);
+	materialReader.ReadStart(GlobalSettings::GetResourceDirectory() + arg_fileDirectory + arg_materialPath);
 	std::vector< TextureTag> textureTags;
 	std::string magic = materialReader.ReadCharactor(16);
 	if (magic != "ButiMaterialData") {
@@ -103,7 +103,7 @@ std::shared_ptr<ButiEngine::Resource_Material> ButiEngine::ResourceFactory::Crea
 			std::string textureName;
 			StringHelper::WStringToSafetyConvert(textureNameW);
 			textureName = Util::WStringToString(textureNameW);
-			textureTags.push_back(resourceContainer->LoadTexture(textureName, arg_fileDirectory));
+			textureTags.push_back(resourceContainer->LoadTexture(textureName, arg_fileDirectory ));
 		}
 	}
 
@@ -1297,12 +1297,12 @@ std::shared_ptr<ButiEngine::Resource_Model> ButiEngine::ResourceFactory::CreateM
 		MaterialTag tag;
 		if (encodeType) {
 			std::string materialFilePath = modelReader.ReadCharactor(fileNameCount);
-			tag = resourceContainer->LoadMaterial(materialFilePath, fileDirectory);
+			tag = resourceContainer->LoadMaterial(materialFilePath, fileDirectory + StringHelper::GetDirectory(modelPath));
 		}
 		else
 		{
 			std::wstring materialFilePath = modelReader.ReadWCharactor(fileNameCount);
-			tag = resourceContainer->LoadMaterial(materialFilePath, fileDirectory);
+			tag = resourceContainer->LoadMaterial(materialFilePath, fileDirectory+StringHelper::GetDirectory(modelPath));
 		}
 		vec_subset.at(i) = (UINT)(modelReader.ReadVariable<int>());
 		resource_model->AddMaterial(tag);

@@ -3,17 +3,8 @@
 #include"Header/GameParts/Renderer.h"
 
 
-#include"Header/GameObjects/DefaultBehavior/FPSViewBehavior.h"
 #include"include/HitTestBehavior.h"
 #include"Header/GameParts/ResourceContainer.h"
-#include"Header/GameObjects/DefaultGameComponent/MeshDrawComponent.h"
-#include"Header/GameObjects/DefaultGameComponent/ModelDrawComponent.h"
-#include"Header/GameObjects/DefaultGameComponent/ChaseComponent.h"
-#include"Header/GameObjects/DefaultBehavior/SampleBehavior.h"
-#include"Header/GameObjects/DefaultGameComponent/ColliderComponent.h"
-#include"Header/GameObjects/DefaultGameComponent/SimpleBoneAnimanotorComponent.h"
-#include "Header/GameObjects/DefaultGameComponent/LookAtComponent.h"
-#include "Header/GameObjects/DefaultGameComponent/SucideComponent.h"
 #include"Header/Resources/ModelAnimation.h"
 //#include "..\..\Header\Scene\EditScene.h"
 
@@ -51,38 +42,22 @@ void ButiEngine::EditScene::OnSet()
 
 void ButiEngine::EditScene::OnInitialize()
 {
-	auto hikari = shp_gameObjectManager->AddObjectFromCereal("hikari.gameObject");
+	//auto hikari = shp_gameObjectManager->AddObjectFromCereal("hikari.gameObject");
 
-	
+	//
 
 
 	auto floor = shp_gameObjectManager->AddObjectFromCereal("floor.gameObject");
 	
-	
-	auto sample = shp_gameObjectManager->AddObjectFromCereal("sample.gameObject");
-	/*ball.lock()->AddGameComponent_Insert<MeshDrawComponent>(
-		GetResourceContainer()->GetModelTag("sphere.b3m", "Model/FBX/"), GetResourceContainer()->GetShaderTag("DefaultMesh")
-		);*/
 
+	//auto maguro = shp_gameObjectManager->AddObjectFromCereal_Insert("maguro.gameObject");
 
-	auto maguro = shp_gameObjectManager->AddObjectFromCereal_Insert("maguro.gameObject");
-
-	auto maguro2 = shp_gameObjectManager->AddObjectFromCereal_Insert("maguro2.gameObject");
+	//auto maguro2 = shp_gameObjectManager->AddObjectFromCereal_Insert("maguro2.gameObject");
 
 
 
 	auto player = shp_gameObjectManager->AddObjectFromCereal_Insert("player.gameObject");
 
-	vec_shp_addComponents.push_back(ObjectFactory::Create<ModelDrawComponent>(
-		GetResourceContainer()->GetModelTag("maguro.b3m", "Model/Maguro/"), GetResourceContainer()->GetShaderTag("QuadModel"),nullptr
-		));
-	vec_shp_addComponents.push_back(ObjectFactory::Create<ChaseComponent>(player.lock()->transform));
-	vec_shp_addComponents.push_back(ObjectFactory::Create<LookAtComponent>(player.lock()->transform));
-	vec_shp_addComponents.push_back(ObjectFactory::Create<SucideComponent>(60.0f));
-
-
-	vec_shp_addBehavior.push_back(ObjectFactory::Create<SampleBehavior>());
-	vec_shp_addBehavior.push_back(ObjectFactory::Create<HitTestBehavior>());
 }
 
 void ButiEngine::EditScene::OnUpdate()
@@ -123,6 +98,10 @@ void ButiEngine::EditScene::UIUpdate()
 		if (ImGui::Button("Change")) {
 			selectedGameObject.lock()->SetObjectName(CallBacks::objectName);
 		}
+
+	/*	if (ImGui::Button("Dlete")) {
+			
+		}*/
 
 		selectedGameObject.lock()->ShowUI();
 
@@ -233,9 +212,11 @@ void ButiEngine::EditScene::Draw()
 	shp_renderer->RenderingEnd();
 }
 
-ButiEngine::EditScene::EditScene(std::weak_ptr<ISceneManager> arg_wkp_sceneManager, SceneInformation argSceneInformation)
+ButiEngine::EditScene::EditScene(std::weak_ptr<ISceneManager> arg_wkp_sceneManager, SceneInformation argSceneInformation, std::vector<std::shared_ptr<Behavior>>arg_vec_shp_addBehavior, std::vector<std::shared_ptr<GameComponent>>arg_vec_shp_addComponents)
 {
 	shp_sceneManager = arg_wkp_sceneManager.lock();
+	vec_shp_addBehavior = arg_vec_shp_addBehavior;
+	vec_shp_addComponents = arg_vec_shp_addComponents;
 }
 
 void ButiEngine::EditScene::Release()
@@ -249,6 +230,8 @@ void ButiEngine::EditScene::Release()
 		delete behaviorNameList[i];
 	}
 	delete behaviorNameList;
+	vec_shp_addBehavior.clear();
+	vec_shp_addComponents.clear();
 	shp_gameObjectManager = nullptr;
 	shp_soundManager->Release();
 	shp_renderer->Release();

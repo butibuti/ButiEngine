@@ -124,13 +124,24 @@ std::string StringHelper::GetDirectory(const std::string& source)
 	if (!Contains(source, "/")) {
 		return source;
 	}
+
+	if (source[source.size() - 1] == '/') {
+		return source;
+	}
+
 	auto splited = Split(source, "/");
 
 	std::string out;
 
+	if ( splited.begin() == (splited.end() - 1)) {
+		return source;
+	}
+
 	for (auto itr = splited.begin(); itr != splited.end() - 1; itr++) {
 		out += (*itr) + "/";
 	}
+
+	
 
 	return out;
 }

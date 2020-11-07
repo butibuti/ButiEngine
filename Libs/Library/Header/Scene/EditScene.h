@@ -6,7 +6,7 @@ namespace ButiEngine {
 	class EditScene :public IScene {
 
 	public:
-		EditScene(std::weak_ptr<ISceneManager> arg_wkp_sceneManager, SceneInformation argSceneInformation);
+		EditScene(std::weak_ptr<ISceneManager> arg_wkp_sceneManager, SceneInformation arg_SceneInformation, std::vector<std::shared_ptr<Behavior>>arg_vec_shp_addBehavior, std::vector<std::shared_ptr<GameComponent>>arg_vec_shp_addComponents);
 		void Release()override;
 		virtual void OnSet();
 		virtual void OnInitialize();

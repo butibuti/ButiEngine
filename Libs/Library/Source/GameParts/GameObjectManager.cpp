@@ -55,6 +55,11 @@ void ButiEngine::GameObjectManager::ShowUI()
 			selectedGameObject = (*itr);
 		}
 	}
+
+	if (ImGui::Button("Add New")) {
+		AddObject(ObjectFactory::Create<Transform>());
+	}
+
 	ImGui::End();
 
 
@@ -79,7 +84,7 @@ std::weak_ptr<ButiEngine::GameObject> ButiEngine::GameObjectManager::AddObject(s
 	}
 	else {
 		UINT count = 1;
-		while (!map_gameObjects.count(arg_objectName + "_" + std::to_string(count))) {
+		while (map_gameObjects.count(arg_objectName + "_" + std::to_string(count))) {
 			count++;
 		}
 		arg_objectName += "_" + std::to_string(count);
@@ -107,7 +112,7 @@ std::weak_ptr<ButiEngine::GameObject> ButiEngine::GameObjectManager::AddObjectFr
 	}
 	else {
 		UINT count = 1;
-		while (!map_gameObjects.count(gameObject->GetGameObjectName() + "_" + std::to_string(count))) {
+		while (map_gameObjects.count(gameObject->GetGameObjectName() + "_" + std::to_string(count))) {
 			count++;
 		}
 		gameObject->SetObjectName(gameObject->GetGameObjectName() + "_" + std::to_string(count));
@@ -138,7 +143,7 @@ std::weak_ptr<ButiEngine::GameObject> ButiEngine::GameObjectManager::AddObjectFr
 	}
 	else {
 		UINT count = 1;
-		while (!map_gameObjects.count(gameObject->GetGameObjectName() + "_" + std::to_string(count))) {
+		while (map_gameObjects.count(gameObject->GetGameObjectName() + "_" + std::to_string(count))) {
 			count++;
 		}
 		gameObject->SetObjectName(gameObject->GetGameObjectName() + "_" + std::to_string(count));
@@ -167,7 +172,7 @@ std::string ButiEngine::GameObjectManager::ReNameGameObject(const std::string& a
 	}
 	else {
 		UINT count = 1;
-		while (!map_gameObjects.count(nowName + "_" + std::to_string(count))) {
+		while (map_gameObjects.count(nowName + "_" + std::to_string(count))) {
 			count++;
 		}
 		nowName += "_" + std::to_string(count);

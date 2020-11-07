@@ -1,5 +1,6 @@
 #include"stdafx.h"
 #include"Header/Device/Helper/MeshHelper.h"
+#include "..\..\..\Header\Device\Helper\MeshHelper.h"
 ButiEngine::MeshHelper::~MeshHelper()
 {
 }
@@ -245,7 +246,71 @@ void ButiEngine::MeshHelper::CreateCube(Vector3 size, const std::vector<Color>& 
 
 void ButiEngine::MeshHelper::CreateSphere(Vector3 size, int tessellation, const std::vector<Color>& arg_colors, BackupData<Vertex::Vertex_UV_Normal_Color>& outputMeshData)
 {
-	return CreateCapsule(size, Vector3(0, 0.0f, 0), Vector3(0, 0.0f, 0), tessellation, false,arg_colors, outputMeshData);
+	if (tessellation < 3) {
+		CreateCube(size, arg_colors, outputMeshData, true);
+		return;
+	}
+	size = size * 0.5f;
+	std::vector< Vertex::Vertex_UV_Normal_Color> vertices;
+	std::vector<UINT> indices;
+
+	size_t verticalSegments = tessellation;
+	size_t horizontalSegments = tessellation * 2;
+	for (size_t i = 0; i <= verticalSegments; i++)
+	{
+
+
+		float v = 1 - (float)i / verticalSegments;
+
+		float latitude = (i * DirectX::XM_PI / verticalSegments) - DirectX::XM_PIDIV2;
+		float dy, dxz;
+
+		DirectX::XMScalarSinCos(&dy, &dxz, latitude);
+
+		Vector3 CenterPos;
+
+
+
+		for (size_t j = 0; j <= horizontalSegments; j++)
+		{
+			float u = (float)j / horizontalSegments;
+
+			float longitude = j * DirectX::XM_2PI / horizontalSegments;
+			float dx, dz;
+
+			DirectX::XMScalarSinCos(&dx, &dz, longitude);
+
+			dx *= dxz;
+			dz *= dxz;
+
+			DirectX::XMVECTOR normal = DirectX::XMVectorSet(dx, dy, dz, 0);
+			auto pos = Vector3(dx * size.x, dy * size.y, dz * size.z);
+			vertices.push_back(Vertex::Vertex_UV_Normal_Color(pos, Vector2(u, v), pos.GetNormalize()));
+		}
+	}
+	size_t stride = horizontalSegments + 1;
+	for (size_t i = 0; i < verticalSegments; i++)
+	{
+		for (size_t j = 0; j <= horizontalSegments; j++)
+		{
+			size_t nextI = i + 1;
+			size_t nextJ = (j + 1) % stride;
+
+			indices.push_back((UINT)(i * stride + j));
+			indices.push_back((UINT)(nextI * stride + j));
+			indices.push_back((UINT)(i * stride + nextJ));
+
+			indices.push_back((UINT)(i * stride + nextJ));
+			indices.push_back((UINT)(nextI * stride + j));
+			indices.push_back((UINT)(nextI * stride + nextJ));
+		}
+	}
+	ReverseWinding(vertices, indices);
+
+
+
+	outputMeshData.vertices = vertices;
+	outputMeshData.indices = indices;
 }
 
 void ButiEngine::MeshHelper::CreateCylinderCap(const std::vector<Color>& arg_colors, std::vector<Vertex::Vertex_UV_Normal_Color>& ref_vertices, std::vector<UINT>& ref_indices, Vector3 size, int tessellation, bool isTop)
@@ -421,37 +486,43 @@ void ButiEngine::MeshHelper::CreateCapsule(Vector3 size, Vector3 pointA, Vector3
 	outputMeshData.indices = indices;
 }
 
-void ButiEngine::MeshHelper::CreatePlane(Vector2 size, const std::vector<Color>& arg_colors, bool flat, BackupData<Vertex::Vertex_UV_Normal_Color>& outputMeshData)
+void ButiEngine::MeshHelper::CreatePlane(Vector2 size, float UVMax, const UINT arg_verticalSeparate,  const UINT arg_horizontalSeparate, const std::vector<Color>& arg_colors, bool flat, BackupData<Vertex::Vertex_UV_Normal_Color>& outputMeshData)
 {
-	size.x *= 0.5f;
-	size.y *= 0.5f;
 	BoxSurface surface;
-	surface.up = size.y;
-	surface.down = -size.y;
-	surface.right = size.x;
-	surface.right = -size.x;
+	surface.up = size.y * 0.5f;
+	surface.down = -size.y * 0.5f;
+	surface.right = size.x * 0.5f;
+	surface.right = -size.x * 0.5f;
 	surface.front = 0;
 	surface.back = 0;
-	std::vector<Vertex::Vertex_UV_Normal_Color> vertices
-	{
-		Vertex::Vertex_UV_Normal_Color(Vector3(-size.x, size.y, 0.0f),Vector2(0.0f,0.0f)),
-		Vertex::Vertex_UV_Normal_Color(Vector3(size.x, size.y, 0.0f),Vector2(1.0f,0.0f)),
-		Vertex::Vertex_UV_Normal_Color(Vector3(-size.x, -size.y, 0.0f),Vector2(0.0f,1.0f)),
-		Vertex::Vertex_UV_Normal_Color(Vector3(size.x, -size.y, 0.0f),Vector2(1.0f,1.0f)),
-		//BackSide
-	};
-	std::vector<UINT>indices{
-		0,1,2,
-		3,2,1,
-		2,1,0,
-		1,2,3
-	};
-	if(flat)
-	VertexFlatConverter(vertices);
+	std::vector<Vertex::Vertex_UV_Normal_Color> vertices;
+	float horizontalUnit = size.y / (arg_horizontalSeparate);
+	float verticalUnit = size.x / (arg_verticalSeparate);
+	for (int i = 0; i < arg_horizontalSeparate + 1; i++) {
+		for (int j = 0; j < arg_verticalSeparate + 1; j++) {
+			vertices.push_back(Vertex::Vertex_UV_Normal_Color(Vector3(verticalUnit * i - size.x / 2, horizontalUnit * j - size.y / 2, 0), Vector2((verticalUnit * i / size.x),( 1 - horizontalUnit * j / size.y)) * UVMax, Vector3(0, 0, 1.0f)));
+		}
+	}
+
+	std::vector<UINT>indices;
+	for (int i = 0; i < (arg_horizontalSeparate + 1) * arg_verticalSeparate; i += arg_horizontalSeparate + 1) {
+		for (int j = i; j < i + arg_horizontalSeparate; j++) {
+			indices.push_back(j + arg_horizontalSeparate + 2);
+			indices.push_back(j + arg_horizontalSeparate + 1);
+			indices.push_back(j);
+			indices.push_back(j + 1);
+			indices.push_back(j + arg_horizontalSeparate + 2);
+			indices.push_back(j);
+		}
+	}
+
+	if (flat)
+		VertexFlatConverter(vertices);
 	VertexAttachColor(arg_colors, vertices);
 	outputMeshData.vertices = vertices;
 	outputMeshData.indices = indices;
 }
+
 
 void ButiEngine::MeshHelper::CreateLine(Vector2 pointA, Vector2 pointB, float width, const std::vector<Color>& arg_colors, BackupData<Vertex::Vertex_UV_Normal_Color>& outputMeshData)
 {

@@ -3,7 +3,7 @@
 
 void ButiEngine::HitTestBehavior::OnUpdate()
 {
-
+	
 	if (GameDevice::input.CheckKey(Keys::H)) {
 		gameObject.lock()->transform->RollLocalRotationX_Degrees(1);
 	}

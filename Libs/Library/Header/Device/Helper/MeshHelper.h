@@ -25,7 +25,7 @@ namespace ButiEngine {
 		
 		static void CreateCapsule(Vector3 size, Vector3 pointA, Vector3 pointB, int tessellation, bool isLie, const std::vector<Color>& arg_colors, BackupData<Vertex::Vertex_UV_Normal_Color>& outputMeshData);
 				
-		static void CreatePlane(Vector2 size, const std::vector<Color>& arg_colors,bool flat, BackupData<Vertex::Vertex_UV_Normal_Color>& outputMeshData);
+		static void CreatePlane(Vector2 size, float UVMax, const UINT arg_verticalSeparate, const UINT arg_horizontalSeparate, const std::vector<Color>& arg_colors, bool flat, BackupData<Vertex::Vertex_UV_Normal_Color>& outputMeshData);
 		
 		static void CreateLine(Vector2 pointA, Vector2 pointB, float width, const std::vector<Color>& arg_colors, BackupData<Vertex::Vertex_UV_Normal_Color>& outputMeshData);
 		

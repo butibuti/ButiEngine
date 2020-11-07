@@ -620,7 +620,7 @@ namespace ButiEngine {
 		template<class Archive>
 		void serialize(Archive& archive)
 		{
-			archive(x, y, z); 
+			archive(x, y, z);
 		}
 
 	};
@@ -800,7 +800,7 @@ namespace ButiEngine {
 		template<class Archive>
 		void serialize(Archive& archive)
 		{
-			archive(x, y, z,w);
+			archive(x, y, z, w);
 		}
 	};
 

@@ -435,20 +435,19 @@ namespace ButiEngine {
 
 
 		inline void ShowUI() {
-
 			ImGui::BulletText("Position");
 			float pos[] = { GetLocalPosition().x,GetLocalPosition().y,GetLocalPosition().z };
-			if (ImGui::DragFloat3("p", pos, 0.02f, -500.0f, 500.0f)) {
+			if (ImGui::DragFloat3("p", pos, 0.02f, -500.0f, 500.0f,"%.3f")) {
 				SetLocalPosition(Vector3(pos[0], pos[1], pos[2]));
 			}
 			ImGui::BulletText("Scale");
 			float scale[] = { GetLocalScale().x,GetLocalScale().y,GetLocalScale().z };
-			if (ImGui::DragFloat3("s", scale, 0.01f, -500.0, 500.0f)) {
+			if (ImGui::DragFloat3("s", scale, 0.01f, -500.0, 500.0f, "%.3f")) {
 				SetLocalScale(Vector3(scale[0], scale[1], scale[2]));
 			}
 			ImGui::BulletText("Rotation");
 			float euler[] = { 0,0,0 };
-			if (ImGui::DragFloat3("R", euler, 1.0f, -500.0, 500.0f)) {
+			if (ImGui::DragFloat3("R", euler, 1.0f, -500.0, 500.0f, "%.3f")) {
 				RollLocalRotation(Vector3(euler[0], euler[1], euler[2]));
 			}ImGui::SameLine();
 			if (ImGui::Button("Identity"))

@@ -2,6 +2,7 @@
 #include"stdafx.h"
 #include"Header/Resources/DrawData/DrawData_Dx12.h"
 #include "..\..\..\Header\GameObjects\DefaultGameComponent\MeshDrawComponent.h"
+#include "..\..\..\Header\GameParts\ResourceContainer.h"
 
 
 ButiEngine::MeshDrawComponent::MeshDrawComponent(const MeshTag& arg_meshTag, const ShaderTag& arg_shaderTag, const MaterialTag& arg_materialTag, std::shared_ptr<DrawInformation> arg_shp_drawInfo, const UINT arg_layer, std::shared_ptr<Transform> arg_shp_transform)
@@ -43,11 +44,6 @@ ButiEngine::MeshDrawComponent::MeshDrawComponent(const ModelTag& arg_modelTag, c
 
 void ButiEngine::MeshDrawComponent::OnUpdate()
 {
-#ifdef DEBUG
-	if (GameDevice::input.TriggerKey(Keys::One)) {
-		SwitchFillMode(false);
-	}
-#endif
 }
 
 void ButiEngine::MeshDrawComponent::ChangeFillMode(const bool arg_isFill)

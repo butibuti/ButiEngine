@@ -8,7 +8,7 @@ namespace ButiEngine {
 		SucideComponent() {}
 		void OnUpdate()override;
 		std::string GetGameComponentName()override {
-			return "SicideComponent";
+			return "SucideComponent";
 		}
 		std::shared_ptr<GameComponent> Clone()override;
 

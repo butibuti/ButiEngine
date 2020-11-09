@@ -19,6 +19,8 @@ namespace ButiEngine {
 		
 		static void CreateSphere(Vector3 size, int tessellation, const std::vector<Color>& arg_colors, BackupData<Vertex::Vertex_UV_Normal_Color>& outputMeshData);
 		
+		static void CreateSphereForParticle(Vector3 size, int tessellation, const std::vector<Color>& arg_colors, BackupData<Vertex::Vertex_UV_Normal_Color>& outputMeshData);
+		
 		static void CreateCylinderCap(const std::vector<Color>& arg_colors,std::vector<Vertex::Vertex_UV_Normal_Color>& ref_vertices, std::vector<UINT>& ref_indices, Vector3 size, int tessellation, bool isTop);
 		
 		static void CreateCone(Vector3 size, int tessellation, const std::vector<Color>& arg_colors, BackupData<Vertex::Vertex_UV_Normal_Color>& outputMeshData);

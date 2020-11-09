@@ -134,6 +134,8 @@ namespace ButiEngine {
 
 		void UpdateTagName();
 
+		std::shared_ptr<GameObject> Clone();
+
 		template<class Archive>
 		void serialize(Archive& archive)
 		{

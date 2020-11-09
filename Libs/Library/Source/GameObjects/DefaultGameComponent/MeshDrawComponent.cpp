@@ -85,22 +85,9 @@ void ButiEngine::MeshDrawComponent::OnSet()
 		}
 	}
 
-	auto renderer = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetRenderer();
-	if (!shp_transform) {
-		shp_transform = gameObject.lock()->transform;
-	}
-	if (!modelTag.IsEmpty()) {												 
-			auto graphicDevice = gameObject.lock()->GetGraphicDevice()->GetThis<GraphicDevice_Dx12>();
-			data = ObjectFactory::Create<MeshDrawData_Dx12>(modelTag, shaderTag,renderer,graphicDevice,shp_drawInfo,shp_transform );
+	CreateData();
 
-	}
-	else {
-			data = ObjectFactory::Create<MeshDrawData_Dx12>(meshTag, shaderTag, materialTag, renderer, gameObject.lock()->GetGraphicDevice()->GetThis<GraphicDevice_Dx12>(), shp_drawInfo,shp_transform);
-
-		
-	}
-
-	index = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetRenderer()->RegistDrawObject(data,layer);
+	Regist();
 }
 
 void ButiEngine::MeshDrawComponent::OnRemove()
@@ -116,13 +103,23 @@ void ButiEngine::MeshDrawComponent::SetBlendMode(const BlendMode& arg_blendMode)
 
 std::shared_ptr<ButiEngine:: GameComponent> ButiEngine::MeshDrawComponent::Clone()
 {
-	if (modelTag.IsEmpty()) {
-		return ObjectFactory::Create<MeshDrawComponent>(meshTag, shaderTag,materialTag, shp_drawInfo, layer, shp_transform);
+	if (shp_drawInfo) {
+		if (modelTag.IsEmpty()) {
+			return ObjectFactory::Create<MeshDrawComponent>(meshTag, shaderTag, materialTag, shp_drawInfo->Clone(), layer, nullptr);
+		}
+		else {
+			return ObjectFactory::Create<MeshDrawComponent>(modelTag, shaderTag, shp_drawInfo->Clone(), layer, nullptr);
+		}
 	}
 	else {
-		return ObjectFactory::Create<MeshDrawComponent>(modelTag,shaderTag,shp_drawInfo,layer,shp_transform);
-	}
 
+		if (modelTag.IsEmpty()) {
+			return ObjectFactory::Create<MeshDrawComponent>(meshTag, shaderTag, materialTag, nullptr, layer, nullptr);
+		}
+		else {
+			return ObjectFactory::Create<MeshDrawComponent>(modelTag, shaderTag, nullptr, layer, nullptr);
+		}
+	}
 }
 
 void ButiEngine::MeshDrawComponent::Regist()
@@ -134,14 +131,88 @@ void ButiEngine::MeshDrawComponent::Regist()
 
 void ButiEngine::MeshDrawComponent::UnRegist()
 {
-	if(index)
-	gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetRenderer()->UnRegistDrawObject(index, layer);
+	if (index) {
+		gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetRenderer()->UnRegistDrawObject(index, layer);
+		index = nullptr;
+	}
 }
 
 void ButiEngine::MeshDrawComponent::OnShowUI()
 {
+	if (ImGui::Button("Regist")) {
+		Regist();
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("UnRegist")) {
+		UnRegist();
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("ReRegist")) {
+		CreateData();
+		UnRegist(); 
+		Regist();
+	}
+
+	ImGui::BulletText("BlendMode");
+
+	if (ImGui::Button("Addition")) {
+		shp_drawInfo->drawSettings.blendMode = BlendMode::Addition;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Blend")) {
+		shp_drawInfo->drawSettings.blendMode = BlendMode::AlphaBlend;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("None")) {
+		shp_drawInfo->drawSettings.blendMode = BlendMode::NoBlend;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Reverse")) {
+		shp_drawInfo->drawSettings.blendMode = BlendMode::Reverse;
+	}
+
+
+	ImGui::BulletText("BillBoarsMode");
+	if (ImGui::Button("None")) {
+		shp_drawInfo->drawSettings.billboardMode = BillBoardMode::none;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("BillBoard")) {
+		shp_drawInfo->drawSettings.billboardMode = BillBoardMode::full;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("BillBoard_X")) {
+		shp_drawInfo->drawSettings.billboardMode = BillBoardMode::x;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("BillBoard_Y")) {
+		shp_drawInfo->drawSettings.billboardMode = BillBoardMode::y;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("BillBoard_Z")) {
+		shp_drawInfo->drawSettings.billboardMode = BillBoardMode::z;
+	}
+
 	auto endItr = shp_drawInfo->vec_exCBuffer.end();
 	for (auto itr = shp_drawInfo->vec_exCBuffer.begin(); itr != endItr; itr++) {
 		(*itr)->ShowUI();
+	}
+}
+
+void ButiEngine::MeshDrawComponent::CreateData()
+{
+	auto renderer = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetRenderer();
+	if (!shp_transform) {
+		shp_transform = gameObject.lock()->transform;
+	}
+	if (!modelTag.IsEmpty()) {
+		auto graphicDevice = gameObject.lock()->GetGraphicDevice()->GetThis<GraphicDevice_Dx12>();
+		data = ObjectFactory::Create<MeshDrawData_Dx12>(modelTag, shaderTag, renderer, graphicDevice, shp_drawInfo, shp_transform);
+
+	}
+	else {
+		data = ObjectFactory::Create<MeshDrawData_Dx12>(meshTag, shaderTag, materialTag, renderer, gameObject.lock()->GetGraphicDevice()->GetThis<GraphicDevice_Dx12>(), shp_drawInfo, shp_transform);
+
+
 	}
 }

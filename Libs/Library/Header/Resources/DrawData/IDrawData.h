@@ -20,6 +20,20 @@ namespace ButiEngine {
 			archive(drawSettings);
 			archive(vec_exCBuffer);
 		}
+
+		std::shared_ptr< DrawInformation > Clone() {
+			auto output = ObjectFactory::Create<DrawInformation>();
+
+			output->drawSettings = drawSettings;
+			output->isLightUp = isLightUp;
+
+			for (auto itr = vec_exCBuffer.begin(); itr != vec_exCBuffer.end(); itr++) {
+				output->vec_exCBuffer.push_back((*itr)->Clone());
+			}
+
+			return output;
+		}
+
 	};
 	struct DrawData {
 		
@@ -29,16 +43,10 @@ namespace ButiEngine {
 		std::shared_ptr<Transform> transform;
 
 		inline float GetMaxZ(const Matrix4x4& arg_viewMatrix){
-			auto trans = transform->GetMatrix().Transpose();
-			auto upFrontZ = max((boxEightCorner.up_right_front * trans * arg_viewMatrix).z, (boxEightCorner.up_left_front * trans * arg_viewMatrix).z);
-			auto upBackZ = max((boxEightCorner.up_right_back * trans * arg_viewMatrix).z, (boxEightCorner.up_left_back * trans * arg_viewMatrix).z);
-			auto downFrontZ = max((boxEightCorner.down_right_front * trans * arg_viewMatrix).z, (boxEightCorner.down_left_front * trans * arg_viewMatrix).z);
-			auto downBackZ = max((boxEightCorner.down_right_back * trans * arg_viewMatrix).z, (boxEightCorner.down_left_back * trans * arg_viewMatrix).z);
+			
+			auto viewPos = transform->GetWorldPosition() * arg_viewMatrix;
 
-			auto upZ = max(upFrontZ, upBackZ);
-			auto downZ = max(downFrontZ, downBackZ);
-
-			return max(upZ,downZ);
+			return viewPos.z;
 		}
 
 		

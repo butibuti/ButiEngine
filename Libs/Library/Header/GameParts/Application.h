@@ -34,13 +34,6 @@ namespace ButiEngine {
 			if (GameDevice::input.CheckKey(Keys::Esc)) {
 				return 1;
 			}
-#ifdef DEBUG
-			if (GameDevice::input.TriggerKey(Keys::C)) {
-				std::cout << "ƒRƒ}ƒ“ƒh‚ð“ü—Í‚µ‚Ä‚­‚¾‚³‚¢" << std::endl;
-				std::string cmd;
-				std::cin>>cmd;
-			}
-#endif
 		}
 		return 0;
 	}

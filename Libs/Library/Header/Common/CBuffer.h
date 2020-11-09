@@ -32,6 +32,8 @@ namespace ButiEngine {
 
 		virtual bool OnShowUI() { return false; }
 
+		virtual std::shared_ptr<ICBuffer> Clone()=0;
+
 		UINT slot = 0;
 		std::string exName;
 	protected:

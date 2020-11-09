@@ -42,22 +42,7 @@ void ButiEngine::EditScene::OnSet()
 
 void ButiEngine::EditScene::OnInitialize()
 {
-	//auto hikari = shp_gameObjectManager->AddObjectFromCereal("hikari.gameObject");
-
-	//
-
-
-	auto floor = shp_gameObjectManager->AddObjectFromCereal("floor.gameObject");
 	
-
-	//auto maguro = shp_gameObjectManager->AddObjectFromCereal_Insert("maguro.gameObject");
-
-	//auto maguro2 = shp_gameObjectManager->AddObjectFromCereal_Insert("maguro2.gameObject");
-
-
-
-	auto player = shp_gameObjectManager->AddObjectFromCereal_Insert("player.gameObject");
-
 }
 
 void ButiEngine::EditScene::OnUpdate()
@@ -72,6 +57,7 @@ void ButiEngine::EditScene::UIUpdate()
 		if (isActive) {
 			startCount++;
 			if (startCount==1) {
+				OutputCereal(shp_gameObjectManager,GlobalSettings::GetResourceDirectory()+ "Scene/" + sceneInformation.GetSceneName()+"/objects.gameObjectManager" );
 				shp_gameObjectManager->Start();
 			}
 		}
@@ -99,9 +85,6 @@ void ButiEngine::EditScene::UIUpdate()
 			selectedGameObject.lock()->SetObjectName(CallBacks::objectName);
 		}
 
-	/*	if (ImGui::Button("Dlete")) {
-			
-		}*/
 
 		selectedGameObject.lock()->ShowUI();
 
@@ -212,7 +195,7 @@ void ButiEngine::EditScene::Draw()
 	shp_renderer->RenderingEnd();
 }
 
-ButiEngine::EditScene::EditScene(std::weak_ptr<ISceneManager> arg_wkp_sceneManager, SceneInformation argSceneInformation, std::vector<std::shared_ptr<Behavior>>arg_vec_shp_addBehavior, std::vector<std::shared_ptr<GameComponent>>arg_vec_shp_addComponents)
+ButiEngine::EditScene::EditScene(std::weak_ptr<ISceneManager> arg_wkp_sceneManager, SceneInformation argSceneInformation, std::vector<std::shared_ptr<Behavior>>arg_vec_shp_addBehavior, std::vector<std::shared_ptr<GameComponent>>arg_vec_shp_addComponents):sceneInformation(argSceneInformation)
 {
 	shp_sceneManager = arg_wkp_sceneManager.lock();
 	vec_shp_addBehavior = arg_vec_shp_addBehavior;
@@ -241,13 +224,24 @@ void ButiEngine::EditScene::Release()
 
 void ButiEngine::EditScene::Initialize()
 {
-	shp_gameObjectManager = ObjectFactory::Create<GameObjectManager>(GetThis<IScene>());
+
 
 	shp_renderer = ObjectFactory::Create<Renderer>(GetThis<IScene>());
 
 	shp_soundManager = ObjectFactory::Create<SoundManager>(GetThis<IScene>());
 
 	auto windowSize = GetWindow()->GetSize();
+	std::string fullGameObjectManagerPath = GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation.GetSceneName() + "/objects.gameObjectManager";
+	if (Util::IsFileExistence(fullGameObjectManagerPath)) {
+		shp_gameObjectManager = ObjectFactory::CreateFromCereal<GameObjectManager>(fullGameObjectManagerPath);
+
+		shp_gameObjectManager->SetScene(GetThis<IScene>());
+		shp_gameObjectManager->Initialize_cereal();
+	}
+	else {
+		_mkdir((GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation.GetSceneName() + "/").c_str());
+		shp_gameObjectManager = ObjectFactory::Create<GameObjectManager>(GetThis<IScene>());
+	}
 	/*
 	shp_renderer->AddLayer();
 	shp_renderer->AddLayer();

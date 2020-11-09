@@ -28,6 +28,7 @@ namespace ButiEngine {
 			for (auto i : inputMeshData.indices) {
 				DataPtr->indices.push_back(i);
 			}
+			DataPtr->eightCorner = inputMeshData.eightCorner;
 			output->SetBackupData(DataPtr);
 			UINT vertexCount;
 			UINT indexCount;

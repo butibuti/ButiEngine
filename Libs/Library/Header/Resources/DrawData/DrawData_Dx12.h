@@ -109,7 +109,7 @@ namespace ButiEngine {
 		}
 
 		inline float GetZ()override {
-			return  GetMaxZ(wkp_graphicDevice.lock()->GetCameraViewMatrix());
+			return  GetMaxZ(wkp_graphicDevice.lock()->GetRawViewMatrix());
 		}
 		void ChangeCullMode(const CullMode& arg_cull)override ;
 		void ChangeFillMode(const bool isFill)override;

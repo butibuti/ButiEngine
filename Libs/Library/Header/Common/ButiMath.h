@@ -61,7 +61,7 @@ namespace ButiEngine {
 			DirectX::XMStoreFloat4x4(this, tmp);
 			return *this;
 		}
-
+		bool ShowUI() { return false; }
 		inline Vector4 operator*(const Vector4& vec4);
 
 		inline operator DirectX::XMMATRIX() const

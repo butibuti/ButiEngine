@@ -14,10 +14,10 @@ namespace ButiEngine {
 		}
 		CArrayBuffer_Dx12(){}
 		~CArrayBuffer_Dx12() {
-
-			wkp_heapManager.lock()->Release(BlankSpace{ index,instanceSize / 0x100 });
-			delete instance;
-
+			if (wkp_graphicDevice.lock()) {
+				wkp_heapManager.lock()->Release(BlankSpace{ index,instanceSize / 0x100 });
+				delete instance;
+			}
 
 		}
 		T& Get(const UINT arg_index) override
@@ -63,6 +63,12 @@ namespace ButiEngine {
 			archive(instanceSize);
 		}
 
+		std::shared_ptr<ICBuffer> Clone()override {
+			auto output = ObjectFactory::Create<CArrayBuffer_Dx12<T>>(this->slot, instanceSize / sizeof(T));
+
+
+			return output;
+		}
 	private:
 		std::weak_ptr<GraphicDevice_Dx12> wkp_graphicDevice;
 		std::weak_ptr<DescriptorHeapManager> wkp_heapManager;

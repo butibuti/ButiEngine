@@ -33,9 +33,7 @@ namespace ButiEngine {
 
 		bool ShowUI() { 
 			
-			float dir[] = { lightDir.x,lightDir.y,lightDir.z,lightDir.w};
-			if (ImGui::DragFloat4("Direction", dir, 0.02f, -500.0f, 500.0f)) {
-				lightDir = Vector4(dir[0], dir[1], dir[2], dir[3]);
+			if (ImGui::DragFloat4("Direction",&lightDir.x, 0.01f, -500.0f, 500.0f)) {
 				return true;
 			}
 			return false;
@@ -48,7 +46,6 @@ namespace ButiEngine {
 		Vector4 ambient;
 		Vector4 specular;
 		MaterialVariable() {
-			memset(this, 0, sizeof(MaterialVariable));
 		};
 		template<class Archive>
 		void serialize(Archive& archive)
@@ -58,14 +55,29 @@ namespace ButiEngine {
 			archive(ambient);
 			archive(specular);
 		}
-		bool ShowUI() { return false; }
+		bool ShowUI() { 
+
+			bool ret = false;
+			if (ImGui::DragFloat4("Emissive", &emissive.x, 0.01f, 0.0f, 1.0f)) {
+				ret = true;
+			}
+			if (ImGui::DragFloat4("Diffuse", &diffuse.x, 0.01f, 0.0f, 1.0f)) {
+				ret = true;
+			}
+			if (ImGui::DragFloat4("Specular", &specular.x, 0.01f, 0.0f, 1.0f)) {
+				ret = true;
+			}
+			if (ImGui::DragFloat4("Ambient", &ambient.x, 0.01f, 0.0f, 1.0f)) {
+				ret= true;
+			}
+			return ret; 
+		}
 	};
 
 	struct TestGSVariable {
 		Vector4 pushPower;
 		float bottom = 0;
 		TestGSVariable() {
-			memset(this, 0, sizeof(TestGSVariable));
 		}
 		template<class Archive>
 		void serialize(Archive& archive)
@@ -85,6 +97,52 @@ namespace ButiEngine {
 
 				ret = true;
 			}
+			return ret;
+		}
+	};
+	struct ParticleParameter {
+		Vector4 startColor=Vector4(0,0,0,1);
+		Vector4 endColor = Vector4(1, 1, 1, 1);
+		float time=0.0f ;
+		float power=0.0f ;
+		int noise=0 ;
+
+		ParticleParameter(){}
+
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(startColor);
+			archive(endColor);
+			archive(time);
+			archive(power);
+			archive(noise);
+		}
+
+		bool ShowUI() {
+
+			bool ret = false;
+			if (ImGui::DragFloat("Time", &time, 0.02f, 0.0f, 200.0f)) {
+
+				ret = true;
+			}
+			if (ImGui::DragFloat("Power", &power, 0.02f, -100.0f, 100.0f)) {
+
+				ret = true;
+			}
+			if (ImGui::DragInt("Noise", &noise, 1.0f, 0, 100)) {
+
+				ret = true;
+			}
+			
+			if (ImGui::ColorEdit4("StartColor", &startColor.x)) {
+				ret = true;
+			}
+
+			if (ImGui::ColorEdit4("EndColor", &endColor.x)) {
+				ret = true;
+			}
+
 			return ret;
 		}
 	};

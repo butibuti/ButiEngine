@@ -217,9 +217,15 @@ void ButiEngine::GameObject::ShowUI()
 
 std::string ButiEngine::GameObject::SetObjectName(const std::string& arg_objectName)
 {
-	objectName = wkp_gameObjManager.lock()->ReNameGameObject(arg_objectName, objectName);
+	if (wkp_gameObjManager.lock()) {
+		objectName = wkp_gameObjManager.lock()->ReNameGameObject(arg_objectName, objectName);
 
-	return objectName;
+		return objectName;
+	}
+	else {
+		objectName = arg_objectName;
+		return arg_objectName;
+	}
 }
 std::weak_ptr< ButiEngine::GameObjectManager> ButiEngine::GameObject::GetGameObjectManager()
 {
@@ -239,6 +245,28 @@ std::shared_ptr<ButiEngine::GraphicDevice> ButiEngine::GameObject::GetGraphicDev
 void ButiEngine::GameObject::UpdateTagName()
 {
 	tagName = GameObjectTagManager::GetTagName(gameObjectTag);
+}
+
+std::shared_ptr<ButiEngine::GameObject> ButiEngine::GameObject::Clone()
+{
+	auto output= ObjectFactory::Create<GameObject>(transform->Clone(), GetGameObjectName());
+
+	auto componentsEndItr = vec_gameComponents.end();
+	for (auto itr = vec_gameComponents.begin(); itr != componentsEndItr;itr++) {
+		auto cloneComponent = (*itr)->Clone();
+		if(cloneComponent)
+		output->vec_gameComponents.push_back(cloneComponent);
+	}
+
+	auto behaviorEndItr = vec_behaviors.end();
+	for (auto itr = vec_behaviors.begin(); itr != behaviorEndItr; itr++) {
+		auto cloneBehavior = (*itr)->Clone();
+		if (cloneBehavior)
+			output->vec_behaviors.push_back(cloneBehavior);
+	}
+
+
+	return output;
 }
 
 void ButiEngine::GameObject::Init_RegistGameComponents()

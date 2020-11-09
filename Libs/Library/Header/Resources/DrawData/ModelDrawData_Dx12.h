@@ -7,7 +7,7 @@ namespace ButiEngine {
 		
 
 		inline float GetZ()override {
-			return  GetMaxZ( wkp_graphicDevice.lock()->GetCameraViewMatrix());
+			return  GetMaxZ( wkp_graphicDevice.lock()->GetRawViewMatrix());
 		}
 		void Initialize()override;
 

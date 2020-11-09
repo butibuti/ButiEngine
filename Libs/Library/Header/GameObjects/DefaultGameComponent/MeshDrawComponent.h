@@ -74,6 +74,7 @@ namespace ButiEngine {
 		}
 	protected:
 		std::shared_ptr< MeshDrawData > data;
+		void CreateData();
 		UINT* index;
 		UINT layer; 
 		MeshTag meshTag;

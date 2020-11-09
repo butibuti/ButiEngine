@@ -36,6 +36,13 @@ namespace ButiEngine {
 			scale = arg_scale;
 			localMatrix = nullptr;
 		}
+		inline Transform(const Vector3& arg_position, const Matrix4x4& arg_rotate, const Vector3& arg_scale) {
+
+			localPosition = arg_position;
+			rotation = arg_rotate;
+			scale = arg_scale;
+			localMatrix = nullptr;
+		}
 		inline Transform(const Vector3& pos) {
 			localPosition = pos;
 			rotation = DirectX::XMMatrixRotationX(
@@ -83,6 +90,14 @@ namespace ButiEngine {
 			}
 
 			return *localMatrix;
+
+		}
+
+		std::shared_ptr<Transform> Clone() {
+			auto output = ObjectFactory::Create<Transform>(localPosition,rotation,scale);
+			if(baseTransform)
+			output->SetBaseTransform(baseTransform, true);
+			return output;
 		}
 
 		inline Vector3 GetWorldPosition()
@@ -436,20 +451,46 @@ namespace ButiEngine {
 
 		inline void ShowUI() {
 			ImGui::BulletText("Position");
-			float pos[] = { GetLocalPosition().x,GetLocalPosition().y,GetLocalPosition().z };
-			if (ImGui::DragFloat3("p", pos, 0.02f, -500.0f, 500.0f,"%.3f")) {
-				SetLocalPosition(Vector3(pos[0], pos[1], pos[2]));
+			if (ImGui::DragFloat3("##p", &localPosition.x, 0.02f, -500.0f, 500.0f,"%.3f")) {
+				localMatrix = nullptr;
 			}
 			ImGui::BulletText("Scale");
-			float scale[] = { GetLocalScale().x,GetLocalScale().y,GetLocalScale().z };
-			if (ImGui::DragFloat3("s", scale, 0.01f, -500.0, 500.0f, "%.3f")) {
-				SetLocalScale(Vector3(scale[0], scale[1], scale[2]));
+			if (ImGui::DragFloat3("##s", &scale.x, 0.01f, -500.0, 500.0f, "%.3f")) {
+				localMatrix = nullptr;
 			}
 			ImGui::BulletText("Rotation");
-			float euler[] = { 0,0,0 };
-			if (ImGui::DragFloat3("R", euler, 1.0f, -500.0, 500.0f, "%.3f")) {
-				RollLocalRotation(Vector3(euler[0], euler[1], euler[2]));
+			Vector3 euler;
+			if (ImGui::InputFloat3("##R", &euler.x, "%.3f")) {
+				SetLocalRotation(euler);
+			}
+
+			ImGui::PushButtonRepeat(true);
+
+			if (ImGui::Button("X:+")) {
+				RollLocalRotationX_Degrees(1);
 			}ImGui::SameLine();
+
+			if (ImGui::Button("Y:+")) {
+				RollLocalRotationY_Degrees(1);
+			}ImGui::SameLine();
+
+			if (ImGui::Button("Z:+")) {
+				RollLocalRotationZ_Degrees(1);
+			}
+			if (ImGui::Button("X:-")) {
+				RollLocalRotationX_Degrees(-1);
+			}ImGui::SameLine();
+
+			if (ImGui::Button("Y:-")) {
+				RollLocalRotationY_Degrees(-1);
+			}ImGui::SameLine();
+
+			if (ImGui::Button("Z:-")) {
+				RollLocalRotationZ_Degrees(-1);
+			}
+
+			ImGui::PushButtonRepeat(false);
+
 			if (ImGui::Button("Identity"))
 			{
 				RollIdentity();

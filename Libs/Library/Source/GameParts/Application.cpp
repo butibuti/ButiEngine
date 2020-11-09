@@ -66,13 +66,19 @@ void ButiEngine::Application::InitLoadResources()
 		std::vector<Color> colors;
 
 
-		MeshHelper::CreateSphere(Vector3(0.5f, 0.5f, 0.5f), 12, colors, testVertices);
+		MeshHelper::CreateSphereForParticle(Vector3(0.5f, 0.5f, 0.5f), 12, colors, testVertices);
+
 		Vertex::VertexHelper::VertexConvert(testVertices, uv_normalVertices);
-		Application::GetResourceContainer()->LoadMesh("Sphere_UV_Normal", uv_normalVertices);
+		Application::GetResourceContainer()->LoadMesh("SphereForParticle_UV_Normal", uv_normalVertices);
+
+
+		MeshHelper::CreateSphere(Vector3(0.5f, 0.5f, 0.5f), 12, colors, testVertices);
 		Vertex::VertexHelper::VertexConvert(testVertices, normalVertices);
 		Application::GetResourceContainer()->LoadMesh("Sphere_Normal", normalVertices);
-		Vertex::VertexHelper::VertexConvert(testVertices, uvVertices);
-		Application::GetResourceContainer()->LoadMesh("Sphere_UV", uvVertices);
+
+
+		Vertex::VertexHelper::VertexConvert(testVertices, uv_normalVertices);
+		Application::GetResourceContainer()->LoadMesh("Sphere_UV_Normal", uv_normalVertices);
 		testVertices.Clear();
 		uvVertices.Clear();
 		normalVertices.Clear();

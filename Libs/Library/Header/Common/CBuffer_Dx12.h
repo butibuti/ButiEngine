@@ -12,8 +12,10 @@ namespace ButiEngine {
 	}
 	CBuffer_Dx12(){}
 	~CBuffer_Dx12() {
-		wkp_heapManager.lock()->Release(BlankSpace{index,size/0x100});
-		this->instance = nullptr;
+		if (wkp_graphicDevice.lock()) {
+			wkp_heapManager.lock()->Release(BlankSpace{ index,size / 0x100 });
+			this->instance = nullptr;
+		}
 	}
 	T& Get() const override
 	{
@@ -58,6 +60,14 @@ namespace ButiEngine {
 	}
 	bool OnShowUI()override {
 		return instance->ShowUI();
+	}
+	std::shared_ptr<ICBuffer> Clone()override {
+		auto output = ObjectFactory::Create<CBuffer_Dx12<T>>(this->slot);
+
+		
+		*(output->instance) = (*instance);
+
+		return output;
 	}
 private:
 	void  UpdateResourceRelease()override {

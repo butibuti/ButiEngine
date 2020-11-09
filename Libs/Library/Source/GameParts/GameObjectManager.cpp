@@ -7,6 +7,11 @@ ButiEngine::GameObjectManager::GameObjectManager(std::weak_ptr<IScene> arg_wkp_s
 	wkp_scene = arg_wkp_scene;
 }
 
+void ButiEngine::GameObjectManager::SetScene(std::weak_ptr<IScene> arg_wkp_scene)
+{
+	wkp_scene = arg_wkp_scene;
+}
+
 void ButiEngine::GameObjectManager::Update()
 {
 	auto itr = vec_gameObjects.begin();
@@ -44,15 +49,50 @@ void ButiEngine::GameObjectManager::PreInitialize()
 
 void ButiEngine::GameObjectManager::ShowUI()
 {
-	ImGui::Begin("hieralchy");
-
-	auto endItr = vec_gameObjects.end();
+	ImGui::Begin("Hieralchy");
 
 
 
-	for (auto itr = vec_gameObjects.begin(); itr != vec_gameObjects.end(); itr++) {
+
+	for (auto itr = vec_gameObjects.begin(); itr != vec_gameObjects.end();) {
 		if (ImGui::Button((*itr)->GetGameObjectName().c_str())) {
 			selectedGameObject = (*itr);
+		}
+
+		if (selectedGameObject.lock() == (*itr)) {
+
+			ImGui::SameLine();
+			if (ImGui::Button("option"))
+				ImGui::OpenPopup("select_popup");
+			if (ImGui::BeginPopup("select_popup"))
+			{
+				if (ImGui::Button("Dlete")) {
+					(*itr)->Release();
+					itr = vec_gameObjects.erase(itr);
+				}
+				else if(ImGui::Button("Copy")) {
+					auto obj= AddObject((*itr)->Clone());
+
+
+					obj.lock()->Init_RegistGameComponents();
+					obj.lock()->Init_RegistBehaviors();
+
+					itr++;
+				}
+				else {
+
+					itr++;
+				}
+				ImGui::EndPopup();
+			}
+			else {
+				itr++;
+			}
+
+			
+		}
+		else {
+			itr++;
 		}
 	}
 
@@ -63,6 +103,16 @@ void ButiEngine::GameObjectManager::ShowUI()
 	ImGui::End();
 
 
+}
+
+void ButiEngine::GameObjectManager::Initialize_cereal()
+{
+	auto endItr = vec_gameObjects.end();
+	for (auto itr = vec_gameObjects.begin(); itr != endItr; itr++) {
+		(*itr)->SetGameObjectManager(GetThis<GameObjectManager>());
+		(*itr)->Init_RegistBehaviors();
+		(*itr)->Init_RegistGameComponents();
+	}
 }
 
 std::weak_ptr<ButiEngine::GameObject> ButiEngine::GameObjectManager::GetSelectedUI()
@@ -94,6 +144,29 @@ std::weak_ptr<ButiEngine::GameObject> ButiEngine::GameObjectManager::AddObject(s
 		out->SetGameObjectManager(GetThis<GameObjectManager>());
 	}
 	return out;
+}
+
+std::weak_ptr<ButiEngine::GameObject> ButiEngine::GameObjectManager::AddObject(std::shared_ptr<GameObject> gameObject)
+{
+	if (!map_gameObjects.count(gameObject->GetGameObjectName())) {
+		map_gameObjects.emplace(gameObject->GetGameObjectName(), gameObject);
+		vec_newGameObjects.push_back(gameObject);
+		gameObject->SetGameObjectManager(GetThis<GameObjectManager>());
+	}
+	else {
+		UINT count = 1;
+		while (map_gameObjects.count(gameObject->GetGameObjectName() + "_" + std::to_string(count))) {
+			count++;
+		}
+		gameObject->SetObjectName(gameObject->GetGameObjectName() + "_" + std::to_string(count));
+
+		map_gameObjects.emplace(gameObject->GetGameObjectName(), gameObject);
+		vec_newGameObjects.push_back(gameObject);
+		gameObject->SetGameObjectManager(GetThis<GameObjectManager>());
+	}
+
+
+	return gameObject;
 }
 
 std::weak_ptr<ButiEngine::GameObject> ButiEngine::GameObjectManager::AddObjectFromCereal(std::string filePath, std::shared_ptr<Transform> arg_transform)
@@ -228,4 +301,35 @@ void ButiEngine::GameObjectManager::UnRegistGameObject(std::shared_ptr<GameObjec
 {
 	if (map_gameObjects.count(gameObject->GetGameObjectName()))
 		map_gameObjects.erase(gameObject->GetGameObjectName());
+}
+
+
+void ButiEngine::OutputCereal(const std::shared_ptr<GameObjectManager>& v, const std::string& path)
+{
+	std::stringstream stream;
+
+
+	cereal::BinaryOutputArchive binOutArchive(stream);
+	binOutArchive(v);
+
+	std::ofstream outputFile(path, std::ios::binary);
+
+	outputFile << stream.str();
+
+	outputFile.close();
+	stream.clear();
+}
+
+void ButiEngine::InputCereal(std::shared_ptr<GameObjectManager>& v, const std::string& path)
+{
+	std::stringstream stream;
+
+	std::ifstream inputFile(path, std::ios::binary);
+
+	stream << inputFile.rdbuf();
+
+	cereal::BinaryInputArchive binInputArchive(stream);
+
+
+	binInputArchive(v);
 }

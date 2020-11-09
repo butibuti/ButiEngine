@@ -55,6 +55,9 @@ namespace ButiEngine {
 
 		std::vector<std::shared_ptr<GameComponent>>vec_shp_addComponents;
 
+
+		SceneInformation sceneInformation;
+
 		//////////////////////////////////////
 		bool isActive = false;
 

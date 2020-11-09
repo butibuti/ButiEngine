@@ -160,9 +160,7 @@ void ButiEngine::MeshHelper::CreateCube(Vector3 size, const std::vector<Color>& 
 	ColorAttachType colorType=ColorAttachType::SingleColor;
 	if (arg_colors.size() == 4)colorType = ColorAttachType::FourColor;
 	else if (arg_colors.size() == 6)colorType = ColorAttachType::SixColor;
-	size.x *= 0.5f;
-	size.y *= 0.5f;
-	size.z *= 0.5f;
+	size*= 0.5f;
 
 	std::vector<Vector3> PosVec = {
 			{ Vector3(-size.x, size.y, -size.z) },
@@ -236,6 +234,15 @@ void ButiEngine::MeshHelper::CreateCube(Vector3 size, const std::vector<Color>& 
 
 	}
 
+	outputMeshData.eightCorner.up_left_back = Vector3(-size.x, size.y, -size.z);
+	outputMeshData.eightCorner.up_left_front = Vector3(-size.x, size.y, size.z);
+	outputMeshData.eightCorner.up_right_back = Vector3(size.x, size.y, -size.z);
+	outputMeshData.eightCorner.up_right_front = Vector3(size.x, size.y, size.z);
+
+	outputMeshData.eightCorner.down_left_back = Vector3(-size.x, -size.y, -size.z);
+	outputMeshData.eightCorner.down_left_front = Vector3(-size.x, -size.y, size.z);
+	outputMeshData.eightCorner.down_right_back = Vector3(size.x, -size.y, -size.z);
+	outputMeshData.eightCorner.down_right_front = Vector3(size.x, -size.y, size.z);
 
 	if (colorType == ColorAttachType::SingleColor)
 		VertexAttachColor(arg_colors, vertices);
@@ -253,6 +260,16 @@ void ButiEngine::MeshHelper::CreateSphere(Vector3 size, int tessellation, const 
 	size = size * 0.5f;
 	std::vector< Vertex::Vertex_UV_Normal_Color> vertices;
 	std::vector<UINT> indices;
+
+	outputMeshData.eightCorner.up_left_back = Vector3(-size.x,  size.y, -size.z);
+	outputMeshData.eightCorner.up_left_front = Vector3(-size.x, size.y, size.z);
+	outputMeshData.eightCorner.up_right_back = Vector3( size.x, size.y, -size.z);
+	outputMeshData.eightCorner.up_right_front = Vector3(size.x, size.y, size.z);
+
+	outputMeshData.eightCorner.down_left_back =  Vector3(-size.x,-size.y, -size.z);
+	outputMeshData.eightCorner.down_left_front = Vector3(-size.x,-size.y, size.z);
+	outputMeshData.eightCorner.down_right_back = Vector3(size.x, -size.y, -size.z);
+	outputMeshData.eightCorner.down_right_front =Vector3(size.x, -size.y, size.z);
 
 	size_t verticalSegments = tessellation;
 	size_t horizontalSegments = tessellation * 2;
@@ -307,6 +324,73 @@ void ButiEngine::MeshHelper::CreateSphere(Vector3 size, int tessellation, const 
 	}
 	ReverseWinding(vertices, indices);
 
+
+
+	outputMeshData.vertices = vertices;
+	outputMeshData.indices = indices;
+}
+
+void ButiEngine::MeshHelper::CreateSphereForParticle(Vector3 size, int tessellation, const std::vector<Color>& arg_colors, BackupData<Vertex::Vertex_UV_Normal_Color>& outputMeshData)
+{
+	if (tessellation < 3) {
+		CreateCube(size, arg_colors, outputMeshData, true);
+		return;
+	}
+	size = size * 0.5f;
+	std::vector< Vertex::Vertex_UV_Normal_Color> vertices;
+	std::vector<UINT> indices;
+
+	outputMeshData.eightCorner.up_left_back = Vector3(-size.x, size.y, -size.z);
+	outputMeshData.eightCorner.up_left_front = Vector3(-size.x, size.y, size.z);
+	outputMeshData.eightCorner.up_right_back = Vector3(size.x, size.y, -size.z);
+	outputMeshData.eightCorner.up_right_front = Vector3(size.x, size.y, size.z);
+
+	outputMeshData.eightCorner.down_left_back = Vector3(-size.x, -size.y, -size.z);
+	outputMeshData.eightCorner.down_left_front = Vector3(-size.x, -size.y, size.z);
+	outputMeshData.eightCorner.down_right_back = Vector3(size.x, -size.y, -size.z);
+	outputMeshData.eightCorner.down_right_front = Vector3(size.x, -size.y, size.z);
+
+	size_t verticalSegments = tessellation;
+	size_t horizontalSegments = tessellation * 2;
+	for (size_t i = 0; i <= verticalSegments; i++)
+	{
+
+
+		float v = 1 - (float)i / verticalSegments;
+
+		float latitude = (i * DirectX::XM_PI / verticalSegments) - DirectX::XM_PIDIV2;
+		float dy, dxz;
+
+		DirectX::XMScalarSinCos(&dy, &dxz, latitude);
+
+		Vector3 CenterPos;
+
+		if (i == 0||i== verticalSegments) {
+			auto pos = Vector3(0, dy * size.y, 0);
+			vertices.push_back(Vertex::Vertex_UV_Normal_Color(pos, Vector2(0, v), pos.GetNormalize()));
+			continue;
+		}
+
+		for (size_t j = 0; j <= horizontalSegments; j++)
+		{
+			float u = (float)j / horizontalSegments;
+
+			float longitude = j * DirectX::XM_2PI / horizontalSegments;
+			float dx, dz;
+
+			DirectX::XMScalarSinCos(&dx, &dz, longitude);
+
+			dx *= dxz;
+			dz *= dxz;
+
+			auto pos = Vector3(dx * size.x, dy * size.y, dz * size.z);
+			vertices.push_back(Vertex::Vertex_UV_Normal_Color(pos, Vector2(u, v), pos.GetNormalize()));
+		}
+	}
+	
+	for (UINT i = 0; i < vertices.size(); i++) {
+		indices.push_back(i);
+	}
 
 
 	outputMeshData.vertices = vertices;
@@ -400,6 +484,19 @@ void ButiEngine::MeshHelper::CreateCapsule(Vector3 size, Vector3 pointA, Vector3
 		return;
 	}
 	size = size * 0.5f;
+
+
+
+	outputMeshData.eightCorner.up_left_back = Vector3(-size.x, size.y, -size.z)+pointA;
+	outputMeshData.eightCorner.up_left_front = Vector3(-size.x, size.y, size.z) + pointA;
+	outputMeshData.eightCorner.up_right_back = Vector3(size.x, size.y, -size.z) + pointA;
+	outputMeshData.eightCorner.up_right_front = Vector3(size.x, size.y, size.z) + pointA;
+
+	outputMeshData.eightCorner.down_left_back = Vector3(-size.x, -size.y, -size.z) + pointB;
+	outputMeshData.eightCorner.down_left_front = Vector3(-size.x, -size.y, size.z) + pointB;
+	outputMeshData.eightCorner.down_right_back = Vector3(size.x, -size.y, -size.z) + pointB;
+	outputMeshData.eightCorner.down_right_front = Vector3(size.x, -size.y, size.z) + pointB;
+
 	std::vector< Vertex::Vertex_UV_Normal_Color> vertices;
 	std::vector<UINT> indices;
 
@@ -495,12 +592,28 @@ void ButiEngine::MeshHelper::CreatePlane(Vector2 size, float UVMax, const UINT a
 	surface.right = -size.x * 0.5f;
 	surface.front = 0;
 	surface.back = 0;
+
+
 	std::vector<Vertex::Vertex_UV_Normal_Color> vertices;
 	float horizontalUnit = size.y / (arg_horizontalSeparate);
 	float verticalUnit = size.x / (arg_verticalSeparate);
+
+
+
+
+	outputMeshData.eightCorner.up_left_back = Vector3(-size.x, size.y, 0)*0.5f;
+	outputMeshData.eightCorner.up_left_front = Vector3(-size.x, size.y, 0) * 0.5f;
+	outputMeshData.eightCorner.up_right_back = Vector3(size.x, size.y, 0) * 0.5f;
+	outputMeshData.eightCorner.up_right_front = Vector3(size.x, size.y, 0) * 0.5f;
+
+	outputMeshData.eightCorner.down_left_back = Vector3(-size.x, -size.y, 0) * 0.5f;
+	outputMeshData.eightCorner.down_left_front = Vector3(-size.x, -size.y, 0) * 0.5f;
+	outputMeshData.eightCorner.down_right_back = Vector3(size.x, -size.y, 0) * 0.5f;
+	outputMeshData.eightCorner.down_right_front = Vector3(size.x, -size.y, 0) * 0.5f;
+
 	for (int i = 0; i < arg_horizontalSeparate + 1; i++) {
 		for (int j = 0; j < arg_verticalSeparate + 1; j++) {
-			vertices.push_back(Vertex::Vertex_UV_Normal_Color(Vector3(verticalUnit * i - size.x / 2, horizontalUnit * j - size.y / 2, 0), Vector2((verticalUnit * i / size.x),( 1 - horizontalUnit * j / size.y)) * UVMax, Vector3(0, 0, 1.0f)));
+			vertices.push_back(Vertex::Vertex_UV_Normal_Color(Vector3(verticalUnit * i - size.x / 2, horizontalUnit * j - size.y / 2, 0), Vector2((verticalUnit * i / size.x), (1 - horizontalUnit * j / size.y)) * UVMax, Vector3(0, 0, 1.0f)));
 		}
 	}
 

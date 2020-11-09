@@ -53,7 +53,7 @@ void ButiEngine::Scene::Draw()
 	shp_renderer->RenderingEnd();
 }
 
-ButiEngine::Scene::Scene(std::weak_ptr<ISceneManager> arg_wkp_sceneManager, SceneInformation argSceneInformation)
+ButiEngine::Scene::Scene(std::weak_ptr<ISceneManager> arg_wkp_sceneManager, SceneInformation argSceneInformation):sceneInformation(argSceneInformation)
 {
 	shp_sceneManager = arg_wkp_sceneManager.lock();
 }
@@ -69,17 +69,25 @@ void ButiEngine::Scene::Release()
 
 void ButiEngine::Scene::Initialize()
 {
-	shp_gameObjectManager = ObjectFactory::Create<GameObjectManager>(GetThis<IScene>());
+	//shp_gameObjectManager = ObjectFactory::Create<GameObjectManager>(GetThis<IScene>());
+
 
 	shp_renderer = ObjectFactory::Create<Renderer>(GetThis<IScene>());
-	
+
 	shp_soundManager = ObjectFactory::Create<SoundManager>(GetThis<IScene>());
-	
-	auto windowSize = GetWindow()->GetSize();/*
-	shp_renderer->AddLayer();
-	shp_renderer->AddLayer();
-	auto prop2 = CameraProjProperty(windowSize.x, windowSize.y, 0, 0,true,1);
-	AddCamera(prop2, "backGround", true);*/
+
+	auto windowSize = GetWindow()->GetSize();
+	std::string fullGameObjectManagerPath = GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation.GetSceneName() + "/objects.gameObjectManager";
+	if (Util::IsFileExistence(fullGameObjectManagerPath)) {
+		shp_gameObjectManager = ObjectFactory::CreateFromCereal<GameObjectManager>(fullGameObjectManagerPath);
+
+		shp_gameObjectManager->SetScene(GetThis<IScene>());
+		shp_gameObjectManager->Initialize_cereal();
+	}
+	else {
+		_mkdir(fullGameObjectManagerPath.c_str());
+		shp_gameObjectManager = ObjectFactory::Create<GameObjectManager>(GetThis<IScene>());
+	}
 
 	auto prop = CameraProjProperty(windowSize.x, windowSize.y, 0, 0);
 	prop.farClip = 100.0f;

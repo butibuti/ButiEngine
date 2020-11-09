@@ -66,6 +66,8 @@ namespace ButiEngine {
 			static std::string GetStringTypeName() {
 			return typeid(T).name();
 		}
+
+		static bool IsFileExistence(const std::string& arg_filePath);
 	};
 	const unsigned int LEVEL_FLAG[]{ (111 << 0),(111 << 3),(111 << 6),(111 << 9),(111 << 12),(111 << 15),(111 << 18),(111 << 21),(111<< 24),(111 << 27), };
 	class OctreeHelper {

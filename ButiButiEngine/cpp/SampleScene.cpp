@@ -93,24 +93,11 @@ void ButiEngine::SampleScene::OnInitialize()
 	animator->SetLoop(true);
 
 	
-	auto floor = shp_gameObjectManager->AddObject(ObjectFactory::Create<Transform>(Vector3(0, -0.1, 0), Vector3(90, 0, 0), Vector3(50.0f, 50.0f, 50.0f)), "floor");
-
-	floor.lock()->AddGameComponent<MeshDrawComponent>(
-		GetResourceContainer()->GetMeshTag("Floor"), GetResourceContainer()->GetShaderTag("Glid"), GetResourceContainer()->GetMaterialTag("blueMaterial.bma", "Material/"), nullptr, 0
-		);
+	auto floor = shp_gameObjectManager->AddObjectFromCereal("floor.gameObject");
 
 
-	auto gsSphere = shp_gameObjectManager->AddObject(ObjectFactory::Create<Transform>( Vector3(5,2,0),Vector3(0,0,0), Vector3(1,1,1)), "test");
-
-	auto sphereInfo = ObjectFactory::Create<DrawInformation>();
-	sphereInfo->drawSettings.billboardMode = BillBoardMode::y;
-	gsSphere.lock()->AddGameComponent<MeshDrawComponent>(
-		GetResourceContainer()->GetMeshTag("Floor"), GetResourceContainer()->GetShaderTag("DefaultMesh"), GetResourceContainer()->GetMaterialTag("blueMaterial.bma", "Material/"), sphereInfo, 0);
-
-	auto player = shp_gameObjectManager->AddObject(
-		ObjectFactory::Create<Transform>(Vector3(0.0f, 1.0f, 0.0f)), "player");
-
-	player.lock()->AddBehavior<FPSViewBehavior>();
+	
+	auto player = shp_gameObjectManager->AddObjectFromCereal_Insert("player.gameObject");
 
 
 }

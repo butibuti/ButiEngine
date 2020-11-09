@@ -2,9 +2,6 @@
 
 
 
-ButiEngine::SceneInformation::SceneInformation()
-{
-}
 
 
 ButiEngine::SceneInformation::~SceneInformation()

@@ -1,4 +1,5 @@
 #include"stdafx.h"
+#include "..\..\Header\Common\Util.h"
 
 
 void ButiEngine::Util::WStringtoMultiByte(const std::wstring & src, std::string & dest)
@@ -60,6 +61,12 @@ std::wstring ButiEngine::Util::StringToWString(std::string oString) {
 
 	// •ÏŠ·Œ‹‰Ê‚ð•Ô‚·
 	return(oRet);
+}
+
+bool ButiEngine::Util::IsFileExistence(const std::string& arg_filePath)
+{
+	std::ifstream ifs(arg_filePath);
+	return ifs.is_open();
 }
 
 

@@ -381,6 +381,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\SucideComponent.h">
       <Filter>header\GameObjects\DefaultGameComponent</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\CameraMan.h">
+      <Filter>header\GameObjects\DefaultBehavior</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Common\Camera.cpp">
@@ -625,6 +628,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Common\CBuffer.cpp">
       <Filter>source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\DefaultGameComponent\CameraMan.cpp">
+      <Filter>source\GameObjects\DefaultGameComponent</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

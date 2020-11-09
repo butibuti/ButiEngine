@@ -8,6 +8,7 @@ ButiEngine::ChaseComponent::ChaseComponent(std::shared_ptr<Transform> arg_shp_ta
 
 void ButiEngine::ChaseComponent::OnUpdate()
 {
+	if (!shp_target) { return; }
 	auto velocity = Vector3(shp_target->GetWorldPosition() - gameObject.lock()->transform->GetWorldPosition());
 	gameObject.lock()->Translate (velocity.GetNormalize() * (velocity.GetLength() * velocity.GetLength() )*speed*0.01f);
 

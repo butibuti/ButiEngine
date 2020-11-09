@@ -24,9 +24,4 @@ namespace ButiEngine {
 	};
 
 }
-
-
-
-CEREAL_REGISTER_TYPE(ButiEngine::SucideComponent);
-
-CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::GameComponent, ButiEngine::SucideComponent)
+BUTI_REGIST_GAMECOMPONENT(ButiEngine::SucideComponent);

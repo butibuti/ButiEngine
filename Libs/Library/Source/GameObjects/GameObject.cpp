@@ -190,12 +190,27 @@ void ButiEngine::GameObject::ShowUI()
 
 		auto endItr = vec_gameComponents.end();
 
-		for (auto itr = vec_gameComponents.begin(); itr != endItr; itr++) {
+		for (auto itr = vec_gameComponents.begin(); itr != endItr;) {
+			bool isComponentRemove = false;
 			if (ImGui::TreeNode((*itr)->GetGameComponentName().c_str())) {
+				if (ImGui::Button("Remove")) {
+					isComponentRemove = true;
+				}
+
 				(*itr)->ShowUI();
 
 				ImGui::TreePop();
 			}
+
+			if (isComponentRemove) {
+				(*itr)->OnRemove();
+				itr = vec_gameComponents.erase(itr);
+				endItr = vec_gameComponents.end();
+			}
+			else {
+				itr++;
+			}
+
 		}
 
 		ImGui::TreePop();
@@ -203,11 +218,24 @@ void ButiEngine::GameObject::ShowUI()
 	if (ImGui::TreeNode("Behaivior")) {
 		auto endItr = vec_behaviors.end();
 
-		for (auto itr = vec_behaviors.begin(); itr != endItr; itr++) {
+		for (auto itr = vec_behaviors.begin(); itr != endItr; ) {
+			bool isComponentRemove = false;
 			if (ImGui::TreeNode((*itr)->GetBehaviorName().c_str())) {
+				if (ImGui::Button("Remove")) {
+					isComponentRemove = true;
+				}
 				(*itr)->ShowUI();
 
 				ImGui::TreePop();
+			}
+
+			if (isComponentRemove) {
+				(*itr)->OnRemove();
+				itr = vec_behaviors.erase(itr);
+				endItr = vec_behaviors.end();
+			}
+			else {
+				itr++;
 			}
 		}
 

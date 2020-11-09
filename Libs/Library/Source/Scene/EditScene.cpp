@@ -53,7 +53,9 @@ void ButiEngine::EditScene::OnUpdate()
 void ButiEngine::EditScene::UIUpdate()
 {
 	ImGui::Begin("top");
-	if (ImGui::Checkbox("Update", &isActive)) {
+	if (ImGui::ArrowButton("##play", ImGuiDir_Right)) {
+		isActive =!isActive;
+		isPlaying = true;
 		if (isActive) {
 			startCount++;
 			if (startCount==1) {
@@ -61,72 +63,139 @@ void ButiEngine::EditScene::UIUpdate()
 				shp_gameObjectManager->Start();
 			}
 		}
+
 	};
+	ImGui::SameLine();
+	if (ImGui::Button("Reset")) {
+		isPlaying = false;
+		isActive = false;
+		startCount = 0;
+
+		shp_gameObjectManager = nullptr;
+		shp_soundManager->Release();
+		shp_renderer->Release();
+		editCam = nullptr;
+		mainCam = nullptr;
+		vec_cameras.clear();
+
+		{
+
+			shp_renderer = ObjectFactory::Create<Renderer>(GetThis<IScene>());
+
+			shp_soundManager = ObjectFactory::Create<SoundManager>(GetThis<IScene>());
+
+			auto windowSize = GetWindow()->GetSize();
+			std::string fullGameObjectManagerPath = GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation.GetSceneName() + "/objects.gameObjectManager";
+			if (Util::IsFileExistence(fullGameObjectManagerPath)) {
+				shp_gameObjectManager = ObjectFactory::CreateFromCereal<GameObjectManager>(fullGameObjectManagerPath);
+
+				shp_gameObjectManager->SetScene(GetThis<IScene>());
+				shp_gameObjectManager->Initialize_cereal();
+			}
+			else {
+				_mkdir((GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation.GetSceneName() + "/").c_str());
+				shp_gameObjectManager = ObjectFactory::Create<GameObjectManager>(GetThis<IScene>());
+			}
+			/*
+			shp_renderer->AddLayer();
+			shp_renderer->AddLayer();
+			auto prop2 = CameraProjProperty(windowSize.x, windowSize.y, 0, 0,true,1);
+			AddCamera(prop2, "backGround", true);*/
+
+			auto prop = CameraProjProperty(windowSize.x, windowSize.y, 0, 0);
+			prop.farClip = 100.0f;
+			AddCamera(prop, "main", true);
+			AddCamera(prop, "edit", true);
+
+			GetCamera("edit").lock()->shp_transform->SetLocalPosition(Vector3(5, 5, -5));
+
+			GetCamera("edit").lock()->shp_transform->SetLookAtRotation(Vector3(0, 0, 0));
+		}
+	}
+
+	if (!isPlaying) {
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("Save!!!!")) {
+
+			OutputCereal(shp_gameObjectManager, GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation.GetSceneName() + "/objects.gameObjectManager");
+
+		};
+	}
+	ImGui::Checkbox("ShowHierarchy", &showHeirarcy);
+
+	ImGui::SameLine();
+	ImGui::Checkbox("ShowInspector", &showInspector);
+
+	ImGui::SameLine();
+	ImGui::Checkbox("ShowContainer", &showContainer);
 	ImGui::End();
 
 
 	/*ImGui::Begin("Bara Bara Slider");
 	ImGui::SliderFloat("pushPower", &t, 0, 1.0f);
 	ImGui::End();*/
-
+	if(showHeirarcy)
 	shp_gameObjectManager->ShowUI();
 
-	auto selectedGameObject = shp_gameObjectManager->GetSelectedUI();
+
+	if (showInspector) {
+
+		auto selectedGameObject = shp_gameObjectManager->GetSelectedUI();
+		ImGui::Begin("SelectedObj");
+		if (selectedGameObject.lock()) {
 
 
-	ImGui::Begin("SelectedObj");
-	if (selectedGameObject.lock()) {
+			ImGui::InputTextWithHint("Name", selectedGameObject.lock()->GetGameObjectName().c_str(), CallBacks::objectName, 64, 64, CallBacks::ImguiCallBack);
+			ImGui::SameLine();
 
-
-		ImGui::InputTextWithHint("Name", selectedGameObject.lock()->GetGameObjectName().c_str(), CallBacks::objectName, 64, 64, CallBacks::ImguiCallBack);
-		ImGui::SameLine();
-
-		if (ImGui::Button("Change")) {
-			selectedGameObject.lock()->SetObjectName(CallBacks::objectName);
-		}
-
-
-		selectedGameObject.lock()->ShowUI();
-
-
-		if (ImGui::TreeNode("Add Behavior")) {
-
-
-			if (ImGui::ListBox("Behaviors", &currentIndex_behaviorList, behaviorNameList,behaviorNameListSize, 5)) {
-			}
-
-			if (ImGui::Button("Add!")) {
-				auto behavior = vec_shp_addBehavior.at(currentIndex_behaviorList)->Clone();
-				selectedGameObject.lock()->AddBehavior_Insert(behavior);
-			}
-
-			ImGui::TreePop();
-		}
-
-		if (ImGui::TreeNode("Add GameComponent")) {
-			if (ImGui::ListBox("GameComponents", &currentIndex_componentList, componentNameList, componentNameListSize, 5)) {
+			if (ImGui::Button("Change")) {
+				selectedGameObject.lock()->SetObjectName(CallBacks::objectName);
 			}
 
 
-			if (ImGui::Button("Add!")) {
-				auto component = vec_shp_addComponents.at(currentIndex_componentList)->Clone();
-				selectedGameObject.lock()->AddGameComponent_Insert(component);
+			selectedGameObject.lock()->ShowUI();
+
+
+			if (ImGui::TreeNode("Add Behavior")) {
+
+
+				if (ImGui::ListBox("Behaviors", &currentIndex_behaviorList, behaviorNameList, behaviorNameListSize, 5)) {
+				}
+
+				if (ImGui::Button("Add!")) {
+					auto behavior = vec_shp_addBehavior.at(currentIndex_behaviorList)->Clone();
+					selectedGameObject.lock()->AddBehavior_Insert(behavior);
+				}
+
+				ImGui::TreePop();
 			}
 
-			ImGui::TreePop();
+			if (ImGui::TreeNode("Add GameComponent")) {
+				if (ImGui::ListBox("GameComponents", &currentIndex_componentList, componentNameList, componentNameListSize, 5)) {
+				}
+
+
+				if (ImGui::Button("Add!")) {
+					auto component = vec_shp_addComponents.at(currentIndex_componentList)->Clone();
+					selectedGameObject.lock()->AddGameComponent_Insert(component);
+				}
+
+				ImGui::TreePop();
+			}
+
+
+
+			if (ImGui::Button("Save!", ImVec2(200, 30))) {
+				OutputCereal(selectedGameObject.lock());
+			}
 		}
 
 
 
-		if (ImGui::Button("Save!", ImVec2(200, 30))) {
-			OutputCereal(selectedGameObject.lock());
-		}
+		ImGui::End();
 	}
-
-
-
-	ImGui::End();
-
 }
 
 void ButiEngine::EditScene::EditCamera()

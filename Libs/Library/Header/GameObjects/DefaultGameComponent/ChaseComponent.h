@@ -30,7 +30,4 @@ namespace ButiEngine {
 
 }
 
-
-CEREAL_REGISTER_TYPE(ButiEngine::ChaseComponent);
-
-CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::GameComponent, ButiEngine::ChaseComponent)
+BUTI_REGIST_GAMECOMPONENT(ButiEngine::ChaseComponent);

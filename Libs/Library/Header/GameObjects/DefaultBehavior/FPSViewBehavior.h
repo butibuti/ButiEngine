@@ -8,7 +8,7 @@ namespace ButiEngine {
 		void OnUpdate() override;
 		void OnSet()override;
 		std::string GetBehaviorName()override {
-			return "PlayerBehavior";
+			return "FPSViewBehavior";
 		};
 		std::shared_ptr<Behavior> Clone()override;
 		template<class Archive>
@@ -22,6 +22,4 @@ namespace ButiEngine {
 	};
 
 }
-CEREAL_REGISTER_TYPE(ButiEngine::FPSViewBehavior);
-
-CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::Behavior, ButiEngine::FPSViewBehavior)
+BUTI_REGIST_BEHAVIOR(ButiEngine::FPSViewBehavior);

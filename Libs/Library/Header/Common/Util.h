@@ -191,6 +191,11 @@ namespace ButiEngine {
 
 		seed ^= primitive_type_hash(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
 	}
+
+	///Cereal Regist
+	/// 
+	///
+
 }
 
 

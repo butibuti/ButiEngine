@@ -74,6 +74,7 @@ namespace ButiEngine {
 		void CommandList_SetScissorRect();
 
 		void CommandList_SetRenderTargetView();
+		void CommandList_SetRenderTargetViewWithoutDepth();
 
 		void InsertCommandList();
 

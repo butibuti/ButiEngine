@@ -79,5 +79,4 @@ namespace ButiEngine {
 		UINT instanceSize;
 		bool mapKeep = true;
 	};
-
 }

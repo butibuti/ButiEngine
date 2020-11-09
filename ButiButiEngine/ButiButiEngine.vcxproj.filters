@@ -23,6 +23,16 @@
     <ClCompile Include="cpp\SampleScene.cpp">
       <Filter>SampleScene</Filter>
     </ClCompile>
+    <ClCompile Include="cpp\EnemyBehavior.cpp">
+      <Filter>SampleScene</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\GameController.cpp">
+      <Filter>SampleScene</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\PlayerBehavior.cpp">
+      <Filter>SampleScene</Filter>
+    </ClCompile>
+    <ClCompile Include="BeforeComponentsLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -44,6 +54,16 @@
     <ClInclude Include="include\SampleScene.h">
       <Filter>SampleScene</Filter>
     </ClInclude>
+    <ClInclude Include="include\EnemyBehavior.h">
+      <Filter>SampleScene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GameController.h">
+      <Filter>SampleScene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PlayerBehavior.h">
+      <Filter>SampleScene</Filter>
+    </ClInclude>
+    <ClInclude Include="BeforeComponentsLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ShootingGame">

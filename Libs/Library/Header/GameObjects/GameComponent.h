@@ -45,4 +45,7 @@ namespace ButiEngine {
 		bool isRemove=false;
 	};
 
+#define BUTI_REGIST_GAMECOMPONENT(T)\
+	CEREAL_REGISTER_TYPE(T);\
+	CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::GameComponent, T);
 }

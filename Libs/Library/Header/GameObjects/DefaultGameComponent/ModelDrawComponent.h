@@ -24,25 +24,16 @@ namespace ButiEngine {
 
 }
 
-CEREAL_REGISTER_TYPE(ButiEngine::ModelDrawComponent);
-
-CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::GameComponent, ButiEngine::ModelDrawComponent)
+BUTI_REGIST_GAMECOMPONENT(ButiEngine::ModelDrawComponent);
 
 
 
-CEREAL_REGISTER_TYPE(ButiEngine::CBuffer_Dx12<ButiEngine::TestGSVariable>);
-
-CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::ICBuffer, ButiEngine::CBuffer_Dx12<ButiEngine::TestGSVariable>);
-
-CEREAL_REGISTER_TYPE(ButiEngine::CBuffer_Dx12<ButiEngine::LightVariable>);
-
-CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::ICBuffer, ButiEngine::CBuffer_Dx12<ButiEngine::LightVariable>);
-
-CEREAL_REGISTER_TYPE(ButiEngine::CBuffer_Dx12<ButiEngine::ParticleParameter>);
-
-CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::ICBuffer, ButiEngine::CBuffer_Dx12<ButiEngine::ParticleParameter>);
+BUTI_REGIST_CBUFFER(ButiEngine::TestGSVariable);
 
 
-CEREAL_REGISTER_TYPE(ButiEngine::CArrayBuffer_Dx12<ButiEngine::Matrix4x4>);
+BUTI_REGIST_CBUFFER(ButiEngine::LightVariable);
 
-CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::ICBuffer, ButiEngine::CArrayBuffer_Dx12<ButiEngine::Matrix4x4>);
+BUTI_REGIST_CBUFFER(ButiEngine::ParticleParameter);
+
+
+BUTI_REGIST_CARRAYBUFFER(ButiEngine::Matrix4x4);

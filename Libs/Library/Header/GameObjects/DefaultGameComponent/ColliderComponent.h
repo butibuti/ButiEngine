@@ -34,9 +34,4 @@ namespace ButiEngine {
 		};
 	}
 }
-
-
-
-CEREAL_REGISTER_TYPE(ButiEngine::Collision::ColliderComponent);
-
-CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::GameComponent, ButiEngine::Collision::ColliderComponent)
+BUTI_REGIST_GAMECOMPONENT(ButiEngine::Collision::ColliderComponent)

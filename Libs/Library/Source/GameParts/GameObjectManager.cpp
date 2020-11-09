@@ -62,7 +62,7 @@ void ButiEngine::GameObjectManager::ShowUI()
 		if (selectedGameObject.lock() == (*itr)) {
 
 			ImGui::SameLine();
-			if (ImGui::Button("option"))
+			if (ImGui::Button("..."))
 				ImGui::OpenPopup("select_popup");
 			if (ImGui::BeginPopup("select_popup"))
 			{

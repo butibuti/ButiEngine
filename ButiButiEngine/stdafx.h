@@ -27,11 +27,6 @@
 
 #include <xaudio2.h>	//sound
 #include <xaudio2fx.h>
-#include <mmreg.h>
-#include <mfidl.h>
-#include <mfapi.h>
-#include <mfreadwrite.h>
-#include <msxml6.h>
 
 
 // STL
@@ -53,8 +48,6 @@
 #include <memory>
 #include <exception>
 #include <stdexcept>
-#include <type_traits>
-#include <typeindex>
 
 #include<dxgi1_6.h>
 #include <d3d12.h>
@@ -66,9 +59,6 @@
 
 
 #include <DirectXMath.h>
-#include <DirectXPackedVector.h>
-#include <DirectXColors.h>
-#include <DirectXCollision.h>
 #include"zlib/zlib.h"
 // XInput
 #include <xinput.h>
@@ -87,8 +77,6 @@
 #pragma comment( lib, "XInput.lib" )
 //Audio
 #pragma comment( lib, "xaudio2.lib" )
-#pragma comment(lib, "Mfplat.lib")
-#pragma comment(lib, "Mfreadwrite.lib")
 //WinHTTP
 #pragma comment( lib, "Winhttp.lib" )
 

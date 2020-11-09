@@ -9,14 +9,16 @@ namespace ButiEngine {
 		DrawInformation() {}
 		DrawInformation(const DrawSettings arg_DrawSettings) :drawSettings(arg_DrawSettings) {}
 		DrawSettings drawSettings;
-		bool isLightUp = true;
+		bool isAlpha = true;
+		bool isDepth = true;
 		void Initialize()override {}
 		void PreInitialize()override {}
 		std::vector<std::shared_ptr<ICBuffer>> vec_exCBuffer;
 		template<class Archive>
 		void serialize(Archive& archive)
 		{
-			archive(isLightUp);
+			archive(isAlpha);
+			archive(isDepth);
 			archive(drawSettings);
 			archive(vec_exCBuffer);
 		}
@@ -25,8 +27,8 @@ namespace ButiEngine {
 			auto output = ObjectFactory::Create<DrawInformation>();
 
 			output->drawSettings = drawSettings;
-			output->isLightUp = isLightUp;
-
+			output->isAlpha = isAlpha;
+			output->isDepth = isDepth;
 			for (auto itr = vec_exCBuffer.begin(); itr != vec_exCBuffer.end(); itr++) {
 				output->vec_exCBuffer.push_back((*itr)->Clone());
 			}

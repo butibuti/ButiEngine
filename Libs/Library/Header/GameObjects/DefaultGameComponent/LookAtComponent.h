@@ -25,8 +25,4 @@ namespace ButiEngine {
 
 }
 
-
-
-CEREAL_REGISTER_TYPE(ButiEngine::LookAtComponent);
-
-CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::GameComponent, ButiEngine::LookAtComponent)
+BUTI_REGIST_GAMECOMPONENT(ButiEngine::LookAtComponent);

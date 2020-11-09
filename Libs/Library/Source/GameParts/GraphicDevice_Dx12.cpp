@@ -481,7 +481,6 @@ void ButiEngine::GraphicDevice_Dx12::ClearWindow()
 	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(renderTargetDescripterHeap->GetCPUDescriptorHandleForHeapStart(), frameIndex, renderTargetDescriptorSize);
 	CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(depthStencilDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
 	clearCommandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
-
 	// Record commands.
 
 	clearCommandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
@@ -520,6 +519,17 @@ void ButiEngine::GraphicDevice_Dx12::CommandList_SetRenderTargetView()
 	currentCommandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
 
 
+}
+
+void ButiEngine::GraphicDevice_Dx12::CommandList_SetRenderTargetViewWithoutDepth()
+{
+	//レンダーターゲットビューのハンドルを取得
+	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(
+		renderTargetDescripterHeap->GetCPUDescriptorHandleForHeapStart(),
+		GetFrameIndex(),
+		renderTargetDescriptorSize);
+	//取得したハンドルをセット
+	currentCommandList->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
 }
 
 void ButiEngine::GraphicDevice_Dx12::InsertCommandList()

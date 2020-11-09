@@ -90,7 +90,13 @@ void ButiEngine::MeshDrawData_Dx12::Initialize()
 
 void ButiEngine::MeshDrawData_Dx12::Draw() {
 	BufferUpdate();
-	CommandExecute();
+	if(shp_drawInfo->isDepth)
+		CommandExecute();
+	else {
+		wkp_graphicDevice.lock()->CommandList_SetRenderTargetViewWithoutDepth();
+		CommandExecute();
+		wkp_graphicDevice.lock()->CommandList_SetRenderTargetView();
+	}
 }
 
 

@@ -60,6 +60,13 @@ namespace ButiEngine {
 
 		//////////////////////////////////////
 		bool isActive = false;
+		bool isPlaying = false;
+
+		bool showHeirarcy = true;
+
+		bool showInspector = true;
+
+		bool showContainer = true;
 
 		UINT startCount = 0;
 

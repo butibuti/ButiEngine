@@ -384,6 +384,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\CameraMan.h">
       <Filter>header\GameObjects\DefaultBehavior</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\Scene\ComponentsLoader.h">
+      <Filter>header\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Common\Camera.cpp">
@@ -631,6 +634,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\DefaultGameComponent\CameraMan.cpp">
       <Filter>source\GameObjects\DefaultGameComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Source\Scene\ComponentsLoader.cpp">
+      <Filter>source\Scene</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

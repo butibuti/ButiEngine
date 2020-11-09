@@ -116,8 +116,7 @@ void ButiEngine::EditScene::UIUpdate()
 	if (!isPlaying) {
 
 		ImGui::SameLine();
-
-		if (ImGui::Button("Save!!!!")) {
+		if (ImGui::Button("Save!!!!")|| ((GameDevice::input.CheckKey(Keys::LeftCtrl) || GameDevice::input.CheckKey(Keys::RightCtrl)) && GameDevice::input.CheckKey(Keys::S))) {
 
 			OutputCereal(shp_gameObjectManager, GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation.GetSceneName() + "/objects.gameObjectManager");
 
@@ -146,6 +145,10 @@ void ButiEngine::EditScene::UIUpdate()
 		ImGui::Begin("SelectedObj");
 		if (selectedGameObject.lock()) {
 
+
+			if ((GameDevice::input.CheckKey(Keys::LeftCtrl) || GameDevice::input.CheckKey(Keys::RightCtrl)) && GameDevice::input.CheckKey(Keys::F)) {
+				GetCamera("edit").lock()->shp_transform->SetLookAtRotation(selectedGameObject.lock()->transform->GetWorldPosition());
+			}
 
 			ImGui::InputTextWithHint("Name", selectedGameObject.lock()->GetGameObjectName().c_str(), CallBacks::objectName, 64, 64, CallBacks::ImguiCallBack);
 			ImGui::SameLine();

@@ -9,7 +9,6 @@ namespace ButiEngine {
 			//仮想関数呼び出し
 			Ptr->PreInitialize();
 			Ptr->Initialize();
-			Ptr->SetCreated(true);
 			return Ptr;
 		}; 
 		template<typename T, typename... Ts>
@@ -29,7 +28,7 @@ namespace ButiEngine {
 			//仮想関数呼び出し
 			Ptr->PreInitialize();
 			Ptr->Initialize();
-			Ptr->SetCreated(true);
+			Ptr->SetIsCereal(true);
 			return Ptr;
 		}; 
 
@@ -38,14 +37,14 @@ namespace ButiEngine {
 	class IObject :public std::enable_shared_from_this<IObject>
 	{
 		friend class ObjectFactory;
-		bool isCreated = false;
-		void SetCreated(bool arg_created) {
-			isCreated = arg_created;
-		};
+		bool isCereal= false;
 	protected:
 		IObject() {}
 		virtual ~IObject() {}
 
+		void SetIsCereal(bool arg_created) {
+			isCereal = arg_created;
+		};
 	public:
 		template<typename T>
 		inline std::shared_ptr<T> GetThis() {
@@ -109,7 +108,7 @@ namespace ButiEngine {
 			//return nullptr;
 
 		}
-		bool IsCreated() { return isCreated; }
+		bool IsCereal() { return isCereal; }
 		virtual void PreInitialize() = 0;
 		virtual void Initialize() = 0;
 

@@ -23,6 +23,8 @@ namespace ButiEngine {
 	private:
 		Vector3 velocity;
 		float speed;
+
+		std::shared_ptr<CBuffer<TestGSVariable> >cb_barabara;
 	};
 }
 BUTI_REGIST_BEHAVIOR(ButiEngine::EnemyBehavior);

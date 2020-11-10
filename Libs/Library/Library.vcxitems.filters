@@ -387,6 +387,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Scene\ComponentsLoader.h">
       <Filter>header\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\Particle_3D.h">
+      <Filter>header\GameObjects\DefaultGameComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\Particle_Standard.h">
+      <Filter>header\GameObjects\DefaultGameComponent</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Common\Camera.cpp">
@@ -637,6 +643,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Scene\ComponentsLoader.cpp">
       <Filter>source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\DefaultGameComponent\Particle_3D.cpp">
+      <Filter>source\GameObjects\DefaultGameComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\DefaultGameComponent\Particle_Standard.cpp">
+      <Filter>source\GameObjects\DefaultGameComponent</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

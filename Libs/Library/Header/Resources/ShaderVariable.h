@@ -106,6 +106,11 @@ namespace ButiEngine {
 		float time=0.0f ;
 		float power=0.0f ;
 		int noise=0 ;
+		float outer=20.0f;
+		float center=1.0f;
+		float size=1.0f;
+		float minSize=0.1f;
+		float rotationPase = 5.0f;
 
 		ParticleParameter(){}
 
@@ -117,6 +122,11 @@ namespace ButiEngine {
 			archive(time);
 			archive(power);
 			archive(noise);
+			archive(outer);
+			archive(center);
+			archive(size);
+			archive(minSize);
+			archive(rotationPase);
 		}
 
 		bool ShowUI() {
@@ -130,7 +140,27 @@ namespace ButiEngine {
 
 				ret = true;
 			}
-			if (ImGui::DragInt("Noise", &noise, 1.0f, 0, 100)) {
+			if (ImGui::DragInt("Noise", &noise, 1.0f, 0, 10)) {
+
+				ret = true;
+			}
+			if (ImGui::DragFloat("Center", &center, 0.02f, -100.0f, 100.0f)) {
+
+				ret = true;
+			}
+			if (ImGui::DragFloat("Outer", &outer, 0.02f, -100.0f, 100.0f)) {
+
+				ret = true;
+			}
+			if (ImGui::DragFloat("Size", &size, 0.02f, -100.0f, 100.0f)) {
+
+				ret = true;
+			}
+			if (ImGui::DragFloat("MinSize", &minSize, 0.02f, -100.0f, 100.0f)) {
+
+				ret = true;
+			}
+			if (ImGui::DragFloat("RotationPase", &rotationPase, 0.02f, -100.0f, 100.0f)) {
 
 				ret = true;
 			}

@@ -162,7 +162,7 @@ void ButiEngine::MeshDrawComponent::OnShowUI()
 	{
 		ImGui::BulletText("ModelTag");
 		auto tagName = gameObject.lock()->GetResourceContainer()->GetTagNameModel(modelTag);
-		if (ImGui::BeginChild("ModelTagWin", ImVec2(ImGui::GetFontSize() * (tagName.size() + 2), ImGui::GetFontSize() * 2), true)) {
+		(ImGui::BeginChild("ModelTagWin", ImVec2(ImGui::GetFontSize() * (tagName.size() + 2), ImGui::GetFontSize() * 2), true));
 			ImGui::Text(Util::ToUTF8(tagName).c_str());
 
 			if (ImGui::IsWindowHovered()) {
@@ -172,14 +172,14 @@ void ButiEngine::MeshDrawComponent::OnShowUI()
 					ReRegist();
 				}
 			}
-			ImGui::EndChild();
-		}
+		
 
+		ImGui::EndChild();
 	}
 	{
 		ImGui::BulletText("MeshTag");
 		auto tagName = gameObject.lock()->GetResourceContainer()->GetTagNameMesh(meshTag);
-		if (ImGui::BeginChild("MeshTagWin", ImVec2(ImGui::GetFontSize() * (tagName.size() + 2), ImGui::GetFontSize() * 2), true)) {
+		(ImGui::BeginChild("MeshTagWin", ImVec2(ImGui::GetFontSize() * (tagName.size() + 2), ImGui::GetFontSize() * 2), true));
 			ImGui::Text(Util::ToUTF8(tagName).c_str());
 
 			if (ImGui::IsWindowHovered()) {
@@ -189,15 +189,15 @@ void ButiEngine::MeshDrawComponent::OnShowUI()
 					ReRegist();
 				}
 			}
-			ImGui::EndChild();
-		}
-
+		
+		
+		ImGui::EndChild();
 	}
 	{
 		ImGui::BulletText("MaterialTag");
 		for (int i = 0; i < materialTag.size(); i++) {
 			auto tagName = gameObject.lock()->GetResourceContainer()->GetTagNameMaterial(materialTag[i]);
-			if (ImGui::BeginChild("MaterialTagWin"+i, ImVec2(ImGui::GetFontSize() * (tagName.size()), ImGui::GetFontSize() * 2), true)) {
+			(ImGui::BeginChild("MaterialTagWin" + i, ImVec2(ImGui::GetFontSize() * (tagName.size()), ImGui::GetFontSize() * 2), true));
 				ImGui::Text(Util::ToUTF8(tagName).c_str());
 
 				if (ImGui::IsWindowHovered()) {
@@ -208,13 +208,13 @@ void ButiEngine::MeshDrawComponent::OnShowUI()
 					}
 				}
 				ImGui::EndChild();
-			}
+			
 		}
 	}
 	{
 		ImGui::BulletText("ShaderTag");
 		auto tagName = gameObject.lock()->GetResourceContainer()->GetTagNameShader(shaderTag);
-		if (ImGui::BeginChild("ShaderTagWin", ImVec2(ImGui::GetFontSize() * (tagName.size() + 2), ImGui::GetFontSize() * 2), true)) {
+		(ImGui::BeginChild("ShaderTagWin", ImVec2(ImGui::GetFontSize() * (tagName.size() + 2), ImGui::GetFontSize() * 2), true));
 			ImGui::Text(Util::ToUTF8(tagName).c_str());
 
 			if (ImGui::IsWindowHovered()) {
@@ -225,7 +225,7 @@ void ButiEngine::MeshDrawComponent::OnShowUI()
 				}
 			}
 			ImGui::EndChild();
-		}
+		
 
 	}
 

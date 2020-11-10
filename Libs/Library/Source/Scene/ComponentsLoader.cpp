@@ -79,6 +79,16 @@ void ButiEngine::ComponentsLoader::AddGameComponent(std::shared_ptr<GameComponen
 		addGameComponents.push_back(arg_gamecomponent);
 }
 
+void ButiEngine::ComponentsLoader::RemoveComponent(const std::string& arg_name)
+{
+	for (auto itr = addGameComponents.begin(); itr != addGameComponents.end(); itr++) {
+		if (arg_name == (*itr)->GetGameComponentName()) {
+			addGameComponents.erase(itr);
+			break;
+		}
+	}
+}
+
 std::shared_ptr<ButiEngine::Behavior> ButiEngine::ComponentsLoader::ShowAddBehaviorUI()
 {
 	std::shared_ptr<Behavior> ret = nullptr;

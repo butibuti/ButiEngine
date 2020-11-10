@@ -32,6 +32,9 @@ namespace ButiEngine {
 		void SetGraphicDevice(std::weak_ptr<GraphicDevice> arg_shp_graphicDevice);
 		void Initialize()override;
 		void PreInitialize()override;
+
+		void ShowGUI();
+
 		template<typename T>
 		MeshTag LoadMesh(const std::string& filePath, const BackupData<T>& inputMeshData);
 
@@ -75,7 +78,17 @@ namespace ButiEngine {
 		void UnLoadVertexShader(VertexShaderTag arg_shaderTag);
 		void UnLoadGeometryShader(GeometryShaderTag arg_shaderTag);
 		void UnLoadSound(SoundTag arg_soundTag);
-		void UnLoadModel(ModelTag arg_soundTag);
+		void UnLoadModel(ModelTag arg_modelTag); 
+		
+		std::string GetTagNameMesh(MeshTag arg_meshTag);
+		std::string GetTagNameTexture(TextureTag arg_textureTag);
+		std::string GetTagNameShader(ShaderTag arg_shaderTag);
+		std::string GetTagNamePixelShader(PixelShaderTag arg_shaderTag);
+		std::string GetTagNameVertexShader(VertexShaderTag arg_shaderTag);
+		std::string GetTagNameGeometryShader(GeometryShaderTag arg_shaderTag);
+		std::string GetTagNameSound(SoundTag arg_soundTag);
+		std::string GetTagNameModel(ModelTag arg_modelTag);
+		std::string GetTagNameMaterial(MaterialTag arg_materiallTag);
 		void Release();
 
 		MeshTag GetMeshTag(const std::string& arg_key, const std::string& arg_fileDirectory = "");

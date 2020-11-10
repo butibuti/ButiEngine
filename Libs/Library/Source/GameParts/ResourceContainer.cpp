@@ -29,6 +29,81 @@ void ButiEngine::ResourceContainer::PreInitialize()
 {
 }
 
+void ButiEngine::ResourceContainer::ShowGUI()
+{
+	ImGui::Begin("ResourceContainer");
+
+	auto app = wkp_graphicDevice.lock()->GetApplication().lock();
+	ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_TabListPopupButton;
+
+	if (ImGui::BeginTabBar("ResourceContainerTabBar", tab_bar_flags))
+	{
+		if (ImGui::BeginTabItem("MeshTags", nullptr, ImGuiTabItemFlags_None)) {
+
+
+			if (ImGui::BeginChild("##MeshTag", ImVec2(0, 0), true))
+			{
+				app->GetGUIController()->SetResourceTag(
+					container_meshes.ShowGUI(app->GetGUIController()->GetGUIIO())
+				);
+
+				ImGui::EndChild();
+			}
+
+			ImGui::EndTabItem();
+		}
+
+		if (ImGui::BeginTabItem("ModelTags", nullptr, ImGuiTabItemFlags_None)) {
+
+			if (ImGui::BeginChild("##ModelTag", ImVec2(0, 0), true))
+			{
+				app->GetGUIController()->SetResourceTag(
+					container_models.ShowGUI(app->GetGUIController()->GetGUIIO())
+				);
+
+				ImGui::EndChild();
+			}
+
+			ImGui::EndTabItem();
+		}
+		if (ImGui::BeginTabItem("MaterialTags", nullptr, ImGuiTabItemFlags_None)) {
+
+			if (ImGui::BeginChild("##MaterialTag", ImVec2(0, 0), true))
+			{
+				app->GetGUIController()->SetResourceTag(
+					container_materials.ShowGUI(app->GetGUIController()->GetGUIIO())
+				);
+
+				ImGui::EndChild();
+			}
+
+			ImGui::EndTabItem();
+		}
+		if (ImGui::BeginTabItem("ShaderTags", nullptr, ImGuiTabItemFlags_None)) {
+
+			if (ImGui::BeginChild("##ShaderTag", ImVec2(0, 0), true))
+			{
+				app->GetGUIController()->SetResourceTag(
+					container_shaders.ShowGUI(app->GetGUIController()->GetGUIIO())
+				);
+
+				ImGui::EndChild();
+			}
+
+			ImGui::EndTabItem();
+		}
+
+
+		ImGui::EndTabBar();
+	}
+
+
+
+
+	ImGui::End();
+
+}
+
 
 
 
@@ -356,6 +431,50 @@ void ButiEngine::ResourceContainer::UnLoadModel(ModelTag arg_modelTag)
 		}
 	}
 	container_models.Remove(arg_modelTag);
+}
+
+std::string ButiEngine::ResourceContainer::GetTagNameMesh(MeshTag arg_meshTag)
+{
+	return container_meshes.GetIDName(arg_meshTag);
+}
+
+std::string ButiEngine::ResourceContainer::GetTagNameTexture(TextureTag arg_textureTag)
+{
+	return container_textures.GetIDName(arg_textureTag);
+}
+
+std::string ButiEngine::ResourceContainer::GetTagNameShader(ShaderTag arg_shaderTag)
+{
+	return container_shaders.GetIDName(arg_shaderTag);
+}
+
+std::string ButiEngine::ResourceContainer::GetTagNamePixelShader(PixelShaderTag arg_shaderTag)
+{
+	return container_pixelShaders.GetIDName(arg_shaderTag);
+}
+
+std::string ButiEngine::ResourceContainer::GetTagNameVertexShader(VertexShaderTag arg_shaderTag)
+{
+	return container_vertexShaders.GetIDName(arg_shaderTag);
+}
+
+std::string ButiEngine::ResourceContainer::GetTagNameGeometryShader(GeometryShaderTag arg_shaderTag)
+{
+	return container_geometryShaders.GetIDName(arg_shaderTag);
+}
+
+std::string ButiEngine::ResourceContainer::GetTagNameSound(SoundTag arg_soundTag)
+{
+	return container_sounds.GetIDName(arg_soundTag);
+}
+
+std::string ButiEngine::ResourceContainer::GetTagNameModel(ModelTag arg_modelTag)
+{
+	return container_models.GetIDName(arg_modelTag);
+}
+std::string ButiEngine::ResourceContainer::GetTagNameMaterial(MaterialTag arg_materiallTag)
+{
+	return container_materials.GetIDName(arg_materiallTag);
 }
 
 void ButiEngine::ResourceContainer::Release()

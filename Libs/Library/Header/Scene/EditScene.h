@@ -3,10 +3,11 @@
 #include "Header/Common/CBuffer_Dx12.h"
 #include"Header/GameParts/CollisionManager.h"
 namespace ButiEngine {
+	class ComponentsLoader;
 	class EditScene :public IScene {
 
 	public:
-		EditScene(std::weak_ptr<ISceneManager> arg_wkp_sceneManager, SceneInformation arg_SceneInformation, std::vector<std::shared_ptr<Behavior>>arg_vec_shp_addBehavior, std::vector<std::shared_ptr<GameComponent>>arg_vec_shp_addComponents);
+		EditScene(std::weak_ptr<ISceneManager> arg_wkp_sceneManager, SceneInformation arg_SceneInformation, std::shared_ptr< ComponentsLoader> arg_shp_componentsLoader);
 		void Release()override;
 		virtual void OnSet();
 		virtual void OnInitialize();
@@ -49,12 +50,7 @@ namespace ButiEngine {
 		std::shared_ptr<ICamera> mainCam;
 		std::shared_ptr<ICamera> editCam;
 
-		std::vector<std::shared_ptr<Behavior>>vec_shp_addBehavior;
-
-
-
-		std::vector<std::shared_ptr<GameComponent>>vec_shp_addComponents;
-
+		std::shared_ptr< ComponentsLoader> shp_componentsLoader;
 
 		SceneInformation sceneInformation;
 
@@ -70,14 +66,6 @@ namespace ButiEngine {
 
 		UINT startCount = 0;
 
-		char** componentNameList;
-		char** behaviorNameList;
-
-		int componentNameListSize;
-		int behaviorNameListSize;
-
-		int currentIndex_componentList = 0;
-		int currentIndex_behaviorList = 0;
 
 
 	};

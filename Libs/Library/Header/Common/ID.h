@@ -1,6 +1,7 @@
 #pragma once
 #include "stdafx.h"
 namespace ButiEngine {
+
 	template <class T>
 	class ID {
 	public:
@@ -58,11 +59,12 @@ namespace ButiEngine {
 			if (arg_id.IsEmpty()) {
 				return "none";
 			}
-			auto index = *arg_id.GetID();
-			auto mapItr = map_values.begin();
-			for (auto i = 0; i < index; i++)
-				mapItr++;
-			return mapItr->first;
+			auto endItr = map_values.end();
+			for (auto mapItr = map_values.begin(); mapItr!=endItr ; mapItr++) {
+				if(mapItr->second==arg_id)
+				return mapItr->first;
+			}
+			return "none";
 		}
 		ID<T> AddValue(std::shared_ptr<T> arg_value, const std::string& arg_key, const std::string& arg_directory = "") {
 			if (map_values.count(arg_directory + arg_key)) {
@@ -127,6 +129,22 @@ namespace ButiEngine {
 		{
 			archive(map_values);
 			archive(vec_p_id);
+		}
+
+		ID<T> ShowGUI(ImGuiIO& arg_io) {
+			auto enditr = map_values.end();
+			ID<T> out;
+			for (auto itr = map_values.begin(); itr != enditr; itr++) {
+				if (ImGui::Button(Util::ToUTF8( itr->first).c_str())) {
+					out = (itr->second);
+				}
+
+				if (ImGui::IsItemActive()) {
+					ImGui::GetForegroundDrawList()->AddLine(arg_io.MouseClickedPos[0], arg_io.MousePos, ImGui::GetColorU32(ImGuiCol_Button), 4.0f); // Draw a line between the button and the mouse cursor
+					out = (itr->second);
+				}
+			}
+			return out;
 		}
 
 	private:

@@ -129,6 +129,14 @@ void ButiEngine::MeshDrawComponent::Regist()
 	index = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetRenderer()->RegistDrawObject(data, layer);
 }
 
+void ButiEngine::MeshDrawComponent::ReRegist()
+{
+
+	CreateData();
+	UnRegist();
+	Regist();
+}
+
 void ButiEngine::MeshDrawComponent::UnRegist()
 {
 	if (index) {
@@ -148,54 +156,141 @@ void ButiEngine::MeshDrawComponent::OnShowUI()
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("ReRegist")) {
-		CreateData();
-		UnRegist(); 
-		Regist();
+		ReRegist();
 	}
 
-	ImGui::BulletText("BlendMode");
+	{
+		ImGui::BulletText("ModelTag");
+		auto tagName = gameObject.lock()->GetResourceContainer()->GetTagNameModel(modelTag);
+		if (ImGui::BeginChild("ModelTagWin", ImVec2(ImGui::GetFontSize() * (tagName.size() + 2), ImGui::GetFontSize() * 2), true)) {
+			ImGui::Text(Util::ToUTF8(tagName).c_str());
 
-	if (ImGui::Button("Addition")) {
-		shp_drawInfo->drawSettings.blendMode = BlendMode::Addition;
+			if (ImGui::IsWindowHovered()) {
+				auto tag = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneManager().lock()->GetApplication().lock()->GetGUIController()->GetModelTag();
+				if (!tag.IsEmpty()) {
+					modelTag = tag;
+					ReRegist();
+				}
+			}
+			ImGui::EndChild();
+		}
+
 	}
-	ImGui::SameLine();
-	if (ImGui::Button("Blend")) {
-		shp_drawInfo->drawSettings.blendMode = BlendMode::AlphaBlend;
+	{
+		ImGui::BulletText("MeshTag");
+		auto tagName = gameObject.lock()->GetResourceContainer()->GetTagNameMesh(meshTag);
+		if (ImGui::BeginChild("MeshTagWin", ImVec2(ImGui::GetFontSize() * (tagName.size() + 2), ImGui::GetFontSize() * 2), true)) {
+			ImGui::Text(Util::ToUTF8(tagName).c_str());
+
+			if (ImGui::IsWindowHovered()) {
+				auto tag = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneManager().lock()->GetApplication().lock()->GetGUIController()->GetMeshTag();
+				if (!tag.IsEmpty()) {
+					meshTag = tag;
+					ReRegist();
+				}
+			}
+			ImGui::EndChild();
+		}
+
 	}
-	ImGui::SameLine();
-	if (ImGui::Button("None")) {
-		shp_drawInfo->drawSettings.blendMode = BlendMode::NoBlend;
+	{
+		ImGui::BulletText("MaterialTag");
+		for (int i = 0; i < materialTag.size(); i++) {
+			auto tagName = gameObject.lock()->GetResourceContainer()->GetTagNameMaterial(materialTag[i]);
+			if (ImGui::BeginChild("MaterialTagWin"+i, ImVec2(ImGui::GetFontSize() * (tagName.size()), ImGui::GetFontSize() * 2), true)) {
+				ImGui::Text(Util::ToUTF8(tagName).c_str());
+
+				if (ImGui::IsWindowHovered()) {
+					auto tag = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneManager().lock()->GetApplication().lock()->GetGUIController()->GetMaterialTag();
+					if (!tag.IsEmpty()) {
+						materialTag[i] = tag;
+						ReRegist();
+					}
+				}
+				ImGui::EndChild();
+			}
+		}
 	}
-	ImGui::SameLine();
-	if (ImGui::Button("Reverse")) {
-		shp_drawInfo->drawSettings.blendMode = BlendMode::Reverse;
+	{
+		ImGui::BulletText("ShaderTag");
+		auto tagName = gameObject.lock()->GetResourceContainer()->GetTagNameShader(shaderTag);
+		if (ImGui::BeginChild("ShaderTagWin", ImVec2(ImGui::GetFontSize() * (tagName.size() + 2), ImGui::GetFontSize() * 2), true)) {
+			ImGui::Text(Util::ToUTF8(tagName).c_str());
+
+			if (ImGui::IsWindowHovered()) {
+				auto tag = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneManager().lock()->GetApplication().lock()->GetGUIController()->GetShaderTag();
+				if (!tag.IsEmpty()) {
+					shaderTag = tag;
+					ReRegist();
+				}
+			}
+			ImGui::EndChild();
+		}
+
 	}
 
 
-	ImGui::BulletText("BillBoarsMode");
-	if (ImGui::Button("None")) {
-		shp_drawInfo->drawSettings.billboardMode = BillBoardMode::none;
-	}
-	ImGui::SameLine();
-	if (ImGui::Button("BillBoard")) {
-		shp_drawInfo->drawSettings.billboardMode = BillBoardMode::full;
-	}
-	ImGui::SameLine();
-	if (ImGui::Button("BillBoard_X")) {
-		shp_drawInfo->drawSettings.billboardMode = BillBoardMode::x;
-	}
-	ImGui::SameLine();
-	if (ImGui::Button("BillBoard_Y")) {
-		shp_drawInfo->drawSettings.billboardMode = BillBoardMode::y;
-	}
-	ImGui::SameLine();
-	if (ImGui::Button("BillBoard_Z")) {
-		shp_drawInfo->drawSettings.billboardMode = BillBoardMode::z;
-	}
+	if (ImGui::TreeNode("DrawSettings")) {
 
-	auto endItr = shp_drawInfo->vec_exCBuffer.end();
-	for (auto itr = shp_drawInfo->vec_exCBuffer.begin(); itr != endItr; itr++) {
-		(*itr)->ShowUI();
+		ImGui::BulletText("BlendMode");
+
+		if (ImGui::Button("Addition")) {
+			shp_drawInfo->drawSettings.blendMode = BlendMode::Addition;
+			ReRegist();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Blend")) {
+			shp_drawInfo->drawSettings.blendMode = BlendMode::AlphaBlend;
+			ReRegist();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("None")) {
+			shp_drawInfo->drawSettings.blendMode = BlendMode::NoBlend;
+			ReRegist();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Reverse")) {
+			shp_drawInfo->drawSettings.blendMode = BlendMode::Reverse;
+			ReRegist();
+		}
+
+
+		ImGui::BulletText("BillBoarsMode");
+		if (ImGui::Button("None")) {
+			shp_drawInfo->drawSettings.billboardMode = BillBoardMode::none;
+			ReRegist();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("BillBoard")) {
+			shp_drawInfo->drawSettings.billboardMode = BillBoardMode::full;
+			ReRegist();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("BillBoard_X")) {
+			shp_drawInfo->drawSettings.billboardMode = BillBoardMode::x;
+			ReRegist();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("BillBoard_Y")) {
+			shp_drawInfo->drawSettings.billboardMode = BillBoardMode::y;
+			ReRegist();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("BillBoard_Z")) {
+			shp_drawInfo->drawSettings.billboardMode = BillBoardMode::z;
+			ReRegist();
+		}
+		if (ImGui::Checkbox("Use Deppth", &shp_drawInfo->isDepth)) {
+		}
+
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNode("ExCBuffer")) {
+		auto endItr = shp_drawInfo->vec_exCBuffer.end();
+		for (auto itr = shp_drawInfo->vec_exCBuffer.begin(); itr != endItr; itr++) {
+			(*itr)->ShowUI();
+		}
+		ImGui::TreePop();
 	}
 }
 
@@ -206,6 +301,8 @@ void ButiEngine::MeshDrawComponent::CreateData()
 		shp_transform = gameObject.lock()->transform;
 	}
 	if (!modelTag.IsEmpty()) {
+		meshTag = MeshTag ();
+		materialTag.clear();
 		auto graphicDevice = gameObject.lock()->GetGraphicDevice()->GetThis<GraphicDevice_Dx12>();
 		data = ObjectFactory::Create<MeshDrawData_Dx12>(modelTag, shaderTag, renderer, graphicDevice, shp_drawInfo, shp_transform);
 

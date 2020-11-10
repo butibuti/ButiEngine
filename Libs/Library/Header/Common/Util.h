@@ -50,6 +50,35 @@ namespace ButiEngine {
 			dest = WCstr;
 			delete[] WCstr;
 		}
+
+		static	std::string ToUTF8(std::string srcSjis) {
+			//Unicodeへ変換後の文字列長を得る
+			int lenghtUnicode = MultiByteToWideChar(CP_THREAD_ACP, 0, srcSjis.c_str(), srcSjis.size() + 1, NULL, 0);
+
+			//必要な分だけUnicode文字列のバッファを確保
+			wchar_t* bufUnicode = new wchar_t[lenghtUnicode];
+
+			//ShiftJISからUnicodeへ変換
+			MultiByteToWideChar(CP_THREAD_ACP, 0, srcSjis.c_str(), srcSjis.size() + 1, bufUnicode, lenghtUnicode);
+
+
+			//UTF8へ変換後の文字列長を得る
+			int lengthUTF8 = WideCharToMultiByte(CP_UTF8, 0, bufUnicode, -1, NULL, 0, NULL, NULL);
+
+			//必要な分だけUTF8文字列のバッファを確保
+			char* bufUTF8 = new char[lengthUTF8];
+
+			//UnicodeからUTF8へ変換
+			WideCharToMultiByte(CP_UTF8, 0, bufUnicode, lenghtUnicode + 1, bufUTF8, lengthUTF8, NULL, NULL);
+
+			std::string strUTF8(bufUTF8);
+
+			delete bufUnicode;
+			delete bufUTF8;
+
+			return strUTF8;
+		}
+
 		static bool CheckFileExistence(const std::string& arg_filePath) {
 			std::ifstream checkedFile(arg_filePath);
 

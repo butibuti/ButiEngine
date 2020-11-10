@@ -21,8 +21,11 @@ namespace ButiEngine {
 		template<typename T, typename... Ts>
 		static inline std::shared_ptr<T> CreateFromCereal(const std::string& arg_filePath) {
 			std::shared_ptr<T> Ptr = std::shared_ptr<T>();
-
-			InputCereal(Ptr, arg_filePath);
+			if(Util::CheckFileExistence(arg_filePath))
+				InputCereal(Ptr, arg_filePath);
+			else {
+				Ptr = std::make_shared<T>();
+			}
 			//‰¼‘zŠÖ”ŒÄ‚Ño‚µ
 			Ptr->PreInitialize();
 			Ptr->Initialize();

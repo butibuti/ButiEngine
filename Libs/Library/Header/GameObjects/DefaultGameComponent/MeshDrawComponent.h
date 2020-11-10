@@ -35,6 +35,7 @@ namespace ButiEngine {
 		void SetBlendMode(const BlendMode& arg_blendMode);
 		std::shared_ptr<GameComponent> Clone()override;
 		void Regist();
+		void ReRegist();
 		void UnRegist();
 
 		void OnShowUI()override;

@@ -7,8 +7,8 @@
 #include"Header/GameParts/ResourceContainer.h"
 #include"Header/Resources/ModelAnimation.h"
 //#include "..\..\Header\Scene\EditScene.h"
-
-
+#include"Header/Scene/ComponentsLoader.h"
+//#include "..\..\Header\Scene\EditScene.h"
 
 
 
@@ -24,9 +24,6 @@ void ButiEngine::EditScene::Update() {
 
 		OnUpdate();
 		shp_soundManager->Update();
-	}
-	else {
-		EditCamera();
 	}
 
 	UIUpdate();
@@ -129,6 +126,8 @@ void ButiEngine::EditScene::UIUpdate()
 
 	ImGui::SameLine();
 	ImGui::Checkbox("ShowContainer", &showContainer);
+
+
 	ImGui::End();
 
 
@@ -139,10 +138,15 @@ void ButiEngine::EditScene::UIUpdate()
 	shp_gameObjectManager->ShowUI();
 
 
+
+	if (showContainer) {
+		GetResourceContainer()->ShowGUI();
+
+	}
 	if (showInspector) {
 
 		auto selectedGameObject = shp_gameObjectManager->GetSelectedUI();
-		ImGui::Begin("SelectedObj");
+		ImGui::Begin("Inspector");
 		if (selectedGameObject.lock()) {
 
 
@@ -160,34 +164,14 @@ void ButiEngine::EditScene::UIUpdate()
 
 			selectedGameObject.lock()->ShowUI();
 
+			auto addComponent = shp_componentsLoader->ShowAddGameComponentUI();
 
-			if (ImGui::TreeNode("Add Behavior")) {
+			if (addComponent)
+				selectedGameObject.lock()->AddGameComponent_Insert(addComponent);
 
-
-				if (ImGui::ListBox("Behaviors", &currentIndex_behaviorList, behaviorNameList, behaviorNameListSize, 5)) {
-				}
-
-				if (ImGui::Button("Add!")) {
-					auto behavior = vec_shp_addBehavior.at(currentIndex_behaviorList)->Clone();
-					selectedGameObject.lock()->AddBehavior_Insert(behavior);
-				}
-
-				ImGui::TreePop();
-			}
-
-			if (ImGui::TreeNode("Add GameComponent")) {
-				if (ImGui::ListBox("GameComponents", &currentIndex_componentList, componentNameList, componentNameListSize, 5)) {
-				}
-
-
-				if (ImGui::Button("Add!")) {
-					auto component = vec_shp_addComponents.at(currentIndex_componentList)->Clone();
-					selectedGameObject.lock()->AddGameComponent_Insert(component);
-				}
-
-				ImGui::TreePop();
-			}
-
+			auto addBehavior = shp_componentsLoader->ShowAddBehaviorUI();
+			if (addBehavior)
+				selectedGameObject.lock()->AddBehavior_Insert(addBehavior);
 
 
 			if (ImGui::Button("Save!", ImVec2(200, 30))) {
@@ -199,6 +183,9 @@ void ButiEngine::EditScene::UIUpdate()
 
 		ImGui::End();
 	}
+
+	if(!isActive&&!ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow))
+	EditCamera();
 }
 
 void ButiEngine::EditScene::EditCamera()
@@ -267,26 +254,17 @@ void ButiEngine::EditScene::Draw()
 	shp_renderer->RenderingEnd();
 }
 
-ButiEngine::EditScene::EditScene(std::weak_ptr<ISceneManager> arg_wkp_sceneManager, SceneInformation argSceneInformation, std::vector<std::shared_ptr<Behavior>>arg_vec_shp_addBehavior, std::vector<std::shared_ptr<GameComponent>>arg_vec_shp_addComponents):sceneInformation(argSceneInformation)
+
+ButiEngine::EditScene::EditScene(std::weak_ptr<ISceneManager> arg_wkp_sceneManager, SceneInformation arg_SceneInformation, std::shared_ptr<ComponentsLoader> arg_shp_componentsLoader)
+	:sceneInformation ( arg_SceneInformation)
 {
+	shp_componentsLoader = arg_shp_componentsLoader;
+	
 	shp_sceneManager = arg_wkp_sceneManager.lock();
-	vec_shp_addBehavior = arg_vec_shp_addBehavior;
-	vec_shp_addComponents = arg_vec_shp_addComponents;
 }
 
 void ButiEngine::EditScene::Release()
 {
-	for (int i = 0; i < componentNameListSize; i++) {
-		delete componentNameList[i];
-	}
-	delete componentNameList;
-
-	for (int i = 0; i < behaviorNameListSize; i++) {
-		delete behaviorNameList[i];
-	}
-	delete behaviorNameList;
-	vec_shp_addBehavior.clear();
-	vec_shp_addComponents.clear();
 	shp_gameObjectManager = nullptr;
 	shp_soundManager->Release();
 	shp_renderer->Release();
@@ -333,28 +311,6 @@ void ButiEngine::EditScene::Initialize()
 	//AddCamera(prop3, "backGround", true);
 	OnInitialize();
 
-	componentNameListSize = vec_shp_addComponents.size();
-	componentNameList = (char**)malloc(sizeof(char*) * componentNameListSize);
-
-	for (int i = 0; i < componentNameListSize; i++) {
-		auto name = vec_shp_addComponents.at(i)->GetGameComponentName();
-		int size =name.size();
-		componentNameList[i] =( char*)malloc(size*sizeof(char)+1) ; 
-		auto name_c_str = name.c_str();
-		strcpy_s( componentNameList[i],size+1,name_c_str );
-	}
-
-	behaviorNameListSize = vec_shp_addBehavior.size();
-
-	behaviorNameList = (char**)malloc(sizeof(char*) *behaviorNameListSize);
-
-	for (int i = 0; i <behaviorNameListSize; i++) {
-		auto name = vec_shp_addBehavior.at(i)->GetBehaviorName();
-		int size = name.size();
-		behaviorNameList[i] = (char*)malloc(size * sizeof(char) + 1);
-		auto name_c_str = name.c_str();
-		strcpy_s(behaviorNameList[i], size + 1, name_c_str);
-	}
 }
 
 void ButiEngine::EditScene::ActiveCollision(const UINT arg_layerCount)

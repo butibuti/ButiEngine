@@ -2,23 +2,24 @@
 #include "..\include\EnemyBehavior.h"
 #include"Header/GameParts/ResourceContainer.h"
 #include "Header/GameObjects/DefaultGameComponent/ModelDrawComponent.h"
+#include"Header/GameObjects/DefaultGameComponent/ColliderComponent.h"
 
 void ButiEngine::EnemyBehavior::Start()
 {
-	auto drawInfo = ObjectFactory::Create<DrawInformation>();
-	cb_barabara = ObjectFactory::Create<CBuffer_Dx12<TestGSVariable>>(4);
-	cb_barabara->SetExName("BaraBara");
-	drawInfo->vec_exCBuffer.push_back(cb_barabara);
-	gameObject.lock()->AddGameComponent<ModelDrawComponent>(
-		gameObject.lock()->GetResourceContainer()->GetModelTag("hikari.b3m", "Model/aomoti式_ウルトラマンヒカリ/"), gameObject.lock()->GetResourceContainer()->GetShaderTag("PMXModel_GS"), drawInfo
-		);
+	gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->ActiveCollision(true);
+	auto prim = ObjectFactory::Create<Collision::CollisionPrimitive_Box_OBB>(Vector3(2, 3,5), gameObject.lock()->transform);
+	auto collider = gameObject.lock()->AddGameComponent< Collision::ColliderComponent>(prim);
 }
 
 void ButiEngine::EnemyBehavior::OnUpdate()
 {
+	
+}
 
-	ImGui::Begin((gameObject.lock()->GetGameObjectName() + ":BaraBaraSlider").c_str());
-
-	cb_barabara->ShowUI();
-	ImGui::End();
+void ButiEngine::EnemyBehavior::OnCollision(std::weak_ptr<GameObject> arg_other)
+{
+	if (arg_other.lock()->GetGameObjectTag()==GameObjectTagManager::GetObjectTag("Bomb")) {
+		ImGui::Begin("Collision!!!!");
+		ImGui::End();
+	}
 }

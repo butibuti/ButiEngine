@@ -16,6 +16,9 @@ namespace ButiEngine {
 		~CArrayBuffer_Dx12() {
 			if (wkp_graphicDevice.lock()) {
 				wkp_heapManager.lock()->Release(BlankSpace{ index,instanceSize / 0x100 });
+				
+			}
+			if (instance) {
 				delete instance;
 			}
 

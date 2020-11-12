@@ -63,13 +63,6 @@ void ButiEngine::SampleScene::OnInitialize()
 	);
 	auto info = ObjectFactory::Create<DrawInformation>();
 
-	auto testVar = ObjectFactory::Create<CBuffer_Dx12< TestGSVariable>>(4);
-	shp_testGSVariable = testVar;
-	info->vec_exCBuffer.push_back(shp_testGSVariable.lock());
-	//info->drawSettings.topologyType = TopologyType::point;
-	auto hikariModelComponent = hikari.lock()->AddGameComponent<ModelDrawComponent>(
-		GetResourceContainer()->GetModelTag("hikari.b3m", "Model/aomoti式_ウルトラマンヒカリ/"), GetResourceContainer()->GetShaderTag("PMXModel_GS"),info
-		);
 
 
 	//auto maguro = shp_gameObjectManager->AddObject(
@@ -85,12 +78,6 @@ void ButiEngine::SampleScene::OnInitialize()
 	//hikariModelComponent->GetModelData()->SerchBoneByName(L"左ひじ")->transform->RollLocalRotationX_Degrees(90);
 
 
-
-
-	auto animator= hikari.lock()->AddGameComponent<SimpleBoneAnimatorComponent>(hikariModelComponent->GetModelData());
-
-	animator->AddAnimation(GetResourceContainer()->GetMotionTag("slash.bmd", "Motion/"));
-	animator->SetLoop(true);
 
 	
 	auto floor = shp_gameObjectManager->AddObjectFromCereal("floor.gameObject");

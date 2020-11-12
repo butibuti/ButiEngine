@@ -69,7 +69,7 @@ void ButiEngine::MeshDrawComponent::OnSet()
 
 	if (!isCereal)
 	{
-		auto lightBuffer_Dx12 = ObjectFactory::Create<CBuffer_Dx12<LightVariable>>(2);
+		auto lightBuffer_Dx12 = ObjectFactory::Create<CBuffer_Dx12<LightVariable>>(3);
 
 		shp_drawInfo->vec_exCBuffer.push_back(lightBuffer_Dx12);
 
@@ -145,6 +145,11 @@ void ButiEngine::MeshDrawComponent::UnRegist()
 	}
 }
 
+std::shared_ptr<ButiEngine::DrawInformation> ButiEngine::MeshDrawComponent::GetDrawInformation()
+{
+	return shp_drawInfo;
+}
+
 void ButiEngine::MeshDrawComponent::OnShowUI()
 {
 	if (ImGui::Button("Regist")) {
@@ -161,7 +166,19 @@ void ButiEngine::MeshDrawComponent::OnShowUI()
 
 	{
 		ImGui::BulletText("ModelTag");
+		
+
 		auto tagName = gameObject.lock()->GetResourceContainer()->GetTagNameModel(modelTag);
+
+		if (!modelTag.IsEmpty())
+			if (ImGui::Button("RemoveModelTag"))
+			{
+				auto resourceContainer = gameObject.lock()->GetResourceContainer();
+				meshTag = resourceContainer->GetModel(modelTag).lock()->GetMeshTag();
+				materialTag = gameObject.lock()->GetResourceContainer()->GetModel(modelTag).lock()->GetMaterialTags();
+				modelTag = ModelTag();
+			}
+
 		(ImGui::BeginChild("ModelTagWin", ImVec2(ImGui::GetFontSize() * (tagName.size() + 2), ImGui::GetFontSize() * 2), true));
 			ImGui::Text(Util::ToUTF8(tagName).c_str());
 
@@ -297,6 +314,8 @@ void ButiEngine::MeshDrawComponent::OnShowUI()
 void ButiEngine::MeshDrawComponent::CreateData()
 {
 	auto renderer = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetRenderer();
+	if(!shp_drawInfo->IsContainExCBuffer("FogParameter"))
+	shp_drawInfo->vec_exCBuffer.push_back(renderer->GetFogCBuffer());
 	if (!shp_transform) {
 		shp_transform = gameObject.lock()->transform;
 	}
@@ -312,4 +331,5 @@ void ButiEngine::MeshDrawComponent::CreateData()
 
 
 	}
+	shp_drawInfo->RemoveExCBuffer("FogParameter");
 }

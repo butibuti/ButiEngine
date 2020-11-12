@@ -12,6 +12,13 @@ void ButiEngine::Renderer::Initialize()
 	
 	wkp_resourceContainer =wkp_iScene.lock()->GetSceneManager().lock()->GetApplication().lock()->GetResourceContainer();
 	wkp_graphicDevice= wkp_iScene.lock()->GetSceneManager().lock()->GetApplication().lock()->GetGraphicDevice();
+
+	
+	CBuffer_fog = ObjectFactory::Create<CBuffer_Dx12<Fog>>(2);
+
+	CBuffer_fog->SetExName("FogParameter");
+	CBuffer_fog->SetGraphicDevice(wkp_graphicDevice.lock());
+	CBuffer_fog->CreateBuffer();
 	AddLayer();
 }
 void ButiEngine::Renderer::Update()
@@ -148,5 +155,22 @@ void ButiEngine::Renderer::Release()
 	vec_index.clear();
 
 	ClearDrawObjects();
+}
+
+void ButiEngine::Renderer::ReleaseFogBuffer()
+{
+	CBuffer_fog = nullptr;
+}
+
+void ButiEngine::Renderer::UpdateFog(const Fog &arg_param)
+{
+	CBuffer_fog->Get().fogColor = arg_param.fogColor;
+	CBuffer_fog->Get().fogCoord = arg_param.fogCoord;
+
+}
+
+std::shared_ptr< ButiEngine::CBuffer_Dx12< ButiEngine::Fog>> ButiEngine::Renderer::GetFogCBuffer()
+{
+	return CBuffer_fog;
 }
 

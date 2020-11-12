@@ -10,11 +10,14 @@ namespace ButiEngine {
 			return "EnemyBehavior";
 		}
 
+		void OnCollision(std::weak_ptr<GameObject> arg_other)override;
+
 		template<class Archive>
 		void serialize(Archive& archive)
 		{
 			archive(velocity);
 			archive(speed);
+			archive(hp);
 		}
 
 		std::shared_ptr<Behavior> Clone()override {
@@ -23,6 +26,7 @@ namespace ButiEngine {
 	private:
 		Vector3 velocity;
 		float speed;
+		UINT hp=0;
 
 		std::shared_ptr<CBuffer<TestGSVariable> >cb_barabara;
 	};

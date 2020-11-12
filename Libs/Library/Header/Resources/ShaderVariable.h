@@ -20,6 +20,22 @@ namespace ButiEngine {
 		}
 		bool ShowUI() { return false; }
 	};
+
+
+	struct Fog {
+
+		Vector4 fogColor;
+		Vector2 fogCoord;
+		bool ShowUI() { return false; }
+
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(fogColor);
+			archive(fogCoord);
+		}
+	};
+
 	struct LightVariable {
 		Vector4 lightDir;// = Vector4(Vector3(-1.0f, -1.0f, 0.0f), 1);
 		LightVariable() {

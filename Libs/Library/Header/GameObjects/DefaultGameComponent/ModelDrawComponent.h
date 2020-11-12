@@ -19,6 +19,10 @@ namespace ButiEngine {
 		std::shared_ptr<ModelDrawData> GetModelData();
 		std::shared_ptr<GameComponent> Clone()override;
 
+		void OnShowUI()override;
+
+	protected:
+		void CreateData()override;
 	private:
 	};
 

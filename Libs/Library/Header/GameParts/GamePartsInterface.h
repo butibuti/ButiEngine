@@ -5,6 +5,8 @@ namespace ButiEngine
 	class IDrawObject;
 	class IScene;
 	class Application;
+	template<typename T>
+	class CBuffer_Dx12;
 	class IRenderer :public IObject {
 	public:
 		void PreInitialize()override {}
@@ -26,6 +28,9 @@ namespace ButiEngine
 		virtual void UnRegistDrawObject(UINT* arg_index, const UINT arg_layer = 0) = 0;
 
 		virtual void Release() = 0;
+		virtual void UpdateFog(const Fog& arg_param) = 0;
+		virtual void ReleaseFogBuffer() = 0;
+		virtual std::shared_ptr<CBuffer_Dx12<Fog>> GetFogCBuffer() = 0;
 	};
 	class ISoundManager :public IObject {
 

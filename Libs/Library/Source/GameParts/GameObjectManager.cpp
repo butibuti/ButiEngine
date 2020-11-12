@@ -105,6 +105,14 @@ void ButiEngine::GameObjectManager::ShowUI()
 
 }
 
+void ButiEngine::GameObjectManager::Release()
+{
+	auto endItr = vec_gameObjects.end();
+	for (auto itr = vec_gameObjects.begin(); itr != endItr; itr++) {
+		(*itr)->Release();
+	}
+}
+
 void ButiEngine::GameObjectManager::Initialize_cereal()
 {
 	auto endItr = vec_gameObjects.end();

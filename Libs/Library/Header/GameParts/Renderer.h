@@ -26,6 +26,9 @@ namespace ButiEngine {
 		void UnRegistDrawObject(UINT* arg_index, const UINT arg_layer = 0)override;
 
 		void Release()override;
+		void ReleaseFogBuffer()override;
+		void UpdateFog(const Fog& arg_param)override;
+		std::shared_ptr<CBuffer_Dx12<Fog>> GetFogCBuffer()override;
 	private:
 
 		inline void ZSort(std::vector < std::weak_ptr< IDrawObject>>& arg_vec_drawObjects) {
@@ -40,5 +43,6 @@ namespace ButiEngine {
 		std::weak_ptr<IScene> wkp_iScene;
 		std::weak_ptr<ResourceContainer>wkp_resourceContainer;
 		std::vector< std::vector<std::weak_ptr< IDrawObject>>> vec_drawLayers;
+		std::shared_ptr<CBuffer_Dx12<Fog>> CBuffer_fog;
 	};
 }

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "..\..\Header\GameParts\CollisionManager.h"
 
 
 
@@ -13,7 +14,6 @@ void ButiEngine::Collision::CollisionManager::Update()
     for (auto itr = vec_collisionLayer.begin(); itr != vec_collisionLayer.end(); itr++) {
         (*itr)->Update();
     }
-    int f = 0;
 }
 
 UINT* ButiEngine::Collision::CollisionManager::RegistCollisionObject(const int layerNum, std::shared_ptr< CollisionObject> arg_registObj)
@@ -30,4 +30,9 @@ void ButiEngine::Collision::CollisionManager::UnRegistCollisionObject(const int 
         return ;
     }
     vec_collisionLayer.at(layerNum)->UnRegistCollisionObj(registNum);
+}
+
+UINT ButiEngine::Collision::CollisionManager::GetLayerCount()
+{
+    return vec_collisionLayer.size();
 }

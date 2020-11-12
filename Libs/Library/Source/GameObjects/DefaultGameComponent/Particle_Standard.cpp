@@ -10,7 +10,7 @@ void ButiEngine::Particle_Standard::OnSet()
 		drawInfo->isDepth = false;
 		drawInfo->drawSettings.blendMode = BlendMode::Addition;
 		if (!shp_particleBuffer) {
-			shp_particleBuffer = ObjectFactory::Create<CBuffer_Dx12<ParticleParameter>>(3);
+			shp_particleBuffer = ObjectFactory::Create<CBuffer_Dx12<ParticleParameter>>(4);
 			shp_particleBuffer->SetExName("ParticleParam");
 			shp_particleBuffer->Get().noise = 1;
 			shp_particleBuffer->Get().power = 0.1f;

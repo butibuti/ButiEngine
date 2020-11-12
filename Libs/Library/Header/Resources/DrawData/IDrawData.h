@@ -22,6 +22,36 @@ namespace ButiEngine {
 			archive(drawSettings);
 			archive(vec_exCBuffer);
 		}
+		bool IsContainExCBuffer(const std::string& arg_cbufferName) {
+			for (auto itr = vec_exCBuffer.begin(); itr != vec_exCBuffer.end(); itr++) {
+				if ((*itr)->GetExName() == arg_cbufferName) {
+					return true;
+				}
+			}
+			return false;
+		}
+		void RemoveExCBuffer(const std::string& arg_cbufferName) {
+			for (auto itr = vec_exCBuffer.begin(); itr != vec_exCBuffer.end(); ) {
+				if ((*itr)->GetExName() == arg_cbufferName) {
+					vec_exCBuffer.erase(itr);
+					return;
+				}
+				else
+					itr++;
+			}
+		}
+		std::shared_ptr<ICBuffer> GetExCBuffer(const std::string& arg_cbufferName) {
+			for (auto itr = vec_exCBuffer.begin(); itr != vec_exCBuffer.end(); ) {
+				if ((*itr)->GetExName() == arg_cbufferName) {
+					vec_exCBuffer.erase(itr);
+					return *itr;
+				}
+				else {
+					itr++;
+				}
+			}
+			return nullptr;
+		}
 
 		std::shared_ptr< DrawInformation > Clone() {
 			auto output = ObjectFactory::Create<DrawInformation>();

@@ -29,7 +29,7 @@ namespace ButiEngine {
 			}
 		private:
 			UINT* p_index=nullptr;
-			UINT layerNum;
+			UINT layerNum=0;
 			std::shared_ptr<CollisionPrimitive> shp_collisionPrim;
 		};
 	}

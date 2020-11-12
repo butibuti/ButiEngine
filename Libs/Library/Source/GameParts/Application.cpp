@@ -72,7 +72,7 @@ void ButiEngine::Application::InitLoadResources()
 		Application::GetResourceContainer()->LoadMesh("SphereForParticle_UV_Normal", uv_normalVertices);
 
 
-		MeshHelper::CreateSphere(Vector3(0.5f, 0.5f, 0.5f), 12, colors, testVertices);
+		MeshHelper::CreateSphere(Vector3(1.0f, 1.0f, 1.0f), 12, colors, testVertices);
 		Vertex::VertexHelper::VertexConvert(testVertices, normalVertices);
 		Application::GetResourceContainer()->LoadMesh("Sphere_Normal", normalVertices);
 

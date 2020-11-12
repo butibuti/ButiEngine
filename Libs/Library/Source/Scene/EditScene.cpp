@@ -265,9 +265,12 @@ ButiEngine::EditScene::EditScene(std::weak_ptr<ISceneManager> arg_wkp_sceneManag
 
 void ButiEngine::EditScene::Release()
 {
-	shp_gameObjectManager = nullptr;
+	
+	shp_gameObjectManager->Release();
 	shp_soundManager->Release();
+	shp_renderer->ReleaseFogBuffer();
 	shp_renderer->Release();
+	(shp_collisionManager) = nullptr;
 	shp_sceneManager = nullptr;
 }
 
@@ -315,6 +318,10 @@ void ButiEngine::EditScene::Initialize()
 
 void ButiEngine::EditScene::ActiveCollision(const UINT arg_layerCount)
 {
+	if (!shp_collisionManager) {
+		shp_collisionManager = ObjectFactory::Create<Collision::CollisionManager>(arg_layerCount);
+	}
+	else if(arg_layerCount != shp_collisionManager->GetLayerCount())
 	shp_collisionManager = ObjectFactory::Create<Collision::CollisionManager>(arg_layerCount);
 }
 

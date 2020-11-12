@@ -14,7 +14,7 @@ namespace ButiEngine {
 		void Initialize()override;
 		void PreInitialize()override;
 		void ShowUI();
-
+		void Release();
 		void Initialize_cereal();
 
 		std::weak_ptr<GameObject> GetSelectedUI();

@@ -37,7 +37,7 @@ namespace ButiEngine {
 		void Regist();
 		void ReRegist();
 		void UnRegist();
-
+		std::shared_ptr< DrawInformation > GetDrawInformation();
 		void OnShowUI()override;
 
 		template <class T>
@@ -84,7 +84,7 @@ namespace ButiEngine {
 		}
 	protected:
 		std::shared_ptr< MeshDrawData > data;
-		void CreateData();
+		virtual void CreateData();
 		UINT* index;
 		UINT layer; 
 		MeshTag meshTag;

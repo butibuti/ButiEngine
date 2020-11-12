@@ -89,6 +89,16 @@ void ButiEngine::ComponentsLoader::RemoveComponent(const std::string& arg_name)
 	}
 }
 
+void ButiEngine::ComponentsLoader::RemoveBehavior(const std::string& arg_name)
+{
+	for (auto itr = addBehaviors.begin(); itr != addBehaviors.end(); itr++) {
+		if (arg_name == (*itr)->GetBehaviorName()) {
+			addBehaviors.erase(itr);
+			break;
+		}
+	}
+}
+
 std::shared_ptr<ButiEngine::Behavior> ButiEngine::ComponentsLoader::ShowAddBehaviorUI()
 {
 	std::shared_ptr<Behavior> ret = nullptr;

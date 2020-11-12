@@ -22,7 +22,7 @@ void ButiEngine::SampleBehavior::OnSet()
 void ButiEngine::SampleBehavior::Start()
 {
 	auto drawInfo = ObjectFactory::Create<DrawInformation>();
-	cb_barabara = ObjectFactory::Create<CBuffer_Dx12<TestGSVariable>>(4);
+	cb_barabara = ObjectFactory::Create<CBuffer_Dx12<TestGSVariable>>(5);
 	cb_barabara->SetExName("BaraBara");
 	drawInfo->vec_exCBuffer.push_back(cb_barabara);
 	gameObject.lock()->AddGameComponent<ModelDrawComponent>(

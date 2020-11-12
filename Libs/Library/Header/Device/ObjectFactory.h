@@ -9,6 +9,7 @@ namespace ButiEngine {
 			//‰¼‘zŠÖ”ŒÄ‚Ño‚µ
 			Ptr->PreInitialize();
 			Ptr->Initialize();
+			Ptr->SetIsCereal(false);
 			return Ptr;
 		}; 
 		template<typename T, typename... Ts>
@@ -37,7 +38,7 @@ namespace ButiEngine {
 	class IObject :public std::enable_shared_from_this<IObject>
 	{
 		friend class ObjectFactory;
-		bool isCereal= false;
+		bool isCereal= true;
 	protected:
 		IObject() {}
 		virtual ~IObject() {}

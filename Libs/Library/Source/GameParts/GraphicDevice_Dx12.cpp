@@ -73,8 +73,8 @@ void ButiEngine::GraphicDevice_Dx12::Initialize()
 	swapChaindesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	swapChaindesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 	swapChaindesc.OutputWindow = wkp_application.lock()->GetWindow()->GetHandle();
-	swapChaindesc.SampleDesc.Count = 1;
 	swapChaindesc.Windowed = TRUE;
+	swapChaindesc.SampleDesc.Count = 1;
 	Microsoft::WRL::ComPtr<IDXGISwapChain> swapChain;
 	// スワップチェインを生成.
 	hr = factory4->CreateSwapChain(commandQueue.Get(), &swapChaindesc, swapChain.GetAddressOf());

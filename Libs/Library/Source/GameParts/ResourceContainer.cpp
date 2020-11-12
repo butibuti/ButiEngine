@@ -41,54 +41,53 @@ void ButiEngine::ResourceContainer::ShowGUI()
 		if (ImGui::BeginTabItem("MeshTags", nullptr, ImGuiTabItemFlags_None)) {
 
 
-			if (ImGui::BeginChild("##MeshTag", ImVec2(0, 0), true))
+			(ImGui::BeginChild("##MeshTag", ImVec2(0, 0), true));
 			{
 				app->GetGUIController()->SetResourceTag(
 					container_meshes.ShowGUI(app->GetGUIController()->GetGUIIO())
 				);
 
-				ImGui::EndChild();
 			}
-
+			ImGui::EndChild();
 			ImGui::EndTabItem();
 		}
 
 		if (ImGui::BeginTabItem("ModelTags", nullptr, ImGuiTabItemFlags_None)) {
 
-			if (ImGui::BeginChild("##ModelTag", ImVec2(0, 0), true))
+			(ImGui::BeginChild("##ModelTag", ImVec2(0, 0), true));
 			{
 				app->GetGUIController()->SetResourceTag(
 					container_models.ShowGUI(app->GetGUIController()->GetGUIIO())
 				);
 
-				ImGui::EndChild();
 			}
 
+			ImGui::EndChild();
 			ImGui::EndTabItem();
 		}
 		if (ImGui::BeginTabItem("MaterialTags", nullptr, ImGuiTabItemFlags_None)) {
 
-			if (ImGui::BeginChild("##MaterialTag", ImVec2(0, 0), true))
+			(ImGui::BeginChild("##MaterialTag", ImVec2(0, 0), true));
 			{
 				app->GetGUIController()->SetResourceTag(
 					container_materials.ShowGUI(app->GetGUIController()->GetGUIIO())
 				);
 
-				ImGui::EndChild();
 			}
+			 ImGui::EndChild();
 
 			ImGui::EndTabItem();
 		}
 		if (ImGui::BeginTabItem("ShaderTags", nullptr, ImGuiTabItemFlags_None)) {
 
-			if (ImGui::BeginChild("##ShaderTag", ImVec2(0, 0), true))
+			 (ImGui::BeginChild("##ShaderTag", ImVec2(0, 0), true));
 			{
 				app->GetGUIController()->SetResourceTag(
 					container_shaders.ShowGUI(app->GetGUIController()->GetGUIIO())
 				);
 
-				ImGui::EndChild();
 			}
+			ImGui::EndChild();
 
 			ImGui::EndTabItem();
 		}

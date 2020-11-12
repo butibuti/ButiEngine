@@ -12,6 +12,7 @@ namespace ButiEngine {
 			void Update();
 			UINT* RegistCollisionObject(const int layerNum, std::shared_ptr< CollisionObject> arg_registObj);
 			void UnRegistCollisionObject(const int layerNum,UINT* registNum);
+			UINT GetLayerCount();
 		private:
 			std::vector<std::shared_ptr< CollisionLayer>> vec_collisionLayer;
 		};

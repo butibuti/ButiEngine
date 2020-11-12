@@ -162,6 +162,8 @@ void ButiEngine::EditScene::UIUpdate()
 
 			if (ImGui::Button("Change")) {
 				selectedGameObject.lock()->SetObjectName(CallBacks::objectName);
+				CallBacks::ObjectNameReset();
+
 			}
 
 

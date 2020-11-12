@@ -179,7 +179,7 @@ void ButiEngine::MeshDrawComponent::OnShowUI()
 				modelTag = ModelTag();
 			}
 
-		(ImGui::BeginChild("ModelTagWin", ImVec2(ImGui::GetFontSize() * (tagName.size() + 2), ImGui::GetFontSize() * 2), true));
+		ImGui::BeginChild("ModelTagWin", ImVec2(ImGui::GetFontSize() * (tagName.size() + 2), ImGui::GetFontSize() * 2), true);
 			ImGui::Text(Util::ToUTF8(tagName).c_str());
 
 			if (ImGui::IsWindowHovered()) {

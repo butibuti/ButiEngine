@@ -43,6 +43,9 @@ namespace ButiEngine {
 
 		static char objectName[128];
 		static char cbufferName[128];
+		static void ObjectNameReset() {
+			memset(objectName, 0, sizeof(objectName));
+		}
 	};
 
     class Window;

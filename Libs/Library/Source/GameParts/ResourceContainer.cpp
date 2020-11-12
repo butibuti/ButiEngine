@@ -31,6 +31,8 @@ void ButiEngine::ResourceContainer::PreInitialize()
 
 void ButiEngine::ResourceContainer::ShowGUI()
 {
+	static bool isShowShader = false;
+
 	ImGui::Begin("ResourceContainer");
 
 	auto app = wkp_graphicDevice.lock()->GetApplication().lock();
@@ -39,9 +41,7 @@ void ButiEngine::ResourceContainer::ShowGUI()
 	if (ImGui::BeginTabBar("ResourceContainerTabBar", tab_bar_flags))
 	{
 		if (ImGui::BeginTabItem("MeshTags", nullptr, ImGuiTabItemFlags_None)) {
-
-
-			(ImGui::BeginChild("##MeshTag", ImVec2(0, 0), true));
+			ImGui::BeginChild("##MeshTag", ImVec2(0, 0), true);
 			{
 				app->GetGUIController()->SetResourceTag(
 					container_meshes.ShowGUI(app->GetGUIController()->GetGUIIO())
@@ -54,7 +54,13 @@ void ButiEngine::ResourceContainer::ShowGUI()
 
 		if (ImGui::BeginTabItem("ModelTags", nullptr, ImGuiTabItemFlags_None)) {
 
-			(ImGui::BeginChild("##ModelTag", ImVec2(0, 0), true));
+			if (ImGui::Button("Add")) {
+
+			}
+
+
+
+			ImGui::BeginChild("##ModelTag", ImVec2(0, 0), true);
 			{
 				app->GetGUIController()->SetResourceTag(
 					container_models.ShowGUI(app->GetGUIController()->GetGUIIO())
@@ -67,23 +73,200 @@ void ButiEngine::ResourceContainer::ShowGUI()
 		}
 		if (ImGui::BeginTabItem("MaterialTags", nullptr, ImGuiTabItemFlags_None)) {
 
-			(ImGui::BeginChild("##MaterialTag", ImVec2(0, 0), true));
+			if (ImGui::Button("Add")) {
+
+			}
+
+			ImGui::SameLine();
+			ImGui::BeginChild("MaterialTagRemove", ImVec2(6 * ImGui::GetFontSize(), ImGui::GetFontSize() * 2), true);
+			ImGui::Text("Remove");
+
+			if (ImGui::IsWindowHovered()) {
+				auto tag = wkp_graphicDevice.lock()->GetApplication().lock()->GetGUIController()->GetMaterialTag();
+				if (!tag.IsEmpty()) {
+					UnLoadMaterial(tag);
+				}
+			}
+
+
+			ImGui::EndChild();
+
+			ImGui::BeginChild("##MaterialTag", ImVec2(0, 0), true);
 			{
 				app->GetGUIController()->SetResourceTag(
 					container_materials.ShowGUI(app->GetGUIController()->GetGUIIO())
 				);
 
 			}
-			 ImGui::EndChild();
+			ImGui::EndChild();
 
 			ImGui::EndTabItem();
 		}
 		if (ImGui::BeginTabItem("ShaderTags", nullptr, ImGuiTabItemFlags_None)) {
+			if (ImGui::Button("Add Shader")) {
+				isShowShader = !isShowShader;
+			}
 
-			 (ImGui::BeginChild("##ShaderTag", ImVec2(0, 0), true));
+			ImGui::SameLine();
+
+			ImGui::BeginChild("ShaderTagRemove", ImVec2(6 * ImGui::GetFontSize(), ImGui::GetFontSize() * 2), true);
+			ImGui::Text("Remove");
+
+			if (ImGui::IsWindowHovered()) {
+				auto tag = wkp_graphicDevice.lock()->GetApplication().lock()->GetGUIController()->GetShaderTag();
+				if (!tag.IsEmpty()) {
+					UnLoadShader(tag);
+				}
+			}
+
+
+			ImGui::EndChild();
+
+
+			ImGui::BeginChild("##ShaderTag", ImVec2(0, 0), true);
 			{
 				app->GetGUIController()->SetResourceTag(
 					container_shaders.ShowGUI(app->GetGUIController()->GetGUIIO())
+				);
+
+			}
+			ImGui::EndChild();
+
+			ImGui::EndTabItem();
+		}
+		if (ImGui::BeginTabItem("VertexShaderTags", nullptr, ImGuiTabItemFlags_None)) {
+			ImGui::Button("Add VertexShader");
+			auto flags = ImGuiPopupFlags_MouseButtonLeft;
+			if (ImGui::BeginPopupContextItem("Add VertexShader", flags))
+			{
+				ImGui::Text("File name:");
+				ImGui::InputText("##edit", CallBacks::objectName, IM_ARRAYSIZE(CallBacks::objectName));
+				if (ImGui::Button("OK!!")) {
+					LoadVertexShader(CallBacks::objectName, "Shader/Compiled/");
+					CallBacks::ObjectNameReset();
+					ImGui::CloseCurrentPopup();
+				}ImGui::SameLine();
+				if (ImGui::Button("Cancel")) {
+					CallBacks::ObjectNameReset();
+					ImGui::CloseCurrentPopup();
+				}
+				ImGui::EndPopup();
+			}
+			ImGui::SameLine();
+
+
+			ImGui::BeginChild("VertexTagRemove", ImVec2(6 * ImGui::GetFontSize(), ImGui::GetFontSize() * 2), true);
+			ImGui::Text("Remove");
+
+			if (ImGui::IsWindowHovered()) {
+				auto tag = wkp_graphicDevice.lock()->GetApplication().lock()->GetGUIController()->GetVertexShaderTag();
+				if (!tag.IsEmpty()) {
+					UnLoadVertexShader(tag);
+				}
+			}
+
+
+			ImGui::EndChild();
+
+
+			ImGui::BeginChild("##VertexShaderTag", ImVec2(0, 0), true);
+			{
+				app->GetGUIController()->SetResourceTag(
+					container_vertexShaders.ShowGUI(app->GetGUIController()->GetGUIIO())
+				);
+
+			}
+			ImGui::EndChild();
+
+			ImGui::EndTabItem();
+		}
+		if (ImGui::BeginTabItem("PixelShaderTags", nullptr, ImGuiTabItemFlags_None)) {
+
+			ImGui::Button("Add PixelShader");
+			auto flags = ImGuiPopupFlags_MouseButtonLeft;
+			if (ImGui::BeginPopupContextItem("Add PixelShader", flags))
+			{
+				ImGui::Text("File name:");
+				ImGui::InputText("##edit", CallBacks::objectName, IM_ARRAYSIZE(CallBacks::objectName));
+				if (ImGui::Button("OK!!")) {
+					LoadPixelShader(CallBacks::objectName, "Shader/Compiled/");
+					CallBacks::ObjectNameReset();
+					ImGui::CloseCurrentPopup();
+				}ImGui::SameLine();
+				if (ImGui::Button("Cancel")) {
+					CallBacks::ObjectNameReset();
+					ImGui::CloseCurrentPopup();
+				}
+				ImGui::EndPopup();
+			}
+
+			ImGui::SameLine();
+
+			ImGui::BeginChild("PixelTagRemove", ImVec2(6 * ImGui::GetFontSize(), ImGui::GetFontSize() * 2), true);
+			ImGui::Text("Remove");
+
+			if (ImGui::IsWindowHovered()) {
+				auto tag = wkp_graphicDevice.lock()->GetApplication().lock()->GetGUIController()->GetPixelShaderTag();
+				if (!tag.IsEmpty()) {
+					UnLoadPixelShader(tag);
+				}
+			}
+
+
+			ImGui::EndChild();
+
+
+			ImGui::BeginChild("##PixelShaderTag", ImVec2(0, 0), true);
+			{
+				app->GetGUIController()->SetResourceTag(
+					container_pixelShaders.ShowGUI(app->GetGUIController()->GetGUIIO())
+				);
+
+			}
+			ImGui::EndChild();
+
+			ImGui::EndTabItem();
+		}
+		if (ImGui::BeginTabItem("GeometryShaderTags", nullptr, ImGuiTabItemFlags_None)) {
+
+			ImGui::Button("Add GeometryShader");
+			auto flags = ImGuiPopupFlags_MouseButtonLeft;
+			if (ImGui::BeginPopupContextItem("Add GeometryShader", flags))
+			{
+				ImGui::Text("File name:");
+				ImGui::InputText("##edit", CallBacks::objectName, IM_ARRAYSIZE(CallBacks::objectName));
+				if (ImGui::Button("OK!!")) {
+					LoadGeometryShader(CallBacks::objectName, "Shader/Compiled/");
+					CallBacks::ObjectNameReset();
+					ImGui::CloseCurrentPopup();
+				}ImGui::SameLine();
+				if (ImGui::Button("Cancel")) {
+					CallBacks::ObjectNameReset();
+					ImGui::CloseCurrentPopup();
+				}
+				ImGui::EndPopup();
+			}
+			ImGui::SameLine();
+
+
+			ImGui::BeginChild("GeometryTagRemove", ImVec2(6 * ImGui::GetFontSize(), ImGui::GetFontSize() * 2), true);
+			ImGui::Text("Remove");
+
+			if (ImGui::IsWindowHovered()) {
+				auto tag = wkp_graphicDevice.lock()->GetApplication().lock()->GetGUIController()->GetGeometryShaderTag();
+				if (!tag.IsEmpty()) {
+					UnLoadGeometryShader(tag);
+				}
+			}
+
+
+			ImGui::EndChild();
+
+
+			ImGui::BeginChild("##GeometryShaderTag", ImVec2(0, 0), true);
+			{
+				app->GetGUIController()->SetResourceTag(
+					container_geometryShaders.ShowGUI(app->GetGUIController()->GetGUIIO())
 				);
 
 			}
@@ -101,8 +284,90 @@ void ButiEngine::ResourceContainer::ShowGUI()
 
 	ImGui::End();
 
-}
+	if (isShowShader) {
 
+		ImGui::Begin("AddShader");
+		{
+			static VertexShaderTag vstag;
+			static PixelShaderTag pstag;
+			static GeometryShaderTag gstag;
+
+			{
+
+				ImGui::BulletText("VertexShaderTag");
+				auto tagName = GetTagNameVertexShader(vstag);
+				(ImGui::BeginChild("VSTagWin", ImVec2(ImGui::GetFontSize()* (tagName.size() + 2), ImGui::GetFontSize() * 2), true));
+				ImGui::Text(Util::ToUTF8(tagName).c_str());
+
+				if (ImGui::IsWindowHovered()) {
+					auto tag = wkp_graphicDevice.lock()->GetApplication().lock()->GetGUIController()->GetVertexShaderTag();
+					if (!tag.IsEmpty()) {
+						vstag = tag;
+					}
+				}
+
+
+				ImGui::EndChild();
+
+			}
+			{
+
+				ImGui::BulletText("PixelShaderTag");
+				auto tagName = GetTagNamePixelShader(pstag);
+				(ImGui::BeginChild("PSTagWin", ImVec2(ImGui::GetFontSize() * (tagName.size() + 2), ImGui::GetFontSize() * 2), true));
+				ImGui::Text(Util::ToUTF8(tagName).c_str());
+
+				if (ImGui::IsWindowHovered()) {
+					auto tag = wkp_graphicDevice.lock()->GetApplication().lock()->GetGUIController()->GetPixelShaderTag();
+					if (!tag.IsEmpty()) {
+						pstag = tag;
+					}
+				}
+
+
+				ImGui::EndChild();
+
+			}
+			{
+
+				ImGui::BulletText("GeometryShaderTag");
+				auto tagName = GetTagNameGeometryShader(gstag);
+				(ImGui::BeginChild("GSTagWin", ImVec2(ImGui::GetFontSize() * (tagName.size() + 2), ImGui::GetFontSize() * 2), true));
+				ImGui::Text(Util::ToUTF8(tagName).c_str());
+
+				if (ImGui::IsWindowHovered()) {
+					auto tag = wkp_graphicDevice.lock()->GetApplication().lock()->GetGUIController()->GetGeometryShaderTag();
+					if (!tag.IsEmpty()) {
+						gstag = tag;
+					}
+				}
+
+
+				ImGui::EndChild();
+
+			}
+
+			ImGui::Text("ShaderName");
+			ImGui::InputText("##edit", CallBacks::objectName, IM_ARRAYSIZE(CallBacks::objectName));
+			if (ImGui::Button("OK!!")) {
+
+				ShaderName sn;
+
+				sn.shaderName = CallBacks::objectName;
+				sn.geometryShaderName = GetTagNameGeometryShader(gstag);
+				sn.vertexShaderName = GetTagNameVertexShader(vstag);
+				sn.pixelShaderName= GetTagNamePixelShader(pstag);
+
+				LoadShader(sn);
+
+				CallBacks::ObjectNameReset();
+				ImGui::SameLine();
+			}
+			ImGui::End();
+		}
+
+	}
+}
 
 
 
@@ -146,6 +411,9 @@ ButiEngine::MaterialTag ButiEngine::ResourceContainer::LoadMaterial(const std::w
 
 ButiEngine::TextureTag ButiEngine::ResourceContainer::LoadTexture(const std::string& arg_filePath, const std::string& arg_fileDirectory)
 {
+	if (!Util::CheckFileExistence(GlobalSettings::GetResourceDirectory() + arg_fileDirectory + arg_filePath)) {
+		return TextureTag();
+	}
 	if (container_textures.ContainValue(arg_fileDirectory + arg_filePath)) {
 		return container_textures.GetTag(arg_fileDirectory + arg_filePath);
 	}
@@ -170,6 +438,9 @@ std::vector < ButiEngine::TextureTag>  ButiEngine::ResourceContainer::LoadTextur
 
 ButiEngine::PixelShaderTag ButiEngine::ResourceContainer::LoadPixelShader(const std::string& arg_filePath, const std::string& arg_fileDirectory)
 {
+	if (!Util::CheckFileExistence(GlobalSettings::GetResourceDirectory() + arg_fileDirectory + arg_filePath+".dx12cps")) {
+		return PixelShaderTag();
+	}
 	if (container_pixelShaders.ContainValue(arg_fileDirectory + arg_filePath)) {
 		return container_pixelShaders.GetTag(arg_fileDirectory + arg_filePath);
 	}
@@ -192,6 +463,9 @@ std::vector<ButiEngine::PixelShaderTag> ButiEngine::ResourceContainer::LoadPixel
 
 ButiEngine::VertexShaderTag ButiEngine::ResourceContainer::LoadVertexShader(const std::string& arg_filePath, const std::string& arg_fileDirectory)
 {
+	if (!Util::CheckFileExistence(GlobalSettings::GetResourceDirectory() + arg_fileDirectory + arg_filePath + ".dx12cps")) {
+		return VertexShaderTag();
+	}
 	if (container_vertexShaders.ContainValue(arg_fileDirectory + arg_filePath)) {
 		return container_vertexShaders.GetTag(arg_fileDirectory + arg_filePath);
 	}
@@ -342,6 +616,9 @@ void ButiEngine::ResourceContainer::UnLoadMesh(MeshTag arg_meshTag)
 
 void ButiEngine::ResourceContainer::UnLoadTexture(TextureTag arg_textureTag)
 {
+	if (arg_textureTag.IsEmpty()) {
+		return;
+	}
 	auto tagName = container_textures.GetIDName(arg_textureTag);
 
 	for (auto itr = vec_filePathAndDirectory_tex.begin(); itr != vec_filePathAndDirectory_tex.end(); itr++) {
@@ -355,6 +632,9 @@ void ButiEngine::ResourceContainer::UnLoadTexture(TextureTag arg_textureTag)
 
 void ButiEngine::ResourceContainer::UnLoadShader(ShaderTag arg_shaderTag)
 {
+	if (arg_shaderTag.IsEmpty()) {
+		return;
+	}
 	auto shaderName = container_shaders.GetIDName(arg_shaderTag);
 
 	for (auto itr = vec_shaderNames.begin(); itr != vec_shaderNames.end(); itr++) {
@@ -369,6 +649,9 @@ void ButiEngine::ResourceContainer::UnLoadShader(ShaderTag arg_shaderTag)
 
 void ButiEngine::ResourceContainer::UnLoadPixelShader(PixelShaderTag arg_shaderTag)
 {
+	if (arg_shaderTag.IsEmpty()) {
+		return;
+	}
 	auto tagName = container_pixelShaders.GetIDName(arg_shaderTag);
 
 	for (auto itr = vec_filePathAndDirectory_ps.begin(); itr != vec_filePathAndDirectory_ps.end(); itr++) {
@@ -382,6 +665,9 @@ void ButiEngine::ResourceContainer::UnLoadPixelShader(PixelShaderTag arg_shaderT
 
 void ButiEngine::ResourceContainer::UnLoadVertexShader(VertexShaderTag arg_shaderTag)
 {
+	if (arg_shaderTag.IsEmpty()) {
+		return;
+	}
 	auto tagName = container_vertexShaders.GetIDName(arg_shaderTag);
 
 	for (auto itr = vec_filePathAndDirectory_vs.begin(); itr != vec_filePathAndDirectory_vs.end(); itr++) {
@@ -395,6 +681,10 @@ void ButiEngine::ResourceContainer::UnLoadVertexShader(VertexShaderTag arg_shade
 
 void ButiEngine::ResourceContainer::UnLoadGeometryShader(GeometryShaderTag arg_shaderTag)
 {
+
+	if (arg_shaderTag.IsEmpty()) {
+		return;
+	}
 	auto tagName = container_geometryShaders.GetIDName(arg_shaderTag);
 
 	for (auto itr = vec_filePathAndDirectory_gs.begin(); itr != vec_filePathAndDirectory_gs.end(); itr++) {
@@ -408,6 +698,9 @@ void ButiEngine::ResourceContainer::UnLoadGeometryShader(GeometryShaderTag arg_s
 
 void ButiEngine::ResourceContainer::UnLoadSound(SoundTag arg_soundTag)
 {
+	if (arg_soundTag.IsEmpty()) {
+		return;
+	}
 	auto tagName = container_sounds.GetIDName(arg_soundTag);
 
 	for (auto itr = vec_filePathAndDirectory_sound.begin(); itr != vec_filePathAndDirectory_sound.end(); itr++) {
@@ -421,6 +714,9 @@ void ButiEngine::ResourceContainer::UnLoadSound(SoundTag arg_soundTag)
 
 void ButiEngine::ResourceContainer::UnLoadModel(ModelTag arg_modelTag)
 {
+	if (arg_modelTag.IsEmpty()) {
+		return;
+	}
 	auto tagName = container_models.GetIDName(arg_modelTag);
 
 	for (auto itr = vec_filePathAndDirectory_model.begin(); itr != vec_filePathAndDirectory_model.end(); itr++) {
@@ -430,6 +726,22 @@ void ButiEngine::ResourceContainer::UnLoadModel(ModelTag arg_modelTag)
 		}
 	}
 	container_models.Remove(arg_modelTag);
+}
+
+void ButiEngine::ResourceContainer::UnLoadMaterial(MaterialTag arg_materialTag)
+{
+	if (arg_materialTag.IsEmpty()) {
+		return;
+	}
+	auto tagName = container_materials.GetIDName(arg_materialTag);
+
+	for (auto itr = vec_filePathAndDirectory_model.begin(); itr != vec_filePathAndDirectory_model.end(); itr++) {
+		if ((*itr) == tagName) {
+			vec_filePathAndDirectory_model.erase(itr);
+			break;
+		}
+	}
+	container_materials.Remove(arg_materialTag);
 }
 
 std::string ButiEngine::ResourceContainer::GetTagNameMesh(MeshTag arg_meshTag)

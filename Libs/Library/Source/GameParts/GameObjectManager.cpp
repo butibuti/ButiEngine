@@ -117,6 +117,7 @@ void ButiEngine::GameObjectManager::Initialize_cereal()
 {
 	auto endItr = vec_gameObjects.end();
 	for (auto itr = vec_gameObjects.begin(); itr != endItr; itr++) {
+		(*itr)->Initialize();
 		(*itr)->SetGameObjectManager(GetThis<GameObjectManager>());
 		(*itr)->Init_RegistBehaviors();
 		(*itr)->Init_RegistGameComponents();
@@ -180,8 +181,8 @@ std::weak_ptr<ButiEngine::GameObject> ButiEngine::GameObjectManager::AddObject(s
 std::weak_ptr<ButiEngine::GameObject> ButiEngine::GameObjectManager::AddObjectFromCereal(std::string filePath, std::shared_ptr<Transform> arg_transform)
 {
 
-	auto gameObject = ObjectFactory::CreateFromCereal<GameObject>(GlobalSettings::GetResourceDirectory()+"GameObject/" +filePath);
-
+	auto gameObject = ObjectFactory::CreateFromCereal<GameObject>(GlobalSettings::GetResourceDirectory()+"GameObject/" +filePath+".gameObject")->Clone();
+	
 	if (arg_transform) {
 		gameObject->transform = arg_transform;
 	}

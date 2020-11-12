@@ -50,6 +50,7 @@ namespace ButiEngine {
             Box_OBB_Static(Vector3 arg_length) {
                 halfLengthes = arg_length / 2;
             }
+            Box_OBB_Static(){}
             inline const Vector3& GetDirect(const UINT index)const {
                 return directs[index];
             }

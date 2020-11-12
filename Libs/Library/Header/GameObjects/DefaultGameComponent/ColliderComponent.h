@@ -14,12 +14,16 @@ namespace ButiEngine {
 			void OnSet()override;
 			void OnUpdate()override;
 			void OnRemove()override;
+			void Start()override;
 			void CollisionStart();
 			void CollisionStop();
 			std::string GetGameComponentName() {
 				return "ColliderComponent";
 			}
 			std::shared_ptr<GameComponent> Clone()override;
+
+			void OnShowUI()override;
+
 			template<class Archive>
 			void serialize(Archive& archive)
 			{

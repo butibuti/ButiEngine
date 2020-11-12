@@ -76,6 +76,9 @@ void ButiEngine::EditScene::UIUpdate()
 		vec_cameras.clear();
 
 		{
+			if (shp_collisionManager) {
+				shp_collisionManager = nullptr;
+			}
 
 			shp_renderer = ObjectFactory::Create<Renderer>(GetThis<IScene>());
 
@@ -282,6 +285,8 @@ void ButiEngine::EditScene::Initialize()
 	shp_renderer = ObjectFactory::Create<Renderer>(GetThis<IScene>());
 
 	shp_soundManager = ObjectFactory::Create<SoundManager>(GetThis<IScene>());
+
+	ActiveCollision(1);
 
 	auto windowSize = GetWindow()->GetSize();
 	std::string fullGameObjectManagerPath = GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation.GetSceneName() + "/objects.gameObjectManager";

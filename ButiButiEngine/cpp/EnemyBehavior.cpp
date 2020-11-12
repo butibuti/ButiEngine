@@ -6,9 +6,6 @@
 
 void ButiEngine::EnemyBehavior::Start()
 {
-	gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->ActiveCollision(true);
-	auto prim = ObjectFactory::Create<Collision::CollisionPrimitive_Box_OBB>(Vector3(2, 3,5), gameObject.lock()->transform);
-	auto collider = gameObject.lock()->AddGameComponent< Collision::ColliderComponent>(prim);
 }
 
 void ButiEngine::EnemyBehavior::OnUpdate()

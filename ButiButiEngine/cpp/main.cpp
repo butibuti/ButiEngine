@@ -5,7 +5,8 @@
 
 #include"Header/GameParts/ResourceContainer.h"
 
-#include"Header/GameObjects/DefaultBehavior/SampleBehavior.h"
+//#include"include/EnemyBehavior.h"
+#include "Header/GameObjects/DefaultGameComponent/ColliderComponent.h"
 using namespace::ButiEngine;
 #ifdef DEBUG
 
@@ -30,10 +31,10 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	std::shared_ptr<ComponentsLoader> componentsLoader = ObjectFactory::CreateFromCereal<ComponentsLoader>(GlobalSettings::GetResourceDirectory()+ "Application/componentLoader.loader");
 
-	//componentsLoader->RemoveBehavior("EnemyBehavior");
+	//componentsLoader->AddBehavior<EnemyBehavior>();
 
-	//componentsLoader->AddBehavior<SampleBehavior>();
-
+	
+	componentsLoader->AddGameComponent<Collision::ColliderComponent>();
 
 	componentsLoader->CreateNameList();
 

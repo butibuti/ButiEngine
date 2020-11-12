@@ -10,16 +10,9 @@ void ButiEngine::PlayerBehavior::Start()
 	initRotate = gameObject.lock()->transform->GetLocalRotation();
 	gameObject.lock()->SetGameObjectTag(GameObjectTagManager::CreateGameObjectTag("Player"));
 	gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->ActiveCollision(true);
-	auto prim= ObjectFactory::Create<Collision::CollisionPrimitive_Box_OBB>(Vector3(2, 3, 5), gameObject.lock()->transform);
-	gameObject.lock()->AddGameComponent< Collision::ColliderComponent>(prim);
 	
-	auto bomb = gameObject.lock()->GetGameObjectManager().lock()->AddObject(ObjectFactory::Create<Transform>(Vector3(0,0,5),Vector3(),Vector3(2,2,2)), "bomb");
-	bomb.lock()->SetGameObjectTag(GameObjectTagManager::CreateGameObjectTag("Bomb"));
-	bomb.lock()->transform->SetBaseTransform(gameObject.lock()->transform, true);
-	bomb.lock()->AddGameComponent<MeshDrawComponent>(gameObject.lock()->GetResourceContainer()->GetMeshTag("Sphere_UV_Normal"), gameObject.lock()->GetResourceContainer()->GetShaderTag("DefaultMesh"), gameObject.lock()->GetResourceContainer()->GetMaterialTag("childMaterial.bma","Material/"));
-	auto spherePrim = ObjectFactory::Create<Collision::CollisionPrimitive_Sphere>(1.0f,bomb.lock()->transform);
-	bomb.lock()->AddGameComponent< Collision::ColliderComponent>(spherePrim);
-
+	auto bomb = gameObject.lock()->GetGameObjectManager().lock()->AddObjectFromCereal("bomb");
+	bomb.lock()->transform->SetBaseTransform( gameObject.lock()->transform,true);
 }
 
 void ButiEngine::PlayerBehavior::OnUpdate()

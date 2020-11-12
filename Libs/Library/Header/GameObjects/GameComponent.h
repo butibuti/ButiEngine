@@ -10,6 +10,7 @@ namespace ButiEngine {
 		void Initialize()override {}
 		void PreInitialize()override {}
 		void Update();
+		virtual void Start(){}
 		void Set(std::weak_ptr<GameObject> arg_wkp_gameObj);
 		void SetIsRemove(bool arg_isRemove) {
 			isRemove = arg_isRemove;

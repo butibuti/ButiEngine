@@ -29,6 +29,9 @@ void ButiEngine::GameObject::Start()
 	for (auto itr = vec_behaviors.begin(); itr != vec_behaviors.end(); itr++) {
 		(*itr)->Start();
 	}
+	for (auto itr = vec_gameComponents.begin(); itr != vec_gameComponents.end(); itr++) {
+		(*itr)->Start();
+	}
 }
 
 void ButiEngine::GameObject::SetActive(bool arg_isActive)
@@ -278,7 +281,7 @@ void ButiEngine::GameObject::UpdateTagName()
 std::shared_ptr<ButiEngine::GameObject> ButiEngine::GameObject::Clone()
 {
 	auto output= ObjectFactory::Create<GameObject>(transform->Clone(), GetGameObjectName());
-
+	output->SetGameObjectTag(gameObjectTag);
 	auto componentsEndItr = vec_gameComponents.end();
 	for (auto itr = vec_gameComponents.begin(); itr != componentsEndItr;itr++) {
 		auto cloneComponent = (*itr)->Clone();

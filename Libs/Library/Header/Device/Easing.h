@@ -1,15 +1,40 @@
 #include "stdafx.h"
 namespace ButiEngine {
+
+
 	namespace Easing {
-        static float EaseInSine(const float x) {
-        return 1 - std::cos((x * DirectX::XM_PI) / 2);
+        enum class EasingType {
+            EaseIn, EaseOut, EaseInOut,
+            EaseInSin, EaseOutSin, EaseInOutSin,
+            EaseInQuad, EaseOutQuad, EaseInOutQuad,
+            EaseInCubic, EaseOutCubic, EaseInOutCubic,
+            EaseInQuart, EaseOutQuart, EaseInOutQuart,
+            EaseInCirc, EaseOutCirc, EaseInOutCirc,
+            EaseInBack, EaseOutBack, EaseInOutBack,
+            EaseInElastic, EaseOutElastic, EaseInOutElastic,
+            EaseInQuint, EaseOutQuint, EaseInOutQuint,
+            EaseInExpo, EaseOutExpo, EaseInOutExpo,
+            Parabola, Liner
+        };
+        static float EaseIn(const float x) {
+            return x * x;
         }
 
-        static float EaseOutSine(const float x) {
-               return std::sin((x * DirectX::XM_PI) / 2);
+        static float EaseOut(const float x) {
+            return x * (2 - x);
         }
-        static float EaseInOutSine(const float x) {
-               return -(std::cos(DirectX::XM_PI * x) - 1) / 2;
+        static float EaseInOut(const float x) {
+            return x * x* (3 - 2 * x);
+        }
+        static float EaseInSin(const float x) {
+            return 1 - std::cos((x * DirectX::XM_PI) / 2);
+        }
+
+        static float EaseOutSin(const float x) {
+            return std::sin((x * DirectX::XM_PI) / 2);
+        }
+        static float EaseInOutSin(const float x) {
+            return -(std::cos(DirectX::XM_PI * x) - 1) / 2;
         }
         static float EaseInQuad(const float x) {
                return x * x;
@@ -126,6 +151,25 @@ namespace ButiEngine {
                 return -(x - 0.5) * (x - 0.5) * 4 + 1;
         }
 
+        static float Liner(const float x) {
+            return x;
+        }
+
+
+       static  float (*EaseFunctions[])(const float) = { EaseIn, EaseOut, EaseInOut,
+                EaseInSin, EaseOutSin, EaseInOutSin,
+                EaseInQuad, EaseOutQuad, EaseInOutQuad,
+                EaseInCubic, EaseOutCubic, EaseInOutCubic,
+                EaseInQuart, EaseOutQuart, EaseInOutQuart,
+                EaseInCirc, EaseOutCirc, EaseInOutCirc,
+                EaseInBack, EaseOutBack, EaseInOutBack,
+                EaseInElastic, EaseOutElastic, EaseInOutElastic,
+                EaseInQuint, EaseOutQuint, EaseInOutQuint,
+                EaseInExpo, EaseOutExpo, EaseInOutExpo,
+                Parabola, Liner };
+        static float GetEase(float x,EasingType type) {
+            return (EaseFunctions)[(UINT)type](x);
+        }
 
 	}
 

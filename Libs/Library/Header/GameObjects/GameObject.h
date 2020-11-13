@@ -129,6 +129,7 @@ namespace ButiEngine {
 		}
 
 		std::weak_ptr<GameObjectManager> GetGameObjectManager();
+		std::weak_ptr<Application> GetApplication();
 		std::shared_ptr<ResourceContainer> GetResourceContainer();
 		std::shared_ptr<GraphicDevice> GetGraphicDevice();
 

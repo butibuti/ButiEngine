@@ -393,6 +393,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\Particle_Standard.h">
       <Filter>header\GameObjects\DefaultGameComponent</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\SplineCurveMover.h">
+      <Filter>header\GameObjects\DefaultGameComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\TransformAnimation.h">
+      <Filter>header\GameObjects\DefaultGameComponent</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Common\Camera.cpp">
@@ -648,6 +654,12 @@
       <Filter>source\GameObjects\DefaultGameComponent</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\DefaultGameComponent\Particle_Standard.cpp">
+      <Filter>source\GameObjects\DefaultGameComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\DefaultGameComponent\SplineCurveMover.cpp">
+      <Filter>source\GameObjects\DefaultGameComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\DefaultGameComponent\TransformAnimation.cpp">
       <Filter>source\GameObjects\DefaultGameComponent</Filter>
     </ClCompile>
   </ItemGroup>

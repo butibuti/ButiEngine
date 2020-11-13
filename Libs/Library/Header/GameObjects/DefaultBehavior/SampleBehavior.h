@@ -2,8 +2,11 @@
 #include"Header/GameObjects/Behavior.h"
 namespace ButiEngine {
 
+
+
 	class SampleBehavior:public Behavior
 	{
+	public:
 		std::string GetBehaviorName()override {
 			return "SampleBehavior";
 		}
@@ -17,12 +20,14 @@ namespace ButiEngine {
 			archive(isActive);
 		}
 		void OnShowUI()override;
+		void PositionSet();
 	private:
+		
+		SplineCurve splineCurve;
 		float t = 0;
-		std::shared_ptr<CBuffer<TestGSVariable> >cb_barabara;
+		float speed = 0.0025f;;
 	};
 
 }
 
-
-//BUTI_REGIST_BEHAVIOR(ButiEngine::SampleBehavior);
+BUTI_REGIST_BEHAVIOR(ButiEngine::SampleBehavior);

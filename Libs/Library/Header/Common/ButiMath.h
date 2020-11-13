@@ -268,7 +268,7 @@ namespace ButiEngine {
 
 		inline const Vector2 operator -() const
 		{
-			return Vector2();
+			return -1*(*this);
 		}
 
 		inline Vector2& Floor(int len)
@@ -469,8 +469,7 @@ namespace ButiEngine {
 
 		inline const Vector3 operator -() const
 		{
-			Vector3 temp(-1.0f, -1.0f, -1.0f);
-			return (Vector3)XMVectorSubtract(*this, temp);
+			return  -1 * (*this);
 		}
 
 		inline const bool operator==(const Vector3& other)const {
@@ -727,8 +726,8 @@ namespace ButiEngine {
 
 		inline const Vector4 operator -() const
 		{
-			Vector4 temp(1.0f, 1.0f, 1.0f, 1.0f);
-			return (Vector4)XMVectorSubtract(*this, temp);
+			
+			return -1*(*this);
 		}
 
 
@@ -1511,6 +1510,142 @@ namespace ButiEngine {
 		QuadraticBezierCurve2D curveABC;
 		QuadraticBezierCurve2D curveBCD;
 		Segment2D cubic;
+	};
+
+
+	struct SplineCurve {
+	public:
+		SplineCurve() {
+			for (int i = 0; i < 6; i++)
+				vec_points.push_back(Vector3(0, 0, 0));
+			Initialize();
+		}
+		SplineCurve(const std::vector<Vector3>& arg_vec_points) {
+			vec_points = arg_vec_points;
+			Initialize();
+		}
+		SplineCurve(Vector3 start, Vector3 end, const std::vector<Vector3>& arg_vec_points) {
+			vec_points.push_back(start);
+			vec_points.push_back(start);
+
+			std::copy(arg_vec_points.begin(), arg_vec_points.end(), std::back_inserter(vec_points));
+
+			vec_points.push_back(end);
+			vec_points.push_back(end);
+			Initialize();
+		}
+		SplineCurve(Vector3 startAndEnd, std::vector<Vector3> arg_vec_points) {
+			vec_points.push_back(startAndEnd);
+			vec_points.push_back(startAndEnd);
+
+			std::copy(arg_vec_points.begin(), arg_vec_points.end(), std::back_inserter(vec_points));
+
+			vec_points.push_back(startAndEnd);
+			vec_points.push_back(startAndEnd);
+			Initialize();
+		}
+
+		Vector3 GetPoint(float t) {
+			{
+				UINT itr = (t / unit);
+
+				if (itr >= vec_points.size() - 3) {
+					itr = vec_points.size() - 4;
+				}
+
+
+				return CatmullRom((t - itr * unit) / unit, vec_points[itr], vec_points[itr + 1], vec_points[itr + 2], vec_points[itr + 3]);
+
+			}
+			t += 0.01f;
+
+			if (t > 1.0f) {
+				t = 0;
+			}
+
+		}
+
+		bool ShowUI() {
+			bool ret = false;
+			if (ImGui::TreeNode("SplineCurve Editor")) {
+
+				ImGui::BulletText("StartPoint");
+
+				if (ImGui::DragFloat3("##startdrag", &vec_points[0].x, 0.01f, -500, 500)) {
+					vec_points[1] = vec_points[0];
+					ret = true;
+				}
+				ImGui::BulletText("ControllPoints");
+				for (int i = 2; i < vec_points.size() - 2; i++) {
+					if (ImGui::DragFloat3(("##controlldrag" + std::to_string(i)).c_str(), &vec_points[i].x, 0.01f, -500, 500))
+						ret = true;
+					ImGui::SameLine();
+
+					if (ImGui::Button(("Insert##" + std::to_string(i)).c_str())) {
+						auto itr = vec_points.begin();
+						itr += i;
+						vec_points.insert(itr, Vector3(vec_points[i]));
+						Initialize();
+						ret = true;
+					}
+					if (vec_points.size() > 6) {
+						ImGui::SameLine();
+						if (ImGui::Button(("Delete##" + std::to_string(i)).c_str())) {
+							auto itr = vec_points.begin();
+							itr += i;
+							vec_points.erase(itr);
+							i--;
+							Initialize();
+							ret = true;
+						}
+					}
+
+				}
+
+
+				ImGui::BulletText("EndPoint");
+
+
+				if (ImGui::DragFloat3("##enddrag", &vec_points[vec_points.size() - 2].x, 0.01f, -500, 500)) {
+					vec_points[vec_points.size() - 1] = vec_points[vec_points.size() - 2]; ret = true;
+				}
+
+				if (ImGui::Button("Loop")) {
+					vec_points[0] = vec_points[vec_points.size() - 2];
+					vec_points[1] = vec_points[vec_points.size() - 2];
+					ret = true;
+				}
+
+				ImGui::TreePop();
+
+			}
+			return ret;
+		}
+
+		void Initialize() {
+			unit = 1.0f / (vec_points.size() - 3);
+		}
+
+
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(vec_points);
+			archive(unit);
+		}
+
+	private:
+		static Vector3 CatmullRom(float t, Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3) {
+			Vector3 a = -p0 + 3.0f * p1 - 3.0f * p2 + p3;
+			Vector3 b = 2.0f * p0 - 5.0f * p1 + 4.0f * p2 - p3;
+			Vector3 c = -p0 + p2;
+			Vector3 d = 2.0f * p1;
+
+			return 0.5f * ((a * t * t * t) + (b * t * t) + (c * t) + d);
+		}
+
+		std::vector<Vector3> vec_points;
+		float unit = 0.0f;
 	};
 
 	////////////////////////////////////////////////////

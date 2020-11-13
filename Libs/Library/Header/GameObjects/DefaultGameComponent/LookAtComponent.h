@@ -19,6 +19,7 @@ namespace ButiEngine {
 			archive(shp_lookTarget);
 			archive(isActive);
 		}
+		void OnShowUI();
 	private:
 		std::shared_ptr<Transform> shp_lookTarget;
 	};

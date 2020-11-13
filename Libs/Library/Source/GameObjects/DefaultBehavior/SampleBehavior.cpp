@@ -4,15 +4,17 @@
 #include "..\..\..\Header\GameObjects\DefaultGameComponent\ModelDrawComponent.h"
 #include"Header/GameParts/ResourceContainer.h"
 
-
-BUTI_REGIST_BEHAVIOR(ButiEngine::SampleBehavior);
-
 void ButiEngine::SampleBehavior::OnUpdate()
 {
-	ImGui::Begin((gameObject.lock()->GetGameObjectName() + ":BaraBaraSlider").c_str());
-	
-	cb_barabara->ShowUI();
-	ImGui::End();
+	PositionSet();
+
+	t += 0.0025f;
+
+	if (t > 1.0f) {
+	t = 0;
+	}
+
+
 }
 
 void ButiEngine::SampleBehavior::OnSet()
@@ -21,13 +23,9 @@ void ButiEngine::SampleBehavior::OnSet()
 
 void ButiEngine::SampleBehavior::Start()
 {
-	auto drawInfo = ObjectFactory::Create<DrawInformation>();
-	cb_barabara = ObjectFactory::Create<CBuffer_Dx12<TestGSVariable>>(5);
-	cb_barabara->SetExName("BaraBara");
-	drawInfo->vec_exCBuffer.push_back(cb_barabara);
-	gameObject.lock()->AddGameComponent<ModelDrawComponent>(
-		gameObject.lock()->GetResourceContainer()->GetModelTag("hikari.b3m", "Model/aomoti式_ウルトラマンヒカリ/"), gameObject.lock()->GetResourceContainer()->GetShaderTag("PMXModel_GS"), drawInfo
-		);
+	//splineCurve = SplineCurve(Vector3(0,6,-10), { Vector3(-10,5 , -1),Vector3(-5, 2,10),Vector3(5, 3, 5)});
+	
+
 }
 
 std::shared_ptr<ButiEngine::Behavior> ButiEngine::SampleBehavior::Clone()
@@ -37,5 +35,20 @@ std::shared_ptr<ButiEngine::Behavior> ButiEngine::SampleBehavior::Clone()
 
 void ButiEngine::SampleBehavior::OnShowUI()
 {
-	ImGui::SliderFloat("Time", &t, 0, 1.0f);
+	ImGui::BulletText("Time");
+	if (ImGui::SliderFloat("##t", &t, 0, 1)) {
+		PositionSet();
+	}
+	ImGui::BulletText("Speed");
+	ImGui::DragFloat("##speed",&speed,0,1);
+	if (splineCurve.ShowUI()) {
+		PositionSet();
+	}
 }
+
+void ButiEngine::SampleBehavior::PositionSet()
+{
+
+	gameObject.lock()->transform->SetLocalPosition(splineCurve.GetPoint(t));
+}
+

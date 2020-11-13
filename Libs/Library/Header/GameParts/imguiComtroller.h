@@ -68,6 +68,10 @@ namespace ButiEngine {
 		void SetResourceTag(PixelShaderTag arg_tag);
 		void SetResourceTag(GeometryShaderTag arg_tag);
 
+		std::shared_ptr<IObject> GetDraggingObject() {
+			return shp_draggingObject;
+		}
+
 		MeshTag GetMeshTag() {
 			return currentMeshTag;
 		}

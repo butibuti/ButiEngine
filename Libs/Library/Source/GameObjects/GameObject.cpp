@@ -263,6 +263,11 @@ std::weak_ptr< ButiEngine::GameObjectManager> ButiEngine::GameObject::GetGameObj
 	return wkp_gameObjManager;
 }
 
+std::weak_ptr<ButiEngine::Application> ButiEngine::GameObject::GetApplication()
+{
+	return  wkp_gameObjManager.lock()->GetApplication();
+}
+
 std::shared_ptr<ButiEngine::ResourceContainer> ButiEngine::GameObject::GetResourceContainer()
 {
 	return wkp_gameObjManager.lock()->GetScene().lock()->GetSceneManager().lock()->GetApplication().lock()->GetResourceContainer();

@@ -51,12 +51,17 @@ void ButiEngine::GameObjectManager::ShowUI()
 {
 	ImGui::Begin("Hieralchy");
 
-
+	std::shared_ptr<GameObject> shp_dragging = nullptr;
 
 
 	for (auto itr = vec_gameObjects.begin(); itr != vec_gameObjects.end();) {
 		if (ImGui::Button((*itr)->GetGameObjectName().c_str())) {
 			selectedGameObject = (*itr);
+		}
+
+		if (ImGui::IsItemActive()) {
+			ImGui::GetForegroundDrawList()->AddLine(GetApplication().lock()->GetGUIController()->GetGUIIO().MouseClickedPos[0], GetApplication().lock()->GetGUIController()->GetGUIIO().MousePos, ImGui::GetColorU32(ImGuiCol_Button), 4.0f);
+			shp_dragging = *itr;
 		}
 
 		if (selectedGameObject.lock() == (*itr)) {
@@ -99,6 +104,8 @@ void ButiEngine::GameObjectManager::ShowUI()
 	if (ImGui::Button("Add New")) {
 		AddObject(ObjectFactory::Create<Transform>());
 	}
+
+	GetApplication().lock()->GetGUIController()->SetDraggingObject(shp_dragging);
 
 	ImGui::End();
 
@@ -304,6 +311,11 @@ void ButiEngine::GameObjectManager::Start()
 	for (auto itr = vec_gameObjects.begin(); itr != endItr; itr++) {
 		(*itr)->Start();
 	}
+}
+
+std::weak_ptr< ButiEngine::Application> ButiEngine::GameObjectManager::GetApplication()
+{
+	return wkp_scene.lock()->GetSceneManager().lock()->GetApplication().lock();
 }
 
 void ButiEngine::GameObjectManager::UnRegistGameObject(std::shared_ptr<GameObject> gameObject)

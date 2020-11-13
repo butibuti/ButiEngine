@@ -60,6 +60,9 @@ void ButiEngine::ButiimguiController::Release()
 
 void ButiEngine::ButiimguiController::SetDraggingObject(std::shared_ptr<IObject> arg_shp_draggingObject)
 {
+    if (befIo.MouseDown[0]) {
+        return;
+    }
     shp_draggingObject = arg_shp_draggingObject;
 }
 

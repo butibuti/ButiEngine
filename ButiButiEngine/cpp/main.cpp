@@ -6,8 +6,10 @@
 #include"Header/GameParts/ResourceContainer.h"
 
 //#include"include/EnemyBehavior.h"
-#include "Header/GameObjects/DefaultGameComponent/ColliderComponent.h"
+//#include "Header/GameObjects/DefaultGameComponent/ColliderComponent.h"
+#include "Header/GameObjects/DefaultGameComponent/TransformAnimation.h"
 using namespace::ButiEngine;
+
 #ifdef DEBUG
 
 int main(){
@@ -31,15 +33,15 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	std::shared_ptr<ComponentsLoader> componentsLoader = ObjectFactory::CreateFromCereal<ComponentsLoader>(GlobalSettings::GetResourceDirectory()+ "Application/componentLoader.loader");
 
-	//componentsLoader->AddBehavior<EnemyBehavior>();
+	componentsLoader->AddGameComponent<TransformAnimation>();
 
 	
-	componentsLoader->AddGameComponent<Collision::ColliderComponent>();
 
 	componentsLoader->CreateNameList();
 
-	app->GetSceneManager()->SetScene_Init("sampleScene", ObjectFactory::Create<EditScene>(app->GetSceneManager(), SceneInformation("SampleScene"), componentsLoader));
-	//app->GetSceneManager()->SetScene_Init("sampleScene", ObjectFactory::Create<Scene>(app->GetSceneManager(),SceneInformation("SampleScene")));
+	app->GetSceneManager()->SetScene_Init("sampleScene", ObjectFactory::Create<EditScene>(app->GetSceneManager(), SceneInformation("EaseScene"), componentsLoader));
+	//app->GetSceneManager()->SetScene_Init("sampleScene", ObjectFactory::Create<EditScene>(app->GetSceneManager(), SceneInformation("SampleScene"), componentsLoader));
+	//app->GetSceneManager()->SetScene_Init("sampleScene", ObjectFactory::Create<Scene>(app->GetSceneManager(),SceneInformation("MathScene")));
 
 	int returnCode = app->Run();
 

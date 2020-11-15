@@ -1,11 +1,12 @@
 #include "stdafx.h"
 #include"Header/Device/DescriptorHeapManager.h"
 #include"Header/Device/GraphicResourceUtil_Dx12.h"
+#include "Header/GameParts/ResourceContainer.h"
 
 ButiEngine::DescriptorHeapManager::DescriptorHeapManager( std::weak_ptr<GraphicDevice_Dx12> arg_wkp_graphicDevice,const UINT arg_max , const UINT arg_addUint )
 {
 	wkp_graphicDevice= arg_wkp_graphicDevice;
-	maxCbv = arg_max;
+	maxCbv = 50;//arg_max;
 	addUnit = arg_addUint;
 }
 
@@ -256,14 +257,21 @@ void ButiEngine::DescriptorHeapManager::AddHeapRange()
 	desc.Width = size;
 
 	wkp_graphicDevice.lock()->GetDevice().CreateCommittedResource(&prop, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&constantBufferUploadHeap));
-	buffer* mapped;
+	buffer* mapped ;
 	D3D12_RANGE readRange = {};
 	HRESULT hr = constantBufferUploadHeap->Map(0, &readRange, (void**)&mapped);
 
-	ReCreateConstantBuffer();
+	//memcpy(mapped, mappedConstantBuffer, cbvSize);
 
-	memcpy(mapped, mappedConstantBuffer, cbvSize);
-	cbvSize = size;
+	 
 
 	mappedConstantBuffer = mapped;
+
+	auto container = wkp_graphicDevice.lock()->GetApplication().lock()->GetResourceContainer();
+	if(container)
+	container->MaterialUpdate();
+
+	ReCreateConstantBuffer();
+	cbvSize = size;
+
 }

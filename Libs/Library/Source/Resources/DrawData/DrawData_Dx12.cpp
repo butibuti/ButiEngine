@@ -167,7 +167,7 @@ void ButiEngine::DrawData_Dx12::CreatePipeLineState(const UINT arg_exCBuffer)
 
 	rasterizerStateDesc.CullMode = (D3D12_CULL_MODE)shp_drawInfo->drawSettings.cullMode;
 	rasterizerStateDesc.FillMode =shp_drawInfo->drawSettings.isFill;
-
+	//rasterizerStateDesc.MultisampleEnable = true;
 	auto pipeLineTopology = shp_drawInfo->drawSettings.topologyType;
 	if (pipeLineTopology == TopologyType::triangleList) {
 		pipeLineTopology = TopologyType::triangle;
@@ -191,7 +191,7 @@ void ButiEngine::DrawData_Dx12::BufferUpdate()
 	shp_worldMatrixUpdater->WorldMatrixUpdate();
 	cbuffer->Get().View = wkp_graphicDevice.lock()->GetCameraViewMatrix();
 	cbuffer->Get().Projection = wkp_graphicDevice.lock()->GetProjectionMatrix();
-	
+	cbuffer->Get().MVP = (XMMATRIX)cbuffer->Get().Projection * (XMMATRIX)cbuffer->Get().View * cbuffer->Get().World;
 
 	cbuffer->Update();
 

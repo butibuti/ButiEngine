@@ -43,6 +43,14 @@ void ButiEngine::LookAtComponent::OnShowUI()
 			shp_lookTarget = nullptr;
 		}
 	}
+	ImGui::SameLine();
+	if (ImGui::Button("Attach New")) {
+		if(!shp_lookTarget)
+		shp_lookTarget = ObjectFactory::Create<Transform>();
+		else {
+			shp_lookTarget = shp_lookTarget->Clone();
+		}
+	}
 
 	if (ImGui::IsWindowHovered())
 	{
@@ -57,4 +65,10 @@ void ButiEngine::LookAtComponent::OnShowUI()
 
 	}
 	ImGui::EndChild();
+	if (shp_lookTarget) {
+
+		shp_lookTarget->ShowUI();
+
+	}
+
 }

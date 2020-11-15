@@ -92,6 +92,8 @@ namespace ButiEngine {
 		std::string GetTagNameMaterial(MaterialTag arg_materiallTag);
 		void Release();
 
+		void MaterialUpdate();
+
 		MeshTag GetMeshTag(const std::string& arg_key, const std::string& arg_fileDirectory = "");
 		TextureTag GetTextureTag(const std::string& arg_key, const std::string& arg_fileDirectory = "");
 		ShaderTag GetShaderTag(const std::string& arg_key);

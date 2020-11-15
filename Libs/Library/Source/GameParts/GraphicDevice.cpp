@@ -1,3 +1,4 @@
+#pragma once
 #include"stdafx.h"
 #include "..\..\Header\GameParts\GraphicDevice.h"
 
@@ -17,6 +18,16 @@ ButiEngine::Matrix4x4 ButiEngine::GraphicDevice::GetProjectionMatrix()
 ButiEngine::Matrix4x4 ButiEngine::GraphicDevice::GetCameraViewMatrix()
 {
 	return viewMatrix;
+}
+
+const ButiEngine::Vector3& ButiEngine::GraphicDevice::GetCameraPos()
+{
+	return cameraPos;
+}
+
+void ButiEngine::GraphicDevice::SetCameraPos(const Vector3& arg_pos)
+{
+	cameraPos = arg_pos;
 }
 
 ButiEngine::Matrix4x4 ButiEngine::GraphicDevice::GetRawViewMatrix()

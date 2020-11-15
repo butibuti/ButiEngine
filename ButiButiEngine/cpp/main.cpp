@@ -39,9 +39,9 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	componentsLoader->CreateNameList();
 
-	app->GetSceneManager()->SetScene_Init("sampleScene", ObjectFactory::Create<EditScene>(app->GetSceneManager(), SceneInformation("EaseScene"), componentsLoader));
+	app->GetSceneManager()->SetScene_Init("sampleScene", ObjectFactory::Create<EditScene>(app->GetSceneManager(), SceneInformation("SampleScene"), componentsLoader));
 	//app->GetSceneManager()->SetScene_Init("sampleScene", ObjectFactory::Create<EditScene>(app->GetSceneManager(), SceneInformation("SampleScene"), componentsLoader));
-	//app->GetSceneManager()->SetScene_Init("sampleScene", ObjectFactory::Create<Scene>(app->GetSceneManager(),SceneInformation("MathScene")));
+	//app->GetSceneManager()->SetScene_Init("sampleScene", ObjectFactory::Create<Scene>(app->GetSceneManager(),SceneInformation("EaseScene")));
 
 	int returnCode = app->Run();
 

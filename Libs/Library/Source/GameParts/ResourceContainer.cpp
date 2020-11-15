@@ -802,6 +802,15 @@ void ButiEngine::ResourceContainer::Release()
 	container_motions.Clear();
 }
 
+void ButiEngine::ResourceContainer::MaterialUpdate()
+{
+	auto ref_materials = container_materials.GetResources();
+	auto endItr = ref_materials.end();
+	for (auto itr = ref_materials.begin(); itr !=endItr; itr++) {
+		(*itr)->Update();
+	}
+}
+
 ButiEngine::MeshTag ButiEngine::ResourceContainer::GetMeshTag(const std::string& arg_key, const std::string& arg_fileDirectory)
 {
 	return container_meshes.GetTag(arg_fileDirectory + arg_key);

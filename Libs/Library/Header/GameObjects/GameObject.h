@@ -91,6 +91,25 @@ namespace ButiEngine {
 
 		std::shared_ptr<GameComponent> GetGameComponent(const std::string& arg_gameComponentName);
 
+
+		template <typename T>
+		std::shared_ptr<T> GetGameComponent() {
+			std::string arg_gameComponentName = ObjectFactory::Create<T>()->GetGameComponentName();
+
+			auto ret = GetGameComponent(arg_gameComponentName);
+
+			return ret->GetThis<T>();
+		}
+
+		template <typename T>
+		std::shared_ptr<T> GetBehavior() {
+			std::string arg_gameComponentName = ObjectFactory::Create<T>()->GetBehaviorName();
+
+			auto ret = GetBehavior(arg_gameComponentName);
+
+			return ret->GetThis<T>();
+		}
+
 		void RemoveBehavior(const std::string& arg_key);
 
 		void RemoveGameComponent(const std::string& arg_key);

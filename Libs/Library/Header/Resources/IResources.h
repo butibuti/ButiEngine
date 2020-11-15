@@ -97,6 +97,7 @@ namespace ButiEngine {
 		virtual std::shared_ptr<IResource_Texture> GetSphereTexture() = 0;
 		virtual TextureTag GetSphereTextureTag() = 0;
 		virtual TextureTag GetTextureTag() = 0;
+		virtual void Update() = 0;
 	};
 	class IResource_Mesh :public IObject {
 	public:

@@ -110,9 +110,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\Resource_Texture.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\Resource_Texture_Dx12.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\ShaderVariable.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\ShaderVariable_Color.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\ShaderVariable_Gradation.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\ShaderVariable_Gradation_LineMove.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\Sound.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\Vertex.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\WaveDatas.h" />

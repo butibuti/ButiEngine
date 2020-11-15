@@ -23,14 +23,17 @@ namespace ButiEngine {
 		}
 
 		void OnShowUI()override;
-		
+
+		void OnCollisionEnter(std::weak_ptr<GameObject> arg_other)override;
 
 	private:
 		float speed;
 		float controllPase;
 		float inertiaMinorPase;
+		int hp = 5;
 		Vector3 inertia;
 		Vector3 initPos;
+		Vector3 moveForce;
 		Matrix4x4 initRotate;
 	};
 }

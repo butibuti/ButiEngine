@@ -8,6 +8,7 @@ namespace ButiEngine {
 		Matrix4x4 World;
 		Matrix4x4 View;
 		Matrix4x4 Projection;
+		Matrix4x4 MVP;
 		ShaderVariable() {
 			memset(this, 0, sizeof(ShaderVariable));
 		};
@@ -17,6 +18,7 @@ namespace ButiEngine {
 			archive(World);
 			archive(View);
 			archive(Projection);
+			archive(MVP);
 		}
 		bool ShowUI() { return false; }
 	};
@@ -25,6 +27,7 @@ namespace ButiEngine {
 	struct Fog {
 
 		Vector4 fogColor;
+		Vector4 cameraPos;
 		Vector2 fogCoord;
 		bool ShowUI() { return false; }
 
@@ -32,6 +35,7 @@ namespace ButiEngine {
 		void serialize(Archive& archive)
 		{
 			archive(fogColor);
+			archive(cameraPos);
 			archive(fogCoord);
 		}
 	};

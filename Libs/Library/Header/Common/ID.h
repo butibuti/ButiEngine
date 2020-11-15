@@ -14,6 +14,9 @@ namespace ButiEngine {
 		bool operator == (const ID& other) {
 			return *other.id == *id;
 		}
+		bool operator != (const ID& other) {
+			return *other.id != *id;
+		}
 		bool IsEmpty() const {
 			return id == nullptr;
 		}
@@ -145,6 +148,10 @@ namespace ButiEngine {
 				}
 			}
 			return out;
+		}
+
+		const std::vector< std::shared_ptr<T>>& GetResources() {
+			return vec_p_resource;
 		}
 
 	private:

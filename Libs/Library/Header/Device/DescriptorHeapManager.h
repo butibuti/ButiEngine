@@ -17,9 +17,9 @@ namespace ButiEngine {
 	};
 	class DescriptorHeapManager
 	{
-		const UINT DescriptorHeapSize = 1000;
+		const UINT DescriptorHeapSize = 5000;
 	public:
-		DescriptorHeapManager(std::weak_ptr<GraphicDevice_Dx12> arg_wkp_graphicDevice,const UINT arg_max=50,const UINT arg_addUint= 100);
+		DescriptorHeapManager(std::weak_ptr<GraphicDevice_Dx12> arg_wkp_graphicDevice,const UINT arg_max=100,const UINT arg_addUint= 100);
 		void Initialize(ID3D12Device& device);
 
 		HandleInformation GetSamplerHandle(const UINT key);

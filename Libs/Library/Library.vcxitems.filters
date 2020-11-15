@@ -138,15 +138,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\ShaderVariable.h">
       <Filter>header\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\ShaderVariable_Color.h">
-      <Filter>header\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\ShaderVariable_Gradation.h">
-      <Filter>header\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\ShaderVariable_Gradation_LineMove.h">
-      <Filter>header\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\Vertex.h">
       <Filter>header\Resources</Filter>
     </ClInclude>

@@ -29,11 +29,42 @@ std::shared_ptr<ButiEngine::GameComponent> ButiEngine::TransformAnimation::Clone
     ret->t = t;
     ret->speed = speed;
     ret->direction = direction;
+    ret->easeType = easeType;
     return ret;
 }
 
 void ButiEngine::TransformAnimation::OnShowUI()
 {
+    ImGui::BulletText("Time");
+  
+    if (ImGui::SliderFloat("##time", &t, 0.0, 1.0f)) {
+        PositionSet();
+    }
+    ImGui::BulletText("Speed");
+
+    if (ImGui::DragFloat("##speed", &speed, 0.0005f, -500, 500,"%.4f")) {
+        PositionSet();
+    }
+
+    ImGui::Checkbox("IsLoop", &isReverse);
+
+    ImGui::Text(Easing::EasingTypeNames[(int)easeType].c_str());
+
+    if (ImGui::ArrowButton("##EaseType_UP", ImGuiDir_Up)) {
+        easeType =((Easing::EasingType)(((int)easeType)+ 1));
+        if ((int)easeType >(int) Easing::EasingType::Liner) {
+            easeType = Easing::EasingType::Liner;
+        }
+    }
+    ImGui::SameLine();
+    if (ImGui::ArrowButton("##EaseType_Down", ImGuiDir_Down)) {
+
+        easeType = ((Easing::EasingType)(((int)easeType) -1));
+        if ((int)easeType < 0) {
+            easeType = Easing::EasingType::EaseIn;
+        }
+    }
+
     if (ImGui::TreeNode("InitTransform")) {
         if (shp_initTransform) {
             shp_initTransform->ShowUI();
@@ -97,7 +128,7 @@ void ButiEngine::TransformAnimation::PositionSet()
     if (!gameObject.lock()) {
         return;
     }
-    gameObject.lock()->transform->SetWorldPosition(shp_initTransform->GetWorldPosition()+shp_targetTransform->GetWorldPosition()*Easing::GetEase(t,easeType));
+    gameObject.lock()->transform->SetWorldPosition(shp_initTransform->GetWorldPosition()+(shp_targetTransform->GetWorldPosition()-shp_initTransform->GetWorldPosition())*Easing::GetEase(t,easeType));
 
 }
 

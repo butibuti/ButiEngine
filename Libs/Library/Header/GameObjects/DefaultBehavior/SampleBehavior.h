@@ -23,9 +23,7 @@ namespace ButiEngine {
 		void PositionSet();
 	private:
 		
-		SplineCurve splineCurve;
-		float t = 0;
-		float speed = 0.0025f;;
+		int t = 0;
 	};
 
 }

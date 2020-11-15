@@ -3,6 +3,14 @@
 #include "..\..\Header\GameParts\Renderer.h"
 #include"Header/GameParts/ResourceContainer.h"
 
+ButiEngine::Vector2 ComputeFogCoord(float start, float end)
+{
+	return ButiEngine::Vector2(
+		end / (end - start),
+		-1.0f / (end - start)
+	);
+}
+
 ButiEngine::Renderer::Renderer(std::weak_ptr<IScene> arg_wkp_iscene)
 {
 	wkp_iScene = arg_wkp_iscene;
@@ -17,8 +25,11 @@ void ButiEngine::Renderer::Initialize()
 	CBuffer_fog = ObjectFactory::Create<CBuffer_Dx12<Fog>>(2);
 
 	CBuffer_fog->SetExName("FogParameter");
+	CBuffer_fog->Get().fogColor = Vector4(100.0f/256.0f,149.0f/256.0f , 247.0f/256.0f, 0.0f);
+	CBuffer_fog->Get().fogCoord = ComputeFogCoord(25.0f,60.0f);
 	CBuffer_fog->SetGraphicDevice(wkp_graphicDevice.lock());
 	CBuffer_fog->CreateBuffer();
+
 	AddLayer();
 }
 void ButiEngine::Renderer::Update()
@@ -34,6 +45,8 @@ void ButiEngine::Renderer::RenderingStart()
 
 void ButiEngine::Renderer::Rendering(const UINT arg_layer)
 {
+	CBuffer_fog->Get().cameraPos = Vector4(wkp_graphicDevice.lock()->GetCameraPos());
+	CBuffer_fog->Update();
 	auto drawObjects = vec_drawLayers.at(arg_layer);
 	ZSort(drawObjects);
 	auto endDrawItr = drawObjects.end();

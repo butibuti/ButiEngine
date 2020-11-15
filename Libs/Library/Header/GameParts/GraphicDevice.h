@@ -105,6 +105,8 @@ namespace ButiEngine {
 		virtual void ClearDepthStancil(const float arg_depth) = 0;
 		Matrix4x4 GetProjectionMatrix();
 		Matrix4x4 GetCameraViewMatrix();
+		const Vector3& GetCameraPos();
+		void SetCameraPos(const Vector3& arg_pos);
 		Matrix4x4 GetRawViewMatrix();
 		std::weak_ptr<Application> GetApplication();
 		void SetProjectionMatrix(const Matrix4x4& arg_projectionMatrix);
@@ -144,7 +146,8 @@ namespace ButiEngine {
 		Matrix4x4 viewMatrix_billBoardZ;
 		Matrix4x4 rawViewMatrix;
 
-		Vector4 color=Vector4(0,1,0,1);
+		Vector4 color = Vector4(0, 1, 0, 1);
+		Vector3 cameraPos;
 
 		float clearColor[4] = { color.x, color.y, color.z, color.w };
 

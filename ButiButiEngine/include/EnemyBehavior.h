@@ -10,7 +10,7 @@ namespace ButiEngine {
 			return "EnemyBehavior";
 		}
 
-		void OnCollision(std::weak_ptr<GameObject> arg_other)override;
+		void OnCollisionEnter(std::weak_ptr<GameObject> arg_other)override;
 
 		template<class Archive>
 		void serialize(Archive& archive)
@@ -23,8 +23,10 @@ namespace ButiEngine {
 		std::shared_ptr<Behavior> Clone()override {
 			return ObjectFactory::Create<EnemyBehavior>();
 		}
+		void OnShowUI()override;
 	private:
-		Vector3 velocity;
+		Vector3 velocity = Vector3();
+		Vector3 moveForce=Vector3();
 		float speed;
 		UINT hp=0;
 

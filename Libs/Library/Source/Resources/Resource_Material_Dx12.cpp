@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include"Header/Resources/Resource_Material_Dx12.h"
+#include "..\..\Header\Resources\Resource_Material_Dx12.h"
 
 ButiEngine::Resource_Material_Dx12::Resource_Material_Dx12(const MaterialVariable & arg_var, const TextureTag & arg_textureTag, std::weak_ptr<GraphicDevice_Dx12> arg_wkp_graphicDevice) :Resource_Material(arg_var)
 {
@@ -36,5 +37,10 @@ void ButiEngine::Resource_Material_Dx12::Attach(std::shared_ptr<IRenderer> arg_s
 {
 	arg_shp_renderer->TextureAttach(textureTag,0);
 	materialBuffer->Attach();
+}
+
+void ButiEngine::Resource_Material_Dx12::Update()
+{
+	materialBuffer->Update();
 }
 

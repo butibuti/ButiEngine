@@ -3,18 +3,31 @@
 #include "..\..\..\Header\GameObjects\DefaultBehavior\SampleBehavior.h"
 #include "..\..\..\Header\GameObjects\DefaultGameComponent\ModelDrawComponent.h"
 #include"Header/GameParts/ResourceContainer.h"
+#include "Header/GameObjects/DefaultGameComponent/TransformAnimation.h"
 
 void ButiEngine::SampleBehavior::OnUpdate()
 {
-	PositionSet();
 
-	t += 0.0025f;
+	if ( t %20==0)
+	{
+		auto add = gameObject.lock()->Clone();
 
-	if (t > 1.0f) {
-	t = 0;
+		auto anim = add->GetGameComponent<TransformAnimation>();
+		if(anim)
+		add->GetGameComponent<TransformAnimation>()->SetIsActive(false);
+
+		auto sample= add->GetBehavior<SampleBehavior>();
+
+		if (sample)
+			sample->SetIsActive(false);
+
+		gameObject.lock()->GetGameObjectManager().lock()->AddObject(add);
+		add->Init_RegistBehaviors();
+		add->Init_RegistGameComponents();
 	}
 
-
+	if (t < 301)
+		t += 1;
 }
 
 void ButiEngine::SampleBehavior::OnSet()
@@ -35,20 +48,10 @@ std::shared_ptr<ButiEngine::Behavior> ButiEngine::SampleBehavior::Clone()
 
 void ButiEngine::SampleBehavior::OnShowUI()
 {
-	ImGui::BulletText("Time");
-	if (ImGui::SliderFloat("##t", &t, 0, 1)) {
-		PositionSet();
-	}
-	ImGui::BulletText("Speed");
-	ImGui::DragFloat("##speed",&speed,0,1);
-	if (splineCurve.ShowUI()) {
-		PositionSet();
-	}
 }
 
 void ButiEngine::SampleBehavior::PositionSet()
 {
 
-	gameObject.lock()->transform->SetLocalPosition(splineCurve.GetPoint(t));
 }
 

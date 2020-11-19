@@ -54,9 +54,40 @@ void ButiEngine::ResourceContainer::ShowGUI()
 
 		if (ImGui::BeginTabItem("ModelTags", nullptr, ImGuiTabItemFlags_None)) {
 
-			if (ImGui::Button("Add")) {
+			if (ImGui::Button("Add Model")) {
 
 			}
+
+			auto flags = ImGuiPopupFlags_MouseButtonLeft;
+			if (ImGui::BeginPopupContextItem("Add Model", flags))
+			{
+				ImGui::Text("File name:");
+				ImGui::InputText("##edit", CallBacks::objectName, IM_ARRAYSIZE(CallBacks::objectName));
+				if (ImGui::Button("OK!!")) {
+					LoadModel(CallBacks::objectName, "Model/");
+					CallBacks::ObjectNameReset();
+					ImGui::CloseCurrentPopup();
+				}ImGui::SameLine();
+				if (ImGui::Button("Cancel")) {
+					CallBacks::ObjectNameReset();
+					ImGui::CloseCurrentPopup();
+				}
+				ImGui::EndPopup();
+			}
+
+			ImGui::SameLine();
+			ImGui::BeginChild("ModelTagRemove", ImVec2(6 * ImGui::GetFontSize(), ImGui::GetFontSize() * 2), true);
+			ImGui::Text("Remove");
+
+			if (ImGui::IsWindowHovered()) {
+				auto tag = wkp_graphicDevice.lock()->GetApplication().lock()->GetGUIController()->GetModelTag();
+				if (!tag.IsEmpty()) {
+					UnLoadModel(tag);
+				}
+			}
+
+
+			ImGui::EndChild();
 
 
 

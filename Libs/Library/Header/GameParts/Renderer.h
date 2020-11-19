@@ -2,6 +2,17 @@
 #include"stdafx.h"
 #include"Header/Resources/DrawData/IDrawObject.h"
 namespace ButiEngine {
+	struct DrawLayer {
+		void Clear();
+		void BefRendering();
+		UINT* Regist(std::weak_ptr< IDrawObject> arg_wkp_drawObject, const bool arg_isAfterRendering);
+		void UnRegist(UINT* arg_path,const bool arg_isAfterRendering);
+
+		std::vector<std::weak_ptr< IDrawObject>> vec_befDrawObj;
+		std::vector<std::weak_ptr< IDrawObject>> vec_afterDrawObj;
+		std::vector<UINT*> vec_index;
+		std::vector<UINT*> vec_afterIndex;
+	};
 
 	class Renderer:public IRenderer
 	{
@@ -21,9 +32,10 @@ namespace ButiEngine {
 		void TextureAttach(const TextureTag& arg_textureTag, const UINT slot)override;
 		void ShaderAttach(const ShaderTag& arg_shaderTag)override;
 		void MaterialAttach(const MaterialTag& arg_materialTag)override;
-		UINT* RegistDrawObject(std::weak_ptr< IDrawObject> arg_wkp_drawObject,const UINT arg_layer=0)override;
 
-		void UnRegistDrawObject(UINT* arg_index, const UINT arg_layer = 0)override;
+		UINT* RegistDrawObject(std::weak_ptr< IDrawObject> arg_wkp_drawObject, const bool arg_afterDraw,const UINT arg_layer=0)override;
+
+		void UnRegistDrawObject(UINT* arg_index, const bool arg_afterDraw, const UINT arg_layer = 0)override;
 
 		void Release()override;
 		void ReleaseFogBuffer()override;
@@ -38,11 +50,10 @@ namespace ButiEngine {
 			});
 		}
 
-		std::vector< std::vector<UINT*>>vec_index;
 		std::weak_ptr<GraphicDevice> wkp_graphicDevice;
 		std::weak_ptr<IScene> wkp_iScene;
 		std::weak_ptr<ResourceContainer>wkp_resourceContainer;
-		std::vector< std::vector<std::weak_ptr< IDrawObject>>> vec_drawLayers;
+		std::vector<DrawLayer> vec_drawLayers;
 		std::shared_ptr<CBuffer_Dx12<Fog>> CBuffer_fog;
 	};
 }

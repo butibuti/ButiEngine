@@ -36,7 +36,7 @@
 #include"GameParts/GamePartsInterface.h"
 #include"Common/Camera.h"
 #include "GameParts/imguiComtroller.h"
-#include"GameParts/ApplicationBeffor.h"
+#include"GameParts/ApplicationBefore.h"
 
 #include"GameObjects/GameObject.h"
 #include"GameObjects/GameObjectTagManager.h"

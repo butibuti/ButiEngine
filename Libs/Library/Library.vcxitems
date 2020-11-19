@@ -103,6 +103,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\Resource_Mesh_Dx12.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\Resource_Model.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\Resource_Motion.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\Resource_RealTimeMesh.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\Resource_RealTimeMesh_Dx12.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\Resource_Shader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\Resource_Shader_Dx12.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\Resource_Sound.h" />
@@ -121,6 +123,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Scene\SceneManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Header\Resources\Resource_RealTimeMesh.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)imGUI\imgui.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)imGUI\imgui_draw.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)imGUI\imgui_impl_dx12.cpp" />
@@ -194,6 +197,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Resources\Resource_Mesh_Dx12.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Resources\Resource_Model.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Resources\Resource_Motion.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Source\Resources\Resource_RealTimeMesh_Dx12.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Resources\Resource_Shader.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Resources\Resource_Shader_Dx12.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Resources\Resource_Sound.cpp" />

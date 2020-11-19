@@ -4,6 +4,7 @@ namespace ButiEngine {
 	class RelativeTimer :public Timer
 	{
 	public:
+		RelativeTimer():Timer(0){}
 		RelativeTimer(float arg_maxCountFrame) :Timer(arg_maxCountFrame) {}
 		inline bool Update()override {
 			if (!isOn) {
@@ -15,6 +16,30 @@ namespace ButiEngine {
 				return true;
 			}
 			return false;
+		}
+
+		std::shared_ptr<RelativeTimer> Clone() {
+			auto cloned = ObjectFactory::Create<RelativeTimer>(maxCountFrame);
+
+			cloned->isOn = isOn;
+
+			return cloned;
+		}
+
+		void ShowGUI() {
+			ImGui::Checkbox("On/Off", &isOn);
+
+			ImGui::DragFloat("Time", &nowCountFrame, 0.1f, 0, maxCountFrame);
+			ImGui::DragFloat("MaxTime", &maxCountFrame, 0.1f, 0, 1000);
+
+
+		}
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(nowCountFrame);
+			archive(maxCountFrame);
+			archive(isOn);
 		}
 	};
 

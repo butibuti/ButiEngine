@@ -37,6 +37,8 @@ namespace ButiEngine {
 
 		template<typename T>
 		MeshTag LoadMesh(const std::string& filePath, const BackupData<T>& inputMeshData);
+		template<typename T>
+		MeshTag LoadRealTimeMesh(const std::string& filePath, const BackupData<T>& inputMeshData);
 
 
 		MaterialTag LoadMaterial(const MaterialVariable& arg_resourceMaterial, const TextureTag& arg_textureTag, const std::string& arg_filePath, const std::string& arg_fileDirectory = "");
@@ -199,8 +201,13 @@ namespace ButiEngine {
 
 	template<typename T>
 	inline MeshTag ButiEngine::ResourceContainer::LoadMesh(const std::string& filePath, const BackupData<T>& inputMeshData)
-	{		
+	{
 		return container_meshes.AddValue(unq_resourceFactory->GetThis<ResourceFactory_Dx12>()->CreateMesh(inputMeshData), filePath);
+	}
+	template<typename T>
+	inline MeshTag ButiEngine::ResourceContainer::LoadRealTimeMesh(const std::string& filePath, const BackupData<T>& inputMeshData)
+	{
+		return container_meshes.AddValue(unq_resourceFactory->GetThis<ResourceFactory_Dx12>()->CreateRealTimeMesh(inputMeshData), filePath);
 	}
 
 	void OutputCereal(const std::shared_ptr<ResourceContainer>& v);

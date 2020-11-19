@@ -2,18 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="Shooting\BulletBehavior.cpp">
-      <Filter>ShootingGame</Filter>
-    </ClCompile>
-    <ClCompile Include="Shooting\HavokBehavior.cpp">
-      <Filter>ShootingGame</Filter>
-    </ClCompile>
-    <ClCompile Include="Shooting\MaguroBehavior.cpp">
-      <Filter>ShootingGame</Filter>
-    </ClCompile>
-    <ClCompile Include="Shooting\ShootingScene.cpp">
-      <Filter>ShootingGame</Filter>
-    </ClCompile>
     <ClCompile Include="cpp\HitTestBehavior.cpp">
       <Filter>SampleScene</Filter>
     </ClCompile>
@@ -33,21 +21,13 @@
       <Filter>SampleScene</Filter>
     </ClCompile>
     <ClCompile Include="BeforeComponentsLoader.cpp" />
+    <ClCompile Include="EnemySpawner.cpp" />
+    <ClCompile Include="BulletEnemy.cpp" />
+    <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="SceneChanger.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="Shooting\BulletBehavior.h">
-      <Filter>ShootingGame</Filter>
-    </ClInclude>
-    <ClInclude Include="Shooting\HavokBehavior.h">
-      <Filter>ShootingGame</Filter>
-    </ClInclude>
-    <ClInclude Include="Shooting\MaguroBehavior.h">
-      <Filter>ShootingGame</Filter>
-    </ClInclude>
-    <ClInclude Include="Shooting\ShootingScene.h">
-      <Filter>ShootingGame</Filter>
-    </ClInclude>
     <ClInclude Include="include\HitTestBehavior.h">
       <Filter>SampleScene</Filter>
     </ClInclude>
@@ -64,6 +44,10 @@
       <Filter>SampleScene</Filter>
     </ClInclude>
     <ClInclude Include="BeforeComponentsLoader.h" />
+    <ClInclude Include="EnemySpawner.h" />
+    <ClInclude Include="BulletEnemy.h" />
+    <ClInclude Include="Bullet.h" />
+    <ClInclude Include="SceneChanger.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ShootingGame">

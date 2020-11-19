@@ -2,13 +2,12 @@
 #include "Header/BehaviorHeader.h"
 
 namespace ButiEngine {
-	class GameController;
-	class EnemyBehavior :public Behavior {
+	class Bullet :public Behavior {
 	public:
 		void Start() override;
 		void OnUpdate()override;
 		virtual std::string GetBehaviorName() {
-			return "EnemyBehavior";
+			return "Bullet";
 		}
 
 		void OnCollisionEnter(std::weak_ptr<GameObject> arg_other)override;
@@ -18,30 +17,24 @@ namespace ButiEngine {
 		{
 			archive(velocity);
 			archive(speed);
-			archive(hp);
-			archive(score);
 		}
 
 		std::shared_ptr<Behavior> Clone()override {
-			auto enemyBeh= ObjectFactory::Create<EnemyBehavior>();
-			enemyBeh->hp = hp;
+			auto enemyBeh = ObjectFactory::Create<Bullet>();
 			enemyBeh->speed = speed;
 			enemyBeh->velocity = velocity;
-			enemyBeh->score = score;
 			return enemyBeh;
 		}
 		void OnShowUI()override;
+
+		void SetVelocity(const Vector3& arg_velocity);
+		void SetSpeed(const float arg_speed);
+
 	private:
 		Vector3 velocity = Vector3();
-		Vector3 moveForce=Vector3();
-		Vector3 stagemin;
-		Vector3 stagemax;
 		float speed;
-		UINT hp=0;
-		int score = 0;
-		std::shared_ptr< GameController> controller;
 
 		std::shared_ptr<CBuffer<TestGSVariable> >cb_barabara;
 	};
 }
-BUTI_REGIST_BEHAVIOR(ButiEngine::EnemyBehavior);
+BUTI_REGIST_BEHAVIOR(ButiEngine::Bullet);

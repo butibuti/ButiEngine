@@ -914,5 +914,18 @@ void ButiEngine::MeshHelper::CreateCirclePolygon(const float radius, const UINT 
 	outputMeshData.indices=indices ;
 }
 
+void ButiEngine::MeshHelper::CreateImmediateMeshForParticle(const UINT arg_particleCount, BackupData<Vertex::Vertex_UV_Normal_Color>& outputMeshData)
+{
+	outputMeshData.Clear();
+	outputMeshData.vertices.reserve(arg_particleCount);
+	outputMeshData.indices.reserve(arg_particleCount);
+	auto vertex = Vertex::Vertex_UV_Normal_Color();
+	vertex.position = Vector3(10000000000000000, 10000000000000000, 1000000000000000);
+	for (unsigned int i = 0; i < arg_particleCount; i++) {
+		outputMeshData.vertices.push_back(vertex);
+		outputMeshData.indices.push_back(i);
+	}
+}
+
 
 

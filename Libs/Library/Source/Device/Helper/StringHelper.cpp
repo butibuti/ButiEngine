@@ -122,7 +122,7 @@ void StringHelper::WStringToSafetyConvert(std::wstring& source)
 std::string StringHelper::GetDirectory(const std::string& source)
 {
 	if (!Contains(source, "/")) {
-		return source;
+		return "";
 	}
 
 	if (source[source.size() - 1] == '/') {

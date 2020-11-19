@@ -453,10 +453,10 @@ void ButiEngine::GraphicDevice_Dx12::Set()
 	CommandListHelper::Close(drawCommandList);
 	InsertCommandList();
 
-	//commandQueue->ExecuteCommandLists((UINT)vec_drawCommandLists.size(), &(vec_drawCommandLists[0]));
+	commandQueue->ExecuteCommandLists((UINT)vec_drawCommandLists.size(), &(vec_drawCommandLists[0]));
 
-	//WaitGPU();
-	//vec_drawCommandLists.clear();
+	WaitGPU();
+	vec_drawCommandLists.clear();
 }
 
 void ButiEngine::GraphicDevice_Dx12::SetGUICommand()

@@ -66,6 +66,94 @@ namespace ButiEngine {
             static inline float GetDistance(const Vector3& arg_point, const Vector3& arg_surfacePoint, const Vector3& arg_surfaceNormal) {
                 return abs(arg_surfaceNormal.Dot(arg_point - arg_surfacePoint)) / arg_surfaceNormal.GetLength();
             }
+            static inline bool IsHitSphere(const Sphere& arg_sphere, const Vector3& arg_surfacePoint, const Vector3& arg_surfaceNormal) {
+                return (GetDistance(arg_sphere.position, arg_surfacePoint, arg_surfaceNormal)) <= arg_sphere.radius;
+            }
+            static inline float GetDistancePointToPolygon(const Vector3& arg_point,  const std::vector<Vector3>& arg_vertices) {
+                Vector3 closest;
+                // pointがp0の外側の頂点領域の中にあるかどうかチェック
+                Vector3 p0_p1 = arg_vertices[1] - arg_vertices[0];
+                Vector3 p0_p2 = arg_vertices[2] - arg_vertices[0];
+                Vector3 p0_pt = arg_point - arg_vertices[0];
+
+                float d1 = p0_p1.Dot( p0_pt);
+                float d2 = p0_p2.Dot(p0_pt);
+
+                if (d1 <= 0.0f && d2<= 0.0f)
+                {
+                    // p0が最近傍
+                    closest = arg_vertices[0];
+                    return Calculator::Distance(closest, arg_point);
+                }
+
+                // pointがp1の外側の頂点領域の中にあるかどうかチェック
+                Vector3 p1_pt = arg_point - arg_vertices[1];
+
+                float d3 = p0_p1.Dot( p1_pt);
+                float d4 =p0_p2.Dot( p1_pt);
+
+                if (d3>= 0.0f && d4 <= d3)
+                {
+                    // p1が最近傍
+                    closest = arg_vertices[1];
+                    return Calculator::Distance(closest, arg_point);
+                }
+
+                // pointがp0_p1の辺領域の中にあるかどうかチェックし、あればpointのp0_p1上に対する射影を返す
+                float vc = d1 * d4 - d3 * d2;
+                if (vc <= 0.0f && d1>= 0.0f && d3 <= 0.0f)
+                {
+                    float v = d1 / (d1 - d3);
+                    closest = arg_vertices[0]+ v * p0_p1;
+                    return Calculator::Distance(closest, arg_point);
+                }
+
+                // pointがp2の外側の頂点領域の中にあるかどうかチェック
+                Vector3 p2_pt = arg_point - arg_vertices[2];
+
+                float d5 =p0_p1.Dot( p2_pt);
+                float d6 = p0_p2.Dot(p2_pt);
+                if (d6 >= 0.0f && d5 <= d6)
+                {
+                    closest = arg_vertices[2];
+                    return Calculator::Distance(closest, arg_point);
+                }
+
+                // pointがp0_p2の辺領域の中にあるかどうかチェックし、あればpointのp0_p2上に対する射影を返す
+                float vb = d5* d2 - d1 * d6;
+                if (vb <= 0.0f && d2 >= 0.0f && d6 <= 0.0f)
+                {
+                    float w = d2 / (d2 - d6);
+                    closest = arg_vertices[0]+ w * p0_p2;
+                    return Calculator::Distance(closest, arg_point);
+                }
+
+                // pointがp1_p2の辺領域の中にあるかどうかチェックし、あればpointのp1_p2上に対する射影を返す
+                float va = d3 * d6- d5 * d4;
+                if (va <= 0.0f && (d4 - d3) >= 0.0f && (d5 - d6) >= 0.0f)
+                {
+                    float w = (d4 - d3) / ((d4 - d3) + (d5 - d6));
+                    closest = arg_vertices[1] + w * (arg_vertices[2] - arg_vertices[1]);
+                    return Calculator::Distance(closest, arg_point);
+                }
+
+                float denom = 1.0f / (va + vb + vc);
+                float v = vb * denom;
+                float w = vc * denom;
+                closest = arg_vertices[0] + p0_p1 * v + p0_p2 * w;
+
+                return Calculator::Distance(closest, arg_point);
+            }
+
+            static inline float IsHitSpherePolygon(const Sphere& arg_sphere, const std::vector<Vector3>& arg_vertices) {
+                if (GetDistancePointToPolygon(arg_sphere.position, arg_vertices) <= arg_sphere.radius) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+
             static inline bool IsContainPointInPolygon(const Vector3& arg_point, const Vector3& arg_normal, const std::vector<Vector3>& arg_vertices) {
                 auto itr = arg_vertices.begin();
                 bool isBreak = false;

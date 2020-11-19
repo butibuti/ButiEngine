@@ -86,6 +86,12 @@ void ButiEngine::Collision::ColliderComponent::OnShowUI()
 		}ImGui::SameLine();
 		if (ImGui::Button("Box_OBB")) {
 			shp_collisionPrim = ObjectFactory::Create<Collision::CollisionPrimitive_Box_OBB>(Vector3(1, 1, 1), gameObject.lock()->transform);
+		}ImGui::SameLine();
+		if (ImGui::Button("Polygon")) {
+			shp_collisionPrim = ObjectFactory::Create<Collision::CollisionPrimitive_Polygon>(Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(0, 0, 0), gameObject.lock()->transform);
+		}ImGui::SameLine();
+		if (ImGui::Button("Surface")) {
+			shp_collisionPrim = ObjectFactory::Create<Collision::CollisionPrimitive_Surface>(Vector3(0, 1, 0), gameObject.lock()->transform);
 		}
 
 	}

@@ -12,8 +12,11 @@ namespace ButiEngine {
 	}
 	CBuffer_Dx12(){}
 	~CBuffer_Dx12() {
-		if (wkp_graphicDevice.lock()) {
-			wkp_heapManager.lock()->Release(BlankSpace{ index,size / 0x100 });
+		if (this->instance) {
+
+			if (wkp_graphicDevice.lock()) {
+				wkp_heapManager.lock()->Release(BlankSpace{ index,size / 0x100 });
+			}
 			this->instance = nullptr;
 		}
 	}

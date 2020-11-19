@@ -47,8 +47,6 @@ namespace ButiEngine {
 		std::shared_ptr<ISoundManager>shp_soundManager;
 		std::shared_ptr<IRenderer>shp_renderer;
 		std::vector< std::shared_ptr<ICamera>> vec_cameras;
-		std::shared_ptr<ICamera> mainCam;
-		std::shared_ptr<ICamera> editCam;
 
 		std::shared_ptr< ComponentsLoader> shp_componentsLoader;
 

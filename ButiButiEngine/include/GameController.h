@@ -3,8 +3,10 @@
 namespace ButiEngine {
 	class GameController :public GameComponent {
 	public:
+		void Start()override;
+		void OnUpdate()override;
 
-		void OnUpdate()override{}
+		void OnSet()override;
 
 		std::string GetGameComponentName()override {
 			return "GameController";
@@ -14,12 +16,42 @@ namespace ButiEngine {
 			return ObjectFactory::Create<GameController>();
 		}
 
+		Vector3 GetStageMax() {
+			return stageMax;
+		}
+
+		Vector3 GetStageMin() {
+			return stageMin;
+		}
+
+		int AddScore(int arg_score);
+		int GetNowScore(int  arg_score) {
+			return nowScore;
+		}
+
+		void Failed();
+
+		void OnShowUI()override;
+
 		template<class Archive>
 		void serialize(Archive& archive)
 		{
+			archive(stageMax);
+			archive(stageMin);
+			archive(befStage);
+			archive(nextStage);
+			archive(nowScore);
+			archive(targetScore);
+			archive(shp_timer);
 		}
 	private:
-
+		Vector3 stageMax;
+		Vector3 stageMin;
+		std::string nextStage = "";
+		std::string befStage = "";
+		int nowScore;
+		int targetScore;
+		std::shared_ptr<RelativeTimer> shp_timer;
 	};
 }
 

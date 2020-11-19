@@ -1,7 +1,10 @@
 #pragma once
 #include"stdafx.h"
-#include "ApplicationBeffor.h"
+#include "ApplicationBefore.h"
 namespace ButiEngine {
+
+	const float frame_min = (1.0f / 60.0f) * 1000;
+
 	inline std::shared_ptr<ISceneManager> ButiEngine::Application::GetSceneManager()
 	{
 		return shp_sceneManager;
@@ -26,6 +29,7 @@ namespace ButiEngine {
 	}
 	inline int Application::Run()
 	{
+
 		while (Update())
 		{
 			GameDevice::input.PadUpdate();
@@ -34,6 +38,18 @@ namespace ButiEngine {
 			if (GameDevice::input.CheckKey(Keys::Esc)) {
 				return 1;
 			}
+
+			std::timespec_get(&nowTs, TIME_UTC);
+			auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::nanoseconds{ nowTs.tv_nsec }) - std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::nanoseconds{ befTs.tv_nsec });
+			if (ms.count()>0){
+				auto sleepTime =frame_min  - ms.count();
+				if (sleepTime > 0) {
+					Sleep(sleepTime);
+				}
+				else {
+				}
+		}
+			std::timespec_get(&befTs, TIME_UTC);
 		}
 		return 0;
 	}

@@ -122,8 +122,8 @@ void ButiEngine::GameObjectManager::Release()
 
 void ButiEngine::GameObjectManager::Initialize_cereal()
 {
-	auto endItr = vec_gameObjects.end();
-	for (auto itr = vec_gameObjects.begin(); itr != endItr; itr++) {
+
+	for (auto itr = vec_gameObjects.begin(); itr != vec_gameObjects.end(); itr++) {
 		(*itr)->Initialize();
 		(*itr)->SetGameObjectManager(GetThis<GameObjectManager>());
 		(*itr)->Init_RegistBehaviors();

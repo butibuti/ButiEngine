@@ -47,11 +47,22 @@ void ButiEngine::Renderer::Rendering(const UINT arg_layer)
 {
 	CBuffer_fog->Get().cameraPos = Vector4(wkp_graphicDevice.lock()->GetCameraPos());
 	CBuffer_fog->Update();
-	auto drawObjects = vec_drawLayers.at(arg_layer);
-	ZSort(drawObjects);
-	auto endDrawItr = drawObjects.end();
-	for (auto itr = drawObjects.begin(); itr != endDrawItr; itr++) {
-		(*itr).lock()->Draw();
+
+	{
+
+		auto endDrawItr = vec_drawLayers.at(arg_layer).vec_befDrawObj.end();
+		for (auto itr = vec_drawLayers.at(arg_layer).vec_befDrawObj.begin(); itr != endDrawItr; itr++) {
+			(*itr).lock()->Draw();
+		}
+	} 
+	{
+
+		auto afterDrawObjects = vec_drawLayers.at(arg_layer).vec_afterDrawObj;
+		ZSort(afterDrawObjects);
+		auto endDrawItr = afterDrawObjects.end();
+		for (auto itr = afterDrawObjects.begin(); itr != endDrawItr; itr++) {
+			(*itr).lock()->Draw();
+		}
 	}
 	
 	
@@ -68,15 +79,14 @@ void ButiEngine::Renderer::RenderingEnd()
 void ButiEngine::Renderer::BefRendering()
 {
 	for (auto layerItr = vec_drawLayers.begin(); layerItr != vec_drawLayers.end(); layerItr++) {
-		for(auto objItr = (layerItr)->begin(); objItr != (layerItr)->end();objItr++)
-		(objItr)->lock()->DrawBefore();
+		layerItr->BefRendering();
+
 	}
 }
 
 void ButiEngine::Renderer::AddLayer()
 {
-	vec_drawLayers.push_back(std::vector<std::weak_ptr< IDrawObject>>());
-	vec_index.push_back(std::vector<UINT*>());
+	vec_drawLayers.push_back(DrawLayer());
 }
 
 UINT ButiEngine::Renderer::GetLayerCount()
@@ -88,48 +98,29 @@ UINT ButiEngine::Renderer::GetLayerCount()
 void ButiEngine::Renderer::ClearDrawObjects()
 {
 	for (auto layerItr = vec_drawLayers.begin(); layerItr != vec_drawLayers.end(); layerItr++) {
-		layerItr->clear();
+		layerItr->Clear();
 	}
 	vec_drawLayers.clear();
 }
 
 
 
-UINT* ButiEngine::Renderer::RegistDrawObject(std::weak_ptr<IDrawObject> arg_wkp_drawObject, const UINT arg_layer)
+UINT* ButiEngine::Renderer::RegistDrawObject(std::weak_ptr<IDrawObject> arg_wkp_drawObject, const bool arg_afterDraw, const UINT arg_layer)
 {
 
 	if (arg_layer > vec_drawLayers.size()) {
 		return nullptr;
 	}
-	UINT* index = new UINT(vec_drawLayers.at(arg_layer).size());
 
-	vec_drawLayers.at(arg_layer).push_back(arg_wkp_drawObject);
-	vec_index.at(arg_layer).push_back(index);
-
-	return index;
+	return vec_drawLayers.at(arg_layer).Regist(arg_wkp_drawObject,arg_afterDraw);
 }
 
-void ButiEngine::Renderer::UnRegistDrawObject(UINT* arg_index, const UINT arg_layer)
+void ButiEngine::Renderer::UnRegistDrawObject(UINT* arg_index, const bool arg_afterDraw, const UINT arg_layer)
 {
 	if (arg_layer > vec_drawLayers.size()) {
 		return;
 	}
-	auto index = *arg_index;
-	if (index >= vec_drawLayers.at(arg_layer).size()) {
-		return;
-	}
-	auto itr = vec_drawLayers.at(arg_layer).begin()+index;
-	
-
-	vec_drawLayers.at(arg_layer).erase(itr);
-
-	delete arg_index;
-	auto numItr = vec_index.at(arg_layer).begin() + index;
-	numItr = vec_index.at(arg_layer).erase(numItr);
-
-	for (; numItr != vec_index.at(arg_layer).end(); numItr++) {
-		*(*numItr) -= 1;
-	}
+	vec_drawLayers.at(arg_layer).UnRegist(arg_index, arg_afterDraw);
 }
 void ButiEngine::Renderer::Draw(const MeshTag& arg_meshTag)
 {
@@ -159,13 +150,6 @@ void ButiEngine::Renderer::MaterialAttach(const MaterialTag& arg_materialTag)
 
 void ButiEngine::Renderer::Release()
 {
-	for (auto layerItr = vec_index.begin(); layerItr != vec_index.end(); layerItr++) {
-		for (auto indexItr = layerItr->begin(); indexItr != layerItr->end(); indexItr++) {
-			delete* indexItr;
-		}
-		layerItr->clear();
-	}
-	vec_index.clear();
 
 	ClearDrawObjects();
 }
@@ -187,3 +171,95 @@ std::shared_ptr< ButiEngine::CBuffer_Dx12< ButiEngine::Fog>> ButiEngine::Rendere
 	return CBuffer_fog;
 }
 
+void ButiEngine::DrawLayer::Clear()
+{
+	vec_afterDrawObj.clear();
+	vec_befDrawObj.clear();
+
+	for (auto itr = vec_index.begin(); itr != vec_index.end(); itr++) {
+		delete* itr;
+	}
+	for (auto itr = vec_afterIndex.begin(); itr != vec_afterIndex.end(); itr++) {
+		delete* itr;
+	}
+}
+
+void ButiEngine::DrawLayer::BefRendering()
+{
+	{
+
+		auto endItr = vec_befDrawObj.end();
+		for (auto itr = vec_befDrawObj.begin(); itr != endItr; itr++) {
+			(*itr).lock()->DrawBefore();
+		}
+	}
+	{
+
+		auto endItr = vec_afterDrawObj.end();
+		for (auto itr = vec_afterDrawObj.begin(); itr != endItr; itr++) {
+			(*itr).lock()->DrawBefore();
+		}
+	}
+}
+
+UINT* ButiEngine::DrawLayer::Regist(std::weak_ptr<IDrawObject> arg_wkp_drawObject, const bool arg_isAfterRendering)
+{
+	if (arg_isAfterRendering) {
+
+		UINT* index = new UINT(vec_afterDrawObj.size());
+
+		vec_afterDrawObj.push_back(arg_wkp_drawObject);
+		vec_afterIndex.push_back(index);
+
+		return index;
+	}
+
+	UINT* index = new UINT(vec_befDrawObj.size());
+
+	vec_befDrawObj.push_back(arg_wkp_drawObject);
+	vec_index.push_back(index);
+
+	return index;
+}
+
+void ButiEngine::DrawLayer::UnRegist(UINT* arg_index, const bool arg_isAfterRendering)
+{
+	if (arg_isAfterRendering) {
+
+		auto index = *arg_index;
+		if (index >= vec_afterDrawObj.size()) {
+			return;
+		}
+		auto itr = vec_afterDrawObj.begin() + index;
+
+
+		vec_afterDrawObj.erase(itr);
+
+		delete arg_index;
+		auto numItr = vec_afterIndex.begin() + index;
+		numItr = vec_afterIndex.erase(numItr);
+
+		for (; numItr != vec_afterIndex.end(); numItr++) {
+			*(*numItr) -= 1;
+		}
+
+
+		return;
+	}
+	auto index = *arg_index;
+	if (index >= vec_befDrawObj.size()) {
+		return;
+	}
+	auto itr = vec_befDrawObj.begin() + index;
+
+
+	vec_befDrawObj.erase(itr);
+
+	delete arg_index;
+	auto numItr = vec_index.begin() + index;
+	numItr = vec_index.erase(numItr);
+
+	for (; numItr != vec_index.end(); numItr++) {
+		*(*numItr) -= 1;
+	}
+}

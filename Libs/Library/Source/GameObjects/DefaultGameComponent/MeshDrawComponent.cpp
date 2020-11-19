@@ -93,7 +93,7 @@ void ButiEngine::MeshDrawComponent::OnSet()
 void ButiEngine::MeshDrawComponent::OnRemove()
 {
 	if (index)
-	gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetRenderer()->UnRegistDrawObject(index,layer);
+	gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetRenderer()->UnRegistDrawObject(index,shp_drawInfo->isAlpha,layer);
 }
 
 void ButiEngine::MeshDrawComponent::SetBlendMode(const BlendMode& arg_blendMode)
@@ -126,7 +126,7 @@ void ButiEngine::MeshDrawComponent::Regist()
 {
 
 	if (!index)
-	index = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetRenderer()->RegistDrawObject(data, layer);
+	index = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetRenderer()->RegistDrawObject(data,shp_drawInfo->isAlpha, layer);
 }
 
 void ButiEngine::MeshDrawComponent::ReRegist()
@@ -140,7 +140,7 @@ void ButiEngine::MeshDrawComponent::ReRegist()
 void ButiEngine::MeshDrawComponent::UnRegist()
 {
 	if (index) {
-		gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetRenderer()->UnRegistDrawObject(index, layer);
+		gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetRenderer()->UnRegistDrawObject(index, shp_drawInfo->isAlpha, layer);
 		index = nullptr;
 	}
 }
@@ -246,8 +246,47 @@ void ButiEngine::MeshDrawComponent::OnShowUI()
 
 	}
 
+	if (ImGui::ArrowButton("##layerUp", ImGuiDir_Up)) {
+		UnRegist();
+		layer++;
+		Regist();
+	}
+	if (ImGui::ArrowButton("##layerDown", ImGuiDir_Down)) {
+		UnRegist();
+		layer--;
+		if (layer < 0) {
+			layer = 0;
+		}
+		Regist();
+	}
+
 
 	if (ImGui::TreeNode("DrawSettings")) {
+
+		ImGui::BulletText("IsAlphaObject");
+		ImGui::Checkbox("##isAlpha", &shp_drawInfo->isAlpha);
+
+		ImGui::BulletText("TopologyMode");
+
+		if (ImGui::Button("Triangle")) {
+			shp_drawInfo->drawSettings.topologyType = TopologyType::triangle;
+			ReRegist();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("TriangleList")) {
+			shp_drawInfo->drawSettings.topologyType = TopologyType::triangleList;
+			ReRegist();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Line")) {
+			shp_drawInfo->drawSettings.topologyType = TopologyType::line;
+			ReRegist();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Point")) {
+			shp_drawInfo->drawSettings.topologyType = TopologyType::point;
+			ReRegist();
+		}
 
 		ImGui::BulletText("BlendMode");
 
@@ -309,6 +348,8 @@ void ButiEngine::MeshDrawComponent::OnShowUI()
 		}
 		ImGui::TreePop();
 	}
+
+
 }
 
 void ButiEngine::MeshDrawComponent::CreateData()

@@ -17,12 +17,14 @@ namespace ButiEngine {
 		Vector3 down_right_back;
 	};
 	class Resource_Mesh_Dx12;
+	class Resource_RealTimeMesh_Dx12;
 	struct BackupDataBase :public IObject {
 		BoxEightCorner eightCorner=BoxEightCorner();
 		BackupDataBase() {}
 		virtual ~BackupDataBase() {
 		}
 		virtual void ResourceUpdate(std::shared_ptr<Resource_Mesh_Dx12> arg_resource, std::weak_ptr<GraphicDevice_Dx12> arg_wkp_graphicDevice) = 0;
+		virtual void ResourceUpdate(std::shared_ptr<Resource_RealTimeMesh_Dx12> arg_resource, std::weak_ptr<GraphicDevice_Dx12> arg_wkp_graphicDevice) = 0;
 		void Initialize()override {}
 		void PreInitialize()override {}
 		inline void SetBoxSurfaces(const BoxSurface& arg_boxSurface) {
@@ -48,6 +50,7 @@ namespace ButiEngine {
 		std::vector<T> vertices;
 		std::vector<UINT> indices;
 		void ResourceUpdate(std::shared_ptr<Resource_Mesh_Dx12> arg_resource, std::weak_ptr<GraphicDevice_Dx12> arg_wkp_graphicDevice)override;
+		void ResourceUpdate(std::shared_ptr<Resource_RealTimeMesh_Dx12> arg_resource, std::weak_ptr<GraphicDevice_Dx12> arg_wkp_graphicDevice)override;
 	};
 	namespace Vertex {
 

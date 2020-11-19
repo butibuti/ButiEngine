@@ -5,7 +5,6 @@ ButiEngine::Resource_Mesh_Dx12::Resource_Mesh_Dx12(std::shared_ptr<GraphicDevice
 
 {
 	wkp_graphicDevice = arg_graphicDevice->GetThis<GraphicDevice_Dx12>();
-
 }
 
 void ButiEngine::Resource_Mesh_Dx12::Draw()

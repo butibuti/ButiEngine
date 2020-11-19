@@ -9,7 +9,7 @@ namespace ButiEngine {
 		DrawInformation() {}
 		DrawInformation(const DrawSettings arg_DrawSettings) :drawSettings(arg_DrawSettings) {}
 		DrawSettings drawSettings;
-		bool isAlpha = true;
+		bool isAlpha = false;
 		bool isDepth = true;
 		void Initialize()override {}
 		void PreInitialize()override {}

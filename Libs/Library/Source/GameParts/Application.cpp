@@ -30,9 +30,9 @@ void ButiEngine::Application::CreateInstances(const std::string windowName, cons
 		
 		shp_resourceContainer = ObjectFactory::Create<ResourceContainer>();
 		
-		//shp_resourceContainer->SetGraphicDevice(shp_graphicDevice);
+		shp_resourceContainer->SetGraphicDevice(shp_graphicDevice);
 
-		InputCereal(shp_resourceContainer, shp_graphicDevice);
+		//InputCereal(shp_resourceContainer, shp_graphicDevice);
 	}
 	
 	if (!shp_sceneManager) {
@@ -47,7 +47,10 @@ void ButiEngine::Application::CreateInstances(const std::string windowName, cons
 		DirectX::XMMatrixRotationZ(
 			DirectX::XMConvertToRadians(0)
 		);
+	std::timespec_get(&befTs, TIME_UTC);
+	timeBeginPeriod(1);
 }
+
 
 std::unique_ptr<ButiEngine::Window>& ButiEngine::Application::GetWindow()
 {
@@ -78,7 +81,7 @@ void ButiEngine::Application::InitLoadResources()
 
 
 		Vertex::VertexHelper::VertexConvert(testVertices, uv_normalVertices);
-		Application::GetResourceContainer()->LoadMesh("Sphere_UV_Normal", uv_normalVertices);
+		Application::GetResourceContainer()->LoadRealTimeMesh("Sphere_UV_Normal", uv_normalVertices);
 		testVertices.Clear();
 		uvVertices.Clear();
 		normalVertices.Clear();
@@ -130,120 +133,129 @@ void ButiEngine::Application::InitLoadResources()
 		uvVertices.Clear();
 		normalVertices.Clear();
 		uv_normalVertices.Clear();
+
+
+		MeshHelper::CreateImmediateMeshForParticle(256, testVertices);
+		Vertex::VertexHelper::VertexConvert(testVertices, uv_normalVertices);
+		Application::GetResourceContainer()->LoadRealTimeMesh("Particle", uv_normalVertices);
+		
 	}
 
-	Application::GetResourceContainer()->Reload();
+	//Application::GetResourceContainer()->Reload();
 
 
-//	{
-//	std::vector<std::pair<std::string, std::string>> vec_pixelShaderPath = {
-//		{"VertexUVNormalColorMeshPS", "Shader/Compiled/"},
-//		{"VertexUVColorMeshPS", "Shader/Compiled/"},
-//		{"GlidPS", "Shader/Compiled/"},
-//		{"AmbientPS", "Shader/Compiled/"},
-//		{"DefaultMeshPS", "Shader/Compiled/"},
-//	};
-//	Application::GetResourceContainer()->LoadPixelShader(vec_pixelShaderPath);
-//
-//	std::vector<std::pair<std::string, std::string>> vec_vertexShaderPath = {
-//		{"SingleBoneVS", "Shader/Compiled/"},
-//		{"QuadBoneVS", "Shader/Compiled/"},
-//		{"PMXVS", "Shader/Compiled/"},
-//		{"PMX_AttributeVS", "Shader/Compiled/"},
-//		{"DefaultMeshVS", "Shader/Compiled/"},
-//		{"VertexUVMeshVS", "Shader/Compiled/"},
-//		{"VertexUVNormalColorMeshVS", "Shader/Compiled/"},
-//		{"VertexUVNormalAttributeVS", "Shader/Compiled/"},
-//		{"ParticleVS", "Shader/Compiled/"},
-//		{"Particle3DVS", "Shader/Compiled/"},
-//	};
-//	Application::GetResourceContainer()->LoadVertexShader(vec_vertexShaderPath);
-//
-//	std::vector<std::pair<std::string, std::string>> vec_geometryShaderPath = {
-//		{"TestGS", "Shader/Compiled/"},
-//		{"PointToPlaneGS", "Shader/Compiled/"},
-//		{"PointToCubeGS", "Shader/Compiled/"},
-//		{"PointToPyramidGS", "Shader/Compiled/"},
-//	};
-//	Application::GetResourceContainer()->LoadGeometryShader(vec_geometryShaderPath);
-//
-//	std::vector<ResourceContainer::ShaderName> vec_names = {
-//		{"DefaultMesh","DefaultMeshVS","DefaultMeshPS", "Shader/Compiled/", "Shader/Compiled/"},
-//		{"OnlyMaterial","DefaultMeshVS","AmbientPS", "Shader/Compiled/", "Shader/Compiled/"},
-//		{"GSMesh","VertexUVNormalAttributeVS","DefaultMeshPS", "Shader/Compiled/", "Shader/Compiled/","TestGS","Shader/Compiled/"},
-//		{"SingleBoneModel","SingleBoneVS","DefaultMeshPS", "Shader/Compiled/", "Shader/Compiled/"},
-//		{"PMXModel","PMXVS","DefaultMeshPS", "Shader/Compiled/", "Shader/Compiled/"},
-//		{"PMXModel_GS","PMX_AttributeVS","DefaultMeshPS", "Shader/Compiled/", "Shader/Compiled/","TestGS","Shader/Compiled/"},
-//		{"QuadModel","QuadBoneVS","DefaultMeshPS", "Shader/Compiled/", "Shader/Compiled/"},
-//		{"Glid","VertexUVMeshVS","GlidPS", "Shader/Compiled/", "Shader/Compiled/"},
-//
-//		{ "GSParticle_Standard","ParticleVS","VertexUVColorMeshPS", "Shader/Compiled/", "Shader/Compiled/","PointToPlaneGS","Shader/Compiled/" },
-//		
-//		{ "GSParticle_Cube","Particle3DVS","VertexUVNormalColorMeshPS", "Shader/Compiled/", "Shader/Compiled/","PointToCubeGS","Shader/Compiled/" },
-//		
-//		{ "GSParticle_Pyramid","Particle3DVS","VertexUVNormalColorMeshPS", "Shader/Compiled/", "Shader/Compiled/","PointToPyramidGS","Shader/Compiled/" },
-//	};
-//
-//	Application::GetResourceContainer()->LoadShader(vec_names);
-//
-//	//ModelFileConverter::FBXtoB3M("ball.fbx", "sphere.b3m", "Model/FBX/");
-//	//ModelFileConverter::FBXtoB3M("sango_another.fbx", "sango_another.b3m", "Model/FBX/");
-//	//ModelFileConverter::FBXtoB3M("coin.fbx", "coin.b3m", "Model/FBX/");
-//	//ModelFileConverter::FBXtoB3M("gun.fbx", "gun.b3m", "Model/Maguro/");
-//	//ModelFileConverter::PMXtoB3M("インパクトドライバー.pmx", "driver.b3m", "Model/");
-//	//ModelFileConverter::PMXtoB3M("ウルトラマンヒカリ._準ボーン.pmx", "hikari.b3m", "Model/aomoti式_ウルトラマンヒカリ/");
-//
-//	//ModelFileConverter::PMXtoB3M("畳.pmx", "tatami.b3m", "Model/畳/");
-//	//ModelFileConverter::VMDtoBMD("Alicia_run.vmd", "slash.bmd", "Motion/");
-//
-//	std::vector<std::pair<std::string, std::string>> vec_modelPath = {
-//		//{"tatami.b3m", "Model/畳/"},
-//		//{"driver.b3m", "Model/"},
-//		{"hikari.b3m", "Model/aomoti式_ウルトラマンヒカリ/"},
-//		{"maguro.b3m", "Model/Maguro/"},
-//	};
-//
-//	Application::GetResourceContainer()->LoadModel(vec_modelPath);
-//
-//	std::vector<std::pair<std::string, std::string>> vec_motionPath = {
-//		{"bakutyuu.bmd","Motion/"},
-//		{"slash.bmd","Motion/"},
-//		{"ojigi.bmd","Motion/"},
-//	};
-//
-//	Application::GetResourceContainer()->LoadMotion(vec_motionPath);
-//
-//	std::vector<std::pair<std::string, std::string>> vec_texturePath = {
-//		{"black.png","Texture/"},
-//		{"sorena.png","Texture/"},
-//		{"haikei.png","Texture/"},
-//	};
-//
-//
-//
-//	auto vec_textureTag = Application::GetResourceContainer()->LoadTexture(vec_texturePath);
-//
-//
-//	std::vector<std::pair<std::string, std::string>> vec_materialPath = {
-//		{"childMaterial.bma", "Material/"},
-//		{"particleMaterial.bma", "Material/"},
-//	};
-//
-//	Application::GetResourceContainer()->LoadMaterial(vec_materialPath);
-//
-//	//MaterialVariable materialVar;
-//
-//	//Application::GetResourceContainer()->LoadMaterial(materialVar, vec_textureTag.at(2), "sorena");
-//	//Application::GetResourceContainer()->LoadMaterial(materialVar,vec_textureTag.at(3),"haikei");
-//
-//	std::vector<std::pair<std::string, std::string>> vec_soundPath = {
-//		{"se_maoudamashii_jingle13.wav","Sound/"},
-//		{"bullet_hit.wav","Sound/"},
-//	};
-//
-//	Application::GetResourceContainer()->LoadSound(vec_soundPath);
-//}
 
+	{
+	std::vector<std::pair<std::string, std::string>> vec_pixelShaderPath = {
+		{"VertexUVNormalColorMeshPS", "Shader/Compiled/"},
+		{"VertexUVColorMeshPS", "Shader/Compiled/"},
+		{"GlidPS", "Shader/Compiled/"},
+		{"AmbientPS", "Shader/Compiled/"},
+		{"DefaultMeshPS", "Shader/Compiled/"},
+	};
+	Application::GetResourceContainer()->LoadPixelShader(vec_pixelShaderPath);
+
+	std::vector<std::pair<std::string, std::string>> vec_vertexShaderPath = {
+		{"SingleBoneVS", "Shader/Compiled/"},
+		{"QuadBoneVS", "Shader/Compiled/"},
+		{"PMXVS", "Shader/Compiled/"},
+		{"PMX_AttributeVS", "Shader/Compiled/"},
+		{"DefaultMeshVS", "Shader/Compiled/"},
+		{"VertexUVMeshVS", "Shader/Compiled/"},
+		{"VertexUVNormalColorMeshVS", "Shader/Compiled/"},
+		{"VertexUVNormalAttributeVS", "Shader/Compiled/"},
+		{"ParticleVS", "Shader/Compiled/"},
+		{"Particle3DVS", "Shader/Compiled/"},
+	};
+	Application::GetResourceContainer()->LoadVertexShader(vec_vertexShaderPath);
+
+	std::vector<std::pair<std::string, std::string>> vec_geometryShaderPath = {
+		{"TestGS", "Shader/Compiled/"},
+		{"PointToPlaneGS", "Shader/Compiled/"},
+		{"PointToCubeGS", "Shader/Compiled/"},
+		{"PointToPyramidGS", "Shader/Compiled/"},
+	};
+	Application::GetResourceContainer()->LoadGeometryShader(vec_geometryShaderPath);
+
+	std::vector<ResourceContainer::ShaderName> vec_names = {
+		{"DefaultMesh","DefaultMeshVS","DefaultMeshPS", "Shader/Compiled/", "Shader/Compiled/"},
+		{"OnlyMaterial","DefaultMeshVS","AmbientPS", "Shader/Compiled/", "Shader/Compiled/"},
+		{"GSMesh","VertexUVNormalAttributeVS","DefaultMeshPS", "Shader/Compiled/", "Shader/Compiled/","TestGS","Shader/Compiled/"},
+		{"SingleBoneModel","SingleBoneVS","DefaultMeshPS", "Shader/Compiled/", "Shader/Compiled/"},
+		{"PMXModel","PMXVS","DefaultMeshPS", "Shader/Compiled/", "Shader/Compiled/"},
+		{"PMXModel_GS","PMX_AttributeVS","DefaultMeshPS", "Shader/Compiled/", "Shader/Compiled/","TestGS","Shader/Compiled/"},
+		{"QuadModel","QuadBoneVS","DefaultMeshPS", "Shader/Compiled/", "Shader/Compiled/"},
+		{"Glid","VertexUVMeshVS","GlidPS", "Shader/Compiled/", "Shader/Compiled/"},
+
+		{ "GSParticle_Standard","ParticleVS","VertexUVColorMeshPS", "Shader/Compiled/", "Shader/Compiled/","PointToPlaneGS","Shader/Compiled/" },
+		
+		{ "GSParticle_Cube","Particle3DVS","VertexUVNormalColorMeshPS", "Shader/Compiled/", "Shader/Compiled/","PointToCubeGS","Shader/Compiled/" },
+		
+		{ "GSParticle_Pyramid","Particle3DVS","VertexUVNormalColorMeshPS", "Shader/Compiled/", "Shader/Compiled/","PointToPyramidGS","Shader/Compiled/" },
+	};
+
+	Application::GetResourceContainer()->LoadShader(vec_names);
+
+	//ModelFileConverter::FBXtoB3M("ball.fbx", "sphere.b3m", "Model/FBX/");
+	//ModelFileConverter::FBXtoB3M("sango_another.fbx", "sango_another.b3m", "Model/FBX/");
+	//ModelFileConverter::FBXtoB3M("coin.fbx", "coin.b3m", "Model/FBX/");
+	//ModelFileConverter::FBXtoB3M("gun.fbx", "gun.b3m", "Model/Maguro/");
+	//ModelFileConverter::PMXtoB3M("インパクトドライバー.pmx", "driver.b3m", "Model/");
+	//ModelFileConverter::PMXtoB3M("ウルトラマンヒカリ._準ボーン.pmx", "hikari.b3m", "Model/aomoti式_ウルトラマンヒカリ/");
+
+	//ModelFileConverter::PMXtoB3M("畳.pmx", "tatami.b3m", "Model/畳/");
+	//ModelFileConverter::VMDtoBMD("Alicia_run.vmd", "slash.bmd", "Motion/");
+
+	std::vector<std::pair<std::string, std::string>> vec_modelPath = {
+		//{"tatami.b3m", "Model/畳/"},
+		//{"driver.b3m", "Model/"},
+		{"hikari.b3m", "Model/aomoti式_ウルトラマンヒカリ/"},
+		{"maguro.b3m", "Model/Maguro/"},
+		{"aircraft.b3m", "Model/AirBattle/"},
+		{"block.b3m", "Model/AirBattle/"},
+		{"enemy.b3m", "Model/AirBattle/"},
+	};
+
+	Application::GetResourceContainer()->LoadModel(vec_modelPath);
+
+	std::vector<std::pair<std::string, std::string>> vec_motionPath = {
+		{"bakutyuu.bmd","Motion/"},
+		{"slash.bmd","Motion/"},
+		{"ojigi.bmd","Motion/"},
+	};
+
+	Application::GetResourceContainer()->LoadMotion(vec_motionPath);
+
+	std::vector<std::pair<std::string, std::string>> vec_texturePath = {
+		{"black.png","Texture/"},
+		{"sorena.png","Texture/"},
+		{"haikei.png","Texture/"},
+	};
+
+
+
+	auto vec_textureTag = Application::GetResourceContainer()->LoadTexture(vec_texturePath);
+
+
+	std::vector<std::pair<std::string, std::string>> vec_materialPath = {
+		{"childMaterial.bma", "Material/"},
+		{"particleMaterial.bma", "Material/"},
+	};
+
+	Application::GetResourceContainer()->LoadMaterial(vec_materialPath);
+
+	//MaterialVariable materialVar;
+
+	//Application::GetResourceContainer()->LoadMaterial(materialVar, vec_textureTag.at(2), "sorena");
+	//Application::GetResourceContainer()->LoadMaterial(materialVar,vec_textureTag.at(3),"haikei");
+
+	std::vector<std::pair<std::string, std::string>> vec_soundPath = {
+		{"se_maoudamashii_jingle13.wav","Sound/"},
+		{"bullet_hit.wav","Sound/"},
+	};
+
+	Application::GetResourceContainer()->LoadSound(vec_soundPath);
+}
 }
 
 void ButiEngine::Application::Exit()

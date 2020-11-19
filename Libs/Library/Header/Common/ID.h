@@ -119,6 +119,7 @@ namespace ButiEngine {
 			for (auto i = 0; i < index; i++)
 				mapItr++;
 			map_values.erase(mapItr->first);
+			if(vec_p_resource.size()>index)
 			vec_p_resource.erase(vec_p_resource.begin() + index);
 
 			vec_p_id.erase(vec_p_id.begin() + index);

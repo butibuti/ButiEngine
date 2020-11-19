@@ -33,6 +33,9 @@ void ButiEngine::SceneManager::RemoveScene(const std::string& arg_sceneName)
 
 void ButiEngine::SceneManager::ChangeScene(std::string arg_sceneName, float sceneChangeDalay)
 {
+	if (!map_iscene.count(arg_sceneName)) {
+		return;
+	}
 	newScene = map_iscene.at(arg_sceneName);
 	sceneChangeTimer = ObjectFactory::Create<AbsoluteTimer>(sceneChangeDalay);
 	sceneChangeTimer->Start();

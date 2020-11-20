@@ -3,6 +3,7 @@
 
 namespace ButiEngine {
 	class GameController;
+	class ImmediateParticleController;
 	class PlayerBehavior :public Behavior {
 	public:
 		void Start() override;
@@ -33,12 +34,13 @@ namespace ButiEngine {
 		float inertiaMinorPase;
 		Vector3 stagemin;
 		Vector3 stagemax;
-		int hp =1;
+		int hp =5;
 		Vector3 inertia;
 		Vector3 initPos;
 		Vector3 moveForce;
 		Matrix4x4 initRotate;
 		std::shared_ptr< GameController> controller;
+		std::shared_ptr<ImmediateParticleController> shp_particleController;
 	};
 }
 BUTI_REGIST_BEHAVIOR(ButiEngine::PlayerBehavior);

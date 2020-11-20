@@ -80,10 +80,10 @@ namespace ButiEngine {
 					RenderTarget[i] = defaultRenderTargetBlendDesc;
 			}
 		};
-		static inline Microsoft::WRL::ComPtr<ID3D12PipelineState> CreateDefault3D(const Microsoft::WRL::ComPtr<ID3D12RootSignature>& rootSignature, D3D12_GRAPHICS_PIPELINE_STATE_DESC& RetDesc, D3D12_RASTERIZER_DESC& arg_rasteriserDesc, std::shared_ptr<IResource_Shader> arg_shader, const BlendMode arg_BlendMode, const TopologyType arg_topologyType, std::shared_ptr<GraphicDevice_Dx12> arg_wkp_graphicDevice) {
+		static inline Microsoft::WRL::ComPtr<ID3D12PipelineState> CreateDefault3D(const Microsoft::WRL::ComPtr<ID3D12RootSignature>& rootSignature, D3D12_GRAPHICS_PIPELINE_STATE_DESC& RetDesc, D3D12_RASTERIZER_DESC& arg_rasteriserDesc, std::shared_ptr<IResource_Shader> arg_shader, const BlendMode arg_BlendMode, const TopologyType arg_topologyType, std::shared_ptr<GraphicDevice_Dx12> arg_wkp_graphicDevice,const bool isDepth=true) {
 
 
-			ZeroMemory(&RetDesc, sizeof(RetDesc));
+			//ZeroMemory(&RetDesc, sizeof(RetDesc));
 			RetDesc.InputLayout = { arg_shader->GetVertexShader().lock()->GetThis<Resource_VertexShader_Dx12>()->GetInputLayoutVector().data(),
 				(UINT)arg_shader->GetVertexShader().lock()->GetThis<Resource_VertexShader_Dx12>()->GetInputLayoutVector().size() };
 			RetDesc.pRootSignature = rootSignature.Get();
@@ -106,6 +106,11 @@ namespace ButiEngine {
 			RetDesc.RasterizerState = arg_rasteriserDesc;
 			RetDesc.BlendState = ButiD3DX12_BLEND_DESC(arg_BlendMode);
 			RetDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+
+			if (!isDepth) {
+				RetDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+			}
+
 			RetDesc.SampleMask = UINT_MAX;
 			RetDesc.PrimitiveTopologyType = (D3D12_PRIMITIVE_TOPOLOGY_TYPE)arg_topologyType;
 			RetDesc.NumRenderTargets = 1;

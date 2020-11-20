@@ -14,7 +14,8 @@ void ButiEngine::EnemySpawner::OnUpdate()
         auto i = ButiRandom::GetRandom<int>(0, vec_enemyPatterns.size()-1,1);
 
         for (auto itr = vec_enemyPatterns[i].names.begin(); itr != vec_enemyPatterns[i].names.end(); itr++) {
-            gameObject.lock()->GetGameObjectManager().lock()->AddObjectFromCereal(*itr);
+            auto newEnemy= gameObject.lock()->GetGameObjectManager().lock()->AddObjectFromCereal(*itr);
+            newEnemy.lock()->transform->TranslateZ(70);
         }
     }
 }

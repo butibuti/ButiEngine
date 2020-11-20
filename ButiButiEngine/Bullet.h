@@ -33,7 +33,7 @@ namespace ButiEngine {
 	private:
 		Vector3 velocity = Vector3();
 		float speed;
-
+		float t = 600;
 		std::shared_ptr<CBuffer<TestGSVariable> >cb_barabara;
 	};
 }

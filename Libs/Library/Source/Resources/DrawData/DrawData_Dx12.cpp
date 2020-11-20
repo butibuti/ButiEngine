@@ -90,13 +90,7 @@ void ButiEngine::MeshDrawData_Dx12::Initialize()
 
 void ButiEngine::MeshDrawData_Dx12::Draw() {
 	BufferUpdate();
-	if(shp_drawInfo->isDepth)
-		CommandExecute();
-	else {
-		wkp_graphicDevice.lock()->CommandList_SetRenderTargetViewWithoutDepth();
-		CommandExecute();
-		wkp_graphicDevice.lock()->CommandList_SetRenderTargetView();
-	}
+	CommandExecute();
 }
 
 
@@ -174,7 +168,7 @@ void ButiEngine::DrawData_Dx12::CreatePipeLineState(const UINT arg_exCBuffer)
 	}else if (pipeLineTopology == TopologyType::pointList) {
 		pipeLineTopology = TopologyType::point;
 	}
-	pipelineState = wkp_graphicDevice.lock()->GetPipelineStateManager().GetPipelineState(rootSignature, rootdesc, pipeLineDesc, rasterizerStateDesc, wkp_graphicDevice.lock()->GetApplication().lock()->GetResourceContainer()->GetShader(shaderTag).lock(), shp_drawInfo->drawSettings.blendMode,pipeLineTopology );
+	pipelineState = wkp_graphicDevice.lock()->GetPipelineStateManager().GetPipelineState(rootSignature, rootdesc, pipeLineDesc, rasterizerStateDesc, wkp_graphicDevice.lock()->GetApplication().lock()->GetResourceContainer()->GetShader(shaderTag).lock(), shp_drawInfo->drawSettings.blendMode,pipeLineTopology,shp_drawInfo->isDepth );
 
 }
 

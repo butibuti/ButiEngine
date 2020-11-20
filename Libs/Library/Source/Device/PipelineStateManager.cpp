@@ -22,7 +22,7 @@ Microsoft::WRL::ComPtr<ID3D12PipelineState> ButiEngine::PipelineStateManager::Ge
 	return map_pipeLineState.at(arg_pipeLineState);
 }
 
-Microsoft::WRL::ComPtr<ID3D12PipelineState> ButiEngine::PipelineStateManager::GetPipelineState(const Microsoft::WRL::ComPtr<ID3D12RootSignature>& rootSignature, const D3D12_ROOT_SIGNATURE_DESC rootdesc, D3D12_GRAPHICS_PIPELINE_STATE_DESC& RetDesc, D3D12_RASTERIZER_DESC& arg_rasteriserDesc, std::shared_ptr<IResource_Shader> arg_shader, const BlendMode arg_BlendMode, const TopologyType arg_topologyType)
+Microsoft::WRL::ComPtr<ID3D12PipelineState> ButiEngine::PipelineStateManager::GetPipelineState(const Microsoft::WRL::ComPtr<ID3D12RootSignature>& rootSignature, const D3D12_ROOT_SIGNATURE_DESC rootdesc, D3D12_GRAPHICS_PIPELINE_STATE_DESC& RetDesc, D3D12_RASTERIZER_DESC& arg_rasteriserDesc, std::shared_ptr<IResource_Shader> arg_shader, const BlendMode arg_BlendMode, const TopologyType arg_topologyType,const bool arg_isDepth)
 {
 	auto rasterStr = std::to_string(arg_rasteriserDesc.CullMode) + std::to_string(arg_rasteriserDesc.FillMode) + std::to_string(arg_rasteriserDesc.AntialiasedLineEnable) + std::to_string(arg_rasteriserDesc.ConservativeRaster);
 	auto rootStr = std::to_string(rootdesc.Flags) + std::to_string(rootdesc.NumParameters) + std::to_string(rootdesc.NumStaticSamplers);
@@ -32,7 +32,7 @@ Microsoft::WRL::ComPtr<ID3D12PipelineState> ButiEngine::PipelineStateManager::Ge
 		return map_pipeLineState.at(key);
 	}
 
-	auto output = PipelineStateHelper::CreateDefault3D(rootSignature, RetDesc, arg_rasteriserDesc, arg_shader, arg_BlendMode,arg_topologyType, wkp_graphicDevice.lock());
+	auto output = PipelineStateHelper::CreateDefault3D(rootSignature, RetDesc, arg_rasteriserDesc, arg_shader, arg_BlendMode,arg_topologyType, wkp_graphicDevice.lock(),arg_isDepth);
 	map_pipeLineState.emplace(key, output);
 	return output;
 }

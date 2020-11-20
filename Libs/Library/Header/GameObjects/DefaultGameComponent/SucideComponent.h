@@ -5,17 +5,18 @@ namespace ButiEngine {
 	{
 	public:
 		SucideComponent(const float arg_count);
-		SucideComponent() {}
+		SucideComponent();
 		void OnUpdate()override;
 		std::string GetGameComponentName()override {
 			return "SucideComponent";
 		}
 		std::shared_ptr<GameComponent> Clone()override;
-
+		void OnShowUI()override;
 		template<class Archive>
 		void serialize(Archive& archive)
 		{
 			archive(count);
+			archive(shp_timer);
 			archive(isActive);
 		}
 	private:

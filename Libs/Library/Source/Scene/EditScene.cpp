@@ -292,8 +292,13 @@ void ButiEngine::EditScene::Initialize()
 		shp_gameObjectManager->Initialize_cereal();
 	}
 	else {
+		auto defaultPath = GlobalSettings::GetResourceDirectory() + "Scene/" +"DefaultScene"+ "/objects.gameObjectManager";
+		shp_gameObjectManager = ObjectFactory::CreateFromCereal<GameObjectManager>(defaultPath);
+
+		shp_gameObjectManager->SetScene(GetThis<IScene>());
+		shp_gameObjectManager->Initialize_cereal();
+
 		_mkdir((GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation.GetSceneName() + "/").c_str());
-		shp_gameObjectManager = ObjectFactory::Create<GameObjectManager>(GetThis<IScene>());
 	}
 	
 

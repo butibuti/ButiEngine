@@ -69,6 +69,7 @@ namespace ButiEngine {
 		std::shared_ptr<ICBuffer> Clone()override {
 			auto output = ObjectFactory::Create<CArrayBuffer_Dx12<T>>(this->slot, instanceSize / sizeof(T));
 
+			output->exName = this->exName;
 
 			return output;
 		}

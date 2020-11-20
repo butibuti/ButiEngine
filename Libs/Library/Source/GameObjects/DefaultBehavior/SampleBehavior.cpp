@@ -18,7 +18,7 @@ void ButiEngine::SampleBehavior::OnUpdate()
 		gameObject.lock()->transform->TranslateX(0.1f);
 	}
 	if (GameDevice::input.CheckKey(Keys::A)) {
-		shp_mesh->GetBackupData_Row()->GetThis<BackupData<Vertex::Vertex_UV_Normal>>()->vertices.at(0).position.y += 0.1;
+		//shp_mesh->GetBackupData_Row()->GetThis<BackupData<Vertex::Vertex_UV_Normal>>()->vertices.at(0).position.y += 0.1;
 	}
 	if (GameDevice::input.CheckKey(Keys::LeftShift)) {
 		gameObject.lock()->transform->TranslateY(-0.1f);
@@ -27,7 +27,7 @@ void ButiEngine::SampleBehavior::OnUpdate()
 		gameObject.lock()->transform->TranslateY(0.1f);
 	}
 
-	shp_mesh->Update();
+	//shp_mesh->Update();
 
 }
 
@@ -39,8 +39,8 @@ void ButiEngine::SampleBehavior::Start()
 {
 	//splineCurve = SplineCurve(Vector3(0,6,-10), { Vector3(-10,5 , -1),Vector3(-5, 2,10),Vector3(5, 3, 5)});
 	
-	auto meshTag = gameObject.lock()->GetResourceContainer()->GetMeshTag("Sphere_UV_Normal");
-	shp_mesh = gameObject.lock()->GetResourceContainer()->GetMesh(meshTag).lock()->GetThis<Resource_RealTimeMesh>();
+	//auto meshTag = gameObject.lock()->GetResourceContainer()->GetMeshTag("Sphere_UV_Normal");
+	//shp_mesh = gameObject.lock()->GetResourceContainer()->GetMesh(meshTag).lock()->GetThis<Resource_RealTimeMesh>();
 }
 
 std::shared_ptr<ButiEngine::Behavior> ButiEngine::SampleBehavior::Clone()

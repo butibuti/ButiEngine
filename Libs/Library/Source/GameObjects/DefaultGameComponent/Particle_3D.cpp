@@ -6,12 +6,17 @@
 void ButiEngine::Particle_3D::OnSet()
 {
 	if (IsCereal()) {
-		return;
+		auto drawcomp = gameObject.lock()->GetGameComponent<MeshDrawComponent>();
+		if (drawcomp) {
+
+			shp_particleBuffer = drawcomp->GetDrawInformation()->GetExCBuffer("ParticleParam")->GetThis<CBuffer_Dx12<ParticleParameter>>();
+			return;
+		}
 	}
 	auto drawcomp = gameObject.lock()->GetGameComponent("MeshDraw");
 	if (drawcomp) {
 		shp_drawComponent = drawcomp->GetThis<MeshDrawComponent>();
-		//shp_particleBuffer=drawcomp->GetThis<MeshDrawComponent>()->GetDrawInformation()->GetExCBuffer("ParticleParam")->GetThis<CBuffer_Dx12<ParticleParameter>>();
+		
 		shp_drawComponent->GetDrawInformation()->vec_exCBuffer.push_back(ObjectFactory::Create<CBuffer_Dx12<ParticleParameter>>(4));
 	}
 	if (!shp_drawComponent) {
@@ -34,9 +39,6 @@ void ButiEngine::Particle_3D::OnSet()
 void ButiEngine::Particle_3D::OnUpdate()
 {
 
-	ImGui::Begin((gameObject.lock()->GetGameObjectName()+ ":ParticleParameter").c_str());
-	shp_particleBuffer->ShowUI();
-	ImGui::End();
 	time +=1.0f;
 
 	shp_particleBuffer->Get().time = time;
@@ -45,8 +47,6 @@ void ButiEngine::Particle_3D::OnUpdate()
 std::shared_ptr<ButiEngine::GameComponent> ButiEngine::Particle_3D::Clone()
 {
 	auto ret = ObjectFactory::Create<Particle_3D>();
-	if (shp_particleBuffer)
-	ret->shp_particleBuffer = shp_particleBuffer->Clone()->GetThis<CBuffer_Dx12<ParticleParameter>>();
-	
+	ret->SetIsCereal(IsCereal());
 	return ret;
 }

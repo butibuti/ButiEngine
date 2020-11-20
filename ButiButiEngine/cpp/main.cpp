@@ -6,8 +6,8 @@
 #include"Header/GameParts/ResourceContainer.h"
 
 #include"include/GameController.h"
-//#include"Header/Device/ModelFileConverter.h"
-//#include "Header/GameObjects/DefaultGameComponent/ColliderComponent.h"
+#include"Header/Device/ModelFileConverter.h"
+#include "Header/GameObjects/DefaultGameComponent/SucideComponent.h"
 using namespace::ButiEngine;
 
 #ifdef DEBUG
@@ -30,8 +30,6 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	
 	app->InitLoadResources();
-
-	//ModelFileConverter::FBXtoB3M("aircraft.fbx", "aircraft.b3m", "Model/AirBattle/");
 	//ModelFileConverter::FBXtoB3M("block.fbx", "block.b3m", "Model/AirBattle/");
 	//ModelFileConverter::FBXtoB3M("enemy.fbx", "enemy.b3m", "Model/AirBattle/");
 
@@ -41,7 +39,7 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//componentsLoader->AddBehavior<EnemyBehavior>();
 
 	//componentsLoader->RemoveComponent("GameController");
-	componentsLoader->AddGameComponent<GameController>();
+	componentsLoader->AddGameComponent<SucideComponent>();
 
 	componentsLoader->CreateNameList();
 

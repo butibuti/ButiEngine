@@ -37,11 +37,7 @@ void ButiEngine::BulletEnemy::OnUpdate()
 		gameObject.lock()->transform->SetWorldPosition(pos);
 	}
 
-	if (pos.z > stagemax.z) {
-		pos.z = stagemax.z;
-		gameObject.lock()->SetIsRemove(true);
-	}
-	else if (pos.z < stagemin.z - 5) {
+	 if (pos.z < stagemin.z - 10) {
 		pos.z = stagemin.z;
 		gameObject.lock()->SetIsRemove(true);
 	}
@@ -54,6 +50,7 @@ void ButiEngine::BulletEnemy::OnUpdate()
 		bullet->transform->SetWorldPosition(gameObject.lock()->transform->GetWorldPosition());
 		bulletBehavior->SetVelocity(bulletVeloc);
 		bulletBehavior->SetSpeed(0.3);
+
 	}
 }
 
@@ -62,10 +59,13 @@ void ButiEngine::BulletEnemy::OnCollisionEnter(std::weak_ptr<GameObject> arg_oth
 	if (arg_other.lock()->GetGameObjectTag() == GameObjectTagManager::GetObjectTag("Bomb")) {
 		hp--;
 		speed = 0.025;
-		//velocity = Vector3();
+
+		auto effect= gameObject.lock()->GetGameObjectManager().lock()->AddObjectFromCereal("SlashEffect");
+		effect.lock()->transform->SetWorldPosition((gameObject.lock()->transform->GetWorldPosition()));
 		//moveForce += ((Vector3)(gameObject.lock()->transform->GetWorldPosition()-arg_other.lock()->transform->GetWorldPosition() )).GetNormalize()*2.0f;
 		if (hp <= 0) {
 			controller->AddScore(score);
+			gameObject.lock()->GetGameObjectManager().lock()->AddObjectFromCereal("Explosion", ObjectFactory::Create<Transform>(gameObject.lock()->transform->GetWorldPosition()));
 			gameObject.lock()->SetIsRemove(true);
 		}
 	}

@@ -43,7 +43,6 @@ namespace ButiEngine {
 		std::shared_ptr<ICBuffer> GetExCBuffer(const std::string& arg_cbufferName) {
 			for (auto itr = vec_exCBuffer.begin(); itr != vec_exCBuffer.end(); ) {
 				if ((*itr)->GetExName() == arg_cbufferName) {
-					vec_exCBuffer.erase(itr);
 					return *itr;
 				}
 				else {

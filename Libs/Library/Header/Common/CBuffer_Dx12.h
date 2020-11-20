@@ -67,7 +67,7 @@ namespace ButiEngine {
 	std::shared_ptr<ICBuffer> Clone()override {
 		auto output = ObjectFactory::Create<CBuffer_Dx12<T>>(this->slot);
 
-		
+		output->exName =this-> exName;
 		*(output->instance) = (*instance);
 
 		return output;

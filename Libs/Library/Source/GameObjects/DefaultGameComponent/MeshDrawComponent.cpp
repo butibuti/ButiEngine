@@ -69,14 +69,16 @@ void ButiEngine::MeshDrawComponent::OnSet()
 
 	if (!isCereal)
 	{
-		auto lightBuffer_Dx12 = ObjectFactory::Create<CBuffer_Dx12<LightVariable>>(3);
+		if (!shp_drawInfo->GetExCBuffer("LightBuffer")) {
+			auto lightBuffer_Dx12 = ObjectFactory::Create<CBuffer_Dx12<LightVariable>>(3);
 
-		shp_drawInfo->vec_exCBuffer.push_back(lightBuffer_Dx12);
+			shp_drawInfo->vec_exCBuffer.push_back(lightBuffer_Dx12);
 
-		auto light = LightVariable();
-		light.lightDir = Vector4(Vector3(-1.0f, -1.0f, 0.0f), 1);
-		lightBuffer_Dx12->SetExName("LightBuffer");
-		lightBuffer_Dx12->Get() = light;
+			auto light = LightVariable();
+			light.lightDir = Vector4(Vector3(-1.0f, -1.0f, 0.0f), 1);
+			lightBuffer_Dx12->SetExName("LightBuffer");
+			lightBuffer_Dx12->Get() = light;
+		}
 	}
 	else {
 		auto endItr = shp_drawInfo->vec_exCBuffer.end();

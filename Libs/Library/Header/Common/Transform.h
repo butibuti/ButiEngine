@@ -461,32 +461,32 @@ namespace ButiEngine {
 			ImGui::BulletText("Rotation");
 			Vector3 euler;
 			if (ImGui::InputFloat3("##R", &euler.x, "%.3f")) {
-				SetLocalRotation(euler);
+				RollWorldRotation(euler);
 			}
 
 			ImGui::PushButtonRepeat(true);
 
 			if (ImGui::Button("X:+")) {
-				RollLocalRotationX_Degrees(1);
+				RollWorldRotationX_Degrees(1);
 			}ImGui::SameLine();
 
 			if (ImGui::Button("Y:+")) {
-				RollLocalRotationY_Degrees(1);
+				RollWorldRotationY_Degrees(1);
 			}ImGui::SameLine();
 
 			if (ImGui::Button("Z:+")) {
-				RollLocalRotationZ_Degrees(1);
+				RollWorldRotationZ_Degrees(1);
 			}
 			if (ImGui::Button("X:-")) {
-				RollLocalRotationX_Degrees(-1);
+				RollWorldRotationX_Degrees(-1);
 			}ImGui::SameLine();
 
 			if (ImGui::Button("Y:-")) {
-				RollLocalRotationY_Degrees(-1);
+				RollWorldRotationY_Degrees(-1);
 			}ImGui::SameLine();
 
 			if (ImGui::Button("Z:-")) {
-				RollLocalRotationZ_Degrees(-1);
+				RollWorldRotationZ_Degrees(-1);
 			}
 
 			ImGui::PushButtonRepeat(false);

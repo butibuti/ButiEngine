@@ -61,6 +61,7 @@ void ButiEngine::Application::InitLoadResources()
 {
 	{
 		BackupData<Vertex::Vertex_UV_Normal> uv_normalVertices;
+		BackupData<Vertex::Vertex_UV_Color> uv_colorVertices;
 		BackupData<Vertex::Vertex_UV> uvVertices;
 		BackupData<Vertex::Vertex_Normal> normalVertices;
 		BackupData<Vertex::Vertex_UV_Normal_Color> testVertices;
@@ -81,7 +82,7 @@ void ButiEngine::Application::InitLoadResources()
 
 
 		Vertex::VertexHelper::VertexConvert(testVertices, uv_normalVertices);
-		Application::GetResourceContainer()->LoadRealTimeMesh("Sphere_UV_Normal", uv_normalVertices);
+		Application::GetResourceContainer()->LoadMesh("Sphere_UV_Normal", uv_normalVertices);
 		testVertices.Clear();
 		uvVertices.Clear();
 		normalVertices.Clear();
@@ -135,10 +136,15 @@ void ButiEngine::Application::InitLoadResources()
 		uv_normalVertices.Clear();
 
 
-		MeshHelper::CreateImmediateMeshForParticle(256, testVertices);
+		MeshHelper::CreateImmediateMeshForParticle(1024, testVertices);
+		Vertex::VertexHelper::VertexConvert(testVertices, uv_colorVertices);
+		Application::GetResourceContainer()->LoadRealTimeMesh("Particle", uv_colorVertices);
+
+		testVertices.Clear();
+		MeshHelper::CreateSphereForParticle(Vector3(0.5f, 0.5f, 0.5f),4, colors, testVertices);
+
 		Vertex::VertexHelper::VertexConvert(testVertices, uv_normalVertices);
-		Application::GetResourceContainer()->LoadRealTimeMesh("Particle", uv_normalVertices);
-		
+		Application::GetResourceContainer()->LoadMesh("SphereForParticle_UV_Normal_min", uv_normalVertices);
 	}
 
 	//Application::GetResourceContainer()->Reload();
@@ -166,6 +172,7 @@ void ButiEngine::Application::InitLoadResources()
 		{"VertexUVNormalAttributeVS", "Shader/Compiled/"},
 		{"ParticleVS", "Shader/Compiled/"},
 		{"Particle3DVS", "Shader/Compiled/"},
+		{"ImmediateParticleVS", "Shader/Compiled/"},
 	};
 	Application::GetResourceContainer()->LoadVertexShader(vec_vertexShaderPath);
 
@@ -192,6 +199,7 @@ void ButiEngine::Application::InitLoadResources()
 		{ "GSParticle_Cube","Particle3DVS","VertexUVNormalColorMeshPS", "Shader/Compiled/", "Shader/Compiled/","PointToCubeGS","Shader/Compiled/" },
 		
 		{ "GSParticle_Pyramid","Particle3DVS","VertexUVNormalColorMeshPS", "Shader/Compiled/", "Shader/Compiled/","PointToPyramidGS","Shader/Compiled/" },
+		{ "ImmdeiateParticle_Plane","ImmediateParticleVS","VertexUVColorMeshPS", "Shader/Compiled/", "Shader/Compiled/","PointToPlaneGS","Shader/Compiled/" },
 	};
 
 	Application::GetResourceContainer()->LoadShader(vec_names);
@@ -214,6 +222,7 @@ void ButiEngine::Application::InitLoadResources()
 		{"aircraft.b3m", "Model/AirBattle/"},
 		{"block.b3m", "Model/AirBattle/"},
 		{"enemy.b3m", "Model/AirBattle/"},
+		{"sword.b3m", "Model/AirBattle/"},
 	};
 
 	Application::GetResourceContainer()->LoadModel(vec_modelPath);

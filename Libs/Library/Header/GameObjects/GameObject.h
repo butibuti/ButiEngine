@@ -97,7 +97,9 @@ namespace ButiEngine {
 			std::string arg_gameComponentName = ObjectFactory::Create<T>()->GetGameComponentName();
 
 			auto ret = GetGameComponent(arg_gameComponentName);
-
+			if (!ret) {
+				return nullptr;
+			}
 			return ret->GetThis<T>();
 		}
 
@@ -106,7 +108,9 @@ namespace ButiEngine {
 			std::string arg_gameComponentName = ObjectFactory::Create<T>()->GetBehaviorName();
 
 			auto ret = GetBehavior(arg_gameComponentName);
-
+			if (!ret) {
+				return nullptr;
+			}
 			return ret->GetThis<T>();
 		}
 

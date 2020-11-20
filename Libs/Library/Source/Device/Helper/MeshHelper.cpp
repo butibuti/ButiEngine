@@ -920,7 +920,8 @@ void ButiEngine::MeshHelper::CreateImmediateMeshForParticle(const UINT arg_parti
 	outputMeshData.vertices.reserve(arg_particleCount);
 	outputMeshData.indices.reserve(arg_particleCount);
 	auto vertex = Vertex::Vertex_UV_Normal_Color();
-	vertex.position = Vector3(10000000000000000, 10000000000000000, 1000000000000000);
+	//vertex.position = Vector3(10000000000000000, 10000000000000000, 1000000000000000);
+	//vertex.uv.x = 1.0;
 	for (unsigned int i = 0; i < arg_particleCount; i++) {
 		outputMeshData.vertices.push_back(vertex);
 		outputMeshData.indices.push_back(i);

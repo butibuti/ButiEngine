@@ -25,6 +25,8 @@
     <ClCompile Include="BulletEnemy.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="SceneChanger.cpp" />
+    <ClCompile Include="PlayerLookingCamera.cpp" />
+    <ClCompile Include="Booster.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -48,6 +50,8 @@
     <ClInclude Include="BulletEnemy.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="SceneChanger.h" />
+    <ClInclude Include="PlayerLookingCamera.h" />
+    <ClInclude Include="Booster.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ShootingGame">

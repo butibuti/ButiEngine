@@ -40,7 +40,6 @@ namespace ButiEngine {
 		Vector3 moveForce;
 		Matrix4x4 initRotate;
 		std::shared_ptr< GameController> controller;
-		std::shared_ptr<ImmediateParticleController> shp_particleController;
 	};
 }
 BUTI_REGIST_BEHAVIOR(ButiEngine::PlayerBehavior);

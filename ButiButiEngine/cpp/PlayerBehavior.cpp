@@ -5,7 +5,6 @@
 #include"Header/GameParts/ResourceContainer.h"
 #include "Header/GameObjects/DefaultGameComponent/SucideComponent.h"
 #include"include/GameController.h"
-#include"Header/GameObjects/DefaultGameComponent/ImmediateParticleController.h"
 
 void ButiEngine::PlayerBehavior::Start()
 {
@@ -18,8 +17,6 @@ void ButiEngine::PlayerBehavior::Start()
 	bomb.lock()->transform->SetBaseTransform( gameObject.lock()->transform,true);
 	bomb.lock()->SetGameObjectTag(GameObjectTagManager::GetObjectTag("Bomb"));
 	controller = gameObject.lock()->GetGameObjectManager().lock()->GetGameObject("GameController").lock()->GetGameComponent<GameController>();
-
-	shp_particleController= gameObject.lock()->GetGameObjectManager().lock()->GetGameObject("ParticleController").lock()->GetGameComponent<ImmediateParticleController>();
 
 	stagemax = controller->GetStageMax();
 	stagemin = controller->GetStageMin();
@@ -35,16 +32,7 @@ void ButiEngine::PlayerBehavior::OnUpdate()
 
 		gameObject.lock()->transform->RollLocalRotationY_Degrees(controllPase);
 	}
-	Particle2D particle;
-	particle.position = gameObject.lock()->transform->GetWorldPosition()+Vector3( ButiRandom::GetRandom<float>(-0.2,0.2,5), ButiRandom::GetRandom<float>(-0.2, 0.2, 5), 0)* gameObject.lock()->transform->GetLocalRotation();
-	particle.accelation = 0.85;
-	particle.force= Vector3(ButiRandom::GetRandom<float>(-0.5, 0.5, 5), 0, ButiRandom::GetRandom<float>(-0.5, 0, 5)) * gameObject.lock()->transform->GetLocalRotation();
-	particle.velocity = Vector3(0, 0.01, 0);
-	particle.sizePase = 0.01f;
-	particle.life = 30.0f;
 
-	particle.color = Vector4(0.8, 0.002, 0.001, 1);
-	shp_particleController->AddParticle(particle);
 	
 
 	Vector3 velocity = gameObject.lock()->transform->GetFront();

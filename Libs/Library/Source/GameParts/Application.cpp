@@ -137,8 +137,7 @@ void ButiEngine::Application::InitLoadResources()
 
 
 		MeshHelper::CreateImmediateMeshForParticle(1024, testVertices);
-		Vertex::VertexHelper::VertexConvert(testVertices, uv_colorVertices);
-		Application::GetResourceContainer()->LoadRealTimeMesh("Particle", uv_colorVertices);
+		Application::GetResourceContainer()->LoadRealTimeMesh("Particle", testVertices);
 
 		testVertices.Clear();
 		MeshHelper::CreateSphereForParticle(Vector3(0.5f, 0.5f, 0.5f),4, colors, testVertices);
@@ -199,7 +198,7 @@ void ButiEngine::Application::InitLoadResources()
 		{ "GSParticle_Cube","Particle3DVS","VertexUVNormalColorMeshPS", "Shader/Compiled/", "Shader/Compiled/","PointToCubeGS","Shader/Compiled/" },
 		
 		{ "GSParticle_Pyramid","Particle3DVS","VertexUVNormalColorMeshPS", "Shader/Compiled/", "Shader/Compiled/","PointToPyramidGS","Shader/Compiled/" },
-		{ "ImmdeiateParticle_Plane","ImmediateParticleVS","VertexUVColorMeshPS", "Shader/Compiled/", "Shader/Compiled/","PointToPlaneGS","Shader/Compiled/" },
+		{ "ImmdeiateParticle_Plane","ImmediateParticleVS","VertexUVNormalColorMeshPS", "Shader/Compiled/", "Shader/Compiled/","PointToCubeGS","Shader/Compiled/" },
 	};
 
 	Application::GetResourceContainer()->LoadShader(vec_names);

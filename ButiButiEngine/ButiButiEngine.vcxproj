@@ -209,6 +209,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BeforeComponentsLoader.cpp" />
+    <ClCompile Include="Booster.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="BulletEnemy.cpp" />
     <ClCompile Include="cpp\EnemyBehavior.cpp" />
@@ -218,6 +219,7 @@
     <ClCompile Include="cpp\PlayerBehavior.cpp" />
     <ClCompile Include="cpp\SampleScene.cpp" />
     <ClCompile Include="EnemySpawner.cpp" />
+    <ClCompile Include="PlayerLookingCamera.cpp" />
     <ClCompile Include="SceneChanger.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -230,6 +232,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BeforeComponentsLoader.h" />
+    <ClInclude Include="Booster.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="BulletEnemy.h" />
     <ClInclude Include="EnemySpawner.h" />
@@ -238,6 +241,7 @@
     <ClInclude Include="include\HitTestBehavior.h" />
     <ClInclude Include="include\PlayerBehavior.h" />
     <ClInclude Include="include\SampleScene.h" />
+    <ClInclude Include="PlayerLookingCamera.h" />
     <ClInclude Include="SceneChanger.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>

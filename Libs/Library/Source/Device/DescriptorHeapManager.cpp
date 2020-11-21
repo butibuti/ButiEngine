@@ -82,7 +82,7 @@ ButiEngine::HandleInformation ButiEngine::DescriptorHeapManager::CreateConstantB
 				isUseSpace = true;
 
 				top = itr->index;
-				itr->index + numRequired;
+				itr->index += numRequired;
 				itr->size -= numRequired;
 				if (itr->size == 0) {
 					vec_space.erase(itr);
@@ -224,7 +224,16 @@ void ButiEngine::DescriptorHeapManager::Release(const BlankSpace& arg_releaseSpa
 
 void ButiEngine::DescriptorHeapManager::ReCreateConstantBuffer()
 {
-	for (auto itr = vec_cbBackUpData.begin(); itr != vec_cbBackUpData.end(); itr++) {
+	std::reverse(vec_cbBackUpData.begin(), vec_cbBackUpData.end());
+	std::map<UINT, std::string> map_check;
+	for (auto itr = vec_cbBackUpData.begin();itr!= vec_cbBackUpData.end(); ) {
+		if (map_check.count(itr->top)) {
+			itr = vec_cbBackUpData.erase(itr);
+			continue;
+		}
+		else {
+			map_check.emplace(itr->top, "");
+		}
 
 		D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
 
@@ -239,6 +248,7 @@ void ButiEngine::DescriptorHeapManager::ReCreateConstantBuffer()
 
 		wkp_graphicDevice.lock()
 			->GetDevice().CreateConstantBufferView(&cbvDesc, itr->cpuHandle);
+		itr++;
 	}
 }
 

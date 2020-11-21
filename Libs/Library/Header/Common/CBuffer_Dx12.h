@@ -31,6 +31,9 @@ namespace ButiEngine {
 		
 	}
 	void CreateBuffer(const bool arg_mapKeep=true)override {
+		if (index != 0&&!this->IsCereal()) {
+			return;
+		}
 		mapKeep = arg_mapKeep;
 		auto out= wkp_heapManager.lock()->CreateConstantBufferView(instance.get(), mapKeep, size);
 		index= out.index;

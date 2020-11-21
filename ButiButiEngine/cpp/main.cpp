@@ -7,7 +7,7 @@
 
 #include"include/GameController.h"
 #include"Header/Device/ModelFileConverter.h"
-#include "Header/GameObjects/DefaultGameComponent/SucideComponent.h"
+#include "Booster.h"
 using namespace::ButiEngine;
 
 #ifdef DEBUG
@@ -31,15 +31,15 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	
 	app->InitLoadResources();
 	//ModelFileConverter::FBXtoB3M("block.fbx", "block.b3m", "Model/AirBattle/");
-	//ModelFileConverter::FBXtoB3M("enemy.fbx", "enemy.b3m", "Model/AirBattle/");
+	ModelFileConverter::FBXtoB3M("enemy.fbx", "enemy.b3m", "Model/AirBattle/");
 
 	std::shared_ptr<ComponentsLoader> componentsLoader = ObjectFactory::CreateFromCereal<ComponentsLoader>(GlobalSettings::GetResourceDirectory()+ "Application/componentLoader.loader");
 
 	//componentsLoader->AddBehavior<Bullet>();
 	//componentsLoader->AddBehavior<EnemyBehavior>();
 
-	//componentsLoader->RemoveComponent("GameController");
-	componentsLoader->AddGameComponent<SucideComponent>();
+	//componentsLoader->RemoveComponent("Booster");
+	componentsLoader->AddGameComponent<Booster>();
 
 	componentsLoader->CreateNameList();
 

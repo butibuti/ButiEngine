@@ -12,7 +12,7 @@ void ButiEngine::Booster::Start()
 void ButiEngine::Booster::OnUpdate()
 {
 	for (int i = 0; i < volume; i++) {
-		float seed = ButiRandom::GetRandom<float>(0.0, colorRange, 5);
+		float seed = ButiRandom::GetRandom<float>(0.0, colorRange, 10);
 		float sizeseed = ButiRandom::GetRandom<float>(0.0, sizeRange, 5);
 		Particle3D particle;
 		particle.position = gameObject.lock()->transform->GetWorldPosition() + offset * gameObject.lock()->transform->GetLocalRotation();

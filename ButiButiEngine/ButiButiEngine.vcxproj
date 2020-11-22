@@ -210,6 +210,7 @@
   <ItemGroup>
     <ClCompile Include="BeforeComponentsLoader.cpp" />
     <ClCompile Include="Booster.cpp" />
+    <ClCompile Include="BossEnemy.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="BulletEnemy.cpp" />
     <ClCompile Include="cpp\EnemyBehavior.cpp" />
@@ -219,8 +220,11 @@
     <ClCompile Include="cpp\PlayerBehavior.cpp" />
     <ClCompile Include="cpp\SampleScene.cpp" />
     <ClCompile Include="EnemySpawner.cpp" />
+    <ClCompile Include="HPBar.cpp" />
+    <ClCompile Include="LevelSelecter.cpp" />
     <ClCompile Include="PlayerLookingCamera.cpp" />
     <ClCompile Include="SceneChanger.cpp" />
+    <ClCompile Include="ScoreUI.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -233,16 +237,20 @@
   <ItemGroup>
     <ClInclude Include="BeforeComponentsLoader.h" />
     <ClInclude Include="Booster.h" />
+    <ClInclude Include="BossEnemy.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="BulletEnemy.h" />
     <ClInclude Include="EnemySpawner.h" />
+    <ClInclude Include="HPBar.h" />
     <ClInclude Include="include\EnemyBehavior.h" />
     <ClInclude Include="include\GameController.h" />
     <ClInclude Include="include\HitTestBehavior.h" />
     <ClInclude Include="include\PlayerBehavior.h" />
     <ClInclude Include="include\SampleScene.h" />
+    <ClInclude Include="LevelSelecter.h" />
     <ClInclude Include="PlayerLookingCamera.h" />
     <ClInclude Include="SceneChanger.h" />
+    <ClInclude Include="ScoreUI.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

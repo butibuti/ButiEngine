@@ -5,6 +5,7 @@
 #include"Header/GameParts/ResourceContainer.h"
 #include "Header/GameObjects/DefaultGameComponent/SucideComponent.h"
 #include"include/GameController.h"
+#include"HPBar.h"
 
 void ButiEngine::PlayerBehavior::Start()
 {
@@ -20,6 +21,8 @@ void ButiEngine::PlayerBehavior::Start()
 
 	stagemax = controller->GetStageMax();
 	stagemin = controller->GetStageMin();
+
+	hpBar = gameObject.lock()->GetGameObjectManager().lock()->GetGameObject("HPBar").lock()-> GetGameComponent<HPBar>();
 }
 
 void ButiEngine::PlayerBehavior::OnUpdate()
@@ -88,6 +91,7 @@ void ButiEngine::PlayerBehavior::OnCollisionEnter(std::weak_ptr<GameObject> arg_
 	moveForce += ((Vector3)(gameObject.lock()->transform->GetWorldPosition() - arg_other.lock()->transform->GetWorldPosition())).GetNormalize() * 2.5f;
 	moveForce.y = 0;
 	hp--;
+	hpBar->SetHP(hp);
 	if (hp <= 0) {
 		controllPase=0;
 		speed = 0;

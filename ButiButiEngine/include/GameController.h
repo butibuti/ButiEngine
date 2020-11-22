@@ -1,6 +1,7 @@
 #include "Header/GameComponentHeader.h"
 
 namespace ButiEngine {
+	class ScoreUI;
 	class GameController :public GameComponent {
 	public:
 		void Start()override;
@@ -51,7 +52,10 @@ namespace ButiEngine {
 		std::string befStage = "";
 		int nowScore;
 		int targetScore;
+		int combo;
 		std::shared_ptr<RelativeTimer> shp_timer;
+		std::shared_ptr<RelativeTimer> shp_combotimer;
+		std::shared_ptr<ScoreUI> shp_scoreUI;
 	};
 }
 

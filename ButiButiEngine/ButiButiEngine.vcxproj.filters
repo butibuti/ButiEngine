@@ -27,6 +27,10 @@
     <ClCompile Include="SceneChanger.cpp" />
     <ClCompile Include="PlayerLookingCamera.cpp" />
     <ClCompile Include="Booster.cpp" />
+    <ClCompile Include="LevelSelecter.cpp" />
+    <ClCompile Include="HPBar.cpp" />
+    <ClCompile Include="BossEnemy.cpp" />
+    <ClCompile Include="ScoreUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -52,6 +56,10 @@
     <ClInclude Include="SceneChanger.h" />
     <ClInclude Include="PlayerLookingCamera.h" />
     <ClInclude Include="Booster.h" />
+    <ClInclude Include="LevelSelecter.h" />
+    <ClInclude Include="HPBar.h" />
+    <ClInclude Include="BossEnemy.h" />
+    <ClInclude Include="ScoreUI.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ShootingGame">

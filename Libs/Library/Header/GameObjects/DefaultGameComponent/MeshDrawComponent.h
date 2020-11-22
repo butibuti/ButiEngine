@@ -33,6 +33,7 @@ namespace ButiEngine {
 		void OnSet()override;
 		void OnRemove() override;
 		void SetBlendMode(const BlendMode& arg_blendMode);
+		void SetMaterialTag(MaterialTag  arg_materialTag);
 		std::shared_ptr<GameComponent> Clone()override;
 		void Regist();
 		void ReRegist();

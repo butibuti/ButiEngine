@@ -101,7 +101,7 @@ void ButiEngine::Application::InitLoadResources()
 		uv_normalVertices.Clear();
 
 
-		MeshHelper::CreatePlane(Vector2(1, 1), 1.0f, 1, 1, colors, false, testVertices);
+		MeshHelper::CreatePlane(Vector2(1, 1), Vector3(), 1.0f, 1, 1, colors, false, testVertices);
 		Vertex::VertexHelper::VertexConvert(testVertices, uv_normalVertices);
 		Application::GetResourceContainer()->LoadMesh("Plane_UV_Normal", uv_normalVertices);
 		Vertex::VertexHelper::VertexConvert(testVertices, normalVertices);
@@ -114,7 +114,7 @@ void ButiEngine::Application::InitLoadResources()
 		normalVertices.Clear();
 		uv_normalVertices.Clear();
 
-		MeshHelper::CreatePlane(Vector2(1, 1), 10.0f, 2, 2, colors, false, testVertices);
+		MeshHelper::CreatePlane(Vector2(1, 1),Vector3(), 10.0f, 2, 2, colors, false, testVertices);
 		Vertex::VertexHelper::VertexConvert(testVertices, uv_normalVertices);
 		Application::GetResourceContainer()->LoadMesh("Plane_UV_Normal_max10", uv_normalVertices);
 		Vertex::VertexHelper::VertexConvert(testVertices, uvVertices);
@@ -125,7 +125,7 @@ void ButiEngine::Application::InitLoadResources()
 		normalVertices.Clear();
 		uv_normalVertices.Clear();
 
-		MeshHelper::CreatePlane(Vector2(1, 1), 100.0f, 2, 2, colors, false, testVertices);
+		MeshHelper::CreatePlane(Vector2(1, 1),Vector3(), 100.0f, 2, 2, colors, false, testVertices);
 		Vertex::VertexHelper::VertexConvert(testVertices, uv_normalVertices);
 		Application::GetResourceContainer()->LoadMesh("Plane_UV_Normal_max100", uv_normalVertices);
 		Vertex::VertexHelper::VertexConvert(testVertices, uvVertices);
@@ -144,6 +144,14 @@ void ButiEngine::Application::InitLoadResources()
 
 		Vertex::VertexHelper::VertexConvert(testVertices, uv_normalVertices);
 		Application::GetResourceContainer()->LoadMesh("SphereForParticle_UV_Normal_min", uv_normalVertices);
+
+
+		testVertices.Clear();
+		uv_normalVertices.Clear();
+		MeshHelper::CreatePlane(Vector2(1, 1), Vector3(0.5,0,0), 1.0f, 1, 1, colors, false, testVertices);
+		Vertex::VertexHelper::VertexConvert(testVertices, uv_normalVertices);
+		Application::GetResourceContainer()->LoadMesh("Bar", uv_normalVertices);
+
 	}
 
 	//Application::GetResourceContainer()->Reload();
@@ -154,6 +162,7 @@ void ButiEngine::Application::InitLoadResources()
 	std::vector<std::pair<std::string, std::string>> vec_pixelShaderPath = {
 		{"VertexUVNormalColorMeshPS", "Shader/Compiled/"},
 		{"VertexUVColorMeshPS", "Shader/Compiled/"},
+		{"VertexUVMeshPS", "Shader/Compiled/"},
 		{"GlidPS", "Shader/Compiled/"},
 		{"AmbientPS", "Shader/Compiled/"},
 		{"DefaultMeshPS", "Shader/Compiled/"},
@@ -199,6 +208,8 @@ void ButiEngine::Application::InitLoadResources()
 		
 		{ "GSParticle_Pyramid","Particle3DVS","VertexUVNormalColorMeshPS", "Shader/Compiled/", "Shader/Compiled/","PointToPyramidGS","Shader/Compiled/" },
 		{ "ImmdeiateParticle_Plane","ImmediateParticleVS","VertexUVNormalColorMeshPS", "Shader/Compiled/", "Shader/Compiled/","PointToCubeGS","Shader/Compiled/" },
+		{"UVMesh","VertexUVMeshVS","VertexUVMeshPS", "Shader/Compiled/", "Shader/Compiled/"},
+
 	};
 
 	Application::GetResourceContainer()->LoadShader(vec_names);
@@ -235,9 +246,18 @@ void ButiEngine::Application::InitLoadResources()
 	Application::GetResourceContainer()->LoadMotion(vec_motionPath);
 
 	std::vector<std::pair<std::string, std::string>> vec_texturePath = {
+		{"num_0.png","Texture/"},
+		{"num_1.png","Texture/"},
+		{"num_2.png","Texture/"},
+		{"num_3.png","Texture/"},
+		{"num_4.png","Texture/"},
+		{"num_5.png","Texture/"},
+		{"num_6.png","Texture/"},
+		{"num_7.png","Texture/"},
+		{"num_8.png","Texture/"},
+		{"num_9.png","Texture/"},
+		{"num_comma.png","Texture/"},
 		{"black.png","Texture/"},
-		{"sorena.png","Texture/"},
-		{"haikei.png","Texture/"},
 	};
 
 
@@ -252,10 +272,11 @@ void ButiEngine::Application::InitLoadResources()
 
 	Application::GetResourceContainer()->LoadMaterial(vec_materialPath);
 
-	//MaterialVariable materialVar;
+	MaterialVariable materialVar;
 
-	//Application::GetResourceContainer()->LoadMaterial(materialVar, vec_textureTag.at(2), "sorena");
-	//Application::GetResourceContainer()->LoadMaterial(materialVar,vec_textureTag.at(3),"haikei");
+	for(int i=0;i<10;i++)
+		Application::GetResourceContainer()->LoadMaterial(materialVar, vec_textureTag.at(i), "num_" + std::to_string(i));
+	Application::GetResourceContainer()->LoadMaterial(materialVar, vec_textureTag.at(11), "num_comma");
 
 	std::vector<std::pair<std::string, std::string>> vec_soundPath = {
 		{"se_maoudamashii_jingle13.wav","Sound/"},

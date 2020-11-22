@@ -1,10 +1,14 @@
 #include "stdafx.h"
 #include "..\include\GameController.h"
-
+#include"ScoreUI.h"
 void ButiEngine::GameController::Start()
 {
 	auto manager = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneManager().lock();
 	manager->RemoveScene(befStage);
+
+	shp_scoreUI = gameObject.lock()->GetGameObjectManager().lock()->GetGameObject("ScoreUI").lock()->GetGameComponent<ScoreUI>();
+
+	shp_combotimer = ObjectFactory::Create<RelativeTimer>(30);
 }
 
 void ButiEngine::GameController::OnUpdate()
@@ -16,7 +20,10 @@ void ButiEngine::GameController::OnUpdate()
 	if (shp_timer->Update()) {
 		gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneManager().lock()->ChangeScene(nextStage);
 	}
-
+	if (shp_combotimer->Update()) {
+		combo = 0;
+		shp_combotimer->Stop();
+	}
 }
 
 void ButiEngine::GameController::OnSet()
@@ -27,7 +34,16 @@ void ButiEngine::GameController::OnSet()
 
 int ButiEngine::GameController::AddScore(int arg_score)
 {
-	nowScore += arg_score;
+	combo++;
+
+
+
+	nowScore += arg_score*combo;
+
+	shp_combotimer->Start();
+	shp_combotimer->SetCount(0);
+
+	shp_scoreUI->SetScore(nowScore);
 
 	if (nowScore >= targetScore) {
 		auto manager = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneManager().lock();

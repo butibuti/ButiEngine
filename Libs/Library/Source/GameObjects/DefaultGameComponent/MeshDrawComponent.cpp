@@ -103,6 +103,12 @@ void ButiEngine::MeshDrawComponent::SetBlendMode(const BlendMode& arg_blendMode)
 	data->SetBlendMode(arg_blendMode);
 }
 
+void ButiEngine::MeshDrawComponent::SetMaterialTag(MaterialTag arg_materialTag)
+{
+	materialTag.clear();
+	materialTag.push_back(arg_materialTag);
+}
+
 std::shared_ptr<ButiEngine:: GameComponent> ButiEngine::MeshDrawComponent::Clone()
 {
 	if (shp_drawInfo) {

@@ -5,10 +5,14 @@ void ButiEngine::SplineCurveMover::OnUpdate()
 {
 	PositionSet();
 
-	t += 0.0025f;
+	t +=speed;
 
 	if (t > 1.0f) {
+		if(splineCurve.IsLoop())
 		t = 0;
+		else {
+			SetIsRemove(true);
+		}
 	}
 
 }
@@ -43,4 +47,9 @@ void ButiEngine::SplineCurveMover::PositionSet()
 void ButiEngine::SplineCurveMover::SetSplineCurve(const SplineCurve& arg_curve)
 {
 	splineCurve = arg_curve;
+}
+
+void ButiEngine::SplineCurveMover::SetSpeed(const float arg_spped)
+{
+	speed = arg_spped;
 }

@@ -28,11 +28,11 @@ void ButiEngine::ImmediateParticleController::OnUpdate()
 			endItr = vec_particleInfo.end();
 			remove++;
 		}else{
-				itr++;
+			itr++;
 		}
 	}
 	remove - addParticleCount;
-	for (int j = 0; j < addParticleCount; j++) {
+	for (int j = 0; j < remove; j++) {
 		shp_backUp->vertices.at(i + j).uv.x = 0.0f;
 	}
 
@@ -45,6 +45,14 @@ void ButiEngine::ImmediateParticleController::OnSet()
 	auto meshTag = gameObject.lock()->GetResourceContainer()->GetMeshTag(meshName);
 	shp_mesh = gameObject.lock()->GetResourceContainer()->GetMesh(meshTag).lock()->GetThis<Resource_RealTimeMesh>();
 	shp_backUp = shp_mesh->GetBackupData_Row()->GetThis<BackupData<Vertex::Vertex_UV_Normal_Color>>();
+}
+
+void ButiEngine::ImmediateParticleController::Start()
+{
+	auto endItr = shp_backUp->vertices.end();
+	for (auto itr = shp_backUp->vertices.begin(); itr != endItr; itr++) {
+		*itr = Vertex::Vertex_UV_Normal_Color();
+	}
 }
 
 void ButiEngine::ImmediateParticleController::AddParticle(const Particle3D& arg_particle)

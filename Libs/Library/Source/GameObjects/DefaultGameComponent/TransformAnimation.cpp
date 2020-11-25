@@ -11,16 +11,65 @@ void ButiEngine::TransformAnimation::OnUpdate()
         if (isReverse) {
             direction = -1;
         }
+        else
+        {
+            SetIsRemove(true);
+        }
     }else if (t <= 0.0f) {
         t = 0.0f;
         if (isReverse) {
             direction = 1;
+        }
+        else
+        {
+            SetIsRemove(true);
         }
     }
 
     PositionSet();
 
 }
+
+std::shared_ptr<ButiEngine::Transform> ButiEngine::TransformAnimation::GetInitTransform()
+{
+    return shp_initTransform;
+}
+
+std::shared_ptr<ButiEngine::Transform> ButiEngine::TransformAnimation::GetTargetTransform()
+{
+    return shp_targetTransform;
+}
+
+void ButiEngine::TransformAnimation::SetInitTransform(std::shared_ptr<Transform> arg_shp_InitTransform)
+{
+    shp_initTransform = arg_shp_InitTransform;
+}
+
+void ButiEngine::TransformAnimation::SetTargetTransform(std::shared_ptr<Transform> arg_shp_targetTransform)
+{
+    shp_targetTransform = arg_shp_targetTransform;
+}
+
+void ButiEngine::TransformAnimation::SetEaseType(const Easing::EasingType type)
+{
+    easeType = type;
+}
+
+void ButiEngine::TransformAnimation::SetSpeed(const float arg_speed)
+{
+    speed = arg_speed;
+}
+
+void ButiEngine::TransformAnimation::SetTime(const float arg_time)
+{
+    t = arg_time;
+}
+
+void ButiEngine::TransformAnimation::SetReverse(const bool arg_isReverse)
+{
+    isReverse = arg_isReverse;
+}
+
 
 std::shared_ptr<ButiEngine::GameComponent> ButiEngine::TransformAnimation::Clone()
 {
@@ -128,8 +177,12 @@ void ButiEngine::TransformAnimation::PositionSet()
     if (!gameObject.lock()) {
         return;
     }
-    gameObject.lock()->transform->SetWorldPosition(shp_initTransform->GetWorldPosition()+(shp_targetTransform->GetWorldPosition()-shp_initTransform->GetWorldPosition())*Easing::GetEase(t,easeType));
+    float time = Easing::GetEase(t, easeType);
+    gameObject.lock()->transform->SetLocalPosition(shp_initTransform->SetLocalPosition() + (shp_targetTransform->SetLocalPosition() - shp_initTransform->SetLocalPosition()) *time);
+    gameObject.lock()->transform->SetLocalScale(shp_initTransform->GetLocalScale()+(shp_targetTransform->GetLocalScale()-shp_initTransform->GetLocalScale())*time);
 
+    
+    gameObject.lock()->transform->SetLocalRotation(Calculator::SphereLerp(shp_initTransform->GetLocalRotation().ToQuat(), shp_targetTransform->GetLocalRotation().ToQuat(),time).ToMatrix());
 }
 
 void ButiEngine::TransformAnimation::OnSet()

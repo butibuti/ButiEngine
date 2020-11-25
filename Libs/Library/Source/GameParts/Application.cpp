@@ -70,7 +70,7 @@ void ButiEngine::Application::InitLoadResources()
 		std::vector<Color> colors;
 
 
-		MeshHelper::CreateSphereForParticle(Vector3(0.5f, 0.5f, 0.5f), 12, colors, testVertices);
+		MeshHelper::CreateSphereForParticle(Vector3(0.5f, 0.5f, 0.5f), 6, colors, testVertices);
 
 		Vertex::VertexHelper::VertexConvert(testVertices, uv_normalVertices);
 		Application::GetResourceContainer()->LoadMesh("SphereForParticle_UV_Normal", uv_normalVertices);
@@ -136,7 +136,7 @@ void ButiEngine::Application::InitLoadResources()
 		uv_normalVertices.Clear();
 
 
-		MeshHelper::CreateImmediateMeshForParticle(1024, testVertices);
+		MeshHelper::CreateImmediateMeshForParticle(2048, testVertices);
 		Application::GetResourceContainer()->LoadRealTimeMesh("Particle", testVertices);
 
 		testVertices.Clear();
@@ -165,6 +165,7 @@ void ButiEngine::Application::InitLoadResources()
 		{"VertexUVMeshPS", "Shader/Compiled/"},
 		{"GlidPS", "Shader/Compiled/"},
 		{"AmbientPS", "Shader/Compiled/"},
+		{"AmbientPS_Alpha", "Shader/Compiled/"},
 		{"DefaultMeshPS", "Shader/Compiled/"},
 	};
 	Application::GetResourceContainer()->LoadPixelShader(vec_pixelShaderPath);
@@ -210,6 +211,7 @@ void ButiEngine::Application::InitLoadResources()
 		{ "ImmdeiateParticle_Plane","ImmediateParticleVS","VertexUVNormalColorMeshPS", "Shader/Compiled/", "Shader/Compiled/","PointToCubeGS","Shader/Compiled/" },
 		{"UVMesh","VertexUVMeshVS","VertexUVMeshPS", "Shader/Compiled/", "Shader/Compiled/"},
 
+		{"OnlyMaterial_Alpha","DefaultMeshVS","AmbientPS_Alpha", "Shader/Compiled/", "Shader/Compiled/"},
 	};
 
 	Application::GetResourceContainer()->LoadShader(vec_names);
@@ -233,6 +235,7 @@ void ButiEngine::Application::InitLoadResources()
 		{"block.b3m", "Model/AirBattle/"},
 		{"enemy.b3m", "Model/AirBattle/"},
 		{"sword.b3m", "Model/AirBattle/"},
+		{"cloud.b3m", "Model/AirBattle/"},
 	};
 
 	Application::GetResourceContainer()->LoadModel(vec_modelPath);
@@ -274,16 +277,75 @@ void ButiEngine::Application::InitLoadResources()
 
 	MaterialVariable materialVar;
 
+	materialVar.diffuse = Vector4(1.0, 1.0, 1.0, 1.0);
 	for(int i=0;i<10;i++)
 		Application::GetResourceContainer()->LoadMaterial(materialVar, vec_textureTag.at(i), "num_" + std::to_string(i));
-	Application::GetResourceContainer()->LoadMaterial(materialVar, vec_textureTag.at(11), "num_comma");
+	Application::GetResourceContainer()->LoadMaterial(materialVar, vec_textureTag.at(10), "num_comma");
+
+	materialVar.diffuse = Vector4(0.9, 0.1, 0.1, 1.0);
+	Application::GetResourceContainer()->LoadMaterial(materialVar, vec_textureTag.at(11), "hpBar_red");
+	materialVar.diffuse = Vector4(0.1, 0.9, 0.1, 1.0);
+	Application::GetResourceContainer()->LoadMaterial(materialVar, vec_textureTag.at(11), "hpBar_green");
 
 	std::vector<std::pair<std::string, std::string>> vec_soundPath = {
-		{"se_maoudamashii_jingle13.wav","Sound/"},
-		{"bullet_hit.wav","Sound/"},
+		{"bgm.wav","Sound/"},
+		{"se_Damege.wav","Sound/"},
+		{"se_Bomb.wav","Sound/"},
+		{"se_Decision.wav","Sound/"},
+		{"se_Select.wav","Sound/"},
+		{"se_Slash.wav","Sound/"},
 	};
 
 	Application::GetResourceContainer()->LoadSound(vec_soundPath);
+	vec_modelPath.clear();
+	vec_modelPath = {
+		{"enemy_2.b3m", "Model/AirBattle/"},
+		{"enemy_3.b3m", "Model/AirBattle/"},
+		{"Building.b3m", "Model/AirBattle/"},
+		{"BorderLine.b3m", "Model/AirBattle/"},
+	};
+
+	Application::GetResourceContainer()->LoadModel(vec_modelPath);
+
+	materialVar.diffuse = Vector4(0.0, 0.0, 0.0, 0.6);
+
+	auto blackTag = vec_textureTag.at(11);
+
+	Application::GetResourceContainer()->LoadMaterial(materialVar, blackTag, "blackMaterial");
+	vec_texturePath.clear();
+	vec_texturePath = {
+		{"UI_Score.png","Texture/Re_UI_Images/"},
+		{"UI_Push_A.png","Texture/Re_UI_Images/"},
+		{"UI_HighScore.png","Texture/Re_UI_Images/"},
+		{"UI_Failed.png","Texture/Re_UI_Images/"},
+		{"UI_title.png","Texture/Re_UI_Images/"},
+		{"UI_Stage3.png","Texture/Re_UI_Images/"},
+		{"UI_Stage2.png","Texture/Re_UI_Images/"},
+		{"UI_Stage1.png","Texture/Re_UI_Images/"},
+		{"UI_Retry.png","Texture/Re_UI_Images/"},
+		{"UI_Select.png","Texture/Re_UI_Images/"},
+		{"UI_Clear.png","Texture/Re_UI_Images/"},
+	};
+
+
+	vec_textureTag = Application::GetResourceContainer()->LoadTexture(vec_texturePath);
+
+	materialVar.diffuse = Vector4(1.0, 1.0, 1.0, 1.0);
+	Application::GetResourceContainer()->LoadMaterial(materialVar, vec_textureTag.at(0), "scoreUI");
+	Application::GetResourceContainer()->LoadMaterial(materialVar, vec_textureTag.at(1), "UI_Push_A");
+	Application::GetResourceContainer()->LoadMaterial(materialVar, vec_textureTag.at(2), "UI_HighScore");
+	Application::GetResourceContainer()->LoadMaterial(materialVar, vec_textureTag.at(3), "UI_Failed");
+	Application::GetResourceContainer()->LoadMaterial(materialVar, vec_textureTag.at(4), "UI_title");
+	Application::GetResourceContainer()->LoadMaterial(materialVar, vec_textureTag.at(5), "UI_Stage3");
+	Application::GetResourceContainer()->LoadMaterial(materialVar, vec_textureTag.at(6), "UI_Stage2");
+	Application::GetResourceContainer()->LoadMaterial(materialVar, vec_textureTag.at(7), "UI_Stage1");
+	Application::GetResourceContainer()->LoadMaterial(materialVar, vec_textureTag.at(8), "UI_Retry");
+	Application::GetResourceContainer()->LoadMaterial(materialVar, vec_textureTag.at(9), "UI_Select");
+	Application::GetResourceContainer()->LoadMaterial(materialVar, vec_textureTag.at(10), "UI_Clear");
+
+	materialVar.diffuse = Vector4(0.95, 0, 0, 0.7);
+
+	Application::GetResourceContainer()->LoadMaterial(materialVar, blackTag, "warn_Red");
 }
 }
 

@@ -40,6 +40,7 @@ namespace ButiEngine {
 
 		void OnUpdate()override;
 		void OnSet()override;
+		void Start();
 		std::string GetGameComponentName()override {
 			return "ImmediateParticleController";
 		}

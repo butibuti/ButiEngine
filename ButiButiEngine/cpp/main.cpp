@@ -5,9 +5,10 @@
 
 #include"Header/GameParts/ResourceContainer.h"
 
-#include"include/GameController.h"
+#include"FailedSceneController.h"
+
 #include"Header/Device/ModelFileConverter.h"
-#include "ScoreUI.h"
+#include"Result.h"
 using namespace::ButiEngine;
 
 #ifdef DEBUG
@@ -24,14 +25,15 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	auto app = ObjectFactory::Create<Application>();
 
-	app->CreateInstances("ButiSampleApp", WindowPopType::max, 1260, 720);
+	app->CreateInstances("JetSaber", WindowPopType::max, 1260, 720);
 	ButiRandom::Initialize();
 	GameDevice::input.Initialize(app);
 
-	
+	Result::CreateInstance();
 	app->InitLoadResources();
-	//ModelFileConverter::FBXtoB3M("block.fbx", "block.b3m", "Model/AirBattle/");
-	//ModelFileConverter::FBXtoB3M("enemy.fbx", "enemy.b3m", "Model/AirBattle/");
+	//ModelFileConverter::FBXtoB3M("enemy_2.fbx", "enemy_2.b3m", "Model/AirBattle/");
+	//ModelFileConverter::FBXtoB3M("enemy_3.fbx", "enemy_3.b3m", "Model/AirBattle/");
+	//ModelFileConverter::FBXtoB3M("Cloud.fbx", "Cloud.b3m", "Model/AirBattle/");
 
 	std::shared_ptr<ComponentsLoader> componentsLoader = ObjectFactory::CreateFromCereal<ComponentsLoader>(GlobalSettings::GetResourceDirectory()+ "Application/componentLoader.loader");
 
@@ -39,12 +41,14 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//componentsLoader->AddBehavior<EnemyBehavior>();
 
 	//componentsLoader->RemoveComponent("Booster");
-	componentsLoader->AddGameComponent<ScoreUI>();
-
+	componentsLoader->AddGameComponent<ClearSceneController>();
 	componentsLoader->CreateNameList();
 
-	app->GetSceneManager()->SetScene_Init("SampleScene", ObjectFactory::Create<EditScene>(app->GetSceneManager(), SceneInformation("SampleScene"), componentsLoader));
-	app->GetSceneManager()->LoadScene("FailedScene", ObjectFactory::Create<Scene>(app->GetSceneManager(),SceneInformation("FailedScene")));
+	app->GetSceneManager()->SetScene_Init("TitleScene", ObjectFactory::Create<EditScene>(app->GetSceneManager(), SceneInformation("TitleScene"), componentsLoader));
+	app->GetSceneManager()->LoadScene("LevelSelectScene", ObjectFactory::Create<Scene>(app->GetSceneManager(), SceneInformation("LevelSelectScene")));
+	//p->GetSceneManager()->LoadScene("TitleScene", ObjectFactory::Create<Scene>(app->GetSceneManager(), SceneInformation("TitleScene")));
+	//app->GetSceneManager()->LoadScene("FailedScene", ObjectFactory::Create<Scene>(app->GetSceneManager(), SceneInformation("FailedScene")));
+	//app->GetSceneManager()->LoadScene("ClearScene", ObjectFactory::Create<Scene>(app->GetSceneManager(),SceneInformation("ClearScene")));
 	app->GetGraphicDevice()->SetClearColor(Vector4(0.39,0.58,0.92,1));
 	int returnCode = app->Run();
 
@@ -52,7 +56,7 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	componentsLoader->Release();
 	app->Exit();
-
+	Result::Output();
 
 	return returnCode;
 }

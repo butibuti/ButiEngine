@@ -23,6 +23,7 @@ namespace ButiEngine {
 		void OnShowUI()override;
 		void PositionSet();
 		void SetSplineCurve(const SplineCurve& arg_curve);
+		void SetSpeed(const float spped);
 	private:
 
 		SplineCurve splineCurve;

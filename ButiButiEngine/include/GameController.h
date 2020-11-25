@@ -26,6 +26,7 @@ namespace ButiEngine {
 		}
 
 		int AddScore(int arg_score);
+		void DestroyBoss(int score);
 		int GetNowScore(int  arg_score) {
 			return nowScore;
 		}
@@ -51,8 +52,10 @@ namespace ButiEngine {
 		std::string nextStage = "";
 		std::string befStage = "";
 		int nowScore;
+		int enemyCount;
 		int targetScore;
 		int combo;
+		bool isSpawnBoss=false;
 		std::shared_ptr<RelativeTimer> shp_timer;
 		std::shared_ptr<RelativeTimer> shp_combotimer;
 		std::shared_ptr<ScoreUI> shp_scoreUI;

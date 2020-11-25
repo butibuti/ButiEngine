@@ -71,3 +71,10 @@ void ButiEngine::EnemySpawner::OnShowUI()
     if(shp_timer)
     shp_timer->ShowGUI();
 }
+
+void ButiEngine::EnemySpawner::SpawnBoss()
+{
+    std::string bossStr ="Boss_"+ gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneInformation().GetSceneName();
+    auto newEnemy = gameObject.lock()->GetGameObjectManager().lock()->AddObjectFromCereal(bossStr);
+    newEnemy.lock()->transform->TranslateZ(70);
+}

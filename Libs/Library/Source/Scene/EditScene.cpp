@@ -6,9 +6,7 @@
 #include"include/HitTestBehavior.h"
 #include"Header/GameParts/ResourceContainer.h"
 #include"Header/Resources/ModelAnimation.h"
-//#include "..\..\Header\Scene\EditScene.h"
 #include"Header/Scene/ComponentsLoader.h"
-//#include "..\..\Header\Scene\EditScene.h"
 
 
 
@@ -31,6 +29,7 @@ void ButiEngine::EditScene::Update() {
 
 void ButiEngine::EditScene::Set()
 {
+	shp_gameObjectManager->Start();
 }
 
 void ButiEngine::EditScene::OnSet()
@@ -103,7 +102,7 @@ void ButiEngine::EditScene::UIUpdate()
 			AddCamera(prop2, "backGround", true);*/
 
 			auto prop = CameraProjProperty(windowSize.x, windowSize.y, 0, 0);
-			prop.farClip = 100.0f;
+			prop.farClip = 150.0f;
 			AddCamera(prop, "main", true);
 			AddCamera(prop, "edit", true);
 
@@ -303,7 +302,7 @@ void ButiEngine::EditScene::Initialize()
 	
 
 	auto prop = CameraProjProperty(windowSize.x, windowSize.y, 0, 0);
-	prop.farClip = 100.0f;
+	prop.farClip = 200.0f;
 	AddCamera(prop, "main", true);
 	auto prop2 = CameraProjProperty(windowSize.x, windowSize.y, 0, 0,true,1);
 	AddCamera(prop, "edit", true);
@@ -416,5 +415,10 @@ std::weak_ptr< ButiEngine::ISceneManager> ButiEngine::EditScene::GetSceneManager
 std::weak_ptr<ButiEngine::Collision::CollisionManager> ButiEngine::EditScene::GetCollisionManager()
 {
 	return shp_collisionManager;
+}
+
+ButiEngine::SceneInformation ButiEngine::EditScene::GetSceneInformation()
+{
+	return sceneInformation;
 }
 

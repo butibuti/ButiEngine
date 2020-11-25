@@ -101,7 +101,15 @@ void ButiEngine::GameObjectManager::ShowUI()
 		}
 	}
 
+	ImGui::InputTextWithHint("##objectName", "ObjectName", CallBacks::newObjectName, 128);
+
 	if (ImGui::Button("Add New")) {
+
+		std::string name = CallBacks::newObjectName;
+		CallBacks::NewObjectNameReset();
+		if (name.size()) {
+			AddObjectFromCereal(name);
+		}else
 		AddObject(ObjectFactory::Create<Transform>());
 	}
 

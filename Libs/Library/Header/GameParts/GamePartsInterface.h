@@ -39,8 +39,8 @@ namespace ButiEngine
 		virtual void StopCheck() = 0;
 		virtual void Update() = 0;
 		virtual void ClearCheck() = 0;
-		virtual void Play(SoundTag tag) = 0;
-		virtual void PlayBGM(SoundTag tag) = 0;
+		virtual void Play(SoundTag tag, float valume) = 0;
+		virtual void PlayBGM(SoundTag tag, float valume) = 0;
 		virtual void Release() = 0;
 	};
 

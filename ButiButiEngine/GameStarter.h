@@ -1,30 +1,30 @@
 #pragma once
 #include"Header/GameComponentHeader.h"
 namespace ButiEngine {
-	class LookAtComponent :public GameComponent
+	class GameStarter :public GameComponent
 	{
 	public:
-		LookAtComponent(std::shared_ptr<Transform> arg_shp_lookTarget);
-		LookAtComponent(){}
-
+		void Start()override;
 		void OnUpdate()override;
-		void OnSet()override;
-		void Detach();
 		std::string GetGameComponentName()override {
-			return "LookAtComponent";
+			return "GameStarter";
 		}
 		std::shared_ptr<GameComponent> Clone()override;
 		template<class Archive>
 		void serialize(Archive& archive)
 		{
-			archive(shp_lookTarget);
 			archive(isActive);
+			archive(requestPush);
+			archive(shp_relTimer);
 		}
 		void OnShowUI();
+		void OnSet();
 	private:
-		std::shared_ptr<Transform> shp_lookTarget;
+		int pushCount=0;
+		int requestPush = 1;
+		std::shared_ptr<RelativeTimer> shp_relTimer;
 	};
 
 }
 
-BUTI_REGIST_GAMECOMPONENT(ButiEngine::LookAtComponent);
+BUTI_REGIST_GAMECOMPONENT(ButiEngine::GameStarter);

@@ -11,8 +11,8 @@ namespace ButiEngine {
 		void StopCheck()override;
 		void Update()override;
 		void ClearCheck()override;
-		void Play(SoundTag tag)override;
-		void PlayBGM(SoundTag tag)override;
+		void Play(SoundTag tag, float valume)override;
+		void PlayBGM(SoundTag tag,float valume)override;
 		void Release()override;
 	private:
 		IXAudio2SourceVoice* cmp_bgm;

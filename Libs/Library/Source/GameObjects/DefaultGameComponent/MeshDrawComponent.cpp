@@ -272,7 +272,13 @@ void ButiEngine::MeshDrawComponent::OnShowUI()
 	if (ImGui::TreeNode("DrawSettings")) {
 
 		ImGui::BulletText("IsAlphaObject");
-		ImGui::Checkbox("##isAlpha", &shp_drawInfo->isAlpha);
+		if (ImGui::Checkbox("##isAlpha", &shp_drawInfo->isAlpha)) {
+			shp_drawInfo->isAlpha = !shp_drawInfo->isAlpha;
+			UnRegist();
+			shp_drawInfo->isAlpha = !shp_drawInfo->isAlpha;
+
+			Regist();
+		}
 
 		ImGui::BulletText("TopologyMode");
 

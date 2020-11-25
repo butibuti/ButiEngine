@@ -1544,6 +1544,9 @@ namespace ButiEngine {
 			vec_points.push_back(startAndEnd);
 			Initialize();
 		}
+		bool IsLoop()const {
+			return vec_points.at(0) == vec_points.at(vec_points.size()-1);
+		}
 
 		Vector3 GetPoint(float t) {
 			{

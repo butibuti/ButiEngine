@@ -39,6 +39,7 @@ namespace ButiEngine {
 		std::shared_ptr<ISoundManager> GetSoundManager()override;
 		std::weak_ptr< ISceneManager> GetSceneManager()override;
 		std::weak_ptr<Collision::CollisionManager> GetCollisionManager()override;
+		SceneInformation GetSceneInformation()override;
 	protected:
 		std::shared_ptr<ISceneManager> shp_sceneManager;
 		std::shared_ptr<GameObjectManager> shp_gameObjectManager;

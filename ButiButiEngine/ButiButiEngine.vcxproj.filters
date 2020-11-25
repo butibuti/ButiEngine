@@ -31,6 +31,12 @@
     <ClCompile Include="HPBar.cpp" />
     <ClCompile Include="BossEnemy.cpp" />
     <ClCompile Include="ScoreUI.cpp" />
+    <ClCompile Include="CloudMover.cpp" />
+    <ClCompile Include="Tilter.cpp" />
+    <ClCompile Include="GameStarter.cpp" />
+    <ClCompile Include="BuldingMover.cpp" />
+    <ClCompile Include="Result.cpp" />
+    <ClCompile Include="FailedSceneController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -60,6 +66,12 @@
     <ClInclude Include="HPBar.h" />
     <ClInclude Include="BossEnemy.h" />
     <ClInclude Include="ScoreUI.h" />
+    <ClInclude Include="CloudMover.h" />
+    <ClInclude Include="Tilter.h" />
+    <ClInclude Include="GameStarter.h" />
+    <ClInclude Include="BuldingMover.h" />
+    <ClInclude Include="Result.h" />
+    <ClInclude Include="FailedSceneController.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ShootingGame">

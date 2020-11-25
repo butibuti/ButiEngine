@@ -434,6 +434,9 @@ namespace ButiEngine {
 		inline void SetBaseTransform(std::shared_ptr<Transform> argParent, const bool arg_isKeepLocalPosition = false)
 		{
 			baseTransform = argParent;
+			if (argParent == nullptr)
+				return;
+
 			if (!arg_isKeepLocalPosition) {
 				localPosition = localPosition - baseTransform->GetWorldPosition();
 				if (localMatrix) {
@@ -445,7 +448,7 @@ namespace ButiEngine {
 		}
 		inline std::shared_ptr<Transform> GetBaseTransform()
 		{
-			return baseTransform->GetThis<Transform>();
+			return baseTransform;
 		}
 
 

@@ -16,6 +16,13 @@ void ButiEngine::LookAtComponent::OnUpdate()
 
 void ButiEngine::LookAtComponent::OnSet()
 {
+	if (!shp_lookTarget) { return; }
+	gameObject.lock()->transform->SetLookAtRotation(shp_lookTarget->GetWorldPosition());
+}
+
+void ButiEngine::LookAtComponent::Detach()
+{
+	shp_lookTarget = nullptr;
 }
 
 std::shared_ptr<ButiEngine::GameComponent> ButiEngine::LookAtComponent::Clone()
@@ -71,4 +78,6 @@ void ButiEngine::LookAtComponent::OnShowUI()
 
 	}
 
+	if (!shp_lookTarget) { return; }
+	gameObject.lock()->transform->SetLookAtRotation(shp_lookTarget->GetWorldPosition());
 }

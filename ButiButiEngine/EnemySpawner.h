@@ -66,6 +66,7 @@ namespace ButiEngine {
 		std::shared_ptr<GameComponent> Clone()override;
 
 		void OnShowUI()override;
+		void SpawnBoss();
 
 		template<class Archive>
 		void serialize(Archive& archive)

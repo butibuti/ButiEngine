@@ -4,10 +4,13 @@ namespace ButiEngine {
 	class PlayerLookingCamera :public GameComponent
 	{
 	public:
-		PlayerLookingCamera() {}
 
 		void OnUpdate()override;
 		void OnSet()override;
+		void Detach();
+		void SetBlendPos(const Vector3& arg_pos );
+		void SetPer(const float per);
+		void SetTarget(std::shared_ptr<Transform> arg_shp_lookTarget);
 		std::string GetGameComponentName()override {
 			return "PlayerLookingCamera";
 		}
@@ -25,6 +28,7 @@ namespace ButiEngine {
 		std::shared_ptr<Transform> shp_lookTarget;
 		Vector3 blendPos;
 		float per;
+		float targetPer;
 	};
 
 }

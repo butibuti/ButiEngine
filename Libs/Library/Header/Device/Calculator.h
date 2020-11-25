@@ -53,7 +53,38 @@ namespace ButiEngine {
 
 			return out;
 		}
-
+		static Quat SphereLerp(Quat arg_initQuat, Quat arg_quat, float time) {
+			auto output = Quat();
+			float ht = arg_initQuat.x * arg_quat.x + arg_initQuat.y * arg_quat.y + arg_initQuat.z * arg_quat.z + arg_initQuat.w * arg_quat.w;
+			float hs = 1.0 - ht * ht;
+			if (hs <= 0.0) {
+				output.x = arg_initQuat.x;
+				output.y = arg_initQuat.y;
+				output.z = arg_initQuat.z;
+				output.w = arg_initQuat.w;
+			}
+			else {
+				hs = std::sqrt(hs);
+				if (std::abs(hs) < 0.0001) {
+					output.x = (arg_initQuat.x * 0.5 + arg_quat.x * 0.5);
+					output.y = (arg_initQuat.y * 0.5 + arg_quat.y * 0.5);
+					output.z = (arg_initQuat.z * 0.5 + arg_quat.z * 0.5);
+					output.w = (arg_initQuat.w * 0.5 + arg_quat.w * 0.5);
+				}
+				else {
+					float ph = std::acos(ht);
+					float pt = ph * time;
+					float t0 = std::sin(ph - pt) / hs;
+					float t1 = std::sin(pt) / hs;
+					output.x = arg_initQuat.x * t0 + arg_quat.x * t1;
+					output.y = arg_initQuat.y * t0 + arg_quat.y * t1;
+					output.z = arg_initQuat.z * t0 + arg_quat.z * t1;
+					output.w = arg_initQuat.w * t0 + arg_quat.w * t1;
+				}
+			}
+			return output;
+		
+		}
 		static inline Vector3 LarpPosition(const Vector3& arg_startPoint, const Vector3& arg_endPoint, const float t) {
 			return arg_startPoint + (arg_endPoint - arg_startPoint) * t;
 

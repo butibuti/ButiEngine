@@ -9,6 +9,7 @@ void ButiEngine::ScoreUI::Start()
 	auto container = gameObject.lock()->GetResourceContainer();
 	auto drawInfo =ObjectFactory::Create< DrawInformation>();
 	drawInfo->drawSettings.blendMode = BlendMode::Addition;
+	drawInfo->isAlpha = true;
 	auto meshTag = container->GetMeshTag("Plane_UV");
 	auto shaderTag = container->GetShaderTag("UVMesh");
 	auto materialTag = container->GetMaterialTag("num_0");

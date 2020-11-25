@@ -5,7 +5,8 @@
 #include"Header/GameParts/ResourceContainer.h"
 #include "Header/GameObjects/DefaultGameComponent/SucideComponent.h"
 #include"include/GameController.h"
-#include"HPBar.h"
+#include"Header/GameObjects/DefaultGameComponent/TransformAnimation.h"
+#include"Header/GameObjects/DefaultGameComponent/CameraMan.h"
 
 void ButiEngine::PlayerBehavior::Start()
 {
@@ -22,11 +23,16 @@ void ButiEngine::PlayerBehavior::Start()
 	stagemax = controller->GetStageMax();
 	stagemin = controller->GetStageMin();
 
-	hpBar = gameObject.lock()->GetGameObjectManager().lock()->GetGameObject("HPBar").lock()-> GetGameComponent<HPBar>();
+	damageInvTimer = ObjectFactory::Create<RelativeTimer>(60);
+
+	shp_cameraman = gameObject.lock()->GetGameObjectManager().lock()->GetGameObject("camera").lock()->GetBehavior< CameraMan>();
 }
 
 void ButiEngine::PlayerBehavior::OnUpdate()
 {
+	if (damageInvTimer->Update()) {
+		damageInvTimer->Stop();
+	}
 	moveForce *= 0.7f;
 	if (GameDevice::input.GetLeftStick().x<0||GameDevice::input.CheckKey(Keys::A)) {
 		gameObject.lock()->transform->RollLocalRotationY_Degrees(-controllPase);
@@ -85,17 +91,47 @@ void ButiEngine::PlayerBehavior::OnShowUI()
 void ButiEngine::PlayerBehavior::OnCollisionEnter(std::weak_ptr<GameObject> arg_other)
 {
 
-	if (arg_other.lock()->GetGameObjectTag() != GameObjectTagManager::GetObjectTag("Enemy")) {
+	if (isInvisible|| damageInvTimer->IsOn()||arg_other.lock()->GetGameObjectTag() != GameObjectTagManager::GetObjectTag("Enemy")) {
 		return;
 	}
+	shp_cameraman->ShakeVartical(0.3f);
 	moveForce += ((Vector3)(gameObject.lock()->transform->GetWorldPosition() - arg_other.lock()->transform->GetWorldPosition())).GetNormalize() * 2.5f;
 	moveForce.y = 0;
 	hp--;
-	hpBar->SetHP(hp);
+	damageInvTimer->Start();
+
+
+	auto seTag = gameObject.lock()->GetResourceContainer()->GetSoundTag("se_Damege.wav", "Sound/");
+
+	gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSoundManager()->Play(seTag, 0.025);
+
+	auto warningPlane = gameObject.lock()->GetGameObjectManager().lock()->GetGameObject("Warning").lock();
+	auto warningtarget = warningPlane->transform->Clone();
+	auto warnAnim = warningPlane->AddGameComponent<TransformAnimation>();
+	warnAnim->SetSpeed(0.09);
+	warnAnim->SetEaseType(Easing::EasingType::Parabola);
+
+	warningtarget->SetLocalScale().y = 2000;
+
+	warnAnim->SetTargetTransform(warningtarget);
+
+	auto hpBar = gameObject.lock()->GetGameObjectManager().lock()->GetGameObject("HPBar_"+std::to_string(hp+1));;
+	if (hpBar.lock()) {
+
+		auto anim = hpBar.lock()->AddGameComponent<TransformAnimation>();
+		auto target = hpBar.lock()->transform->Clone();
+		target->SetLocalScale().x = 0;
+		anim->SetSpeed(0.1);
+		anim->SetTargetTransform(target);
+	}
+
 	if (hp <= 0) {
 		controllPase=0;
 		speed = 0;
-		gameObject.lock()->AddGameComponent<SucideComponent>(30.0f);
 		controller->Failed();
+
+		auto seTag = gameObject.lock()->GetResourceContainer()->GetSoundTag("se_Bomb.wav", "Sound/");
+
+		gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSoundManager()->Play(seTag, 0.025);
 	}
 }

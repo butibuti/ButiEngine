@@ -186,16 +186,56 @@ void ButiEngine::GameObject::ShowUI()
 	if (ImGui::TreeNode("Transform")) {
 		transform->ShowUI();
 
+		std::string target = "Looking:";
+		if (transform->GetBaseTransform()) {
+			target += "Existence";
+		}
+		else {
+			target += "nullptr";
+		}
+
+
+		ImGui::BeginChild("##BaseTransform", ImVec2((ImGui::GetFontSize()) * (target.size() + 2), ImGui::GetFontSize() * 2), true);
+		ImGui::BulletText((target).c_str());
+		if (transform->GetBaseTransform()) {
+			ImGui::SameLine();
+			if (ImGui::Button("Detach")) {
+				transform->SetBaseTransform( nullptr);
+			}
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Attach New")) {
+			if (!transform->GetBaseTransform())
+				transform->SetBaseTransform(ObjectFactory::Create<Transform>(),true);
+			else {
+				transform->SetBaseTransform(transform->GetBaseTransform()->Clone(), true);
+			}
+		}
+
+		if (ImGui::IsWindowHovered())
+		{
+			auto obj = GetApplication().lock()->GetGUIController()->GetDraggingObject();
+
+
+			if (obj && obj->IsThis<GameObject>()) {
+
+				auto trans = obj->GetThis<GameObject>()->transform;
+				transform->SetBaseTransform(trans,true);
+			}
+
+		}
+		ImGui::EndChild();
+
 		ImGui::TreePop();
 	}
 
 	if (ImGui::TreeNode("GameComponent")) {
 
 		auto endItr = vec_gameComponents.end();
-
-		for (auto itr = vec_gameComponents.begin(); itr != endItr;) {
+		int componentCount = 0;
+		for (auto itr = vec_gameComponents.begin(); itr != endItr;componentCount++) {
 			bool isComponentRemove = false;
-			if (ImGui::TreeNode((*itr)->GetGameComponentName().c_str())) {
+			if (ImGui::TreeNode(((*itr)->GetGameComponentName()+"##"+std::to_string(componentCount)).c_str())) {
 				if (ImGui::Button("Remove")) {
 					isComponentRemove = true;
 				}

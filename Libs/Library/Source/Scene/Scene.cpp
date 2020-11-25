@@ -14,6 +14,7 @@ void ButiEngine::Scene::Update() {
 
 void ButiEngine::Scene::Set()
 {
+	shp_gameObjectManager->Start();
 }
 
 void ButiEngine::Scene::OnSet()
@@ -75,6 +76,7 @@ void ButiEngine::Scene::Initialize()
 
 	shp_soundManager = ObjectFactory::Create<SoundManager>(GetThis<IScene>());
 
+	ActiveCollision(1);
 	auto windowSize = GetWindow()->GetSize();
 	std::string fullGameObjectManagerPath = GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation.GetSceneName() + "/objects.gameObjectManager";
 	if (Util::IsFileExistence(fullGameObjectManagerPath)) {
@@ -89,7 +91,7 @@ void ButiEngine::Scene::Initialize()
 	}
 
 	auto prop = CameraProjProperty(windowSize.x, windowSize.y, 0, 0);
-	prop.farClip = 100.0f;
+	prop.farClip = 150.0;
 	AddCamera(prop, "main", true);
 	auto prop2 = CameraProjProperty(windowSize.x, windowSize.y, 0, 0, true, 1);
 	AddCamera(prop2, "ui", true);
@@ -98,7 +100,6 @@ void ButiEngine::Scene::Initialize()
 	//AddCamera(prop3, "backGround", true);
 	OnInitialize();
 
-	shp_gameObjectManager->Start();
 }
 
 void ButiEngine::Scene::ActiveCollision(const UINT arg_layerCount)
@@ -199,5 +200,10 @@ std::weak_ptr< ButiEngine::ISceneManager> ButiEngine::Scene::GetSceneManager()
 std::weak_ptr<ButiEngine::Collision::CollisionManager> ButiEngine::Scene::GetCollisionManager()
 {
 	return shp_collisionManager;
+}
+
+ButiEngine::SceneInformation ButiEngine::Scene::GetSceneInformation()
+{
+	return sceneInformation;
 }
 

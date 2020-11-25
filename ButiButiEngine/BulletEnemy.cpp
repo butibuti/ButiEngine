@@ -2,7 +2,10 @@
 #include "BulletEnemy.h"
 #include "Bullet.h"
 #include "Header/GameObjects/DefaultGameComponent/SucideComponent.h"
+#include "Header/GameObjects/DefaultGameComponent/CameraMan.h"
 #include"include/GameController.h"
+#include"Header/GameParts/ResourceContainer.h"
+
 
 void ButiEngine::BulletEnemy::Start()
 {
@@ -60,6 +63,12 @@ void ButiEngine::BulletEnemy::OnCollisionEnter(std::weak_ptr<GameObject> arg_oth
 		hp--;
 		speed = 0.025;
 
+
+
+		auto seTag = gameObject.lock()->GetResourceContainer()->GetSoundTag("se_Slash.wav", "Sound/");
+
+		gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSoundManager()->Play(seTag, 0.025);
+
 		auto effect= gameObject.lock()->GetGameObjectManager().lock()->AddObjectFromCereal("SlashEffect");
 		effect.lock()->transform->SetWorldPosition((gameObject.lock()->transform->GetWorldPosition()));
 		//moveForce += ((Vector3)(gameObject.lock()->transform->GetWorldPosition()-arg_other.lock()->transform->GetWorldPosition() )).GetNormalize()*2.0f;
@@ -67,6 +76,12 @@ void ButiEngine::BulletEnemy::OnCollisionEnter(std::weak_ptr<GameObject> arg_oth
 			controller->AddScore(score);
 			gameObject.lock()->GetGameObjectManager().lock()->AddObjectFromCereal("Explosion", ObjectFactory::Create<Transform>(gameObject.lock()->transform->GetWorldPosition()));
 			gameObject.lock()->SetIsRemove(true);
+			gameObject.lock()->GetGameObjectManager().lock()->GetGameObject("camera").lock()->GetBehavior< CameraMan>()->ShakeVartical(0.3f);
+		}
+		else {
+
+			gameObject.lock()->GetGameObjectManager().lock()->GetGameObject("camera").lock()->GetBehavior< CameraMan>()->ShakeHorizontal(0.2f);
+
 		}
 	}
 }

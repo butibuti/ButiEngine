@@ -23,6 +23,7 @@ namespace ButiEngine {
 		virtual std::unique_ptr<Window>& GetWindow() = 0;
 		virtual void SceneEnd()=0;
 		virtual void Release() = 0;
+		virtual SceneInformation GetSceneInformation() = 0;
 	protected:
 	};
 

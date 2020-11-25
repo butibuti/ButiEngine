@@ -58,7 +58,7 @@ void ButiEngine::SoundManager::ClearCheck()
 
 
 
-void ButiEngine::SoundManager::Play(SoundTag tag)
+void ButiEngine::SoundManager::Play(SoundTag tag, float valume)
 {
 	IXAudio2SourceVoice* pSourceVoice;
 
@@ -67,13 +67,13 @@ void ButiEngine::SoundManager::Play(SoundTag tag)
 	waveData->buffer.Flags = XAUDIO2_END_OF_STREAM;
 	HRESULT hr = cmp_pXAudio2->CreateSourceVoice(&pSourceVoice, &waveData->format);
 	hr = pSourceVoice->SubmitSourceBuffer(&(waveData->buffer));
-
+	pSourceVoice->SetVolume(valume*4);
 	hr = pSourceVoice->Start();
 	vec_seVoices.push_back(pSourceVoice);
 
 }
 
-void ButiEngine::SoundManager::PlayBGM(SoundTag tag)
+void ButiEngine::SoundManager::PlayBGM(SoundTag tag, float valume)
 {
 	if (cmp_bgm) {
 		cmp_bgm->Stop();
@@ -81,11 +81,10 @@ void ButiEngine::SoundManager::PlayBGM(SoundTag tag)
 	}
 	auto waveData = wkp_iscene.lock()->GetSceneManager().lock()->GetApplication().lock()->GetResourceContainer()->GetSound(tag).lock()->GetWavDatas();
 	waveData->buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
-
 	waveData->buffer.Flags = XAUDIO2_END_OF_STREAM;
 	HRESULT hr = cmp_pXAudio2->CreateSourceVoice(&cmp_bgm, &waveData->format);
 	cmp_bgm->SubmitSourceBuffer(&waveData->buffer);
-
+	cmp_bgm->SetVolume(valume);
 	cmp_bgm->Start();
 }
 

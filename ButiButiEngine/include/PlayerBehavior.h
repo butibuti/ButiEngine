@@ -4,7 +4,7 @@
 namespace ButiEngine {
 	class GameController;
 	class ImmediateParticleController;
-	class HPBar;
+	class CameraMan;
 	class PlayerBehavior :public Behavior {
 	public:
 		void Start() override;
@@ -29,19 +29,24 @@ namespace ButiEngine {
 
 		void OnCollisionEnter(std::weak_ptr<GameObject> arg_other)override;
 
+		void SetIsInvisible(const bool arg_isInv) {
+			isInvisible = arg_isInv;
+		}
 	private:
 		float speed;
 		float controllPase;
 		float inertiaMinorPase;
 		Vector3 stagemin;
 		Vector3 stagemax;
-		int hp =10;
+		int hp =3;
 		Vector3 inertia;
 		Vector3 initPos;
 		Vector3 moveForce;
 		Matrix4x4 initRotate;
 		std::shared_ptr< GameController> controller;
-		std::shared_ptr< HPBar> hpBar;
+		std::shared_ptr<RelativeTimer> damageInvTimer;
+		std::shared_ptr<CameraMan> shp_cameraman;
+		bool isInvisible = false;
 	};
 }
 BUTI_REGIST_BEHAVIOR(ButiEngine::PlayerBehavior);

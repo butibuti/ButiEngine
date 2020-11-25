@@ -4,11 +4,40 @@
 void ButiEngine::PlayerLookingCamera::OnUpdate()
 {
 	if (!shp_lookTarget) { return; }
-	gameObject.lock()->transform->SetLookAtRotation(shp_lookTarget->GetWorldPosition());
+
+	auto lookPos = per* shp_lookTarget->GetWorldPosition() + (1 - per) * blendPos;
+
+	gameObject.lock()->transform->SetLookAtRotation(lookPos);
+	
+	if (abs(targetPer - per) > 0.03) {
+		per += 0.02 * (targetPer - per) / abs(targetPer - per);
+	}
+
 }
 
 void ButiEngine::PlayerLookingCamera::OnSet()
 {
+}
+
+void ButiEngine::PlayerLookingCamera::Detach()
+{
+	shp_lookTarget = nullptr;
+}
+
+void ButiEngine::PlayerLookingCamera::SetBlendPos(const Vector3& arg_pos)
+{
+	blendPos = arg_pos;
+}
+
+void ButiEngine::PlayerLookingCamera::SetPer(const float arg_per)
+{
+
+	 targetPer= arg_per;
+}
+
+void ButiEngine::PlayerLookingCamera::SetTarget(std::shared_ptr<Transform> arg_shp_lookTarget)
+{
+	shp_lookTarget = arg_shp_lookTarget;
 }
 
 std::shared_ptr<ButiEngine::GameComponent> ButiEngine::PlayerLookingCamera::Clone()

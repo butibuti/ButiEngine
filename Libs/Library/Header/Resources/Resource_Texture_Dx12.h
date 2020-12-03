@@ -2,6 +2,7 @@
 #include"stdafx.h"
 #include"Resource_Texture.h"
 namespace ButiEngine {
+	class GraphicDevice_Dx12;
 	class Resource_Texture_Dx12 :public Resource_Texture
 	{
 		struct CUSTAM_SUBRESOURCE_DATA

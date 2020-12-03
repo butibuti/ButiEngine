@@ -1,6 +1,10 @@
 #include"stdafx.h"
 #include"Header/Device/GraphicResourceUtil_Dx12.h"
 #include"Header/Device/Helper/ShaderHelper.h"
+
+#include"Header/GameParts/GraphicDevice_Dx12.h"
+#pragma comment(lib, "d3dcompiler.lib")
+#include <d3dcompiler.h>
 ButiEngine::Resource_PixelShader_Dx12::Resource_PixelShader_Dx12( const std::string& fileName, std::shared_ptr<GraphicDevice> arg_graphicDevice)
 	
 {

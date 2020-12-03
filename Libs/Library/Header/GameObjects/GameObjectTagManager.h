@@ -1,16 +1,17 @@
 #pragma once
 #include "stdafx.h"
 namespace ButiEngine {
+	class GameObject;
 	using GameObjectTag= ID<GameObject>;
 
 	class GameObjectTagManager
 	{
 	public:
-		static GameObjectTag CreateGameObjectTag(std::string arg_tagName);
-		static GameObjectTag GetObjectTag(std::string arg_tagName);
-		static std::string GetTagName(const GameObjectTag& arg_gameObj);
+		GameObjectTag CreateGameObjectTag(std::string arg_tagName);
+		GameObjectTag GetObjectTag(std::string arg_tagName);
+		std::string GetTagName(const GameObjectTag& arg_gameObj);
 	private:
-		static IDManager<GameObject> idManager;
+		IDManager<GameObject> idManager;
 	};
 
 }

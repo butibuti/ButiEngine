@@ -4,13 +4,13 @@
 void ButiEngine::HitTestBehavior::OnUpdate()
 {
 	
-	if (GameDevice::input.CheckKey(Keys::H)) {
+	if (GameDevice::GetInput()->CheckKey(Keys::H)) {
 		gameObject.lock()->transform->RollLocalRotationX_Degrees(1);
 	}
-	if (GameDevice::input.CheckKey(Keys::J)) {
+	if (GameDevice::GetInput()->CheckKey(Keys::J)) {
 		gameObject.lock()->transform->RollLocalRotationY_Degrees(1);
 	}
-	if (GameDevice::input.CheckKey(Keys::K)) {
+	if (GameDevice::GetInput()->CheckKey(Keys::K)) {
 		gameObject.lock()->transform->RollLocalRotationZ_Degrees(1);
 	}
 }

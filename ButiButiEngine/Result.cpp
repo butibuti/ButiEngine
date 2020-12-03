@@ -1,6 +1,7 @@
 #pragma once
 #include "stdafx.h"
 #include "Result.h"
+#include "..\..\Header\Common\CerealUtill.h"
 
 std::shared_ptr<ButiEngine::Result> ButiEngine::Result::shp_instance = nullptr;
 
@@ -83,6 +84,16 @@ int ButiEngine::Result::SetScore(const std::string& arg_stageName, const int sco
     return rank;
 }
 
+int ButiEngine::Result::SetCurrentScore(const std::string& arg_stageName, const int score)
+{
+	if (!map_score.count(arg_stageName)) {
+		return 0;
+	}
+	currentScore = score;
+
+	return currentScore;
+}
+
 int ButiEngine::Result::GetCurrentScore()
 {
 	return currentScore;
@@ -91,6 +102,11 @@ int ButiEngine::Result::GetCurrentScore()
 std::vector<int> ButiEngine::Result::GetScores(const std::string& arg_stageName)
 {
 	return map_score.at(arg_stageName);
+}
+
+int ButiEngine::Result::GetMaxScore(const std::string& arg_stageName)
+{
+	return map_score.at(arg_stageName).at(0);
 }
 
 void ButiEngine::Result::SetReplayScene(const std::string& arg_currentReplayScene)

@@ -1,5 +1,7 @@
 #pragma once
 #include"stdafx.h"
+
+#include"../Common/Geometry.h"
 namespace ButiEngine {
 	namespace Collision {
 		class CollisionPrimitive_Point;
@@ -9,6 +11,7 @@ namespace ButiEngine {
 		class CollisionPrimitive_Polygon;
 		class CollisionPrimitive_Surface;
 		class CollisionPrimitive_PLane;
+		class CollisionPrimitive_Ray;
 		class CollisionPrimitive :public IObject
 		{
 		public:
@@ -17,12 +20,13 @@ namespace ButiEngine {
 			virtual void Update() = 0;
 			virtual bool IsHit(std::weak_ptr< CollisionPrimitive> other) = 0;
 
-			virtual bool IsHitPoint(CollisionPrimitive_Point* other) = 0;
-			virtual bool IsHitPolygon(CollisionPrimitive_Polygon* other) = 0;
-			virtual bool IsHitSurface(CollisionPrimitive_Surface* other) = 0;
-			virtual bool IsHitSphere(CollisionPrimitive_Sphere* other) = 0;
-			virtual bool IsHitBox_AABB(CollisionPrimitive_Box_AABB* other) = 0;
-			virtual bool IsHitBox_OBB(CollisionPrimitive_Box_OBB* other) = 0;
+			virtual bool IsHitPoint(CollisionPrimitive_Point* other) { return false; }
+			virtual bool IsHitPolygon(CollisionPrimitive_Polygon* other) { return false; }
+			virtual bool IsHitSurface(CollisionPrimitive_Surface* other) { return false; }
+			virtual bool IsHitSphere(CollisionPrimitive_Sphere* other) { return false; }
+			virtual bool IsHitBox_AABB(CollisionPrimitive_Box_AABB* other) { return false; }
+			virtual bool IsHitBox_OBB(CollisionPrimitive_Box_OBB* other) { return false; }
+			virtual bool IsHitRay(CollisionPrimitive_Ray* other) { return false; }
 			virtual void GetMaxPointAndMinPoint(Vector3& arg_outputMax, Vector3& arg_outputMin) const = 0;
 			virtual std::shared_ptr<CollisionPrimitive> Clone() = 0;
 			virtual void ShowUI() = 0;
@@ -64,7 +68,7 @@ namespace ButiEngine {
 			}
 
 			void ShowUI() override {
-				ImGui::BulletText("Point");
+				GUI::BulletText("Point");
 			}
 
 			template<class Archive>
@@ -74,6 +78,60 @@ namespace ButiEngine {
 			}
 
 		private:
+		}; 
+		class CollisionPrimitive_Ray :public CollisionPrimitive,public Line
+		{
+		public:
+			inline CollisionPrimitive_Ray(std::weak_ptr<Transform> arg_weak_transform,const Vector3& arg_velocity)
+			{
+				wkp_transform = arg_weak_transform;
+				initVelocity = arg_velocity;
+			}
+			CollisionPrimitive_Ray() {}
+
+
+			bool IsHitSphere(CollisionPrimitive_Sphere* other)override;
+			bool IsHitPolygon(CollisionPrimitive_Polygon* other)override;
+			bool IsHitSurface(CollisionPrimitive_Surface* other)override;
+			inline void Update()override {
+				point = wkp_transform.lock()->GetWorldPosition();
+				velocity = initVelocity;
+				wkp_transform.lock()->GetRotatedVector(velocity);
+			}
+			inline bool IsHit(std::weak_ptr< CollisionPrimitive> other)override
+			{
+				return other.lock()->IsHitRay(this);
+
+
+			}
+			inline void GetMaxPointAndMinPoint(Vector3& arg_outputMax, Vector3& arg_outputMin) const override {
+				arg_outputMax = Vector3(100, 100, 100);
+				arg_outputMin = Vector3(-100, -100, -100);
+			}
+
+			std::shared_ptr<CollisionPrimitive> Clone()override {
+				auto ret = ObjectFactory::Create< CollisionPrimitive_Ray>();
+				ret->initVelocity = initVelocity;
+				ret->wkp_transform = wkp_transform;
+				return ret;
+			}
+
+			void ShowUI() override {
+				GUI::BulletText("Ray");
+				if (GUI::DragFloat3("##rayVelocity", &initVelocity.x, 0.01f, -500, 500)); {
+					initVelocity.Normalize();
+				}
+			}
+
+			template<class Archive>
+			void serialize(Archive& archive)
+			{
+				archive(wkp_transform);
+				archive(initVelocity);
+			}
+
+		private:
+			Vector3 initVelocity;
 		};
 		class CollisionPrimitive_Sphere :public CollisionPrimitive, public Geometry::Sphere
 		{
@@ -102,7 +160,7 @@ namespace ButiEngine {
 			bool IsHitBox_OBB(CollisionPrimitive_Box_OBB* other)override;
 			bool IsHitPolygon(CollisionPrimitive_Polygon* other)override;
 			bool IsHitSurface(CollisionPrimitive_Surface* other)override;
-
+			bool IsHitRay(CollisionPrimitive_Ray* other)override;
 			std::shared_ptr<CollisionPrimitive> Clone()override {
 				auto ret = ObjectFactory::Create<CollisionPrimitive_Sphere>();
 				ret->radius = radius;
@@ -110,10 +168,10 @@ namespace ButiEngine {
 			}
 			void ShowUI() override {
 
-				if (ImGui::TreeNode("Sphere")) {
-					ImGui::BulletText("radius");
-					ImGui::DragFloat("##radius", &radius, 0.01, 0, 500);
-					ImGui::TreePop();
+				if (GUI::TreeNode("Sphere")) {
+					GUI::BulletText("radius");
+					GUI::DragFloat("##radius", &radius, 0.01, 0, 500);
+					GUI::TreePop();
 				}
 
 			}
@@ -142,6 +200,9 @@ namespace ButiEngine {
 				Update();
 			}
 			CollisionPrimitive_Polygon() {}
+			void Initialize()override {
+				points.resize(initPoints.size());
+			}
 			inline void Update()override {
 				for (int i = 0; i < 3; i++) {
 					points[i] = initPoints[i] + wkp_transform.lock()->GetWorldPosition();
@@ -176,14 +237,15 @@ namespace ButiEngine {
 			bool IsHitBox_OBB(CollisionPrimitive_Box_OBB* other)override;
 			bool IsHitPolygon(CollisionPrimitive_Polygon* other)override;
 			bool IsHitSurface(CollisionPrimitive_Surface* other)override;
+			bool IsHitRay(CollisionPrimitive_Ray* other)override;
 			std::shared_ptr<CollisionPrimitive> Clone()override {
 				return ObjectFactory::Create<CollisionPrimitive_Polygon>();
 			}
 
 			void ShowUI() override {
-				ImGui::BulletText("Polygon");
+				GUI::BulletText("Polygon");
 				for (int i = 0; i < 3; i++) {
-					ImGui::DragFloat3(("point##" + std::to_string(i)).c_str(), &initPoints[i].x, 0.01f, -100, 100);
+					GUI::DragFloat3(("point##" + std::to_string(i)).c_str(), &initPoints[i].x, 0.01f, -100, 100);
 				}
 			}
 
@@ -221,10 +283,11 @@ namespace ButiEngine {
 			}
 			bool IsHitPoint(CollisionPrimitive_Point* other)override;
 			bool IsHitSphere(CollisionPrimitive_Sphere* other)override;
+			bool IsHitPolygon(CollisionPrimitive_Polygon* other)override;
 			bool IsHitBox_AABB(CollisionPrimitive_Box_AABB* other)override;
 			bool IsHitBox_OBB(CollisionPrimitive_Box_OBB* other)override;
-			bool IsHitPolygon(CollisionPrimitive_Polygon* other)override;
-			bool IsHitSurface(CollisionPrimitive_Surface* other)override;
+			bool IsHitSurface(CollisionPrimitive_Surface* other)override; 
+			bool IsHitRay(CollisionPrimitive_Ray* other)override;
 			std::shared_ptr<CollisionPrimitive> Clone()override {
 				auto ret = ObjectFactory::Create<CollisionPrimitive_Surface>();
 				ret->normal = normal;
@@ -232,12 +295,12 @@ namespace ButiEngine {
 			}
 			void ShowUI() override {
 
-				if (ImGui::TreeNode("Surface")) {
-					ImGui::BulletText("Normal");
-					if (ImGui::DragFloat3("##normal", &normal.x, 0.01, 0, 500)) {
+				if (GUI::TreeNode("Surface")) {
+					GUI::BulletText("Normal");
+					if (GUI::DragFloat3("##normal", &normal.x, 0.01, 0, 500)) {
 						normal.Normalize();
 					}
-					ImGui::TreePop();
+					GUI::TreePop();
 				}
 
 			}
@@ -282,10 +345,10 @@ namespace ButiEngine {
 
 			void ShowUI() override {
 
-				if (ImGui::TreeNode("Box_AABB")) {
-					ImGui::BulletText("Length");
-					ImGui::DragFloat3("##length", &initLengthes.x, 0.01, 0, 500);
-					ImGui::TreePop();
+				if (GUI::TreeNode("Box_AABB")) {
+					GUI::BulletText("Length");
+					GUI::DragFloat3("##length", &initLengthes.x, 0.01, 0, 500);
+					GUI::TreePop();
 				}
 			}
 
@@ -339,10 +402,10 @@ namespace ButiEngine {
 
 			void ShowUI() override {
 
-				if (ImGui::TreeNode("Box_OBB")) {
-					ImGui::BulletText("Length");
-					ImGui::DragFloat3("##length", &initLengthes.x, 0.01, 0, 500);
-					ImGui::TreePop();
+				if (GUI::TreeNode("Box_OBB")) {
+					GUI::BulletText("Length");
+					GUI::DragFloat3("##length", &initLengthes.x, 0.01, 0, 500);
+					GUI::TreePop();
 				}
 			}
 
@@ -364,15 +427,3 @@ namespace ButiEngine {
 		};
 	}
 }
-CEREAL_REGISTER_TYPE(ButiEngine::Collision::CollisionPrimitive_Point);
-CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::Collision::CollisionPrimitive, ButiEngine::Collision::CollisionPrimitive_Point);
-CEREAL_REGISTER_TYPE(ButiEngine::Collision::CollisionPrimitive_Sphere);
-CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::Collision::CollisionPrimitive, ButiEngine::Collision::CollisionPrimitive_Sphere);
-CEREAL_REGISTER_TYPE(ButiEngine::Collision::CollisionPrimitive_Box_AABB);
-CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::Collision::CollisionPrimitive, ButiEngine::Collision::CollisionPrimitive_Box_AABB);
-CEREAL_REGISTER_TYPE(ButiEngine::Collision::CollisionPrimitive_Box_OBB);
-CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::Collision::CollisionPrimitive, ButiEngine::Collision::CollisionPrimitive_Box_OBB);
-CEREAL_REGISTER_TYPE(ButiEngine::Collision::CollisionPrimitive_Polygon);
-CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::Collision::CollisionPrimitive, ButiEngine::Collision::CollisionPrimitive_Polygon);
-CEREAL_REGISTER_TYPE(ButiEngine::Collision::CollisionPrimitive_Surface);
-CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::Collision::CollisionPrimitive, ButiEngine::Collision::CollisionPrimitive_Surface);

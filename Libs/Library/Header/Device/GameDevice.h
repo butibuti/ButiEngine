@@ -1,16 +1,17 @@
 #pragma once
-#include"stdafx.h"
-#pragma comment(lib,"xaudio2.lib")
-#pragma comment(lib,"winmm.lib")
 
+#include"../Device/Input.h"
 namespace ButiEngine {
 
 	class GameDevice
 	{
 	public:
-		GameDevice();
 		~GameDevice();
-		static Input input;
+		static void Initialize();
 		static float WorldSpeed;
+		static std::unique_ptr<Input>& GetInput();
+	private:
+		GameDevice();
+		static std::unique_ptr<Input> input;
 	};
 }

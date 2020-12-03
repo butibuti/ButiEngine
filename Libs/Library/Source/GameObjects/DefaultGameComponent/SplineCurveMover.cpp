@@ -1,6 +1,8 @@
 #include"stdafx.h"
 #include "..\..\..\Header\GameObjects\DefaultGameComponent\SplineCurveMover.h"
 
+#include "..\..\Header\Common\CerealUtill.h"
+BUTI_REGIST_GAMECOMPONENT(ButiEngine::SplineCurveMover);
 void ButiEngine::SplineCurveMover::OnUpdate()
 {
 	PositionSet();
@@ -28,12 +30,12 @@ std::shared_ptr< ButiEngine::GameComponent> ButiEngine::SplineCurveMover::Clone(
 
 void ButiEngine::SplineCurveMover::OnShowUI()
 {
-	ImGui::BulletText("Time");
-	if (ImGui::SliderFloat("##t", &t, 0, 1)) {
+	GUI::BulletText("Time");
+	if (GUI::SliderFloat("##t", &t, 0, 1)) {
 		PositionSet();
 	}
-	ImGui::BulletText("Speed");
-	ImGui::DragFloat("##speed", &speed, 0, 1);
+	GUI::BulletText("Speed");
+	GUI::DragFloat("##speed", &speed, 0, 1);
 	if (splineCurve.ShowUI()) {
 		PositionSet();
 	}

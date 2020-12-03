@@ -71,7 +71,7 @@ namespace ButiEngine {
             }
             static inline float GetDistancePointToPolygon(const Vector3& arg_point,  const std::vector<Vector3>& arg_vertices) {
                 Vector3 closest;
-                // pointがp0の外側の頂点領域の中にあるかどうかチェック
+
                 Vector3 p0_p1 = arg_vertices[1] - arg_vertices[0];
                 Vector3 p0_p2 = arg_vertices[2] - arg_vertices[0];
                 Vector3 p0_pt = arg_point - arg_vertices[0];
@@ -81,12 +81,10 @@ namespace ButiEngine {
 
                 if (d1 <= 0.0f && d2<= 0.0f)
                 {
-                    // p0が最近傍
                     closest = arg_vertices[0];
                     return Calculator::Distance(closest, arg_point);
                 }
 
-                // pointがp1の外側の頂点領域の中にあるかどうかチェック
                 Vector3 p1_pt = arg_point - arg_vertices[1];
 
                 float d3 = p0_p1.Dot( p1_pt);
@@ -94,12 +92,11 @@ namespace ButiEngine {
 
                 if (d3>= 0.0f && d4 <= d3)
                 {
-                    // p1が最近傍
                     closest = arg_vertices[1];
                     return Calculator::Distance(closest, arg_point);
                 }
 
-                // pointがp0_p1の辺領域の中にあるかどうかチェックし、あればpointのp0_p1上に対する射影を返す
+
                 float vc = d1 * d4 - d3 * d2;
                 if (vc <= 0.0f && d1>= 0.0f && d3 <= 0.0f)
                 {
@@ -108,7 +105,7 @@ namespace ButiEngine {
                     return Calculator::Distance(closest, arg_point);
                 }
 
-                // pointがp2の外側の頂点領域の中にあるかどうかチェック
+
                 Vector3 p2_pt = arg_point - arg_vertices[2];
 
                 float d5 =p0_p1.Dot( p2_pt);
@@ -119,7 +116,7 @@ namespace ButiEngine {
                     return Calculator::Distance(closest, arg_point);
                 }
 
-                // pointがp0_p2の辺領域の中にあるかどうかチェックし、あればpointのp0_p2上に対する射影を返す
+
                 float vb = d5* d2 - d1 * d6;
                 if (vb <= 0.0f && d2 >= 0.0f && d6 <= 0.0f)
                 {
@@ -128,7 +125,7 @@ namespace ButiEngine {
                     return Calculator::Distance(closest, arg_point);
                 }
 
-                // pointがp1_p2の辺領域の中にあるかどうかチェックし、あればpointのp1_p2上に対する射影を返す
+
                 float va = d3 * d6- d5 * d4;
                 if (va <= 0.0f && (d4 - d3) >= 0.0f && (d5 - d6) >= 0.0f)
                 {
@@ -257,6 +254,28 @@ namespace ButiEngine {
                 }
                 return false;
             }
+            static inline bool IsHitLinePolygon(const Line& arg_line, const std::vector<Vector3>& arg_vertices) {
+                if (arg_vertices.size() < 3) {
+                    return false;
+                }
+                Vector3 normal = Vector3(arg_vertices.at(1) - arg_vertices.at(0)).Cross(arg_vertices.at(arg_vertices.size() - 1) - arg_vertices.at(0));
+                normal.Normalize();
+                if (!IsHitLineSurface(arg_line, arg_vertices.at(0), normal)) {
+                    return false;
+                }
+                auto startPointDis = GeometryUtill::GetDistance(arg_line.point, arg_vertices.at(0), normal);
+
+
+
+                auto intDivRaio = startPointDis/-(normal.Dot(arg_line.velocity));
+
+
+                Vector3 penetrationPoint = arg_line.point + arg_line.velocity*intDivRaio;
+
+
+
+                return GeometryUtill::IsContainPointInPolygon(penetrationPoint, normal, arg_vertices);
+            }
             static inline bool IsHitSegmentSurface(const Segment& arg_segment, const Vector3& arg_surfacePoint, const Vector3& arg_surfaceNormal) {
                 Vector3 v1 = arg_segment.point - arg_surfacePoint;
                 Vector3 v2 = arg_segment.GetEndPoint() - arg_surfacePoint;
@@ -283,6 +302,46 @@ namespace ButiEngine {
 
 
                 return GeometryUtill::IsContainPointInPolygon(penetrationPoint, normal, arg_vertices);
+            }
+        }
+        namespace RayHit {
+            static inline float GetDistanceRayPoint(const Line& arg_ray,const Vector3& arg_point) {
+
+            }
+
+            static inline bool HitRaySphere(const Line& arg_ray, const Sphere& arg_sphere) {
+                Vector3 spherePos = arg_sphere.position;
+                spherePos.x = spherePos.x - arg_ray.point.x;
+                spherePos.y = spherePos.y - arg_ray.point.y;
+                spherePos.z = spherePos.z - arg_ray.point.z;
+
+                float A = arg_ray.velocity.x * arg_ray.velocity.x + arg_ray.velocity.y * arg_ray.velocity.y + arg_ray.velocity.z * arg_ray.velocity.z;
+                float B = arg_ray.velocity.x * spherePos.x + arg_ray.velocity.y * spherePos.y + arg_ray.velocity.z * spherePos.z;
+                float C = spherePos.x * spherePos.x + spherePos.y * spherePos.y + spherePos.z * spherePos.z - arg_sphere.radius * arg_sphere.radius;
+
+                if (A == 0.0f)
+                    return false; 
+
+                float s = B * B - A * C;
+                if (s < 0.0f)
+                    return false; 
+
+                s = sqrtf(s);
+                float a1 = (B - s) / A;
+                float a2 = (B + s) / A;
+
+                if (a1 < 0.0f || a2 < 0.0f)
+                    return false; 
+
+
+                return true;
+            }
+            static inline bool HitRayPolygon(const Line& arg_ray, const std::vector<Vector3> arg_polygon) {
+
+            }
+
+            static inline bool HitRaySurfase(const Line& arg_ray, const Vector3& arg_point, const Vector3& arg_normal) {
+
             }
         }
 

@@ -3,7 +3,7 @@
 #include"Header/Device/GraphicResourceUtil_Dx12.h"
 #include"Header/Device/DescriptorHeapManager.h"
 #include "..\..\Header\GameParts\GraphicDevice_Dx12.h"
-ButiEngine::GraphicDevice_Dx12::GraphicDevice_Dx12(std::weak_ptr<Application> arg_wkp_application)
+ButiEngine::GraphicDevice_Dx12::GraphicDevice_Dx12(std::weak_ptr<IApplication> arg_wkp_application)
 {
 	wkp_application = arg_wkp_application;
 }

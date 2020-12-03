@@ -16,7 +16,7 @@ void ButiEngine::SceneChanger::Start()
 void ButiEngine::SceneChanger::OnUpdate()
 {
 
-	if (GameDevice::input.GetAnyButton() || GameDevice::input.CheckKey(Keys::Space)) {
+	if (GameDevice::GetInput()->GetAnyButton() || GameDevice::GetInput()->CheckKey(Keys::Space)) {
 
 
 		auto seTag = gameObject.lock()->GetResourceContainer()->GetSoundTag("se_Decision.wav", "Sound/");
@@ -25,10 +25,13 @@ void ButiEngine::SceneChanger::OnUpdate()
 
 		auto manager = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneManager().lock();
 		manager->RemoveScene(removeScene);
-		manager->LoadScene(loadScene, ObjectFactory::Create<Scene>(manager, SceneInformation(loadScene)));
+		manager->LoadScene(loadScene);
 
 		auto wkp_cam = gameObject.lock()->GetGameObjectManager().lock()->GetGameObject("camera");
-		wkp_cam.lock()->GetGameComponent<LookAtComponent>()->Detach();
+		auto look= wkp_cam.lock()->GetGameComponent<LookAtComponent>();
+		if (look) {
+			look->Detach();
+		}
 		auto anim = wkp_cam.lock()->AddGameComponent<TransformAnimation>();
 		auto targetTransform = wkp_cam.lock()->transform->Clone();
 		targetTransform->RollLocalRotationX_Degrees(-90);
@@ -53,42 +56,42 @@ void ButiEngine::SceneChanger::OnUpdate()
 
 void ButiEngine::SceneChanger::OnShowUI()
 {
-	ImGui::BulletText("SceneChangeFrame");
-	ImGui::DragInt("##SceneChangeFrame", &changeInterval, 1, 0, 600);
-	if (ImGui::TreeNode("RemoveScene")) {
+	GUI::BulletText("SceneChangeFrame");
+	GUI::DragInt("##SceneChangeFrame", &changeInterval, 1, 0, 600);
+	if (GUI::TreeNode("RemoveScene")) {
 
-		ImGui::InputTextWithHint("##RemoveName", removeScene.c_str(), CallBacks::objectName, 64, 64, CallBacks::ImguiCallBack);
-		ImGui::SameLine();
+		GUI::InputTextWithHint("##RemoveName", removeScene.c_str(), GUI::objectName, 64, 64);
+		GUI::SameLine();
 
-		if (ImGui::Button("Change")) {
-			removeScene = CallBacks::objectName;
-			CallBacks::ObjectNameReset();
+		if (GUI::Button("Change")) {
+			removeScene = GUI::objectName;
+			GUI::ObjectNameReset();
 
 		}
-		ImGui::TreePop();
+		GUI::TreePop();
 	}
-	if (ImGui::TreeNode("ChangeScene")) {
+	if (GUI::TreeNode("ChangeScene")) {
 
-		ImGui::InputTextWithHint("##ChangeName", nextScene.c_str(), CallBacks::objectName, 64, 64, CallBacks::ImguiCallBack);
-		ImGui::SameLine();
+		GUI::InputTextWithHint("##ChangeName", nextScene.c_str(), GUI::objectName, 64, 64);
+		GUI::SameLine();
 
-		if (ImGui::Button("Change")) {
-			nextScene = CallBacks::objectName;
-			CallBacks::ObjectNameReset();
+		if (GUI::Button("Change")) {
+			nextScene = GUI::objectName;
+			GUI::ObjectNameReset();
 
 		}
-		ImGui::TreePop();
+		GUI::TreePop();
 	}
-	if (ImGui::TreeNode("LoadScene")) {
+	if (GUI::TreeNode("LoadScene")) {
 
-		ImGui::InputTextWithHint("##LoadName", loadScene.c_str(), CallBacks::objectName, 64, 64, CallBacks::ImguiCallBack);
-		ImGui::SameLine();
+		GUI::InputTextWithHint("##LoadName", loadScene.c_str(), GUI::objectName, 64, 64);
+		GUI::SameLine();
 
-		if (ImGui::Button("Change")) {
-			loadScene = CallBacks::objectName;
-			CallBacks::ObjectNameReset();
+		if (GUI::Button("Change")) {
+			loadScene = GUI::objectName;
+			GUI::ObjectNameReset();
 
 		}
-		ImGui::TreePop();
+		GUI::TreePop();
 	}
 }

@@ -3,19 +3,15 @@
 namespace ButiEngine {
 	class DescriptorHeapManager;
 	class PipelineStateManager;
-	struct Resource {
-		virtual void  ResourceUpdate() {}
-		virtual void  UpdateResourceRelease() {}
-	};
 
 	static const unsigned char TextureTableRegion = 1;
 	static const unsigned char SamplerTableRegion = 1;
-	class Application;
+	class IApplication;
 	class GraphicDevice_Dx12 :public GraphicDevice
 	{
 	public:
 
-		GraphicDevice_Dx12(std::weak_ptr<Application> arg_wkp_application);
+		GraphicDevice_Dx12(std::weak_ptr<IApplication> arg_wkp_application);
 		void Initialize()override;
 
 		void PreInitialize()override;

@@ -16,8 +16,11 @@ void ButiEngine::GameController::Start()
 {
 	auto manager = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneManager().lock();
 	manager->RemoveScene(befStage);
+	shp_scoreUIObject = gameObject.lock()->GetGameObjectManager().lock()->GetGameObject("ScoreUI").lock();
+	shp_scoreUI = shp_scoreUIObject->GetGameComponent<ScoreUI>();
 
-	shp_scoreUI = gameObject.lock()->GetGameObjectManager().lock()->GetGameObject("ScoreUI").lock()->GetGameComponent<ScoreUI>();
+	shp_remainUIObject = gameObject.lock()->GetGameObjectManager().lock()->GetGameObject("UI_Remain").lock();
+	shp_remainUI = shp_remainUIObject->GetGameComponent<RemainUI>();
 
 	shp_combotimer = ObjectFactory::Create<RelativeTimer>(30);
 	CloudMover::startZ = 130;
@@ -26,11 +29,14 @@ void ButiEngine::GameController::Start()
 
 void ButiEngine::GameController::OnUpdate()
 {
-
+	if (!init) {
+		init = true;
+		shp_remainUI->SetScore(targetScore);
+	}
 	if (shp_timer->Update()) {
 		auto manager = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneManager().lock();
 		manager->RemoveScene(nextStage);
-		manager->LoadScene(nextStage, ObjectFactory::Create<Scene>(manager, SceneInformation(nextStage)));
+		manager->LoadScene(nextStage,ObjectFactory::Create< SceneInformation>(nextStage));
 		manager->ChangeScene(nextStage,60);
 		SetIsActive(false);
 		auto wkp_cam = gameObject.lock()->GetGameObjectManager().lock()->GetGameObject("camera");
@@ -44,7 +50,7 @@ void ButiEngine::GameController::OnUpdate()
 		targetTransform->RollLocalRotationX_Degrees(-90);
 		targetTransform->TranslateY(10);
 		anim->SetTargetTransform(targetTransform);
-		anim->SetSpeed(0.05);
+		anim->SetSpeed(0.07);
 
 		auto uibase = gameObject.lock()->GetGameObjectManager().lock()->GetGameObject("UIBase");
 		if (uibase.lock()) {
@@ -82,13 +88,48 @@ int ButiEngine::GameController::AddScore(int arg_score)
 	shp_combotimer->Start();
 	shp_combotimer->SetCount(0);
 
+	if (nowScore >= Result::GetInstance()->GetMaxScore(gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneInformation()->GetSceneName())) {
+		shp_scoreUI->SetColor(Vector4(0.92, 0.84, 0.06, 1.0));
+	}
 	shp_scoreUI->SetScore(nowScore);
+	auto scoreAnim= shp_scoreUIObject->GetGameComponent<TransformAnimation>();
+	if (!scoreAnim) {
+		scoreAnim = shp_scoreUIObject->AddGameComponent<TransformAnimation>();
+		scoreAnim->SetSpeed(0.07);
+		scoreAnim->SetEaseType(Easing::EasingType::Parabola);
 
+		auto target= shp_scoreUIObject->transform->Clone();
+
+		scoreAnim->SetTargetTransform(target);
+	}
+
+	scoreAnim->GetTargetTransform()->SetLocalScale() *= 1.1;
+	scoreAnim->SetTime(0);
+	
 	enemyCount++;
+
+
+	shp_remainUI->SetScore(max (0,targetScore-enemyCount));
+
+
+	auto remainAnim = shp_remainUIObject->GetGameComponent<TransformAnimation>();
+	if (!remainAnim) {
+		remainAnim = shp_remainUIObject->AddGameComponent<TransformAnimation>();
+		remainAnim->SetSpeed(0.07);
+		remainAnim->SetEaseType(Easing::EasingType::Parabola);
+
+		auto target = shp_remainUIObject->transform->Clone();
+
+		remainAnim->SetTargetTransform(target);
+	}
+
+	remainAnim->GetTargetTransform()->SetLocalScale() *= 1.1;
+	remainAnim->SetTime(0);
+
 
 	if (enemyCount >= targetScore&&!isSpawnBoss) {
 
-		if (gameObject.lock()->GetGameObjectManager().lock()->GetGameObject("Boss_" + gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneInformation().GetSceneName()).lock()) {
+		if (gameObject.lock()->GetGameObjectManager().lock()->GetGameObject("Boss_" + gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneInformation()->GetSceneName()).lock()) {
 			return nowScore;
 		}
 		isSpawnBoss = true;
@@ -113,7 +154,25 @@ void ButiEngine::GameController::DestroyBoss(int arg_score)
 	shp_combotimer->Start();
 	shp_combotimer->SetCount(0);
 
-	shp_scoreUI->SetScore(nowScore);
+	shp_scoreUI->SetScore(nowScore); 
+
+	if (nowScore >= Result::GetInstance()->GetMaxScore(gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneInformation()->GetSceneName())) {
+		shp_scoreUI->SetColor(Vector4(0.92, 0.84, 0.06, 1.0));
+	}
+
+	auto scoreAnim = shp_scoreUIObject->GetGameComponent<TransformAnimation>();
+	if (!scoreAnim) {
+		scoreAnim = shp_scoreUIObject->AddGameComponent<TransformAnimation>();
+		scoreAnim->SetSpeed(0.05);
+		scoreAnim->SetEaseType(Easing::EasingType::Parabola);
+
+		auto target = shp_scoreUIObject->transform->Clone();
+
+		scoreAnim->SetTargetTransform(target);
+	}
+
+	scoreAnim->GetTargetTransform()->SetLocalScale() *= 1.1;
+	scoreAnim->SetTime(0);
 
 	if (enemyCount >= targetScore) {
 
@@ -124,7 +183,7 @@ void ButiEngine::GameController::DestroyBoss(int arg_score)
 
 		nextStage = "ClearScene";
 		shp_timer->Start();
-		auto sceneName = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneInformation().GetSceneName();
+		auto sceneName = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneInformation()->GetSceneName();
 		Result::GetInstance()->SetScore(sceneName, nowScore);
 		Result::GetInstance()->SetReplayScene(sceneName);
 		auto cam = gameObject.lock()->GetGameObjectManager().lock()->GetGameObject("camera").lock();
@@ -154,6 +213,10 @@ void ButiEngine::GameController::DestroyBoss(int arg_score)
 
 		}
 		splineMover->SetSplineCurve(curve);
+
+
+		GameDevice::WorldSpeed = 0.125f;
+		
 	}
 
 	return ;
@@ -169,8 +232,8 @@ void ButiEngine::GameController::Failed()
 	auto playerGameObj = gameObject.lock()->GetGameObjectManager().lock()->GetGameObject("Player").lock();
 	auto player = playerGameObj->GetBehavior<PlayerBehavior>();
 	player->SetIsRemove(true);
-	auto sceneName = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneInformation().GetSceneName();
-	Result::GetInstance()->SetScore(sceneName, nowScore);
+	auto sceneName = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneInformation()->GetSceneName();
+	Result::GetInstance()->SetCurrentScore(sceneName, nowScore);
 	Result::GetInstance()->SetReplayScene(sceneName);
 
 
@@ -192,38 +255,39 @@ void ButiEngine::GameController::Failed()
 	auto playerLooker = cam->GetGameComponent<PlayerLookingCamera>();
 	playerLooker->SetPer(1.0);
 
+	GameDevice::WorldSpeed = 0.125f;
 }
 
 void ButiEngine::GameController::OnShowUI()
 {
-	ImGui::BulletText("StageRange_Max");
-	ImGui::DragFloat3("##max", &stageMax.x, 0.1f, -80.0f, 80.0f);
-	ImGui::BulletText("StageRange_Min");
-	ImGui::DragFloat3("##min", &stageMin.x, 0.1f, -80.0f, 80.0f);
-	ImGui::BulletText("TargetScore");
-	ImGui::DragInt("##TargetScore", &targetScore, 1.0, 0, 10000000000);
-	ImGui::BulletText("NowScore");
-	ImGui::DragInt("##NowScore", &nowScore, 1.0, 0, 10000000000);
-	ImGui::BulletText("NextStageName");
+	GUI::BulletText("StageRange_Max");
+	GUI::DragFloat3("##max", &stageMax.x, 0.1f, -80.0f, 80.0f);
+	GUI::BulletText("StageRange_Min");
+	GUI::DragFloat3("##min", &stageMin.x, 0.1f, -80.0f, 80.0f);
+	GUI::BulletText("TargetScore");
+	GUI::DragInt("##TargetScore", &targetScore, 1.0, 0, 10000000000);
+	GUI::BulletText("NowScore");
+	GUI::DragInt("##NowScore", &nowScore, 1.0, 0, 10000000000);
+	GUI::BulletText("NextStageName");
 
-	ImGui::InputTextWithHint("##Name", nextStage.c_str(), CallBacks::objectName, 64, 64, CallBacks::ImguiCallBack);
-	ImGui::SameLine();
+	GUI::InputTextWithHint("##Name", nextStage.c_str(), GUI::objectName, 64, 64);
+	GUI::SameLine();
 
-	if (ImGui::Button("Change")) {
-		nextStage = CallBacks::objectName;
-		CallBacks::ObjectNameReset();
-
-	}
-	ImGui::BulletText("BefStageName");
-	ImGui::InputTextWithHint("##befName", befStage.c_str(), CallBacks::objectName, 64, 64, CallBacks::ImguiCallBack);
-	ImGui::SameLine();
-
-	if (ImGui::Button("Change##befName")) {
-		befStage = CallBacks::objectName;
-		CallBacks::ObjectNameReset();
+	if (GUI::Button("Change")) {
+		nextStage = GUI::objectName;
+		GUI::ObjectNameReset();
 
 	}
+	GUI::BulletText("BefStageName");
+	GUI::InputTextWithHint("##befName", befStage.c_str(), GUI::objectName, 64, 64);
+	GUI::SameLine();
 
-	ImGui::BulletText("Timer");
+	if (GUI::Button("Change##befName")) {
+		befStage = GUI::objectName;
+		GUI::ObjectNameReset();
+
+	}
+
+	GUI::BulletText("Timer");
 	shp_timer->ShowGUI();
 }

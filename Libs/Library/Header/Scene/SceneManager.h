@@ -4,11 +4,11 @@
 
 #include"stdafx.h"
 namespace ButiEngine {
-	class Application;
+	class IApplication;
 	class SceneManager :public ISceneManager
 	{
 	public:
-		SceneManager(std::weak_ptr<Application> arg_wkp_app);
+		SceneManager(std::weak_ptr<IApplication> arg_wkp_app);
 
 		inline void Update()override {
 			if (sceneChangeTimer->Update())
@@ -20,12 +20,19 @@ namespace ButiEngine {
 		}
 		void Initialize()override;
 		void PreInitialize()override;
-		void LoadScene(const std::string& arg_sceneName, std::shared_ptr<IScene> shp_scene)override;
 		void RemoveScene(const std::string& arg_sceneName)override;
 		void ChangeScene(std::string arg_sceneName,float sceneChangeDalay=0)override;
+		void SetScene(const std::string& arg_sceneName, std::shared_ptr<IScene> shp_scene)override;
 		void SetScene_Init(const std::string& arg_sceneName, std::shared_ptr<IScene> shp_scene)override;
+
+
+		void LoadScene(const std::string& arg_sceneName, std::shared_ptr<SceneInformation> shp_scene) override;
+		void LoadScene_Init(const std::string& arg_sceneName, std::shared_ptr<SceneInformation> shp_scene) override;
+		void LoadScene_EditMode(const std::string& arg_sceneName, std::shared_ptr<SceneInformation> shp_scene) override;
+		void LoadScene_Init_EditMode(const std::string& arg_sceneName, std::shared_ptr<SceneInformation> shp_scene) override;
+
 		void RenewalScene()override;
-		std::weak_ptr<Application> GetApplication()override;
+		std::weak_ptr<IApplication> GetApplication()override;
 		inline std::shared_ptr<IScene> GetCurrentScene()override {
 			return currentScene;
 		}
@@ -39,7 +46,7 @@ namespace ButiEngine {
 		std::shared_ptr<IScene> newScene;
 		std::map<std::string, std::shared_ptr<IScene>> map_iscene;
 		std::shared_ptr<AbsoluteTimer> sceneChangeTimer;
-		std::weak_ptr<Application> wkp_app;
+		std::weak_ptr<IApplication> wkp_app;
 	};
 }
 #endif // !_SceneManager_H_

@@ -1,5 +1,6 @@
 #include"stdafx.h"
 
+#include"Header/GameParts/GraphicDevice_Dx12.h"
 #include"Header/Resources/Resource_Mesh_Dx12.h"
 ButiEngine::Resource_Mesh_Dx12::Resource_Mesh_Dx12(std::shared_ptr<GraphicDevice> arg_graphicDevice)
 

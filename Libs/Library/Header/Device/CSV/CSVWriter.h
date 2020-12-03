@@ -7,7 +7,7 @@ namespace ButiEngine {
 	{
 	public:
 		~CSVWriter();
-		static void Write(CSVData arg_csvData, const char filePath[]);
+		static void Write(CSVData arg_csvData, const std::string& filePath);
 	private:
 		CSVWriter();
 	};

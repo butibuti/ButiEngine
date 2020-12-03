@@ -1,7 +1,8 @@
 #include"stdafx.h"
 #include "..\..\..\Header\GameObjects\DefaultGameComponent\Particle_Standard.h"
-#include"Header/GameParts/ResourceContainer.h"
 
+#include "..\..\Header\Common\CerealUtill.h"
+BUTI_REGIST_GAMECOMPONENT(ButiEngine::Particle_Standard)
 void ButiEngine::Particle_Standard::OnSet()
 {
 	if (!shp_drawComponent) {
@@ -24,9 +25,9 @@ void ButiEngine::Particle_Standard::OnSet()
 
 void ButiEngine::Particle_Standard::OnUpdate()
 {
-	ImGui::Begin((gameObject.lock()->GetGameObjectName() + ":ParticleParameter").c_str());
+	GUI::Begin((gameObject.lock()->GetGameObjectName() + ":ParticleParameter").c_str());
 	shp_particleBuffer->ShowUI();
-	ImGui::End();
+	GUI::End();
 	time += 1.0f;
 
 	shp_particleBuffer->Get().time = time;

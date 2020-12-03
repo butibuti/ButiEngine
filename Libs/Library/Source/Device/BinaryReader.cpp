@@ -1,5 +1,7 @@
 #include"stdafx.h"
 #include "..\..\Header\Device\BinaryReader.h"
+#include"zlib/zlib.h"
+#pragma comment(lib,"ZDll.lib")
 
 bool ButiEngine::BinaryReader::ReadStart(const std::string & filePath)
 {
@@ -61,6 +63,38 @@ void ButiEngine::BinaryReader::ReadData(char* out, const UINT size)
 
 	fin.read((char*)out, size);
 }
+
+void ButiEngine::BinaryReader::ReadDefrateData(const UINT arg_compressedSize, UINT uncompressedSize, const UINT arraySize, unsigned char* outBuffer)
+{
+	unsigned char* inBuffer;
+	inBuffer = (unsigned char*)malloc(arg_compressedSize);
+
+	z_stream z;
+
+
+	z.zalloc = Z_NULL;
+	z.zfree = Z_NULL;
+	z.opaque = Z_NULL;
+
+	int res = inflateInit(&z);
+	z.next_in = NULL;
+	z.avail_in = 0;
+	z.next_out = outBuffer;
+	z.avail_out = uncompressedSize;
+
+	fin.read((char*)inBuffer, arg_compressedSize);
+
+	z.next_in = inBuffer;
+	z.avail_in = arg_compressedSize;
+
+	res = inflate(&z, Z_SYNC_FLUSH);
+
+
+	inflateEnd(&z);
+
+	free(inBuffer);
+}
+
 
 std::wstring ButiEngine::BinaryReader::ReadWCharactor(const UINT count)
 {

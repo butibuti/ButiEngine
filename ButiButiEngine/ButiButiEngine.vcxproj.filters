@@ -8,9 +8,6 @@
     <ClCompile Include="cpp\main.cpp">
       <Filter>SampleScene</Filter>
     </ClCompile>
-    <ClCompile Include="cpp\SampleScene.cpp">
-      <Filter>SampleScene</Filter>
-    </ClCompile>
     <ClCompile Include="cpp\EnemyBehavior.cpp">
       <Filter>SampleScene</Filter>
     </ClCompile>
@@ -20,7 +17,6 @@
     <ClCompile Include="cpp\PlayerBehavior.cpp">
       <Filter>SampleScene</Filter>
     </ClCompile>
-    <ClCompile Include="BeforeComponentsLoader.cpp" />
     <ClCompile Include="EnemySpawner.cpp" />
     <ClCompile Include="BulletEnemy.cpp" />
     <ClCompile Include="Bullet.cpp" />
@@ -43,9 +39,6 @@
     <ClInclude Include="include\HitTestBehavior.h">
       <Filter>SampleScene</Filter>
     </ClInclude>
-    <ClInclude Include="include\SampleScene.h">
-      <Filter>SampleScene</Filter>
-    </ClInclude>
     <ClInclude Include="include\EnemyBehavior.h">
       <Filter>SampleScene</Filter>
     </ClInclude>
@@ -55,7 +48,6 @@
     <ClInclude Include="include\PlayerBehavior.h">
       <Filter>SampleScene</Filter>
     </ClInclude>
-    <ClInclude Include="BeforeComponentsLoader.h" />
     <ClInclude Include="EnemySpawner.h" />
     <ClInclude Include="BulletEnemy.h" />
     <ClInclude Include="Bullet.h" />

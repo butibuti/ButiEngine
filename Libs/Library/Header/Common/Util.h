@@ -6,9 +6,11 @@ namespace ButiEngine {
 		const unsigned int FLAG_MAX = 16;
 		const unsigned int BIT_FLAG[]{ (1 << 0),(1 << 1),(1 << 2),(1 << 3),(1 << 4),(1 << 5),(1 << 6),(1 << 7),(1 << 8),(1 << 9),(1 << 10),(1 << 11),(1 << 12),(1 << 13),(1 << 14),(1 << 15) };
 	}
+	class IApplication;
 	class Util
 	{
 	public:
+
 		static inline bool GetBitFlag(const int arg_flag, const int arg_bitIndex) {
 			if (arg_bitIndex >= 16 || arg_bitIndex < 0) {
 				return false;

@@ -10,7 +10,7 @@ ButiEngine::CSVReader::~CSVReader()
 {
 }
 
-std::shared_ptr< ButiEngine::CSVData>  ButiEngine::CSVReader::GetMatrix(const char filePath[])
+std::shared_ptr< ButiEngine::CSVData>  ButiEngine::CSVReader::GetMatrix(const std::string& filePath)
 {
 	std::ifstream ifs(filePath);
 	std::string source = std::string(std::istreambuf_iterator<char>(ifs),

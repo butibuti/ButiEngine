@@ -41,10 +41,6 @@ namespace ButiEngine {
 		bool isRemove;
 	};
 
-#define BUTI_REGIST_BEHAVIOR(T)\
-	CEREAL_REGISTER_TYPE(T);\
-	CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::Behavior, T);
-
 	
 }
 

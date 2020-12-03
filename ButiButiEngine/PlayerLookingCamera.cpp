@@ -51,11 +51,11 @@ std::shared_ptr<ButiEngine::GameComponent> ButiEngine::PlayerLookingCamera::Clon
 
 void ButiEngine::PlayerLookingCamera::OnShowUI()
 {
-	ImGui::BulletText("Per");
-	ImGui::SliderFloat("##per", &per, 0, 1.0);
+	GUI::BulletText("Per");
+	GUI::SliderFloat("##per", &per, 0, 1.0);
 
-	ImGui::BulletText("BlendPos");
-	ImGui::DragFloat3("##BlendPos", &blendPos.x, 0.1,-100, 100);
+	GUI::BulletText("BlendPos");
+	GUI::DragFloat3("##BlendPos", &blendPos.x, 0.1,-100, 100);
 	std::string target = "Looking:";
 	if (shp_lookTarget) {
 		target += "Existence";
@@ -65,16 +65,16 @@ void ButiEngine::PlayerLookingCamera::OnShowUI()
 	}
 
 
-	ImGui::BeginChild("##LookTransform", ImVec2((ImGui::GetFontSize()) * (target.size() + 2), ImGui::GetFontSize() * 2), true);
-	ImGui::BulletText((target).c_str());
+	GUI::BeginChild("##LookTransform", Vector2((GUI::GetFontSize()) * (target.size() + 2), GUI::GetFontSize() * 2), true);
+	GUI::BulletText((target).c_str());
 	if (shp_lookTarget) {
-		ImGui::SameLine();
-		if (ImGui::Button("DontLook")) {
+		GUI::SameLine();
+		if (GUI::Button("DontLook")) {
 			shp_lookTarget = nullptr;
 		}
 	}
-	ImGui::SameLine();
-	if (ImGui::Button("Attach New")) {
+	GUI::SameLine();
+	if (GUI::Button("Attach New")) {
 		if (!shp_lookTarget)
 			shp_lookTarget = ObjectFactory::Create<Transform>();
 		else {
@@ -82,7 +82,7 @@ void ButiEngine::PlayerLookingCamera::OnShowUI()
 		}
 	}
 
-	if (ImGui::IsWindowHovered())
+	if (GUI::IsWindowHovered())
 	{
 		auto obj = gameObject.lock()->GetApplication().lock()->GetGUIController()->GetDraggingObject();
 
@@ -94,7 +94,7 @@ void ButiEngine::PlayerLookingCamera::OnShowUI()
 		}
 
 	}
-	ImGui::EndChild();
+	GUI::EndChild();
 	if (shp_lookTarget) {
 
 		shp_lookTarget->ShowUI();

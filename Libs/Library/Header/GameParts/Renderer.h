@@ -52,7 +52,7 @@ namespace ButiEngine {
 
 		std::weak_ptr<GraphicDevice> wkp_graphicDevice;
 		std::weak_ptr<IScene> wkp_iScene;
-		std::weak_ptr<ResourceContainer>wkp_resourceContainer;
+		std::weak_ptr<IResourceContainer>wkp_resourceContainer;
 		std::vector<DrawLayer> vec_drawLayers;
 		std::shared_ptr<CBuffer_Dx12<Fog>> CBuffer_fog;
 	};

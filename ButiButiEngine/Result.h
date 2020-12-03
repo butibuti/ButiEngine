@@ -8,9 +8,11 @@ namespace  ButiEngine {
 		static void CreateInstance();
 		static std::shared_ptr<Result> GetInstance();
 		static void Output();
-		int SetScore(const std::string& arg_stageName,const int score);
+		int SetScore(const std::string& arg_stageName, const int score);
+		int SetCurrentScore(const std::string& arg_stageName,const int score);
 		int GetCurrentScore();
 		std::vector<int> GetScores(const std::string& arg_stageName);
+		int GetMaxScore(const std::string& arg_stageName);
 		void SetReplayScene(const std::string& currentReplayScene);
 		const std::string& GetReplayScene();
 		template<class Archive>

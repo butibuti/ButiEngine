@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "..\..\Header\GameParts\GameObjectManager.h"
+#include "..\..\Header\Common\CerealUtill.h"
 
 
 ButiEngine::GameObjectManager::GameObjectManager(std::weak_ptr<IScene> arg_wkp_scene)
@@ -49,33 +50,35 @@ void ButiEngine::GameObjectManager::PreInitialize()
 
 void ButiEngine::GameObjectManager::ShowUI()
 {
-	ImGui::Begin("Hieralchy");
+	GUI::Begin("Hieralchy");
 
 	std::shared_ptr<GameObject> shp_dragging = nullptr;
 
 
 	for (auto itr = vec_gameObjects.begin(); itr != vec_gameObjects.end();) {
-		if (ImGui::Button((*itr)->GetGameObjectName().c_str())) {
+		if (GUI::Button((*itr)->GetGameObjectName().c_str())) {
 			selectedGameObject = (*itr);
 		}
 
-		if (ImGui::IsItemActive()) {
-			ImGui::GetForegroundDrawList()->AddLine(GetApplication().lock()->GetGUIController()->GetGUIIO().MouseClickedPos[0], GetApplication().lock()->GetGUIController()->GetGUIIO().MousePos, ImGui::GetColorU32(ImGuiCol_Button), 4.0f);
+		if (GUI::IsItemActive()) {
+			auto p1 = GetApplication().lock()->GetGUIController()->GetGUIIO().MouseClickedPos[0];
+			auto p2 = GetApplication().lock()->GetGUIController()->GetGUIIO().MousePos;
+			GUI::Line(Vector2(p1.x,p1.y), Vector2(p2.x, p2.y), GUI::GetColorU32(GUI::GuiCol_Button), 4.0f);
 			shp_dragging = *itr;
 		}
 
 		if (selectedGameObject.lock() == (*itr)) {
 
-			ImGui::SameLine();
-			if (ImGui::Button("..."))
-				ImGui::OpenPopup("select_popup");
-			if (ImGui::BeginPopup("select_popup"))
+			GUI::SameLine();
+			if (GUI::Button("..."))
+				GUI::OpenPopup("select_popup");
+			if (GUI::BeginPopup("select_popup"))
 			{
-				if (ImGui::Button("Dlete")) {
+				if (GUI::Button("Dlete")) {
 					(*itr)->Release();
 					itr = vec_gameObjects.erase(itr);
 				}
-				else if(ImGui::Button("Copy")) {
+				else if(GUI::Button("Copy")) {
 					auto obj= AddObject((*itr)->Clone());
 
 
@@ -88,7 +91,7 @@ void ButiEngine::GameObjectManager::ShowUI()
 
 					itr++;
 				}
-				ImGui::EndPopup();
+				GUI::EndPopup();
 			}
 			else {
 				itr++;
@@ -101,12 +104,12 @@ void ButiEngine::GameObjectManager::ShowUI()
 		}
 	}
 
-	ImGui::InputTextWithHint("##objectName", "ObjectName", CallBacks::newObjectName, 128);
+	GUI::InputTextWithHint("##objectName", "ObjectName", GUI::newObjectName, 128);
 
-	if (ImGui::Button("Add New")) {
+	if (GUI::Button("Add New")) {
 
-		std::string name = CallBacks::newObjectName;
-		CallBacks::NewObjectNameReset();
+		std::string name = GUI::newObjectName;
+		GUI::NewObjectNameReset();
 		if (name.size()) {
 			AddObjectFromCereal(name);
 		}else
@@ -115,7 +118,7 @@ void ButiEngine::GameObjectManager::ShowUI()
 
 	GetApplication().lock()->GetGUIController()->SetDraggingObject(shp_dragging);
 
-	ImGui::End();
+	GUI::End();
 
 
 }
@@ -321,7 +324,7 @@ void ButiEngine::GameObjectManager::Start()
 	}
 }
 
-std::weak_ptr< ButiEngine::Application> ButiEngine::GameObjectManager::GetApplication()
+std::weak_ptr< ButiEngine::IApplication> ButiEngine::GameObjectManager::GetApplication()
 {
 	return wkp_scene.lock()->GetSceneManager().lock()->GetApplication().lock();
 }

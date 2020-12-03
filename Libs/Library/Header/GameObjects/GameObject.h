@@ -6,6 +6,9 @@ namespace ButiEngine {
 	class GameComponent;
 	class Behavior;
 	class GameObjectManager;
+	class Application;
+	class ResourceContainer;
+	class GraphicDevice;
 	class GameObject:public IObject
 	{
 		enum CollisionTiming {
@@ -152,8 +155,8 @@ namespace ButiEngine {
 		}
 
 		std::weak_ptr<GameObjectManager> GetGameObjectManager();
-		std::weak_ptr<Application> GetApplication();
-		std::shared_ptr<ResourceContainer> GetResourceContainer();
+		std::weak_ptr<IApplication> GetApplication();
+		std::shared_ptr<IResourceContainer> GetResourceContainer();
 		std::shared_ptr<GraphicDevice> GetGraphicDevice();
 
 		void UpdateTagName();

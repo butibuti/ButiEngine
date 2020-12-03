@@ -1,10 +1,33 @@
 #pragma once
 #include "stdafx.h"
 #include "..\..\Header\Scene\ComponentsLoader.h"
+#include "..\..\Header\Common\CerealUtill.h"
+
+std::shared_ptr<  ButiEngine::ComponentsLoader> ButiEngine::ComponentsLoader::instance = nullptr;
+
+void ButiEngine::ComponentsLoader::CreateInstance()
+{
+	if (instance)
+		return;
+
+	instance= ObjectFactory::CreateFromCereal<ComponentsLoader>(GlobalSettings::GetResourceDirectory() + "Application/componentLoader.loader");
+	instance->CreateNameList();
+}
+
+void ButiEngine::ComponentsLoader::SaveInstance()
+{
+	OutputCereal(instance, GlobalSettings::GetResourceDirectory() + "Application/componentLoader.loader");
+}
+
+std::shared_ptr<ButiEngine::ComponentsLoader> ButiEngine::ComponentsLoader::GetInstance()
+{
+	return instance;
+}
 
 void ButiEngine::ComponentsLoader::Release()
 {
 
+	ComponentsLoader::GetInstance()->SaveInstance();
 	for (int i = 0; i < componentNameListSize; i++) {
 		delete componentNameList[i];
 	}
@@ -102,17 +125,17 @@ void ButiEngine::ComponentsLoader::RemoveBehavior(const std::string& arg_name)
 std::shared_ptr<ButiEngine::Behavior> ButiEngine::ComponentsLoader::ShowAddBehaviorUI()
 {
 	std::shared_ptr<Behavior> ret = nullptr;
-	if (ImGui::TreeNode("Add Behavior")) {
+	if (GUI::TreeNode("Add Behavior")) {
 
 
-		if (ImGui::ListBox("##Behaviors", &currentIndex_behaviorList, behaviorNameList, behaviorNameListSize, 5)) {
+		if (GUI::ListBox("##Behaviors",currentIndex_behaviorList,behaviorNameList,behaviorNameListSize,5)) {
 		}
 
-		if (ImGui::Button("Add!")) {
+		if (GUI::Button("Add!")) {
 			ret = addBehaviors.at(currentIndex_behaviorList)->Clone();
 		}
 
-		ImGui::TreePop();
+		GUI::TreePop();
 	}
 	return ret;
 }
@@ -121,17 +144,17 @@ std::shared_ptr<ButiEngine::GameComponent> ButiEngine::ComponentsLoader::ShowAdd
 {
 	std::shared_ptr<GameComponent> ret=nullptr;
 
-	if (ImGui::TreeNode("Add GameComponent")) {
-		if (ImGui::ListBox("##GameComponents", &currentIndex_componentList, componentNameList, componentNameListSize, 5)) {
+	if (GUI::TreeNode("Add GameComponent")) {
+		if (GUI::ListBox("##GameComponents", currentIndex_componentList, componentNameList, componentNameListSize, 5)) {
 		}
 
 
-		if (ImGui::Button("Add!")) {
+		if (GUI::Button("Add!")) {
 			ret= addGameComponents.at(currentIndex_componentList)->Clone();
 			
 		}
 
-		ImGui::TreePop();
+		GUI::TreePop();
 	}
 	return ret;
 }

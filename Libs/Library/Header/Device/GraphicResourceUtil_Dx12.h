@@ -1,5 +1,6 @@
 #pragma once
 #include"stdafx.h"
+#include"Header/GameParts/GraphicDevice_Dx12.h"
 #include"../Resources/Resource_Shader_Dx12.h"
 namespace ButiEngine {
 	namespace PipelineStateHelper {

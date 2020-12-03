@@ -1,8 +1,6 @@
+#pragma once
 #include "stdafx.h"
 #include "..\include\PlayerBehavior.h"
-#include"Header/GameObjects/DefaultGameComponent/ColliderComponent.h"
-#include"Header/GameObjects/DefaultGameComponent/MeshDrawComponent.h"
-#include"Header/GameParts/ResourceContainer.h"
 #include "Header/GameObjects/DefaultGameComponent/SucideComponent.h"
 #include"include/GameController.h"
 #include"Header/GameObjects/DefaultGameComponent/TransformAnimation.h"
@@ -12,12 +10,12 @@ void ButiEngine::PlayerBehavior::Start()
 {
 	initPos = gameObject.lock()->transform->GetLocalPosition();
 	initRotate = gameObject.lock()->transform->GetLocalRotation();
-	gameObject.lock()->SetGameObjectTag(GameObjectTagManager::CreateGameObjectTag("Player"));
+	gameObject.lock()->SetGameObjectTag(gameObject.lock()->GetApplication().lock()->GetGameObjectTagManager()->CreateGameObjectTag("Player"));
 	gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->ActiveCollision(true);
 	
 	auto bomb = gameObject.lock()->GetGameObjectManager().lock()->AddObjectFromCereal("bomb");
 	bomb.lock()->transform->SetBaseTransform( gameObject.lock()->transform,true);
-	bomb.lock()->SetGameObjectTag(GameObjectTagManager::GetObjectTag("Bomb"));
+	bomb.lock()->SetGameObjectTag(gameObject.lock()-> GetApplication().lock()->GetGameObjectTagManager()->GetObjectTag("Bomb"));
 	controller = gameObject.lock()->GetGameObjectManager().lock()->GetGameObject("GameController").lock()->GetGameComponent<GameController>();
 
 	stagemax = controller->GetStageMax();
@@ -34,12 +32,12 @@ void ButiEngine::PlayerBehavior::OnUpdate()
 		damageInvTimer->Stop();
 	}
 	moveForce *= 0.7f;
-	if (GameDevice::input.GetLeftStick().x<0||GameDevice::input.CheckKey(Keys::A)) {
-		gameObject.lock()->transform->RollLocalRotationY_Degrees(-controllPase);
+	if (GameDevice::GetInput()->GetPadButton(PadButtons::XBOX_LEFT) || GameDevice::GetInput()->GetLeftStick().x<0||GameDevice::GetInput()->CheckKey(Keys::A)|| GameDevice::GetInput()->GetPadButton(PadButtons::XBOX_BUTTON_LEFT)) {
+		gameObject.lock()->transform->RollLocalRotationY_Degrees(-controllPase*GameDevice::WorldSpeed);
 	}
-	else if (GameDevice::input.GetLeftStick().x > 0 || GameDevice::input.CheckKey(Keys::D)) {
+	else if (GameDevice::GetInput()->GetPadButton(PadButtons::XBOX_RIGHT) || GameDevice::GetInput()->GetLeftStick().x > 0 || GameDevice::GetInput()->CheckKey(Keys::D) || GameDevice::GetInput()->GetPadButton(PadButtons::XBOX_BUTTON_RIGHT)) {
 
-		gameObject.lock()->transform->RollLocalRotationY_Degrees(controllPase);
+		gameObject.lock()->transform->RollLocalRotationY_Degrees(controllPase * GameDevice::WorldSpeed);
 	}
 
 	
@@ -50,7 +48,7 @@ void ButiEngine::PlayerBehavior::OnUpdate()
 	inertia *= inertiaMinorPase;
 	velocity += inertia;
 
-	gameObject.lock()->transform->Translate(velocity+moveForce);
+	gameObject.lock()->transform->Translate(velocity * GameDevice::WorldSpeed +moveForce * GameDevice::WorldSpeed);
 
 	inertia += velocity * 0.1f;
 
@@ -75,23 +73,23 @@ void ButiEngine::PlayerBehavior::OnUpdate()
 
 void ButiEngine::PlayerBehavior::OnShowUI()
 {
-	ImGui::BulletText("Speed");
-	if (ImGui::SliderFloat("##speed", &speed, 0.0f, 1.0f, "%.3f", 1.0f)) {
+	GUI::BulletText("Speed");
+	if (GUI::SliderFloat("##speed", &speed, 0.0f, 1.0f, "%.3f", 1.0f)) {
 	}
-	ImGui::BulletText("Air resistance");
-	if (ImGui::SliderFloat("##inertiaMinorPase", &inertiaMinorPase, 0.0f, 1.0f, "%.3f", 1.0f)) {
+	GUI::BulletText("Air resistance");
+	if (GUI::SliderFloat("##inertiaMinorPase", &inertiaMinorPase, 0.0f, 1.0f, "%.3f", 1.0f)) {
 	}
-	ImGui::BulletText("ControllPase");
-	if (ImGui::SliderFloat("##controllPase", &controllPase, 0.0f, 10.0f, "%.3f", 1.0f)) {
+	GUI::BulletText("ControllPase");
+	if (GUI::SliderFloat("##controllPase", &controllPase, 0.0f, 10.0f, "%.3f", 1.0f)) {
 	}
-	ImGui::BulletText("HP");
-	ImGui::SliderInt("##playerHP",&hp,0,100);
+	GUI::BulletText("HP");
+	GUI::SliderInt("##playerHP",hp,0,100);
 }
 
 void ButiEngine::PlayerBehavior::OnCollisionEnter(std::weak_ptr<GameObject> arg_other)
 {
 
-	if (isInvisible|| damageInvTimer->IsOn()||arg_other.lock()->GetGameObjectTag() != GameObjectTagManager::GetObjectTag("Enemy")) {
+	if (isInvisible|| damageInvTimer->IsOn()||arg_other.lock()->GetGameObjectTag() != gameObject.lock()->GetApplication().lock()->GetGameObjectTagManager()->GetObjectTag("Enemy")) {
 		return;
 	}
 	shp_cameraman->ShakeVartical(0.3f);
@@ -129,6 +127,10 @@ void ButiEngine::PlayerBehavior::OnCollisionEnter(std::weak_ptr<GameObject> arg_
 		controllPase=0;
 		speed = 0;
 		controller->Failed();
+		isInvisible = true;
+		gameObject.lock()->GetGameObjectManager().lock()->AddObjectFromCereal("Explosion_Player", ObjectFactory::Create<Transform>(gameObject.lock()->transform->GetWorldPosition()));
+		gameObject.lock()->GetGameObjectManager().lock()->AddObjectFromCereal("Explosion_Player", ObjectFactory::Create<Transform>(gameObject.lock()->transform->GetWorldPosition()+Vector3(1,1,-1)));
+		gameObject.lock()->GetGameObjectManager().lock()->AddObjectFromCereal("Explosion_Player", ObjectFactory::Create<Transform>(gameObject.lock()->transform->GetWorldPosition()+Vector3(-2,-0.5,2)));
 
 		auto seTag = gameObject.lock()->GetResourceContainer()->GetSoundTag("se_Bomb.wav", "Sound/");
 

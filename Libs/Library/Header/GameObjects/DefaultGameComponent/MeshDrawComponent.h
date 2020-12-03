@@ -4,14 +4,6 @@
 #include"Header/Common/CBuffer_Dx12.h"
 #include"Header/Common/CArrayBuffer_Dx12.h"
 
-#define BUTI_REGIST_CBUFFER(T)\
-CEREAL_REGISTER_TYPE(ButiEngine::CBuffer_Dx12<T>);\
-CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::ICBuffer, ButiEngine::CBuffer_Dx12<T>);\
-
-
-#define BUTI_REGIST_CARRAYBUFFER(T)\
-	CEREAL_REGISTER_TYPE(ButiEngine::CArrayBuffer_Dx12<T>);\
-	CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::ICBuffer, ButiEngine::CArrayBuffer_Dx12<T>);\
 
 namespace ButiEngine {
 
@@ -98,9 +90,3 @@ namespace ButiEngine {
 		bool isCereal = true;
 	};
 }
-
-
-
-CEREAL_REGISTER_TYPE(ButiEngine::MeshDrawComponent);
-
-CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::GameComponent, ButiEngine::MeshDrawComponent)

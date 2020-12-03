@@ -53,7 +53,7 @@ namespace ButiEngine {
 
 		bool ShowUI() { 
 			
-			if (ImGui::DragFloat4("Direction",&lightDir.x, 0.01f, -500.0f, 500.0f)) {
+			if (GUI::DragFloat4("Direction",&lightDir.x, 0.01f, -500.0f, 500.0f)) {
 				return true;
 			}
 			return false;
@@ -78,16 +78,16 @@ namespace ButiEngine {
 		bool ShowUI() { 
 
 			bool ret = false;
-			if (ImGui::DragFloat4("Emissive", &emissive.x, 0.01f, 0.0f, 1.0f)) {
+			if (GUI::DragFloat4("Emissive", &emissive.x, 0.01f, 0.0f, 1.0f)) {
 				ret = true;
 			}
-			if (ImGui::DragFloat4("Diffuse", &diffuse.x, 0.01f, 0.0f, 1.0f)) {
+			if (GUI::DragFloat4("Diffuse", &diffuse.x, 0.01f, 0.0f, 1.0f)) {
 				ret = true;
 			}
-			if (ImGui::DragFloat4("Specular", &specular.x, 0.01f, 0.0f, 1.0f)) {
+			if (GUI::DragFloat4("Specular", &specular.x, 0.01f, 0.0f, 1.0f)) {
 				ret = true;
 			}
-			if (ImGui::DragFloat4("Ambient", &ambient.x, 0.01f, 0.0f, 1.0f)) {
+			if (GUI::DragFloat4("Ambient", &ambient.x, 0.01f, 0.0f, 1.0f)) {
 				ret= true;
 			}
 			return ret; 
@@ -109,11 +109,11 @@ namespace ButiEngine {
 		bool ShowUI() { 
 
 			bool ret = false;
-			if (ImGui::DragFloat("Time", &pushPower.w, 0.02f, 0.0f, 10.0f)) {
+			if (GUI::DragFloat("Time", &pushPower.w, 0.02f, 0.0f, 10.0f)) {
 
 				ret = true;
 			}
-			if (ImGui::DragFloat("FloorHight", &bottom, 0.02f, -100.0f, 100.0f)) {
+			if (GUI::DragFloat("FloorHight", &bottom, 0.02f, -100.0f, 100.0f)) {
 
 				ret = true;
 			}
@@ -149,51 +149,6 @@ namespace ButiEngine {
 			archive(rotationPase);
 		}
 
-		bool ShowUI() {
-
-			bool ret = false;
-			if (ImGui::DragFloat("Time", &time, 0.02f, 0.0f, 200.0f)) {
-
-				ret = true;
-			}
-			if (ImGui::DragFloat("Power", &power, 0.02f, -100.0f, 100.0f)) {
-
-				ret = true;
-			}
-			if (ImGui::DragInt("Noise", &noise, 1.0f, 0, 10)) {
-
-				ret = true;
-			}
-			if (ImGui::DragFloat("Center", &center, 0.02f, -100.0f, 100.0f)) {
-
-				ret = true;
-			}
-			if (ImGui::DragFloat("Outer", &outer, 0.02f, -100.0f, 100.0f)) {
-
-				ret = true;
-			}
-			if (ImGui::DragFloat("Size", &size, 0.02f, -100.0f, 100.0f)) {
-
-				ret = true;
-			}
-			if (ImGui::DragFloat("MinSize", &minSize, 0.02f, -100.0f, 100.0f)) {
-
-				ret = true;
-			}
-			if (ImGui::DragFloat("RotationPase", &rotationPase, 0.02f, -100.0f, 100.0f)) {
-
-				ret = true;
-			}
-			
-			if (ImGui::ColorEdit4("StartColor", &startColor.x)) {
-				ret = true;
-			}
-
-			if (ImGui::ColorEdit4("EndColor", &endColor.x)) {
-				ret = true;
-			}
-
-			return ret;
-		}
+		bool ShowUI();
 	};
 }

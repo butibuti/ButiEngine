@@ -18,14 +18,14 @@ void ButiEngine::LevelSelecter::Start()
     for (int i = 0; i < max; i++) {
         sceneManager->RemoveScene("Stage_"+std::to_string(i+1));
 
-        sceneManager->LoadScene("Stage_" + std::to_string(i + 1), ObjectFactory::Create<Scene>(sceneManager, SceneInformation("Stage_" + std::to_string(i + 1))));
+        sceneManager->LoadScene("Stage_" + std::to_string(i + 1), ObjectFactory::Create< SceneInformation>("Stage_" + std::to_string(i + 1)));
     }
     wkp_draw= gameObject.lock()->GetGameObjectManager().lock()->GetGameObject("LevelText").lock()->GetGameComponent<MeshDrawComponent>();
 }
 
 void ButiEngine::LevelSelecter::OnUpdate()
 {
-    if (GameDevice::input.GetLeftStick().x >= 0.1 || GameDevice::input.TriggerKey(Keys::D)) {
+    if (GameDevice::GetInput()->GetLeftStick().x >= 0.1 || GameDevice::GetInput()->TriggerKey(Keys::D)) {
         auto transformanim = wkp_cam.lock()->GetGameComponent<TransformAnimation>();
         if (transformanim) {
             return;
@@ -49,7 +49,7 @@ void ButiEngine::LevelSelecter::OnUpdate()
         wkp_draw.lock()->SetMaterialTag(levelTextTag); 
         wkp_draw.lock()->ReRegist();
 
-    }else if (GameDevice::input.GetLeftStick().x <= -0.1||GameDevice::input.TriggerKey(Keys::A)) {
+    }else if (GameDevice::GetInput()->GetLeftStick().x <= -0.1||GameDevice::GetInput()->TriggerKey(Keys::A)) {
 
 
 
@@ -74,7 +74,7 @@ void ButiEngine::LevelSelecter::OnUpdate()
         wkp_draw.lock()->ReRegist();
     }
     
-    if (GameDevice::input.GetPadButtonTriger(PadButtons::XBOX_A) || GameDevice::input.TriggerKey(Keys::Space)) {
+    if (GameDevice::GetInput()->GetPadButtonTriger(PadButtons::XBOX_A) || GameDevice::GetInput()->TriggerKey(Keys::Space)) {
 
 
         auto seTag = gameObject.lock()->GetResourceContainer()->GetSoundTag("se_Decision.wav", "Sound/");
@@ -115,6 +115,6 @@ std::shared_ptr< ButiEngine::GameComponent> ButiEngine::LevelSelecter::Clone()
 
 void ButiEngine::LevelSelecter::OnShowUI()
 {
-    ImGui::DragInt("MaxStage", &max);
-    ImGui::DragFloat("Unit", &unit);
+    GUI::DragInt("MaxStage", &max);
+    GUI::DragFloat("Unit", &unit);
 }

@@ -1,8 +1,7 @@
 #include "stdafx.h"
 #include"Header/Device/ResourceFileCreater.h"
-#include"Header/GameParts/ResourceContainer.h"
 
-void ButiEngine::ResourceFileCreater::CreateMaterialFile(const  MaterialTag& arg_tag, const std::string& arg_filePath, ResourceContainer& arg_resourceContainer, const std::string& arg_fileDirectory)
+void ButiEngine::ResourceFileCreater::CreateMaterialFile(const  MaterialTag& arg_tag, const std::string& arg_filePath, IResourceContainer& arg_resourceContainer, const std::string& arg_fileDirectory)
 {
 	BinaryWriter b3mWriter;
 	b3mWriter.WriteStart(GlobalSettings::GetResourceDirectory() + arg_fileDirectory + arg_filePath + ".bma");

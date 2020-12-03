@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include"Header/Device/DescriptorHeapManager.h"
 #include"Header/Device/GraphicResourceUtil_Dx12.h"
-#include "Header/GameParts/ResourceContainer.h"
 
 ButiEngine::DescriptorHeapManager::DescriptorHeapManager( std::weak_ptr<GraphicDevice_Dx12> arg_wkp_graphicDevice,const UINT arg_max , const UINT arg_addUint )
 {

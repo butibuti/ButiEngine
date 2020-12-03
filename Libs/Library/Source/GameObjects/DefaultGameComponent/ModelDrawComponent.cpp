@@ -2,8 +2,9 @@
 #include"Header/Resources/DrawData/ModelDrawData_Dx12.h"
 #include"Header/Resources/ModelAnimation.h"
 #include "..\..\..\Header\GameObjects\DefaultGameComponent\ModelDrawComponent.h"
-#include "Header/GameParts/ResourceContainer.h"
 
+#include "..\..\Header\Common\CerealUtill.h"
+BUTI_REGIST_GAMECOMPONENT(ButiEngine::ModelDrawComponent);
 
 ButiEngine::ModelDrawComponent::ModelDrawComponent(const ModelTag& arg_modelTag, const ShaderTag& arg_shaderTag, std::shared_ptr< DrawInformation >arg_shp_drawInfo, const UINT arg_layer,  std::shared_ptr<Transform> arg_shp_transform)
 {
@@ -20,7 +21,7 @@ ButiEngine::ModelDrawComponent::ModelDrawComponent(const ModelTag& arg_modelTag,
 void ButiEngine::ModelDrawComponent::OnUpdate()
 {
 #ifdef DEBUG
-	if (GameDevice::input.TriggerKey(Keys::One)) {
+	if (GameDevice::GetInput()->TriggerKey(Keys::One)) {
 		SwitchFillMode(false);
 	}
 #endif
@@ -72,29 +73,29 @@ std::shared_ptr<ButiEngine::GameComponent> ButiEngine::ModelDrawComponent::Clone
 
 void ButiEngine::ModelDrawComponent::OnShowUI()
 {
-	if (ImGui::Button("Regist")) {
+	if (GUI::Button("Regist")) {
 		Regist();
 	}
-	ImGui::SameLine();
-	if (ImGui::Button("UnRegist")) {
+	GUI::SameLine();
+	if (GUI::Button("UnRegist")) {
 		UnRegist();
 	}
-	ImGui::SameLine();
-	if (ImGui::Button("ReRegist")) {
+	GUI::SameLine();
+	if (GUI::Button("ReRegist")) {
 		ReRegist();
 	}
 
 	{
-		ImGui::BulletText("ModelTag");
+		GUI::BulletText("ModelTag");
 
 
 		auto tagName = gameObject.lock()->GetResourceContainer()->GetTagNameModel(modelTag);
 
 
-		(ImGui::BeginChild("ModelTagWin", ImVec2(ImGui::GetFontSize() * (tagName.size() + 2), ImGui::GetFontSize() * 2), true));
-		ImGui::Text(Util::ToUTF8(tagName).c_str());
+		(GUI::BeginChild("ModelTagWin", Vector2(GUI::GetFontSize() * (tagName.size() + 2), GUI::GetFontSize() * 2), true));
+		GUI::Text(Util::ToUTF8(tagName).c_str());
 
-		if (ImGui::IsWindowHovered()) {
+		if (GUI::IsWindowHovered()) {
 			auto tag = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneManager().lock()->GetApplication().lock()->GetGUIController()->GetModelTag();
 			if (!tag.IsEmpty()) {
 				modelTag = tag;
@@ -103,88 +104,88 @@ void ButiEngine::ModelDrawComponent::OnShowUI()
 		}
 
 
-		ImGui::EndChild();
+		GUI::EndChild();
 	}
 	{
-		ImGui::BulletText("ShaderTag");
+		GUI::BulletText("ShaderTag");
 		auto tagName = gameObject.lock()->GetResourceContainer()->GetTagNameShader(shaderTag);
-		(ImGui::BeginChild("ShaderTagWin", ImVec2(ImGui::GetFontSize() * (tagName.size() + 2), ImGui::GetFontSize() * 2), true));
-		ImGui::Text(Util::ToUTF8(tagName).c_str());
+		(GUI::BeginChild("ShaderTagWin", Vector2(GUI::GetFontSize() * (tagName.size() + 2), GUI::GetFontSize() * 2), true));
+		GUI::Text(Util::ToUTF8(tagName).c_str());
 
-		if (ImGui::IsWindowHovered()) {
+		if (GUI::IsWindowHovered()) {
 			auto tag = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneManager().lock()->GetApplication().lock()->GetGUIController()->GetShaderTag();
 			if (!tag.IsEmpty()) {
 				shaderTag = tag;
 				ReRegist();
 			}
 		}
-		ImGui::EndChild();
+		GUI::EndChild();
 
 
 	}
 
 
-	if (ImGui::TreeNode("DrawSettings")) {
+	if (GUI::TreeNode("DrawSettings")) {
 
-		ImGui::BulletText("BlendMode");
+		GUI::BulletText("BlendMode");
 
-		if (ImGui::Button("Addition")) {
+		if (GUI::Button("Addition")) {
 			shp_drawInfo->drawSettings.blendMode = BlendMode::Addition;
 			ReRegist();
 		}
-		ImGui::SameLine();
-		if (ImGui::Button("Blend")) {
+		GUI::SameLine();
+		if (GUI::Button("Blend")) {
 			shp_drawInfo->drawSettings.blendMode = BlendMode::AlphaBlend;
 			ReRegist();
 		}
-		ImGui::SameLine();
-		if (ImGui::Button("None")) {
+		GUI::SameLine();
+		if (GUI::Button("None")) {
 			shp_drawInfo->drawSettings.blendMode = BlendMode::NoBlend;
 			ReRegist();
 		}
-		ImGui::SameLine();
-		if (ImGui::Button("Reverse")) {
+		GUI::SameLine();
+		if (GUI::Button("Reverse")) {
 			shp_drawInfo->drawSettings.blendMode = BlendMode::Reverse;
 			ReRegist();
 		}
 
 
-		ImGui::BulletText("BillBoarsMode");
-		if (ImGui::Button("None")) {
+		GUI::BulletText("BillBoarsMode");
+		if (GUI::Button("None")) {
 			shp_drawInfo->drawSettings.billboardMode = BillBoardMode::none;
 			ReRegist();
 		}
-		ImGui::SameLine();
-		if (ImGui::Button("BillBoard")) {
+		GUI::SameLine();
+		if (GUI::Button("BillBoard")) {
 			shp_drawInfo->drawSettings.billboardMode = BillBoardMode::full;
 			ReRegist();
 		}
-		ImGui::SameLine();
-		if (ImGui::Button("BillBoard_X")) {
+		GUI::SameLine();
+		if (GUI::Button("BillBoard_X")) {
 			shp_drawInfo->drawSettings.billboardMode = BillBoardMode::x;
 			ReRegist();
 		}
-		ImGui::SameLine();
-		if (ImGui::Button("BillBoard_Y")) {
+		GUI::SameLine();
+		if (GUI::Button("BillBoard_Y")) {
 			shp_drawInfo->drawSettings.billboardMode = BillBoardMode::y;
 			ReRegist();
 		}
-		ImGui::SameLine();
-		if (ImGui::Button("BillBoard_Z")) {
+		GUI::SameLine();
+		if (GUI::Button("BillBoard_Z")) {
 			shp_drawInfo->drawSettings.billboardMode = BillBoardMode::z;
 			ReRegist();
 		}
-		if (ImGui::Checkbox("Use Deppth", &shp_drawInfo->isDepth)) {
+		if (GUI::Checkbox("Use Deppth", &shp_drawInfo->isDepth)) {
 		}
 
-		ImGui::TreePop();
+		GUI::TreePop();
 	}
-	if (ImGui::TreeNode("ExCBuffer")) {
+	if (GUI::TreeNode("ExCBuffer")) {
 		auto endItr = shp_drawInfo->vec_exCBuffer.end();
 		for (auto itr = shp_drawInfo->vec_exCBuffer.begin(); itr != endItr; itr++) {
 			(*itr)->ShowUI();
 		}
-		ImGui::TreePop();
+		GUI::TreePop();
 	}
 
 }

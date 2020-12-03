@@ -583,10 +583,10 @@ void ButiEngine::MeshHelper::CreateCapsule(Vector3 size, Vector3 pointA, Vector3
 	outputMeshData.indices = indices;
 }
 
-void ButiEngine::MeshHelper::CreatePlane(Vector2 size, Vector3 offset, float UVMax, const UINT arg_verticalSeparate,  const UINT arg_horizontalSeparate, const std::vector<Color>& arg_colors, bool flat, BackupData<Vertex::Vertex_UV_Normal_Color>& outputMeshData)
+void ButiEngine::MeshHelper::CreatePlane(Vector2 size, Vector3 offset, float tilt, float UVMax, const UINT arg_verticalSeparate,  const UINT arg_horizontalSeparate, const std::vector<Color>& arg_colors, bool flat, BackupData<Vertex::Vertex_UV_Normal_Color>& outputMeshData)
 {
 	BoxSurface surface;
-	surface.up = size.y * 0.5f;
+	surface.up = size.y * 0.5f+tilt;
 	surface.down = -size.y * 0.5f;
 	surface.right = size.x * 0.5f;
 	surface.right = -size.x * 0.5f;
@@ -613,9 +613,11 @@ void ButiEngine::MeshHelper::CreatePlane(Vector2 size, Vector3 offset, float UVM
 
 	for (int i = 0; i < arg_horizontalSeparate + 1; i++) {
 		for (int j = 0; j < arg_verticalSeparate + 1; j++) {
-			vertices.push_back(Vertex::Vertex_UV_Normal_Color(Vector3(verticalUnit * i - size.x / 2, horizontalUnit * j - size.y / 2, 0)+offset, Vector2((verticalUnit * i / size.x), (1 - horizontalUnit * j / size.y)) * UVMax, Vector3(0, 0, 1.0f)));
+			vertices.push_back(Vertex::Vertex_UV_Normal_Color(Vector3(verticalUnit * i - size.x / 2 +tilt*j , horizontalUnit * j - size.y / 2, 0)+offset, Vector2((verticalUnit * i / size.x), (1 - horizontalUnit * j / size.y)) * UVMax, Vector3(0, 0, 1.0f)));
 		}
 	}
+
+
 
 	std::vector<UINT>indices;
 	for (int i = 0; i < (arg_horizontalSeparate + 1) * arg_verticalSeparate; i += arg_horizontalSeparate + 1) {

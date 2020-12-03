@@ -20,10 +20,10 @@ namespace ButiEngine {
 		virtual std::shared_ptr<IRenderer> GetRenderer()=0;
 		virtual std::shared_ptr<ISoundManager> GetSoundManager()=0;
 		virtual std::weak_ptr< ISceneManager> GetSceneManager() = 0;
-		virtual std::unique_ptr<Window>& GetWindow() = 0;
+		virtual std::unique_ptr<IWindow>& GetWindow() = 0;
 		virtual void SceneEnd()=0;
 		virtual void Release() = 0;
-		virtual SceneInformation GetSceneInformation() = 0;
+		virtual std::shared_ptr< SceneInformation> GetSceneInformation() = 0;
 	protected:
 	};
 

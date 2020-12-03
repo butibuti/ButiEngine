@@ -18,7 +18,8 @@ namespace ButiEngine {
 	};
 	class Resource_Mesh_Dx12;
 	class Resource_RealTimeMesh_Dx12;
-	struct BackupDataBase :public IObject {
+	class BackupDataBase :public IObject {
+	public:
 		BoxEightCorner eightCorner=BoxEightCorner();
 		BackupDataBase() {}
 		virtual ~BackupDataBase() {
@@ -42,7 +43,8 @@ namespace ButiEngine {
 		}
 	};
 	template<typename T>
-	struct BackupData : public BackupDataBase {
+	class BackupData : public BackupDataBase {
+	public:
 		void Clear() {
 			vertices.clear();
 			indices.clear();

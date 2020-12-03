@@ -15,6 +15,7 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\ApplicationCreater.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Common.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Common\ButiMath.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Common\ButiMathInc.h" />
@@ -24,6 +25,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Common\CArrayBuffer_Dx12.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Common\CBuffer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Common\CBuffer_Dx12.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\Common\CerealUtill.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Common\CollisionPrimitive.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Common\Geometry.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Common\ID.h" />
@@ -41,6 +43,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\FBXNodeStructure.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\GameDevice.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\GraphicResourceUtil_Dx12.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\GUI.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\Helper\MeshHelper.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\Helper\ShaderHelper.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\Helper\StringHelper.h" />
@@ -124,7 +127,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Scene\SceneManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Header\ApplicationCreater.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Header\Resources\Resource_RealTimeMesh.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Header\Resources\ShaderVariable.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)imGUI\imgui.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)imGUI\imgui_draw.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)imGUI\imgui_impl_dx12.cpp" />
@@ -146,6 +151,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Device\DescriptorHeapManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Device\FBXNodeStructure.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Device\GameDevice.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Source\Device\GUI.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Device\Helper\MeshHelper.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Device\Helper\ShaderHelper.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Device\Helper\StringHelper.cpp" />

@@ -1,7 +1,12 @@
 #pragma once
 #include"stdafx.h"
+#include <D3dx12.h>
 namespace ButiEngine {
 
+	struct Resource {
+		virtual void  ResourceUpdate() {}
+		virtual void  UpdateResourceRelease() {}
+	};
 	enum class CullMode {
 		none =D3D12_CULL_MODE_NONE, front = D3D12_CULL_MODE_FRONT, back = D3D12_CULL_MODE_BACK
 	}; 
@@ -83,7 +88,7 @@ namespace std {
 }
 
 namespace ButiEngine {
-	class Application;
+	class IApplication;
 	class GraphicDevice:public IObject
 	{
 	public:
@@ -108,7 +113,7 @@ namespace ButiEngine {
 		const Vector3& GetCameraPos();
 		void SetCameraPos(const Vector3& arg_pos);
 		Matrix4x4 GetRawViewMatrix();
-		std::weak_ptr<Application> GetApplication();
+		std::weak_ptr<IApplication> GetApplication();
 		void SetProjectionMatrix(const Matrix4x4& arg_projectionMatrix);
 		void SetViewMatrix(const Matrix4x4& arg_viewMatrix);
 		void SetRawViewMatrix(const Matrix4x4& arg_viewMatrix);
@@ -136,7 +141,7 @@ namespace ButiEngine {
 
 	protected:
 
-		std::weak_ptr<Application> wkp_application;
+		std::weak_ptr<IApplication> wkp_application;
 		Matrix4x4 projectionMatrix;
 
 		Matrix4x4 viewMatrix;

@@ -1,18 +1,16 @@
 #pragma once
-#define DIRECTINPUT_VERSION 0x0800
-#include"stdafx.h"
-#include<dinput.h>
-#include<Xinput.h>
-#define  KEY_MAX 256
-#define CONTROLLERS_MAX 1
+#include"../Device/Keys.h"
+#include"../Device/MouseButtons.h"
+#include"../Device/PadButtons.h"
 namespace ButiEngine {
-	class Application;
+	class IApplication;
 	class Input
 	{
+		class InputInstance;
 	public:
 		Input();
 		~Input();
-		void Initialize(std::weak_ptr<Application> arg_wkp_app);
+		void Initialize(std::weak_ptr<IApplication> arg_wkp_app);
 		bool CheckKey(const UINT index);
 		bool TriggerKey(const UINT index);
 		bool CheckKey(const Keys index);
@@ -48,32 +46,18 @@ namespace ButiEngine {
 
 		HRESULT SetMouseFormat(void);
 
-		HRESULT SetKeyCooperative(std::weak_ptr<Application> arg_wkp_app);
+		HRESULT SetKeyCooperative(std::weak_ptr<IApplication> arg_wkp_app);
 
-		HRESULT SetMouseCooperative(std::weak_ptr<Application> arg_wkp_app);
+		HRESULT SetMouseCooperative(std::weak_ptr<IApplication> arg_wkp_app);
 
 
 
 		HRESULT result;
 
-		LPDIRECTINPUT8 input;
 
-		LPDIRECTINPUTDEVICE8 key;
-		LPDIRECTINPUTDEVICE8 mouse;
+		std::unique_ptr<InputInstance> unq_instance;
 
-		BYTE currentKeys[KEY_MAX];
+		std::weak_ptr<IApplication> wkp_app;
 
-		BYTE beffores[KEY_MAX];
-
-		XINPUT_STATE currentPad;
-		XINPUT_STATE befforePad;
-
-		DIMOUSESTATE mouseState;
-		DIMOUSESTATE beforeMouseState;
-		Vector2 mousePos;
-		Vector2 mouseMove = Vector2(0, 0);
-		POINT mousePoint;
-		std::weak_ptr<Application> wkp_app;
-		bool isMouseCenterKeep;
 	};
 }

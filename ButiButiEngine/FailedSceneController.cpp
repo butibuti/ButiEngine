@@ -1,3 +1,4 @@
+#pragma once
 #include "stdafx.h"
 #include "FailedSceneController.h"
 #include"Result.h"
@@ -6,6 +7,7 @@
 #include"ScoreUI.h"
 #include"PlayerLookingCamera.h"
 #include"Header/GameParts/ResourceContainer.h"
+#include"Header/GameObjects/DefaultGameComponent/MeshDrawComponent.h"
 
 void ButiEngine::ClearSceneController::Start()
 {
@@ -14,6 +16,7 @@ void ButiEngine::ClearSceneController::Start()
 
 		vec_ranks.at(i) = gameObject.lock()->GetGameObjectManager().lock()->GetGameObject("ScoreUI_"+std::to_string(i+1)).lock()->GetGameComponent<ScoreUI>();
 	}
+	GameDevice::WorldSpeed = 1.0f;
 	shp_currentScore= gameObject.lock()->GetGameObjectManager().lock()->GetGameObject("ScoreUI_Current").lock()->GetGameComponent<ScoreUI>();
 }
 
@@ -29,7 +32,8 @@ void ButiEngine::ClearSceneController::OnUpdate()
 			vec_ranks.at(i)->SetScore(vec_rancValue.at(i));
 
 			if (!isRankin&& vec_rancValue.at(i) == Result::GetInstance()->GetCurrentScore()) {
-				auto ui = gameObject.lock()->GetGameObjectManager().lock()->GetGameObject("ScoreUI_" + std::to_string(i + 1)).lock();
+				auto uiGameObject = gameObject.lock()->GetGameObjectManager().lock()->GetGameObject("ScoreUI_" + std::to_string(i + 1)).lock();
+				auto ui = uiGameObject;
 				auto anim= ui->AddGameComponent<TransformAnimation>();
 				auto target = ui->transform->Clone();
 				target->SetLocalScale() *= 1.1;
@@ -37,12 +41,14 @@ void ButiEngine::ClearSceneController::OnUpdate()
 				anim->SetSpeed(0.02);
 				anim->SetReverse(true);
 				isRankin = true;
+				vec_ranks.at(i)->SetColor(Vector4(0.92, 0.84, 0.06, 1.0));
+
 			}
 		}
 		shp_currentScore->SetScore(Result::GetInstance()->GetCurrentScore());
 	}
 
-	if (GameDevice::input.GetLeftStick().x >= 0.1 || GameDevice::input.CheckKey(Keys::A)) {
+	if (GameDevice::GetInput()->GetLeftStick().x >= 0.1 || GameDevice::GetInput()->CheckKey(Keys::A)) {
 		int bef = selectButton;
 
 		selectButton--;
@@ -56,7 +62,7 @@ void ButiEngine::ClearSceneController::OnUpdate()
 
 
 	}
-	else if (GameDevice::input.GetLeftStick().x <= -0.1 || GameDevice::input.CheckKey(Keys::D)) {
+	else if (GameDevice::GetInput()->GetLeftStick().x <= -0.1 || GameDevice::GetInput()->CheckKey(Keys::D)) {
 		int bef = selectButton;
 
 		selectButton++;
@@ -69,7 +75,7 @@ void ButiEngine::ClearSceneController::OnUpdate()
 		}
 	}
 
-	if (GameDevice::input.GetAnyButton() || GameDevice::input.CheckKey(Keys::Space)) {
+	if (GameDevice::GetInput()->GetAnyButton() || GameDevice::GetInput()->CheckKey(Keys::Space)) {
 		isLoading = false;
 		auto manager = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneManager().lock();
 		manager->RemoveScene(Result::GetInstance()->GetReplayScene());
@@ -90,7 +96,7 @@ void ButiEngine::ClearSceneController::OnUpdate()
 
 		if (selectButton == 0) {
 
-			manager->LoadScene(Result::GetInstance()->GetReplayScene(), ObjectFactory::Create<Scene>(manager, SceneInformation(Result::GetInstance()->GetReplayScene())));
+			manager->LoadScene(Result::GetInstance()->GetReplayScene());
 
 			gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneManager().lock()->ChangeScene(Result::GetInstance()->GetReplayScene(), changeInterval);
 
@@ -98,7 +104,7 @@ void ButiEngine::ClearSceneController::OnUpdate()
 		}
 		else if (selectButton==1) {
 			manager->RemoveScene("LevelSelectScene");
-			manager->LoadScene("LevelSelectScene", ObjectFactory::Create<Scene>(manager, SceneInformation("LevelSelectScene")));
+			manager->LoadScene("LevelSelectScene",ObjectFactory::Create< SceneInformation>("LevelSelectScene"));
 
 			gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneManager().lock()->ChangeScene("LevelSelectScene", changeInterval);
 
@@ -118,8 +124,8 @@ void ButiEngine::ClearSceneController::OnUpdate()
 
 void ButiEngine::ClearSceneController::OnShowUI()
 {
-	ImGui::BulletText("SceneChangeFrame");
-	ImGui::DragInt("##SceneChangeFrame", &changeInterval, 1, 0, 600);
+	GUI::BulletText("SceneChangeFrame");
+	GUI::DragInt("##SceneChangeFrame", changeInterval, 1, 0, 600);
 }
 
 void ButiEngine::ClearSceneController::ButtonSelect()
@@ -193,6 +199,7 @@ void ButiEngine::FailedSceneController::Start()
 {
 	shp_currentScore = gameObject.lock()->GetGameObjectManager().lock()->GetGameObject("ScoreUI_Current").lock()->GetGameComponent<ScoreUI>();
 
+	GameDevice::WorldSpeed = 1.0f;
 }
 
 void ButiEngine::FailedSceneController::OnUpdate()
@@ -206,7 +213,7 @@ void ButiEngine::FailedSceneController::OnUpdate()
 
 	}
 
-	if (GameDevice::input.GetLeftStick().x >= 0.1 || GameDevice::input.CheckKey(Keys::A)) {
+	if (GameDevice::GetInput()->GetLeftStick().x >= 0.1 || GameDevice::GetInput()->CheckKey(Keys::A)) {
 		int bef = selectButton;
 
 		selectButton--;
@@ -220,7 +227,7 @@ void ButiEngine::FailedSceneController::OnUpdate()
 
 
 	}
-	else if (GameDevice::input.GetLeftStick().x <= -0.1 || GameDevice::input.CheckKey(Keys::D)) {
+	else if (GameDevice::GetInput()->GetLeftStick().x <= -0.1 || GameDevice::GetInput()->CheckKey(Keys::D)) {
 		int bef = selectButton;
 
 		selectButton++;
@@ -233,7 +240,7 @@ void ButiEngine::FailedSceneController::OnUpdate()
 		}
 	}
 
-	if (GameDevice::input.GetAnyButton() || GameDevice::input.CheckKey(Keys::Space)) {
+	if (GameDevice::GetInput()->GetAnyButton() || GameDevice::GetInput()->CheckKey(Keys::Space)) {
 		isLoading = false;
 		auto manager = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneManager().lock();
 		manager->RemoveScene(Result::GetInstance()->GetReplayScene());
@@ -254,7 +261,7 @@ void ButiEngine::FailedSceneController::OnUpdate()
 
 		if (selectButton == 0) {
 
-			manager->LoadScene(Result::GetInstance()->GetReplayScene(), ObjectFactory::Create<Scene>(manager, SceneInformation(Result::GetInstance()->GetReplayScene())));
+			manager->LoadScene(Result::GetInstance()->GetReplayScene());
 
 			gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneManager().lock()->ChangeScene(Result::GetInstance()->GetReplayScene(), changeInterval);
 
@@ -262,7 +269,7 @@ void ButiEngine::FailedSceneController::OnUpdate()
 		}
 		else if (selectButton == 1) {
 			manager->RemoveScene("LevelSelectScene");
-			manager->LoadScene("LevelSelectScene", ObjectFactory::Create<Scene>(manager, SceneInformation("LevelSelectScene")));
+			manager->LoadScene("LevelSelectScene");
 
 			gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneManager().lock()->ChangeScene("LevelSelectScene", changeInterval);
 
@@ -283,8 +290,8 @@ void ButiEngine::FailedSceneController::OnUpdate()
 void ButiEngine::FailedSceneController::OnShowUI()
 {
 
-	ImGui::BulletText("SceneChangeFrame");
-	ImGui::DragInt("##SceneChangeFrame", &changeInterval, 1, 0, 600);
+	GUI::BulletText("SceneChangeFrame");
+	GUI::DragInt("##SceneChangeFrame", &changeInterval, 1, 0, 600);
 }
 
 void ButiEngine::FailedSceneController::ButtonSelect()

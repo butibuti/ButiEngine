@@ -1,56 +1,39 @@
 #pragma once
 #include"stdafx.h"
-#include "ApplicationBefore.h"
 namespace ButiEngine {
 
-	const float frame_min = (1.0f / 60.0f) * 1000;
+	class ISceneManager;
+	class Window;
+	class ResourceContainer;
 
-	inline std::shared_ptr<ISceneManager> ButiEngine::Application::GetSceneManager()
-	{
-		return shp_sceneManager;
-	}
-	inline std::shared_ptr<GraphicDevice> ButiEngine::Application::GetGraphicDevice()
-	{
-		return shp_graphicDevice;
-	}
-	inline std::shared_ptr<ResourceContainer> ButiEngine::Application::GetResourceContainer()
-	{
-		return shp_resourceContainer;
-	}
-	inline bool Application::Update() {
-		unq_imguiController->Start();
-		shp_sceneManager->Update();
-		shp_sceneManager->Draw();
-		return unq_window->Update();
-	}
-	inline std::unique_ptr<ButiimguiController>& ButiEngine::Application::GetGUIController()
-	{
-		return unq_imguiController;
-	}
-	inline int Application::Run()
-	{
 
-		while (Update())
-		{
-			GameDevice::input.PadUpdate();
-			GameDevice::input.MouseUpdate();
 
-			if (GameDevice::input.CheckKey(Keys::Esc)) {
-				return 1;
-			}
+	class Application :public IApplication
+	{
+	public:
+		Application() {};
+		void Initialize()override {}
+		void PreInitialize()override {}
+		void CreateInstances(const std::string windowName = "Buti", const WindowPopType arg_windowPopType = WindowPopType::normal, const UINT windowWidth = 720, const UINT windowHeight = 480, const bool isFullScreen = false);
+		std::unique_ptr<IWindow>& GetWindow()override;
+		std::shared_ptr<ISceneManager> GetSceneManager()override;
+		std::shared_ptr<GraphicDevice> GetGraphicDevice()override;
+		std::shared_ptr<IResourceContainer> GetResourceContainer()override;
+		std::unique_ptr<ImguiController>& GetGUIController()override;
+		std::unique_ptr<GameObjectTagManager>& GetGameObjectTagManager()override;
+		bool Update()override;
+		int Run()override;
+		void InitLoadResources()override;
+		void Exit()override;
+	private:
+		std::shared_ptr<GraphicDevice>shp_graphicDevice;
+		std::unique_ptr<IWindow> unq_window;
+		std::unique_ptr<ImguiController> unq_imguiController;
+		std::shared_ptr< ISceneManager> shp_sceneManager;
+		std::shared_ptr<IResourceContainer>shp_resourceContainer;
+		std::unique_ptr<GameObjectTagManager> unq_gameObjTagManager;
+		std::timespec befTs;
+		std::timespec nowTs;
+	};
 
-			std::timespec_get(&nowTs, TIME_UTC);
-			auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::nanoseconds{ nowTs.tv_nsec }) - std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::nanoseconds{ befTs.tv_nsec });
-			if (ms.count()>0){
-				auto sleepTime =frame_min  - ms.count();
-				if (sleepTime > 0) {
-					Sleep(sleepTime);
-				}
-				else {
-				}
-		}
-			std::timespec_get(&befTs, TIME_UTC);
-		}
-		return 0;
-	}
 }

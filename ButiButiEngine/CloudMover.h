@@ -1,4 +1,4 @@
-#include"Header/GameObjects/GameComponent.h"
+#include"Header/GameComponentHeader.h"
 namespace ButiEngine {
 
 

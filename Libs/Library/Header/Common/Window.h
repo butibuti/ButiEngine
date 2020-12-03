@@ -3,22 +3,19 @@
 
 namespace ButiEngine {
 
-	enum class WindowPopType {
-		normal=SW_SHOWNORMAL,max=SW_SHOWMAXIMIZED
-	};
 
-	class Window
+	class Window:public IWindow
 	{
 	public:
 		Window();
-		void Initialize(const std::string arg_windowName,const WindowPopType arg_popType ,  UINT width=0, UINT height = 0);
-		HWND GetHandle();
-		DirectX::XMUINT2 GetSize();
-		Vector2 GetWindowCenterPosition();
-		void SetSize(int width, int height);
-		bool Update();
-		Vector2 GetWindowPosition();
-		void Release();
+		void Initialize(const std::string arg_windowName,const WindowPopType arg_popType ,bool isFullScreen,  UINT width=0, UINT height = 0)override;
+		HWND GetHandle()override;
+		DirectX::XMUINT2 GetSize()override;
+		Vector2 GetWindowCenterPosition()override;
+		void SetSize(int width, int height)override;
+		bool Update()override;
+		Vector2 GetWindowPosition()override;
+		void Release()override;
 	private:
 		HWND handle;
 

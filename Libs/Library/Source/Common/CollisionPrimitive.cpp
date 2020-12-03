@@ -2,6 +2,22 @@
 #include "stdafx.h"
 #include "..\..\Header\Common\CollisionPrimitive.h"
 
+#include "..\..\Header\Common\CerealUtill.h"
+
+CEREAL_REGISTER_TYPE(ButiEngine::Collision::CollisionPrimitive_Point);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::Collision::CollisionPrimitive, ButiEngine::Collision::CollisionPrimitive_Point);
+CEREAL_REGISTER_TYPE(ButiEngine::Collision::CollisionPrimitive_Ray);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::Collision::CollisionPrimitive, ButiEngine::Collision::CollisionPrimitive_Ray);
+CEREAL_REGISTER_TYPE(ButiEngine::Collision::CollisionPrimitive_Sphere);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::Collision::CollisionPrimitive, ButiEngine::Collision::CollisionPrimitive_Sphere);
+CEREAL_REGISTER_TYPE(ButiEngine::Collision::CollisionPrimitive_Box_AABB);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::Collision::CollisionPrimitive, ButiEngine::Collision::CollisionPrimitive_Box_AABB);
+CEREAL_REGISTER_TYPE(ButiEngine::Collision::CollisionPrimitive_Box_OBB);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::Collision::CollisionPrimitive, ButiEngine::Collision::CollisionPrimitive_Box_OBB);
+CEREAL_REGISTER_TYPE(ButiEngine::Collision::CollisionPrimitive_Polygon);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::Collision::CollisionPrimitive, ButiEngine::Collision::CollisionPrimitive_Polygon);
+CEREAL_REGISTER_TYPE(ButiEngine::Collision::CollisionPrimitive_Surface);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::Collision::CollisionPrimitive, ButiEngine::Collision::CollisionPrimitive_Surface);
 
 bool ButiEngine::Collision::CollisionPrimitive_Sphere::IsHitPoint(CollisionPrimitive_Point* other)
 {
@@ -31,6 +47,11 @@ bool ButiEngine::Collision::CollisionPrimitive_Sphere::IsHitPolygon(CollisionPri
 bool ButiEngine::Collision::CollisionPrimitive_Sphere::IsHitSurface(CollisionPrimitive_Surface* other)
 {
     return Geometry::GeometryUtill::IsHitSphere(*this, other->wkp_transform.lock()->GetWorldPosition(), other->normal);
+}
+
+bool ButiEngine::Collision::CollisionPrimitive_Sphere::IsHitRay(CollisionPrimitive_Ray* other)
+{
+    return Geometry::RayHit::HitRaySphere(*other ,*this);
 }
 
 bool ButiEngine::Collision::CollisionPrimitive_Box_AABB::IsHitPoint(CollisionPrimitive_Point* other)
@@ -154,6 +175,11 @@ bool ButiEngine::Collision::CollisionPrimitive_Polygon::IsHitSurface(CollisionPr
     return false;
 }
 
+bool ButiEngine::Collision::CollisionPrimitive_Polygon::IsHitRay(CollisionPrimitive_Ray* other)
+{
+    return Geometry::SurfaceHit::IsHitLinePolygon(*other,points);
+}
+
 bool ButiEngine::Collision::CollisionPrimitive_Surface::IsHitPoint(CollisionPrimitive_Point* other)
 {
     return false;
@@ -183,4 +209,25 @@ bool ButiEngine::Collision::CollisionPrimitive_Surface::IsHitPolygon(CollisionPr
 bool ButiEngine::Collision::CollisionPrimitive_Surface::IsHitSurface(CollisionPrimitive_Surface* other)
 {
     return false;
+}
+
+bool ButiEngine::Collision::CollisionPrimitive_Surface::IsHitRay(CollisionPrimitive_Ray* other)
+{
+    return Geometry::SurfaceHit::IsHitLineSurface(*other,wkp_transform.lock()->GetWorldPosition(), normal);
+}
+
+
+bool ButiEngine::Collision::CollisionPrimitive_Ray::IsHitSphere(CollisionPrimitive_Sphere* other)
+{
+    return Geometry::RayHit::HitRaySphere(*this, *other);
+}
+
+bool ButiEngine::Collision::CollisionPrimitive_Ray::IsHitPolygon(CollisionPrimitive_Polygon* other)
+{
+    return Geometry::SurfaceHit::IsHitLinePolygon(*this,other->points);
+}
+
+bool ButiEngine::Collision::CollisionPrimitive_Ray::IsHitSurface(CollisionPrimitive_Surface* other)
+{
+    return Geometry::SurfaceHit::IsHitLineSurface(*this, other->wkp_transform.lock()->GetWorldPosition(), other->normal);
 }

@@ -1,5 +1,9 @@
 #include "stdafx.h"
 #include "..\..\..\Header\GameObjects\DefaultGameComponent\ChaseComponent.h"
+
+
+BUTI_REGIST_GAMECOMPONENT(ButiEngine::ChaseComponent);
+
 ButiEngine::ChaseComponent::ChaseComponent(std::shared_ptr<Transform> arg_shp_target, const float arg_speed)
 {
 	shp_target = arg_shp_target;
@@ -20,7 +24,7 @@ void ButiEngine::ChaseComponent::OnSet()
 
 void ButiEngine::ChaseComponent::OnShowUI()
 {
-	ImGui::SliderFloat("speed", &speed, 0.0, 1.0, "%.3f");
+	GUI::SliderFloat("speed", &speed, 0.0, 1.0, "%.3f");
 }
 
 std::shared_ptr<ButiEngine::GameComponent> ButiEngine::ChaseComponent::Clone()

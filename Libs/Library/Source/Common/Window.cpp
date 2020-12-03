@@ -1,11 +1,14 @@
 #include"stdafx.h"
+#include "imgui.h"
+#include "./backends/imgui_impl_win32.h"
+#include "./backends/imgui_impl_dx12.h"
 #include "..\..\Header\Common\Window.h"
 
 ButiEngine::Window::Window()
 {
 }
 
-void ButiEngine::Window::Initialize(const std::string arg_windowName, const WindowPopType arg_popType, UINT width , UINT height)
+void ButiEngine::Window::Initialize(const std::string arg_windowName, const WindowPopType arg_popType, bool isFullScreen, UINT width , UINT height)
 {
 	std::wstring wName;
 	Util::MultiBytetoWString(arg_windowName, wName);
@@ -17,13 +20,18 @@ void ButiEngine::Window::Initialize(const std::string arg_windowName, const Wind
 	windowClass.hInstance = instance;
 	windowClass.hCursor = (HCURSOR)LoadImageW(nullptr, MAKEINTRESOURCEW(32512)
 		, IMAGE_CURSOR, 0, 0, LR_SHARED
-	);
+	); 
+	//ShowCursor(FALSE);
 	windowClass.lpszClassName = wName.c_str();
 	RegisterClassW(&windowClass);
+	auto windowState = WS_OVERLAPPEDWINDOW;
+
+	if (isFullScreen) {
+		windowState= WS_POPUP;
+	}
 
 	handle = CreateWindowW(wName.c_str(), wName.c_str(),
-		WS_OVERLAPPEDWINDOW
-		//	WS_POPUP
+		windowState
 		, 0, 0, 0, 0, nullptr, nullptr, instance, nullptr);
 	SetSize(width, height);
 	ShowWindow(handle,

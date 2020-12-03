@@ -35,7 +35,7 @@ ButiEngine::Matrix4x4 ButiEngine::GraphicDevice::GetRawViewMatrix()
 	return rawViewMatrix;
 }
 
-std::weak_ptr<ButiEngine::Application> ButiEngine::GraphicDevice::GetApplication()
+std::weak_ptr<ButiEngine::IApplication> ButiEngine::GraphicDevice::GetApplication()
 {
 	return wkp_application;
 }

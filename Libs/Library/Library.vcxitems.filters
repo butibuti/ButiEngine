@@ -399,6 +399,13 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\ImmediateParticleController.h">
       <Filter>header\GameObjects\DefaultGameComponent</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\GUI.h">
+      <Filter>header\Device</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\Common\CerealUtill.h">
+      <Filter>header\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\ApplicationCreater.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Common\Camera.cpp">
@@ -669,5 +676,10 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\DefaultGameComponent\ImmediateParticleController.cpp">
       <Filter>source\GameObjects\DefaultGameComponent</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Source\Device\GUI.cpp">
+      <Filter>source\Device</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Header\Resources\ShaderVariable.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Header\ApplicationCreater.cpp" />
   </ItemGroup>
 </Project>

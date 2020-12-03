@@ -2,9 +2,23 @@
 #include"stdafx.h"
 #include"Header/Resources/DrawData/DrawData_Dx12.h"
 #include "..\..\..\Header\GameObjects\DefaultGameComponent\MeshDrawComponent.h"
-#include "..\..\..\Header\GameParts\ResourceContainer.h"
+
+#include "..\..\Header\Common\CerealUtill.h"
+
+CEREAL_REGISTER_TYPE(ButiEngine::MeshDrawComponent);
+
+CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::GameComponent, ButiEngine::MeshDrawComponent)
 
 
+BUTI_REGIST_CBUFFER(ButiEngine::TestGSVariable);
+
+
+BUTI_REGIST_CBUFFER(ButiEngine::LightVariable);
+
+BUTI_REGIST_CBUFFER(ButiEngine::ParticleParameter);
+
+
+BUTI_REGIST_CARRAYBUFFER(ButiEngine::Matrix4x4);
 ButiEngine::MeshDrawComponent::MeshDrawComponent(const MeshTag& arg_meshTag, const ShaderTag& arg_shaderTag, const MaterialTag& arg_materialTag, std::shared_ptr<DrawInformation> arg_shp_drawInfo, const UINT arg_layer, std::shared_ptr<Transform> arg_shp_transform)
 {
 	layer = arg_layer;
@@ -160,26 +174,26 @@ std::shared_ptr<ButiEngine::DrawInformation> ButiEngine::MeshDrawComponent::GetD
 
 void ButiEngine::MeshDrawComponent::OnShowUI()
 {
-	if (ImGui::Button("Regist")) {
+	if (GUI::Button("Regist")) {
 		Regist();
 	}
-	ImGui::SameLine();
-	if (ImGui::Button("UnRegist")) {
+	GUI::SameLine();
+	if (GUI::Button("UnRegist")) {
 		UnRegist();
 	}
-	ImGui::SameLine();
-	if (ImGui::Button("ReRegist")) {
+	GUI::SameLine();
+	if (GUI::Button("ReRegist")) {
 		ReRegist();
 	}
 
 	{
-		ImGui::BulletText("ModelTag");
+		GUI::BulletText("ModelTag");
 		
 
 		auto tagName = gameObject.lock()->GetResourceContainer()->GetTagNameModel(modelTag);
 
 		if (!modelTag.IsEmpty())
-			if (ImGui::Button("RemoveModelTag"))
+			if (GUI::Button("RemoveModelTag"))
 			{
 				auto resourceContainer = gameObject.lock()->GetResourceContainer();
 				meshTag = resourceContainer->GetModel(modelTag).lock()->GetMeshTag();
@@ -187,10 +201,10 @@ void ButiEngine::MeshDrawComponent::OnShowUI()
 				modelTag = ModelTag();
 			}
 
-		ImGui::BeginChild("ModelTagWin", ImVec2(ImGui::GetFontSize() * (tagName.size() + 2), ImGui::GetFontSize() * 2), true);
-			ImGui::Text(Util::ToUTF8(tagName).c_str());
+		GUI::BeginChild("ModelTagWin", Vector2(GUI::GetFontSize() * (tagName.size() + 2), GUI::GetFontSize() * 2), true);
+			GUI::Text(Util::ToUTF8(tagName).c_str());
 
-			if (ImGui::IsWindowHovered()) {
+			if (GUI::IsWindowHovered()) {
 				auto tag = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneManager().lock()->GetApplication().lock()->GetGUIController()->GetModelTag();
 				if (!tag.IsEmpty()) {
 					modelTag = tag;
@@ -199,15 +213,15 @@ void ButiEngine::MeshDrawComponent::OnShowUI()
 			}
 		
 
-		ImGui::EndChild();
+		GUI::EndChild();
 	}
 	{
-		ImGui::BulletText("MeshTag");
+		GUI::BulletText("MeshTag");
 		auto tagName = gameObject.lock()->GetResourceContainer()->GetTagNameMesh(meshTag);
-		(ImGui::BeginChild("MeshTagWin", ImVec2(ImGui::GetFontSize() * (tagName.size() + 2), ImGui::GetFontSize() * 2), true));
-			ImGui::Text(Util::ToUTF8(tagName).c_str());
+		(GUI::BeginChild("MeshTagWin", Vector2(GUI::GetFontSize() * (tagName.size() + 2), GUI::GetFontSize() * 2), true));
+			GUI::Text(Util::ToUTF8(tagName).c_str());
 
-			if (ImGui::IsWindowHovered()) {
+			if (GUI::IsWindowHovered()) {
 				auto tag = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneManager().lock()->GetApplication().lock()->GetGUIController()->GetMeshTag();
 				if (!tag.IsEmpty()) {
 					meshTag = tag;
@@ -216,50 +230,50 @@ void ButiEngine::MeshDrawComponent::OnShowUI()
 			}
 		
 		
-		ImGui::EndChild();
+		GUI::EndChild();
 	}
 	{
-		ImGui::BulletText("MaterialTag");
+		GUI::BulletText("MaterialTag");
 		for (int i = 0; i < materialTag.size(); i++) {
 			auto tagName = gameObject.lock()->GetResourceContainer()->GetTagNameMaterial(materialTag[i]);
-			(ImGui::BeginChild("MaterialTagWin" + i, ImVec2(ImGui::GetFontSize() * (tagName.size()), ImGui::GetFontSize() * 2), true));
-				ImGui::Text(Util::ToUTF8(tagName).c_str());
+			(GUI::BeginChild("MaterialTagWin" + i, Vector2(GUI::GetFontSize() * (tagName.size()), GUI::GetFontSize() * 2), true));
+				GUI::Text(Util::ToUTF8(tagName).c_str());
 
-				if (ImGui::IsWindowHovered()) {
+				if (GUI::IsWindowHovered()) {
 					auto tag = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneManager().lock()->GetApplication().lock()->GetGUIController()->GetMaterialTag();
 					if (!tag.IsEmpty()) {
 						materialTag[i] = tag;
 						ReRegist();
 					}
 				}
-				ImGui::EndChild();
+				GUI::EndChild();
 			
 		}
 	}
 	{
-		ImGui::BulletText("ShaderTag");
+		GUI::BulletText("ShaderTag");
 		auto tagName = gameObject.lock()->GetResourceContainer()->GetTagNameShader(shaderTag);
-		(ImGui::BeginChild("ShaderTagWin", ImVec2(ImGui::GetFontSize() * (tagName.size() + 2), ImGui::GetFontSize() * 2), true));
-			ImGui::Text(Util::ToUTF8(tagName).c_str());
+		(GUI::BeginChild("ShaderTagWin", Vector2(GUI::GetFontSize() * (tagName.size() + 2), GUI::GetFontSize() * 2), true));
+			GUI::Text(Util::ToUTF8(tagName).c_str());
 
-			if (ImGui::IsWindowHovered()) {
+			if (GUI::IsWindowHovered()) {
 				auto tag = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneManager().lock()->GetApplication().lock()->GetGUIController()->GetShaderTag();
 				if (!tag.IsEmpty()) {
 					shaderTag = tag;
 					ReRegist();
 				}
 			}
-			ImGui::EndChild();
+			GUI::EndChild();
 		
 
 	}
 
-	if (ImGui::ArrowButton("##layerUp", ImGuiDir_Up)) {
+	if (GUI::ArrowButton("##layerUp",GUI::GuiDir_Up)) {
 		UnRegist();
 		layer++;
 		Regist();
 	}
-	if (ImGui::ArrowButton("##layerDown", ImGuiDir_Down)) {
+	if (GUI::ArrowButton("##layerDown", GUI::GuiDir_Down)) {
 		UnRegist();
 		layer--;
 		if (layer < 0) {
@@ -269,10 +283,10 @@ void ButiEngine::MeshDrawComponent::OnShowUI()
 	}
 
 
-	if (ImGui::TreeNode("DrawSettings")) {
+	if (GUI::TreeNode("DrawSettings")) {
 
-		ImGui::BulletText("IsAlphaObject");
-		if (ImGui::Checkbox("##isAlpha", &shp_drawInfo->isAlpha)) {
+		GUI::BulletText("IsAlphaObject");
+		if (GUI::Checkbox("##isAlpha", &shp_drawInfo->isAlpha)) {
 			shp_drawInfo->isAlpha = !shp_drawInfo->isAlpha;
 			UnRegist();
 			shp_drawInfo->isAlpha = !shp_drawInfo->isAlpha;
@@ -280,87 +294,87 @@ void ButiEngine::MeshDrawComponent::OnShowUI()
 			Regist();
 		}
 
-		ImGui::BulletText("TopologyMode");
+		GUI::BulletText("TopologyMode");
 
-		if (ImGui::Button("Triangle")) {
+		if (GUI::Button("Triangle")) {
 			shp_drawInfo->drawSettings.topologyType = TopologyType::triangle;
 			ReRegist();
 		}
-		ImGui::SameLine();
-		if (ImGui::Button("TriangleList")) {
+		GUI::SameLine();
+		if (GUI::Button("TriangleList")) {
 			shp_drawInfo->drawSettings.topologyType = TopologyType::triangleList;
 			ReRegist();
 		}
-		ImGui::SameLine();
-		if (ImGui::Button("Line")) {
+		GUI::SameLine();
+		if (GUI::Button("Line")) {
 			shp_drawInfo->drawSettings.topologyType = TopologyType::line;
 			ReRegist();
 		}
-		ImGui::SameLine();
-		if (ImGui::Button("Point")) {
+		GUI::SameLine();
+		if (GUI::Button("Point")) {
 			shp_drawInfo->drawSettings.topologyType = TopologyType::point;
 			ReRegist();
 		}
 
-		ImGui::BulletText("BlendMode");
+		GUI::BulletText("BlendMode");
 
-		if (ImGui::Button("Addition")) {
+		if (GUI::Button("Addition")) {
 			shp_drawInfo->drawSettings.blendMode = BlendMode::Addition;
 			ReRegist();
 		}
-		ImGui::SameLine();
-		if (ImGui::Button("Blend")) {
+		GUI::SameLine();
+		if (GUI::Button("Blend")) {
 			shp_drawInfo->drawSettings.blendMode = BlendMode::AlphaBlend;
 			ReRegist();
 		}
-		ImGui::SameLine();
-		if (ImGui::Button("None")) {
+		GUI::SameLine();
+		if (GUI::Button("None")) {
 			shp_drawInfo->drawSettings.blendMode = BlendMode::NoBlend;
 			ReRegist();
 		}
-		ImGui::SameLine();
-		if (ImGui::Button("Reverse")) {
+		GUI::SameLine();
+		if (GUI::Button("Reverse")) {
 			shp_drawInfo->drawSettings.blendMode = BlendMode::Reverse;
 			ReRegist();
 		}
 
 
-		ImGui::BulletText("BillBoarsMode");
-		if (ImGui::Button("None")) {
+		GUI::BulletText("BillBoarsMode");
+		if (GUI::Button("None")) {
 			shp_drawInfo->drawSettings.billboardMode = BillBoardMode::none;
 			ReRegist();
 		}
-		ImGui::SameLine();
-		if (ImGui::Button("BillBoard")) {
+		GUI::SameLine();
+		if (GUI::Button("BillBoard")) {
 			shp_drawInfo->drawSettings.billboardMode = BillBoardMode::full;
 			ReRegist();
 		}
-		ImGui::SameLine();
-		if (ImGui::Button("BillBoard_X")) {
+		GUI::SameLine();
+		if (GUI::Button("BillBoard_X")) {
 			shp_drawInfo->drawSettings.billboardMode = BillBoardMode::x;
 			ReRegist();
 		}
-		ImGui::SameLine();
-		if (ImGui::Button("BillBoard_Y")) {
+		GUI::SameLine();
+		if (GUI::Button("BillBoard_Y")) {
 			shp_drawInfo->drawSettings.billboardMode = BillBoardMode::y;
 			ReRegist();
 		}
-		ImGui::SameLine();
-		if (ImGui::Button("BillBoard_Z")) {
+		GUI::SameLine();
+		if (GUI::Button("BillBoard_Z")) {
 			shp_drawInfo->drawSettings.billboardMode = BillBoardMode::z;
 			ReRegist();
 		}
-		if (ImGui::Checkbox("Use Deppth", &shp_drawInfo->isDepth)) {
+		if (GUI::Checkbox("Use Deppth", &shp_drawInfo->isDepth)) {
 		}
 
-		ImGui::TreePop();
+		GUI::TreePop();
 	}
-	if (ImGui::TreeNode("ExCBuffer")) {
+	if (GUI::TreeNode("ExCBuffer")) {
 		auto endItr = shp_drawInfo->vec_exCBuffer.end();
 		for (auto itr = shp_drawInfo->vec_exCBuffer.begin(); itr != endItr; itr++) {
 			(*itr)->ShowUI();
 		}
-		ImGui::TreePop();
+		GUI::TreePop();
 	}
 
 

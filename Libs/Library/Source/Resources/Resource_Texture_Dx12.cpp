@@ -1,5 +1,6 @@
 #include"stdafx.h"
 
+#include"Header/GameParts/GraphicDevice_Dx12.h"
 #include"Header/Resources/Resource_Texture_Dx12.h"
 #include"Header/Device/DescriptorHeapManager.h"
 

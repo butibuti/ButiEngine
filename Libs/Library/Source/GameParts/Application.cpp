@@ -1,16 +1,24 @@
 #pragma once
+
 #include "stdafx.h"
 #include"Header/Resources/Vertex.h"
 #include"Header/Device/Helper/MeshHelper.h"
 #include"Header/GameParts/ResourceContainer.h"
 #include"Header/Device/ModelFileConverter.h"
+#include "..\..\Header\GameParts\Application.h"
+#include"..\..\Header/Scene/SceneManager.h"
+#include"Header/GameParts/GraphicDevice_Dx12.h"
 
+#include"../../Header/Common/Window.h"
+
+#include "Header/Scene/ComponentsLoader.h"
 std::string ButiEngine::GlobalSettings::resourceDirectory = "Resources/";
-ButiEngine::Matrix4x4 ButiEngine::Transform::x90Rotate;
 ButiEngine::Vector3 ButiEngine::Vector3::XAxis = ButiEngine::Vector3(1, 0, 0);
 ButiEngine::Vector3 ButiEngine::Vector3::YAxis = ButiEngine::Vector3(0, 1, 0);
 ButiEngine::Vector3 ButiEngine::Vector3::ZAxis = ButiEngine::Vector3(0, 0, 1);
 
+
+const float frame_min = (1.0f / 60.0f) * 1000;
 
 void ButiEngine::Application::CreateInstances(const std::string windowName, const WindowPopType arg_windowPopType, const UINT windowWidth , const UINT windowHeight, const bool isFullScreen )
 {
@@ -18,12 +26,11 @@ void ButiEngine::Application::CreateInstances(const std::string windowName, cons
 		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 		CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
 		unq_window = std::make_unique<Window>();
-		unq_window->Initialize(windowName,arg_windowPopType, windowWidth, windowHeight);
+		unq_window->Initialize(windowName,arg_windowPopType,isFullScreen, windowWidth, windowHeight);
 	}
+	shp_graphicDevice = ObjectFactory::Create<GraphicDevice_Dx12>(GetThis<IApplication>());
 
-	shp_graphicDevice = ObjectFactory::Create<GraphicDevice_Dx12>(GetThis<Application>());
-
-	unq_imguiController = std::make_unique<ButiimguiController>(unq_window, shp_graphicDevice->GetThis<GraphicDevice_Dx12>());
+	unq_imguiController = std::make_unique<ImguiController>(unq_window, shp_graphicDevice->GetThis<GraphicDevice_Dx12>());
 
 	
 	if (!shp_resourceContainer) {
@@ -36,25 +43,87 @@ void ButiEngine::Application::CreateInstances(const std::string windowName, cons
 	}
 	
 	if (!shp_sceneManager) {
-		shp_sceneManager = std::make_unique<SceneManager>(GetThis<Application>());
+		shp_sceneManager = std::make_unique<SceneManager>(GetThis<IApplication>());
 	}
-	Transform::x90Rotate= DirectX::XMMatrixRotationX(
-		DirectX::XMConvertToRadians(90)
-	) *
-		DirectX::XMMatrixRotationY(
-			DirectX::XMConvertToRadians(0)
-		) *
-		DirectX::XMMatrixRotationZ(
-			DirectX::XMConvertToRadians(0)
-		);
+
+	if (!unq_gameObjTagManager) {
+		unq_gameObjTagManager = std::make_unique<GameObjectTagManager>();
+	}
+
+	ButiRandom::Initialize();
+
+
 	std::timespec_get(&befTs, TIME_UTC);
+
 	timeBeginPeriod(1);
+
+	ComponentsLoader::CreateInstance();
+
 }
 
 
-std::unique_ptr<ButiEngine::Window>& ButiEngine::Application::GetWindow()
+std::unique_ptr<ButiEngine::IWindow>& ButiEngine::Application::GetWindow()
 {
 	return unq_window;
+}
+
+std::shared_ptr<ButiEngine::ISceneManager> ButiEngine::Application::GetSceneManager()
+{
+	return shp_sceneManager;
+}
+
+std::shared_ptr<ButiEngine::GraphicDevice> ButiEngine::Application::GetGraphicDevice()
+{
+	return shp_graphicDevice;
+}
+
+std::shared_ptr<ButiEngine::IResourceContainer> ButiEngine::Application::GetResourceContainer()
+{
+	return shp_resourceContainer;
+}
+
+std::unique_ptr<ButiEngine::ImguiController>& ButiEngine::Application::GetGUIController()
+{
+	return unq_imguiController;
+}
+
+std::unique_ptr<ButiEngine::GameObjectTagManager>& ButiEngine::Application::GetGameObjectTagManager()
+{
+	return unq_gameObjTagManager;
+}
+
+bool ButiEngine::Application::Update()
+{
+	unq_imguiController->Start();
+	shp_sceneManager->Update();
+	shp_sceneManager->Draw();
+	return unq_window->Update();
+}
+
+int ButiEngine::Application::Run()
+{
+	while (Update())
+	{
+		GameDevice::GetInput()->PadUpdate();
+		GameDevice::GetInput()->MouseUpdate();
+
+		if (GameDevice::GetInput()->CheckKey(Keys::Esc)) {
+			return 1;
+		}
+
+		std::timespec_get(&nowTs, TIME_UTC);
+		auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::nanoseconds{ nowTs.tv_nsec }) - std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::nanoseconds{ befTs.tv_nsec });
+		if (ms.count() > 0) {
+			auto sleepTime = frame_min - ms.count();
+			if (sleepTime > 0) {
+				Sleep(sleepTime);
+			}
+			else {
+			}
+		}
+		std::timespec_get(&befTs, TIME_UTC);
+	}
+	return 0;
 }
 
 void ButiEngine::Application::InitLoadResources()
@@ -69,20 +138,21 @@ void ButiEngine::Application::InitLoadResources()
 
 		std::vector<Color> colors;
 
+		auto container = Application::GetResourceContainer()->GetThis<ResourceContainer>();
 
-		MeshHelper::CreateSphereForParticle(Vector3(0.5f, 0.5f, 0.5f), 6, colors, testVertices);
+		MeshHelper::CreateSphereForParticle(Vector3(0.5f, 0.5f, 0.5f), 8, colors, testVertices);
 
 		Vertex::VertexHelper::VertexConvert(testVertices, uv_normalVertices);
-		Application::GetResourceContainer()->LoadMesh("SphereForParticle_UV_Normal", uv_normalVertices);
+		container->LoadMesh("SphereForParticle_UV_Normal", uv_normalVertices);
 
 
 		MeshHelper::CreateSphere(Vector3(1.0f, 1.0f, 1.0f), 12, colors, testVertices);
 		Vertex::VertexHelper::VertexConvert(testVertices, normalVertices);
-		Application::GetResourceContainer()->LoadMesh("Sphere_Normal", normalVertices);
+		container->LoadMesh("Sphere_Normal", normalVertices);
 
 
 		Vertex::VertexHelper::VertexConvert(testVertices, uv_normalVertices);
-		Application::GetResourceContainer()->LoadMesh("Sphere_UV_Normal", uv_normalVertices);
+		container->LoadMesh("Sphere_UV_Normal", uv_normalVertices);
 		testVertices.Clear();
 		uvVertices.Clear();
 		normalVertices.Clear();
@@ -90,46 +160,46 @@ void ButiEngine::Application::InitLoadResources()
 
 		MeshHelper::CreateCube(Vector3(0.5f, 0.5f, 0.5f), colors, testVertices, true);
 		Vertex::VertexHelper::VertexConvert(testVertices, uv_normalVertices);
-		Application::GetResourceContainer()->LoadMesh("Cube_UV_Normal", uv_normalVertices);
+		container->LoadMesh("Cube_UV_Normal", uv_normalVertices);
 		Vertex::VertexHelper::VertexConvert(testVertices, normalVertices);
-		Application::GetResourceContainer()->LoadMesh("Cube_Normal", normalVertices);
+		container->LoadMesh("Cube_Normal", normalVertices);
 		Vertex::VertexHelper::VertexConvert(testVertices, uvVertices);
-		Application::GetResourceContainer()->LoadMesh("Cube_UV", uvVertices);
+		container->LoadMesh("Cube_UV", uvVertices);
 		testVertices.Clear();
 		uvVertices.Clear();
 		normalVertices.Clear();
 		uv_normalVertices.Clear();
 
 
-		MeshHelper::CreatePlane(Vector2(1, 1), Vector3(), 1.0f, 1, 1, colors, false, testVertices);
+		MeshHelper::CreatePlane(Vector2(1, 1), Vector3(),0, 1.0f, 1, 1, colors, false, testVertices);
 		Vertex::VertexHelper::VertexConvert(testVertices, uv_normalVertices);
-		Application::GetResourceContainer()->LoadMesh("Plane_UV_Normal", uv_normalVertices);
+		container->LoadMesh("Plane_UV_Normal", uv_normalVertices);
 		Vertex::VertexHelper::VertexConvert(testVertices, normalVertices);
-		Application::GetResourceContainer()->LoadMesh("Plane_Normal", normalVertices);
+		container->LoadMesh("Plane_Normal", normalVertices);
 		Vertex::VertexHelper::VertexConvert(testVertices, uvVertices);
-		Application::GetResourceContainer()->LoadMesh("Plane_UV", uvVertices);
+		container->LoadMesh("Plane_UV", uvVertices);
 
 		testVertices.Clear();
 		uvVertices.Clear();
 		normalVertices.Clear();
 		uv_normalVertices.Clear();
 
-		MeshHelper::CreatePlane(Vector2(1, 1),Vector3(), 10.0f, 2, 2, colors, false, testVertices);
+		MeshHelper::CreatePlane(Vector2(1, 1),Vector3(),0, 10.0f, 2, 2, colors, false, testVertices);
 		Vertex::VertexHelper::VertexConvert(testVertices, uv_normalVertices);
-		Application::GetResourceContainer()->LoadMesh("Plane_UV_Normal_max10", uv_normalVertices);
+		container->LoadMesh("Plane_UV_Normal_max10", uv_normalVertices);
 		Vertex::VertexHelper::VertexConvert(testVertices, uvVertices);
-		Application::GetResourceContainer()->LoadMesh("Plane_UV_max10", uvVertices);
+		container->LoadMesh("Plane_UV_max10", uvVertices);
 
 		testVertices.Clear();
 		uvVertices.Clear();
 		normalVertices.Clear();
 		uv_normalVertices.Clear();
 
-		MeshHelper::CreatePlane(Vector2(1, 1),Vector3(), 100.0f, 2, 2, colors, false, testVertices);
+		MeshHelper::CreatePlane(Vector2(1, 1),Vector3(),0, 100.0f, 2, 2, colors, false, testVertices);
 		Vertex::VertexHelper::VertexConvert(testVertices, uv_normalVertices);
-		Application::GetResourceContainer()->LoadMesh("Plane_UV_Normal_max100", uv_normalVertices);
+		container->LoadMesh("Plane_UV_Normal_max100", uv_normalVertices);
 		Vertex::VertexHelper::VertexConvert(testVertices, uvVertices);
-		Application::GetResourceContainer()->LoadMesh("Plane_UV_max100", uvVertices);
+		container->LoadMesh("Plane_UV_max100", uvVertices);
 		testVertices.Clear();
 		uvVertices.Clear();
 		normalVertices.Clear();
@@ -137,20 +207,20 @@ void ButiEngine::Application::InitLoadResources()
 
 
 		MeshHelper::CreateImmediateMeshForParticle(2048, testVertices);
-		Application::GetResourceContainer()->LoadRealTimeMesh("Particle", testVertices);
+		container->LoadRealTimeMesh("Particle", testVertices);
 
 		testVertices.Clear();
 		MeshHelper::CreateSphereForParticle(Vector3(0.5f, 0.5f, 0.5f),4, colors, testVertices);
 
 		Vertex::VertexHelper::VertexConvert(testVertices, uv_normalVertices);
-		Application::GetResourceContainer()->LoadMesh("SphereForParticle_UV_Normal_min", uv_normalVertices);
+		container->LoadMesh("SphereForParticle_UV_Normal_min", uv_normalVertices);
 
 
 		testVertices.Clear();
 		uv_normalVertices.Clear();
-		MeshHelper::CreatePlane(Vector2(1, 1), Vector3(0.5,0,0), 1.0f, 1, 1, colors, false, testVertices);
+		MeshHelper::CreatePlane(Vector2(1, 1), Vector3(0.5,0,0),0.1 ,1.0f, 1, 1, colors, false, testVertices);
 		Vertex::VertexHelper::VertexConvert(testVertices, uv_normalVertices);
-		Application::GetResourceContainer()->LoadMesh("Bar", uv_normalVertices);
+		container->LoadMesh("Bar", uv_normalVertices);
 
 	}
 
@@ -163,8 +233,10 @@ void ButiEngine::Application::InitLoadResources()
 		{"VertexUVNormalColorMeshPS", "Shader/Compiled/"},
 		{"VertexUVColorMeshPS", "Shader/Compiled/"},
 		{"VertexUVMeshPS", "Shader/Compiled/"},
+		{"TextMeshPS", "Shader/Compiled/"},
 		{"GlidPS", "Shader/Compiled/"},
 		{"AmbientPS", "Shader/Compiled/"},
+		{"AmbientFogPS", "Shader/Compiled/"},
 		{"AmbientPS_Alpha", "Shader/Compiled/"},
 		{"DefaultMeshPS", "Shader/Compiled/"},
 	};
@@ -176,11 +248,13 @@ void ButiEngine::Application::InitLoadResources()
 		{"PMXVS", "Shader/Compiled/"},
 		{"PMX_AttributeVS", "Shader/Compiled/"},
 		{"DefaultMeshVS", "Shader/Compiled/"},
+		{"DefaultMeshFogVS", "Shader/Compiled/"},
 		{"VertexUVMeshVS", "Shader/Compiled/"},
 		{"VertexUVNormalColorMeshVS", "Shader/Compiled/"},
 		{"VertexUVNormalAttributeVS", "Shader/Compiled/"},
 		{"ParticleVS", "Shader/Compiled/"},
 		{"Particle3DVS", "Shader/Compiled/"},
+		{"ParticleSpray3DVS", "Shader/Compiled/"},
 		{"ImmediateParticleVS", "Shader/Compiled/"},
 	};
 	Application::GetResourceContainer()->LoadVertexShader(vec_vertexShaderPath);
@@ -195,7 +269,7 @@ void ButiEngine::Application::InitLoadResources()
 
 	std::vector<ResourceContainer::ShaderName> vec_names = {
 		{"DefaultMesh","DefaultMeshVS","DefaultMeshPS", "Shader/Compiled/", "Shader/Compiled/"},
-		{"OnlyMaterial","DefaultMeshVS","AmbientPS", "Shader/Compiled/", "Shader/Compiled/"},
+		{"OnlyMaterial","DefaultMeshFogVS","AmbientFogPS", "Shader/Compiled/", "Shader/Compiled/"},
 		{"GSMesh","VertexUVNormalAttributeVS","DefaultMeshPS", "Shader/Compiled/", "Shader/Compiled/","TestGS","Shader/Compiled/"},
 		{"SingleBoneModel","SingleBoneVS","DefaultMeshPS", "Shader/Compiled/", "Shader/Compiled/"},
 		{"PMXModel","PMXVS","DefaultMeshPS", "Shader/Compiled/", "Shader/Compiled/"},
@@ -212,6 +286,10 @@ void ButiEngine::Application::InitLoadResources()
 		{"UVMesh","VertexUVMeshVS","VertexUVMeshPS", "Shader/Compiled/", "Shader/Compiled/"},
 
 		{"OnlyMaterial_Alpha","DefaultMeshVS","AmbientPS_Alpha", "Shader/Compiled/", "Shader/Compiled/"},
+		{"OnlyMaterialNoFog","DefaultMeshVS","AmbientPS", "Shader/Compiled/", "Shader/Compiled/"},
+
+		{ "GSParticle_CubeSpray","ParticleSpray3DVS","VertexUVNormalColorMeshPS", "Shader/Compiled/", "Shader/Compiled/","PointToCubeGS","Shader/Compiled/" },
+		{"TextMesh","VertexUVMeshVS","TextMeshPS", "Shader/Compiled/", "Shader/Compiled/"},
 	};
 
 	Application::GetResourceContainer()->LoadShader(vec_names);
@@ -353,8 +431,10 @@ void ButiEngine::Application::Exit()
 {
 	shp_sceneManager->Release();
 	unq_window->Release();
-	OutputCereal(shp_resourceContainer);
+	OutputCereal(shp_resourceContainer->GetThis<ResourceContainer>());
 	shp_resourceContainer->Release();
 	unq_imguiController->Release();
 	shp_graphicDevice->Release();
+
+	ComponentsLoader::GetInstance()->Release();
 }

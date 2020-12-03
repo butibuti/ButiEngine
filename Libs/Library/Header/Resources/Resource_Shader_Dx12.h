@@ -2,7 +2,7 @@
 #include"stdafx.h"
 #include"Resource_Shader.h"
 namespace ButiEngine {
-
+	class GraphicDevice_Dx12;
 	namespace Dx12Compile {
 		static void Compile(const std::string& source, const std::string& fileName, const char* entryPoint, const char* shaderModel);
 		static void InputLayoutCompile(const std::string& source, const std::string& fileName);

@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include"Header/Device/Helper/ShaderHelper.h"
+#pragma comment(lib, "d3dcompiler.lib")
+#include <d3dcompiler.h>
 void ButiEngine::ShaderHelper::Compile(const std::string& filePath, const CompileType& type)
 {
 

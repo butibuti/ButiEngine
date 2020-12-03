@@ -1,8 +1,9 @@
 #pragma once
 #include"stdafx.h"
-#include"Header/Resources/Resource_Mesh_Dx12.h"
+#include"Header/Resources/Resource_Mesh_Dx12.h"	
 #include"Header/Resources/Resource_RealTimeMesh_Dx12.h"
 #include"ResourceFactory.h"
+#include"../GameParts/GraphicDevice_Dx12.h"
 namespace ButiEngine {
 	class ResourceFactory_Dx12 :public ResourceFactory {
 	public:

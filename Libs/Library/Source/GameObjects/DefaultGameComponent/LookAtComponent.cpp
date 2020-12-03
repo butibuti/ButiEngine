@@ -2,6 +2,7 @@
 #include "Header/GameObjects/DefaultGameComponent/LookAtComponent.h"
 #include "..\..\..\Header\GameObjects\DefaultGameComponent\LookAtComponent.h"
 
+BUTI_REGIST_GAMECOMPONENT(ButiEngine::LookAtComponent);
 ButiEngine::LookAtComponent::LookAtComponent(std::shared_ptr<Transform> arg_shp_lookTarget)
 {
 	shp_lookTarget = arg_shp_lookTarget;
@@ -42,16 +43,16 @@ void ButiEngine::LookAtComponent::OnShowUI()
 	}
 
 
-	ImGui::BeginChild("##LookTransform", ImVec2((ImGui::GetFontSize())*(target.size()+2), ImGui::GetFontSize()*2), true);
-	ImGui::BulletText((target).c_str());
+	GUI::BeginChild("##LookTransform", Vector2((GUI::GetFontSize())*(target.size()+2), GUI::GetFontSize()*2), true);
+	GUI::BulletText((target).c_str());
 	if (shp_lookTarget) {
-		ImGui::SameLine();
-		if (ImGui::Button("DontLook")) {
+		GUI::SameLine();
+		if (GUI::Button("DontLook")) {
 			shp_lookTarget = nullptr;
 		}
 	}
-	ImGui::SameLine();
-	if (ImGui::Button("Attach New")) {
+	GUI::SameLine();
+	if (GUI::Button("Attach New")) {
 		if(!shp_lookTarget)
 		shp_lookTarget = ObjectFactory::Create<Transform>();
 		else {
@@ -59,7 +60,7 @@ void ButiEngine::LookAtComponent::OnShowUI()
 		}
 	}
 
-	if (ImGui::IsWindowHovered())
+	if (GUI::IsWindowHovered())
 	{
 		auto obj = gameObject.lock()->GetApplication().lock()->GetGUIController()->GetDraggingObject();
 
@@ -71,7 +72,7 @@ void ButiEngine::LookAtComponent::OnShowUI()
 		}
 
 	}
-	ImGui::EndChild();
+	GUI::EndChild();
 	if (shp_lookTarget) {
 
 		shp_lookTarget->ShowUI();

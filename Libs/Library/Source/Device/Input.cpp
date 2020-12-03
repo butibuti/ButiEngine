@@ -5,24 +5,56 @@
 #include "../../Header/Device/PadButtons.h"
 
 #include"stdafx.h"
+#include<dinput.h>
+#include <xinput.h>
 #pragma comment(lib,"dinput8.lib")
 #pragma comment(lib,"dxguid.lib")
 #pragma comment(lib,"xinput.lib")
 using namespace::ButiEngine; 
 
 
-Input::Input() :result(S_OK), input(nullptr), key(nullptr)
+#define DIRECTINPUT_VERSION 0x0800
+#define  KEY_MAX 256
+#define CONTROLLERS_MAX 1
+
+class Input::InputInstance {
+public:
+	InputInstance():input(nullptr), key(nullptr) {
+
+	}
+
+	LPDIRECTINPUT8 input;
+
+	LPDIRECTINPUTDEVICE8 key;
+	LPDIRECTINPUTDEVICE8 mouse;
+
+	BYTE currentKeys[KEY_MAX];
+
+	BYTE beffores[KEY_MAX];
+	XINPUT_STATE currentPad;
+	XINPUT_STATE befforePad;
+
+	DIMOUSESTATE mouseState;
+	DIMOUSESTATE beforeMouseState;
+	Vector2 mousePos;
+	Vector2 mouseMove = Vector2(0, 0);
+	POINT mousePoint;
+	bool isMouseCenterKeep;
+};
+
+Input::Input() :result(S_OK)
 {
+	unq_instance = std::make_unique<InputInstance>();
 }
 Input::~Input() {
-	key->Release();
-	mouse->Release();
-	input->Release();;
+	unq_instance->key->Release();
+	unq_instance->mouse->Release();
+	unq_instance->input->Release();;
 }
-void ButiEngine::Input::Initialize(std::weak_ptr<Application> arg_wkp_app)
+void ButiEngine::Input::Initialize(std::weak_ptr<IApplication> arg_wkp_app)
 {
-	memset(&currentKeys, 0, sizeof(currentKeys));
-	memset(&beffores, 0, sizeof(beffores));
+	memset(&unq_instance->currentKeys, 0, sizeof(unq_instance->currentKeys));
+	memset(&unq_instance->beffores, 0, sizeof(unq_instance->beffores));
 	CreateInput();
 	CreateKey();
 	CreateMouse();
@@ -35,43 +67,43 @@ void ButiEngine::Input::Initialize(std::weak_ptr<Application> arg_wkp_app)
 }
 bool Input::GetAnyButton()
 {
-	return(currentPad.Gamepad.wButtons != 0);
+	return(unq_instance->currentPad.Gamepad.wButtons != 0);
 }
 bool Input::GetAnyButtonTrigger()
 {
-	return (currentPad.Gamepad.wButtons != 0 && befforePad.Gamepad.wButtons == 0);
+	return (unq_instance->currentPad.Gamepad.wButtons != 0 && unq_instance->befforePad.Gamepad.wButtons == 0);
 }
 bool ButiEngine::Input::GetPadButton(const PadButtons num)
 {
-	return Util::GetBitFlag(currentPad.Gamepad.wButtons, (int)num);
+	return Util::GetBitFlag(unq_instance->currentPad.Gamepad.wButtons, (int)num);
 }
 bool ButiEngine::Input::GetPadButtonTriger(const PadButtons num)
 {
-	return Util::GetBitFlag(currentPad.Gamepad.wButtons, (int)num)&& !Util::GetBitFlag(befforePad.Gamepad.wButtons, (int)num);
+	return Util::GetBitFlag(unq_instance->currentPad.Gamepad.wButtons, (int)num)&& !Util::GetBitFlag(unq_instance->befforePad.Gamepad.wButtons, (int)num);
 }
 bool ButiEngine::Input::GetPadButtonRelease(const PadButtons num)
 {
-	return !Util::GetBitFlag(currentPad.Gamepad.wButtons, (int)num) && Util::GetBitFlag(befforePad.Gamepad.wButtons, (int)num);
+	return !Util::GetBitFlag(unq_instance->currentPad.Gamepad.wButtons, (int)num) && Util::GetBitFlag(unq_instance->befforePad.Gamepad.wButtons, (int)num);
 }
 
 bool Input::GetMouseButton(const MouseButtons num)
 {
-	return mouseState.rgbButtons[(int)num] == 128;
+	return unq_instance->mouseState.rgbButtons[(int)num] == 128;
 }
 
 bool Input::GetMouseTrigger(const MouseButtons num)
 {
-	return (beforeMouseState.rgbButtons[(int)num] != 128) && mouseState.rgbButtons[(int)num] == 128;
+	return (unq_instance->beforeMouseState.rgbButtons[(int)num] != 128) && unq_instance->mouseState.rgbButtons[(int)num] == 128;
 }
 
 bool Input::GetMouseReleaseTrigger(const MouseButtons num)
 {
-	return (beforeMouseState.rgbButtons[(int)num] == 128) && mouseState.rgbButtons[(int)num] != 128;
+	return (unq_instance->beforeMouseState.rgbButtons[(int)num] == 128) && unq_instance->mouseState.rgbButtons[(int)num] != 128;
 }
 
 bool ButiEngine::Input::GetMouseWheel()
 {
-	if(mouseState.lZ!=0)
+	if(unq_instance->mouseState.lZ!=0)
 	return true;
 	else {
 		return false;
@@ -80,7 +112,7 @@ bool ButiEngine::Input::GetMouseWheel()
 
 float ButiEngine::Input::GetMouseWheelMove()
 {
-	return mouseState.lZ;
+	return unq_instance->mouseState.lZ;
 }
 
 
@@ -88,8 +120,8 @@ float ButiEngine::Input::GetMouseWheelMove()
 Vector2 Input::GetLeftStick()
 {
 	float x =
-		currentPad.Gamepad.sThumbLX;
-	float y = currentPad.Gamepad.sThumbLY;
+		unq_instance->currentPad.Gamepad.sThumbLX;
+	float y = unq_instance->currentPad.Gamepad.sThumbLY;
 
 	if (x < 0)x += 1;
 	if (y < 0)y += 1;
@@ -99,8 +131,8 @@ Vector2 Input::GetLeftStick()
 Vector2 Input::GetRightStick()
 {
 	float x =
-		currentPad.Gamepad.sThumbRX;
-	float y = currentPad.Gamepad.sThumbRY;
+		unq_instance->currentPad.Gamepad.sThumbRX;
+	float y = unq_instance->currentPad.Gamepad.sThumbRY;
 
 	if (x < 0)x += 1;
 	if (y < 0)y += 1;
@@ -109,58 +141,58 @@ Vector2 Input::GetRightStick()
 
 Vector2 Input::GetMouseMove()
 {
-	return mouseMove;
+	return unq_instance->mouseMove;
 }
 
 Vector2 Input::GetMousePos()
 {
-	return mousePos;
+	return unq_instance->mousePos;
 }
 
 HRESULT Input::CreateInput(void) {
-	result = DirectInput8Create(GetModuleHandle(0), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)(&input), NULL);
+	result = DirectInput8Create(GetModuleHandle(0), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)(&unq_instance->input), NULL);
 	return result;
 }
 
 HRESULT Input::CreateKey(void) {
-	result = input->CreateDevice(GUID_SysKeyboard, &key, NULL);
+	result = unq_instance->input->CreateDevice(GUID_SysKeyboard, &unq_instance->key, NULL);
 	return result;
 }
 
 HRESULT Input::CreateMouse(void)
 {
-	result = input->CreateDevice(GUID_SysMouse, &mouse, NULL);
+	result = unq_instance->input->CreateDevice(GUID_SysMouse, &unq_instance->mouse, NULL);
 	return result;
 }
 
 HRESULT Input::SetKeyFormat(void) {
-	result = key->SetDataFormat(&c_dfDIKeyboard);
+	result = unq_instance->key->SetDataFormat(&c_dfDIKeyboard);
 	return result;
 }
 
 HRESULT Input::SetMouseFormat(void)
 {
-	result = mouse->SetDataFormat(&c_dfDIMouse);
+	result = unq_instance->mouse->SetDataFormat(&c_dfDIMouse);
 	return result;
 }
 
-HRESULT Input::SetKeyCooperative(std::weak_ptr<Application> arg_wkp_app) {
-	result = key->SetCooperativeLevel(arg_wkp_app.lock()->GetWindow()->GetHandle(), DISCL_NONEXCLUSIVE | DISCL_BACKGROUND);
-	key->Acquire();
+HRESULT Input::SetKeyCooperative(std::weak_ptr<IApplication> arg_wkp_app) {
+	result = unq_instance->key->SetCooperativeLevel(arg_wkp_app.lock()->GetWindow()->GetHandle(), DISCL_NONEXCLUSIVE | DISCL_BACKGROUND);
+	unq_instance->key->Acquire();
 	return result;
 }
 
-HRESULT Input::SetMouseCooperative(std::weak_ptr<Application> arg_wkp_app)
+HRESULT Input::SetMouseCooperative(std::weak_ptr<IApplication> arg_wkp_app)
 {
-	result = mouse->SetCooperativeLevel(arg_wkp_app.lock()->GetWindow()->GetHandle(), DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
+	result = unq_instance->mouse->SetCooperativeLevel(arg_wkp_app.lock()->GetWindow()->GetHandle(), DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
 	DIPROPDWORD diProperty;
 	diProperty.diph.dwSize = sizeof(diProperty);
 	diProperty.diph.dwHeaderSize = sizeof(diProperty.diph);
 	diProperty.diph.dwObj = 0;
 	diProperty.diph.dwHow = DIPH_DEVICE;
 	diProperty.dwData = DIPROPAXISMODE_REL;
-	result = mouse->SetProperty(DIPROP_AXISMODE, &diProperty.diph);
-	mouse->Acquire();
+	result = unq_instance->mouse->SetProperty(DIPROP_AXISMODE, &diProperty.diph);
+	unq_instance->mouse->Acquire();
 
 	return result;
 }
@@ -169,14 +201,14 @@ void ButiEngine::Input::SetMouseCursor(const Vector2& position)
 {
 
 	SetCursorPos(position.x, position.y);
-	mousePos = position;
+	unq_instance->mousePos = position;
 }
 
 
 bool Input::CheckKey(const UINT index) {
 	bool checkFlag = false;
 
-	if (currentKeys[index] & 0x80) {
+	if (unq_instance->currentKeys[index] & 0x80) {
 		checkFlag = true;
 	}
 	return checkFlag;
@@ -184,7 +216,7 @@ bool Input::CheckKey(const UINT index) {
 bool Input::CheckKey(const Keys index) {
 	bool checkFlag = false;
 	int nIndex = (int)index;
-	if (currentKeys[nIndex] & 0x80) {
+	if (unq_instance->currentKeys[nIndex] & 0x80) {
 		checkFlag = true;
 	}
 	return checkFlag;
@@ -193,7 +225,7 @@ bool Input::TriggerKey(const UINT index) {
 	bool checkFlag = false;
 
 
-	if ((currentKeys[index] & 0x80) && !(beffores[index] & 0x80)) {
+	if ((unq_instance->currentKeys[index] & 0x80) && !(unq_instance->beffores[index] & 0x80)) {
 		checkFlag = true;
 	}
 
@@ -203,7 +235,7 @@ bool Input::TriggerKey(const Keys index) {
 	bool checkFlag = false;
 	int nIndex = (int)index;
 
-	if ((currentKeys[nIndex] & 0x80) && !(beffores[nIndex] & 0x80)) {
+	if ((unq_instance->currentKeys[nIndex] & 0x80) && !(unq_instance->beffores[nIndex] & 0x80)) {
 		checkFlag = true;
 	}
 
@@ -215,7 +247,7 @@ bool ButiEngine::Input::ReleaseKey(const Keys index)
 	bool checkFlag = false;
 	int nIndex = (int)index;
 
-	if (!(currentKeys[nIndex] & 0x80) && (beffores[nIndex] & 0x80)) {
+	if (!(unq_instance->currentKeys[nIndex] & 0x80) && (unq_instance->beffores[nIndex] & 0x80)) {
 		checkFlag = true;
 	}
 
@@ -226,12 +258,12 @@ void Input::PadUpdate()
 {
 	DWORD dwResult;
 
-	befforePad = currentPad;
+	unq_instance->befforePad = unq_instance->currentPad;
 	for (DWORD i = 0; i < CONTROLLERS_MAX; i++)
 	{
-		ZeroMemory(&currentPad, sizeof(currentPad));
+		ZeroMemory(&unq_instance->currentPad, sizeof(unq_instance->currentPad));
 
-		dwResult = XInputGetState(i, &currentPad);
+		dwResult = XInputGetState(i, &unq_instance->currentPad);
 
 		if (dwResult == ERROR_SUCCESS)
 		{
@@ -250,22 +282,22 @@ void Input::PadUpdate()
 
 void Input::MouseUpdate()
 {
-	beforeMouseState = mouseState;
-	auto hr= mouse->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState);
+	unq_instance->beforeMouseState = unq_instance->mouseState;
+	auto hr= unq_instance->mouse->GetDeviceState(sizeof(DIMOUSESTATE), &unq_instance->mouseState);
 
 	if (hr !=S_OK) {
-		mouse->Acquire();
-		hr = mouse->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState);
+		unq_instance->mouse->Acquire();
+		hr = unq_instance->mouse->GetDeviceState(sizeof(DIMOUSESTATE), &unq_instance->mouseState);
 	}
-	GetCursorPos(&mousePoint);
-	mouseMove.x =   mousePos.x- mousePoint.x;
-	mouseMove.y =   mousePos.y- mousePoint.y;
+	GetCursorPos(&unq_instance->mousePoint);
+	unq_instance->mouseMove.x = unq_instance->mousePos.x- unq_instance->mousePoint.x;
+	unq_instance->mouseMove.y = unq_instance->mousePos.y- unq_instance->mousePoint.y;
 
-	mousePos.x = mousePoint.x; mousePos.y = mousePoint.y;
+	unq_instance->mousePos.x = unq_instance->mousePoint.x; unq_instance->mousePos.y = unq_instance->mousePoint.y;
 
 	for (int i = 0; i < 256; i++) {
-		beffores[i] = currentKeys[i];
+		unq_instance->beffores[i] = unq_instance->currentKeys[i];
 	}
 
-	key->GetDeviceState(sizeof(currentKeys), &currentKeys);
+	unq_instance->key->GetDeviceState(sizeof(unq_instance->currentKeys), &unq_instance->currentKeys);
 }

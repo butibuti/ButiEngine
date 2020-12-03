@@ -51,7 +51,7 @@ void ButiEngine::Scene::Draw()
 	shp_renderer->RenderingEnd();
 }
 
-ButiEngine::Scene::Scene(std::weak_ptr<ISceneManager> arg_wkp_sceneManager, SceneInformation argSceneInformation):sceneInformation(argSceneInformation)
+ButiEngine::Scene::Scene(std::weak_ptr<ISceneManager> arg_wkp_sceneManager, std::shared_ptr< SceneInformation> argSceneInformation):sceneInformation(argSceneInformation)
 {
 	shp_sceneManager = arg_wkp_sceneManager.lock();
 }
@@ -78,7 +78,7 @@ void ButiEngine::Scene::Initialize()
 
 	ActiveCollision(1);
 	auto windowSize = GetWindow()->GetSize();
-	std::string fullGameObjectManagerPath = GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation.GetSceneName() + "/objects.gameObjectManager";
+	std::string fullGameObjectManagerPath = GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation->GetSceneName() + "/objects.gameObjectManager";
 	if (Util::IsFileExistence(fullGameObjectManagerPath)) {
 		shp_gameObjectManager = ObjectFactory::CreateFromCereal<GameObjectManager>(fullGameObjectManagerPath);
 
@@ -115,7 +115,7 @@ void ButiEngine::Scene::PreInitialize()
 {
 }
 
-std::unique_ptr<ButiEngine::Window>& ButiEngine::Scene::GetWindow()
+std::unique_ptr<ButiEngine::IWindow>& ButiEngine::Scene::GetWindow()
 {
 	return shp_sceneManager->GetApplication().lock()->GetWindow();
 }
@@ -177,7 +177,7 @@ void ButiEngine::Scene::SceneEnd()
 	OnSceneEnd();
 }
 
-std::shared_ptr<ButiEngine::ResourceContainer> ButiEngine::Scene::GetResourceContainer()
+std::shared_ptr<ButiEngine::IResourceContainer> ButiEngine::Scene::GetResourceContainer()
 {
 	return shp_sceneManager->GetApplication().lock()->GetResourceContainer();
 }
@@ -202,7 +202,7 @@ std::weak_ptr<ButiEngine::Collision::CollisionManager> ButiEngine::Scene::GetCol
 	return shp_collisionManager;
 }
 
-ButiEngine::SceneInformation ButiEngine::Scene::GetSceneInformation()
+std::shared_ptr< ButiEngine::SceneInformation >ButiEngine::Scene::GetSceneInformation()
 {
 	return sceneInformation;
 }

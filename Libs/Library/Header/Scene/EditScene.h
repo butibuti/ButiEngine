@@ -7,7 +7,7 @@ namespace ButiEngine {
 	class EditScene :public IScene {
 
 	public:
-		EditScene(std::weak_ptr<ISceneManager> arg_wkp_sceneManager, SceneInformation arg_SceneInformation, std::shared_ptr< ComponentsLoader> arg_shp_componentsLoader);
+		EditScene(std::weak_ptr<ISceneManager> arg_wkp_sceneManager, std::shared_ptr< SceneInformation> arg_SceneInformation);
 		void Release()override;
 		virtual void OnSet();
 		virtual void OnInitialize();
@@ -20,7 +20,7 @@ namespace ButiEngine {
 		virtual void  OnSceneEnd() {}
 		void ActiveCollision(const UINT arg_layerCount = 1);
 		void PreInitialize()override;
-		std::unique_ptr<Window>& GetWindow()override;
+		std::unique_ptr<IWindow>& GetWindow()override;
 
 		void Update()override final;
 
@@ -34,12 +34,12 @@ namespace ButiEngine {
 		void RemoveCamera(const std::string& arg_camName) override final;
 		void RemoveCamera(const UINT arg_camNum) override final;
 		void SceneEnd()override final;
-		std::shared_ptr<ResourceContainer> GetResourceContainer();
+		std::shared_ptr<IResourceContainer> GetResourceContainer();
 		std::shared_ptr<IRenderer> GetRenderer()override;
 		std::shared_ptr<ISoundManager> GetSoundManager()override;
 		std::weak_ptr< ISceneManager> GetSceneManager()override;
 		std::weak_ptr<Collision::CollisionManager> GetCollisionManager()override;
-		SceneInformation GetSceneInformation()override;
+		std::shared_ptr< SceneInformation> GetSceneInformation()override;
 	protected:
 		std::shared_ptr<ISceneManager> shp_sceneManager;
 		std::shared_ptr<GameObjectManager> shp_gameObjectManager;
@@ -49,9 +49,8 @@ namespace ButiEngine {
 		std::shared_ptr<IRenderer>shp_renderer;
 		std::vector< std::shared_ptr<ICamera>> vec_cameras;
 
-		std::shared_ptr< ComponentsLoader> shp_componentsLoader;
 
-		SceneInformation sceneInformation;
+		std::shared_ptr< SceneInformation> sceneInformation;
 
 		//////////////////////////////////////
 		bool isActive = false;

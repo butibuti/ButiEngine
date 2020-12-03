@@ -24,7 +24,7 @@ std::shared_ptr<ButiEngine::GameComponent> ButiEngine::Tilter::Clone()
 
 void ButiEngine::Tilter::OnShowUI()
 {
-    ImGui::DragFloat("Angle", &angle);
+    GUI::DragFloat("Angle", &angle);
 }
 
 void ButiEngine::Tilter::SetAngle(const float arg_angle)

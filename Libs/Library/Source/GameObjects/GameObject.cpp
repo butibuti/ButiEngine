@@ -1,6 +1,7 @@
 #include"stdafx.h"
 #include "..\..\Header\GameObjects\GameObject.h"
 
+#include "..\..\Header\Common\CerealUtill.h"
 
 ButiEngine::GameObject::GameObject()
 {
@@ -88,7 +89,7 @@ void ButiEngine::GameObject::Release()
 
 void ButiEngine::GameObject::Initialize()
 {
-	gameObjectTag = GameObjectTagManager::CreateGameObjectTag(tagName);
+
 }
 
 void ButiEngine::GameObject::PreInitialize()
@@ -183,7 +184,7 @@ void ButiEngine::GameObject::ShowUI()
 
 
 
-	if (ImGui::TreeNode("Transform")) {
+	if (GUI::TreeNode("Transform")) {
 		transform->ShowUI();
 
 		std::string target = "Looking:";
@@ -195,16 +196,16 @@ void ButiEngine::GameObject::ShowUI()
 		}
 
 
-		ImGui::BeginChild("##BaseTransform", ImVec2((ImGui::GetFontSize()) * (target.size() + 2), ImGui::GetFontSize() * 2), true);
-		ImGui::BulletText((target).c_str());
+		GUI::BeginChild("##BaseTransform", Vector2((GUI::GetFontSize()) * (target.size() + 2), GUI::GetFontSize() * 2), true);
+		GUI::BulletText((target).c_str());
 		if (transform->GetBaseTransform()) {
-			ImGui::SameLine();
-			if (ImGui::Button("Detach")) {
+			GUI::SameLine();
+			if (GUI::Button("Detach")) {
 				transform->SetBaseTransform( nullptr);
 			}
 		}
-		ImGui::SameLine();
-		if (ImGui::Button("Attach New")) {
+		GUI::SameLine();
+		if (GUI::Button("Attach New")) {
 			if (!transform->GetBaseTransform())
 				transform->SetBaseTransform(ObjectFactory::Create<Transform>(),true);
 			else {
@@ -212,7 +213,7 @@ void ButiEngine::GameObject::ShowUI()
 			}
 		}
 
-		if (ImGui::IsWindowHovered())
+		if (GUI::IsWindowHovered())
 		{
 			auto obj = GetApplication().lock()->GetGUIController()->GetDraggingObject();
 
@@ -224,25 +225,25 @@ void ButiEngine::GameObject::ShowUI()
 			}
 
 		}
-		ImGui::EndChild();
+		GUI::EndChild();
 
-		ImGui::TreePop();
+		GUI::TreePop();
 	}
 
-	if (ImGui::TreeNode("GameComponent")) {
+	if (GUI::TreeNode("GameComponent")) {
 
 		auto endItr = vec_gameComponents.end();
 		int componentCount = 0;
 		for (auto itr = vec_gameComponents.begin(); itr != endItr;componentCount++) {
 			bool isComponentRemove = false;
-			if (ImGui::TreeNode(((*itr)->GetGameComponentName()+"##"+std::to_string(componentCount)).c_str())) {
-				if (ImGui::Button("Remove")) {
+			if (GUI::TreeNode(((*itr)->GetGameComponentName()+"##"+std::to_string(componentCount)).c_str())) {
+				if (GUI::Button("Remove")) {
 					isComponentRemove = true;
 				}
 
 				(*itr)->ShowUI();
 
-				ImGui::TreePop();
+				GUI::TreePop();
 			}
 
 			if (isComponentRemove) {
@@ -256,20 +257,20 @@ void ButiEngine::GameObject::ShowUI()
 
 		}
 
-		ImGui::TreePop();
+		GUI::TreePop();
 	}
-	if (ImGui::TreeNode("Behaivior")) {
+	if (GUI::TreeNode("Behaivior")) {
 		auto endItr = vec_behaviors.end();
 
 		for (auto itr = vec_behaviors.begin(); itr != endItr; ) {
 			bool isComponentRemove = false;
-			if (ImGui::TreeNode((*itr)->GetBehaviorName().c_str())) {
-				if (ImGui::Button("Remove")) {
+			if (GUI::TreeNode((*itr)->GetBehaviorName().c_str())) {
+				if (GUI::Button("Remove")) {
 					isComponentRemove = true;
 				}
 				(*itr)->ShowUI();
 
-				ImGui::TreePop();
+				GUI::TreePop();
 			}
 
 			if (isComponentRemove) {
@@ -282,7 +283,7 @@ void ButiEngine::GameObject::ShowUI()
 			}
 		}
 
-		ImGui::TreePop();
+		GUI::TreePop();
 	}
 }
 
@@ -303,12 +304,12 @@ std::weak_ptr< ButiEngine::GameObjectManager> ButiEngine::GameObject::GetGameObj
 	return wkp_gameObjManager;
 }
 
-std::weak_ptr<ButiEngine::Application> ButiEngine::GameObject::GetApplication()
+std::weak_ptr<ButiEngine::IApplication> ButiEngine::GameObject::GetApplication()
 {
 	return  wkp_gameObjManager.lock()->GetApplication();
 }
 
-std::shared_ptr<ButiEngine::ResourceContainer> ButiEngine::GameObject::GetResourceContainer()
+std::shared_ptr<ButiEngine::IResourceContainer> ButiEngine::GameObject::GetResourceContainer()
 {
 	return wkp_gameObjManager.lock()->GetScene().lock()->GetSceneManager().lock()->GetApplication().lock()->GetResourceContainer();
 }
@@ -320,7 +321,8 @@ std::shared_ptr<ButiEngine::GraphicDevice> ButiEngine::GameObject::GetGraphicDev
 
 void ButiEngine::GameObject::UpdateTagName()
 {
-	tagName = GameObjectTagManager::GetTagName(gameObjectTag);
+	if(wkp_gameObjManager.lock())
+	tagName = wkp_gameObjManager.lock()->GetApplication().lock()->GetGameObjectTagManager()->GetTagName(gameObjectTag);
 }
 
 std::shared_ptr<ButiEngine::GameObject> ButiEngine::GameObject::Clone()

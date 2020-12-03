@@ -41,6 +41,7 @@ namespace ButiEngine {
 		float sizeRange;
 		Vector3 offset;
 		int volume=1;
+		float time = 0;
 		std::shared_ptr<ImmediateParticleController> shp_particleController;
 	};
 }

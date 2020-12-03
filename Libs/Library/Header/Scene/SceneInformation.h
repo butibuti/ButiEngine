@@ -2,7 +2,7 @@
 #include "stdafx.h"
 namespace ButiEngine {
 
-	struct SceneInformation
+	struct SceneInformation:public IObject
 	{
 	public:
 		SceneInformation(const std::string& arg_sceneName) {
@@ -12,6 +12,8 @@ namespace ButiEngine {
 		std::string GetSceneName() {
 			return sceneName;
 		}
+		void Initialize()override{}
+		void PreInitialize()override{}
 	private:
 		std::string sceneName;
 	};

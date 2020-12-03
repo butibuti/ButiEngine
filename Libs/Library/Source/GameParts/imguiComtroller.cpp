@@ -1,8 +1,16 @@
 #pragma once
 #include "stdafx.h"
+
+
+//imgui
+
+#include "imgui.h"
+#include "./backends/imgui_impl_win32.h"
+#include "./backends/imgui_impl_dx12.h"
+
 #include "Header/Device/DescriptorHeapManager.h"
 #include"Header/Device/GraphicResourceUtil_Dx12.h"
-ButiEngine::ButiimguiController::ButiimguiController(std::unique_ptr<Window>& unq_window, std::shared_ptr<GraphicDevice_Dx12> shp_graphicDevice)
+ButiEngine::ImguiController::ImguiController(std::unique_ptr<IWindow>& unq_window, std::shared_ptr<GraphicDevice_Dx12> shp_graphicDevice)
 {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -12,7 +20,7 @@ ButiEngine::ButiimguiController::ButiimguiController(std::unique_ptr<Window>& un
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
-    //ImGui::StyleColorsClassic();
+    //GUI::StyleColorsClassic();
 
     // Setup Platform/Renderer backends
     ImGui_ImplWin32_Init(unq_window->GetHandle());
@@ -27,21 +35,21 @@ ButiEngine::ButiimguiController::ButiimguiController(std::unique_ptr<Window>& un
     wkp_graphicDevice = shp_graphicDevice;
 }
 
-void ButiEngine::ButiimguiController::Start()
+void ButiEngine::ImguiController::Start()
 {
 
     ImGui_ImplDX12_NewFrame();
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
     befIo = io;
-    io = ImGui::GetIO();
+    io = GUI::GetIO();
 }
 
-void ButiEngine::ButiimguiController::Update()
+void ButiEngine::ImguiController::Update()
 {
 }
 
-void ButiEngine::ButiimguiController::Draw()
+void ButiEngine::ImguiController::Draw()
 {
 
     ImGui::Render();
@@ -51,14 +59,14 @@ void ButiEngine::ButiimguiController::Draw()
 
 }
 
-void ButiEngine::ButiimguiController::Release()
+void ButiEngine::ImguiController::Release()
 {
     ImGui_ImplDX12_Shutdown();
     ImGui_ImplWin32_Shutdown();
     ImGui::DestroyContext();
 }
 
-void ButiEngine::ButiimguiController::SetDraggingObject(std::shared_ptr<IObject> arg_shp_draggingObject)
+void ButiEngine::ImguiController::SetDraggingObject(std::shared_ptr<IObject> arg_shp_draggingObject)
 {
     if (befIo.MouseDown[0]) {
         return;
@@ -66,7 +74,7 @@ void ButiEngine::ButiimguiController::SetDraggingObject(std::shared_ptr<IObject>
     shp_draggingObject = arg_shp_draggingObject;
 }
 
-void ButiEngine::ButiimguiController::SetResourceTag(MeshTag arg_tag)
+void ButiEngine::ImguiController::SetResourceTag(MeshTag arg_tag)
 {
     if (befIo.MouseDown[0]) {
         return;
@@ -74,7 +82,7 @@ void ButiEngine::ButiimguiController::SetResourceTag(MeshTag arg_tag)
     currentMeshTag = arg_tag;
 }
 
-void ButiEngine::ButiimguiController::SetResourceTag(SoundTag arg_tag)
+void ButiEngine::ImguiController::SetResourceTag(SoundTag arg_tag)
 {
     if (befIo.MouseDown[0]) {
         return;
@@ -82,7 +90,7 @@ void ButiEngine::ButiimguiController::SetResourceTag(SoundTag arg_tag)
     currentSoundTag = arg_tag;
 }
 
-void ButiEngine::ButiimguiController::SetResourceTag(MotionTag arg_tag)
+void ButiEngine::ImguiController::SetResourceTag(MotionTag arg_tag)
 {
     if (befIo.MouseDown[0]) {
         return;
@@ -90,7 +98,7 @@ void ButiEngine::ButiimguiController::SetResourceTag(MotionTag arg_tag)
     currentMotionTag = arg_tag;
 }
 
-void ButiEngine::ButiimguiController::SetResourceTag(MaterialTag arg_tag)
+void ButiEngine::ImguiController::SetResourceTag(MaterialTag arg_tag)
 {
     if (befIo.MouseDown[0]) {
         return;
@@ -98,7 +106,7 @@ void ButiEngine::ButiimguiController::SetResourceTag(MaterialTag arg_tag)
     currentMaterialTag = arg_tag;
 }
 
-void ButiEngine::ButiimguiController::SetResourceTag(ModelTag arg_tag)
+void ButiEngine::ImguiController::SetResourceTag(ModelTag arg_tag)
 {
     if (befIo.MouseDown[0]) {
         return;
@@ -106,7 +114,7 @@ void ButiEngine::ButiimguiController::SetResourceTag(ModelTag arg_tag)
     currentModelTag = arg_tag;
 }
 
-void ButiEngine::ButiimguiController::SetResourceTag(ShaderTag arg_tag)
+void ButiEngine::ImguiController::SetResourceTag(ShaderTag arg_tag)
 {
     if (befIo.MouseDown[0]) {
         return;
@@ -114,7 +122,7 @@ void ButiEngine::ButiimguiController::SetResourceTag(ShaderTag arg_tag)
     currentShaderTag = arg_tag;
 }
 
-void ButiEngine::ButiimguiController::SetResourceTag(VertexShaderTag arg_tag)
+void ButiEngine::ImguiController::SetResourceTag(VertexShaderTag arg_tag)
 {
     if (befIo.MouseDown[0]) {
         return;
@@ -122,7 +130,7 @@ void ButiEngine::ButiimguiController::SetResourceTag(VertexShaderTag arg_tag)
     currentVertexShaderTag = arg_tag;
 }
 
-void ButiEngine::ButiimguiController::SetResourceTag(PixelShaderTag arg_tag)
+void ButiEngine::ImguiController::SetResourceTag(PixelShaderTag arg_tag)
 {
     if (befIo.MouseDown[0]) {
         return;
@@ -130,7 +138,7 @@ void ButiEngine::ButiimguiController::SetResourceTag(PixelShaderTag arg_tag)
     currentPixelShaderTag = arg_tag;
 }
 
-void ButiEngine::ButiimguiController::SetResourceTag(GeometryShaderTag arg_tag)
+void ButiEngine::ImguiController::SetResourceTag(GeometryShaderTag arg_tag)
 {
     if (befIo.MouseDown[0]) {
         return;

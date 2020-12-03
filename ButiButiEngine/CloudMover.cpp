@@ -6,7 +6,7 @@ float ButiEngine::CloudMover::startZ = 130;
 
 void ButiEngine::CloudMover::OnUpdate()
 {
-    gameObject.lock()->transform->Translate(velocity);
+    gameObject.lock()->transform->Translate(velocity * GameDevice::WorldSpeed);
     if (gameObject.lock()->transform->GetLocalPosition().z < endZ) {
         gameObject.lock()->transform->SetLocalPosition().z = startZ;
     }
@@ -21,7 +21,7 @@ std::shared_ptr<ButiEngine::GameComponent> ButiEngine::CloudMover::Clone()
 
 void ButiEngine::CloudMover::OnShowUI()
 {
-    ImGui::DragFloat3("Velocity", &velocity.x);
-    ImGui::DragFloat("StartZ", &startZ);
-    ImGui::DragFloat("EndZ", &endZ);
+    GUI::DragFloat3("Velocity", &velocity.x);
+    GUI::DragFloat("StartZ", &startZ);
+    GUI::DragFloat("EndZ", &endZ);
 }

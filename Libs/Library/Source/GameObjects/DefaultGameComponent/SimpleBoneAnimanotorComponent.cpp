@@ -1,7 +1,6 @@
 #include"stdafx.h"
 #include "..\..\..\Header\GameObjects\DefaultGameComponent\SimpleBoneAnimanotorComponent.h"
 #include"Header/Resources/ModelAnimation.h"
-#include"Header/GameParts/ResourceContainer.h"
 
 ButiEngine::SimpleBoneAnimatorComponent::SimpleBoneAnimatorComponent(std::shared_ptr<ModelDrawData> arg_shp_modelData)
 {

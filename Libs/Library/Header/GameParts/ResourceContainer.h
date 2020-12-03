@@ -5,35 +5,16 @@
 #include"ResourceFactory_Dx12.h"
 namespace ButiEngine {
 
-	class ResourceContainer :public IObject
+	class ResourceContainer :public IResourceContainer
 	{
 	public:
-		struct ShaderName {
-			std::string shaderName;
-			std::string vertexShaderName;
-			std::string pixelShaderName;
-			std::string vertexShaderDirectory = "";
-			std::string pixelShaderDirectory = "";
-			std::string geometryShaderName = "none";
-			std::string geometryShaderDirectory = "";
-			template<class Archive>
-			void serialize(Archive& archive)
-			{
-				archive(shaderName);
-				archive(vertexShaderName);
-				archive(pixelShaderName);
-				archive(vertexShaderDirectory);
-				archive(pixelShaderDirectory);
-				archive(geometryShaderName);
-				archive(geometryShaderDirectory);
-			}
-		};
+
 		ResourceContainer();
 		void SetGraphicDevice(std::weak_ptr<GraphicDevice> arg_shp_graphicDevice);
 		void Initialize()override;
 		void PreInitialize()override;
 
-		void ShowGUI();
+		void ShowGUI()override;
 
 		template<typename T>
 		MeshTag LoadMesh(const std::string& filePath, const BackupData<T>& inputMeshData);
@@ -41,88 +22,88 @@ namespace ButiEngine {
 		MeshTag LoadRealTimeMesh(const std::string& filePath, const BackupData<T>& inputMeshData);
 
 
-		MaterialTag LoadMaterial(const MaterialVariable& arg_resourceMaterial, const TextureTag& arg_textureTag, const std::string& arg_filePath, const std::string& arg_fileDirectory = "");
-		MaterialTag LoadMaterial(const std::string& arg_filePath, const std::string& arg_fileDirectory = "");
+		MaterialTag LoadMaterial(const MaterialVariable& arg_resourceMaterial, const TextureTag& arg_textureTag, const std::string& arg_filePath, const std::string& arg_fileDirectory = "")override;
+		MaterialTag LoadMaterial(const std::string& arg_filePath, const std::string& arg_fileDirectory = "")override;
 
-		std::vector < MaterialTag> LoadMaterial(const std::vector<std::pair< std::string, std::string>>& arg_vec_filePathAndDirectory);
-		MaterialTag LoadMaterial(const std::wstring& arg_filePath, const std::string& arg_fileDirectory = "");
+		std::vector < MaterialTag> LoadMaterial(const std::vector<std::pair< std::string, std::string>>& arg_vec_filePathAndDirectory)override;
+		MaterialTag LoadMaterial(const std::wstring& arg_filePath, const std::string& arg_fileDirectory = "")override;
 
-		TextureTag LoadTexture(const std::string& arg_filePath, const std::string& arg_fileDirectory = "");
-		std::vector < TextureTag> LoadTexture(const std::vector<std::pair< std::string, std::string>>& arg_vec_filePathAndDirectory);
+		TextureTag LoadTexture(const std::string& arg_filePath, const std::string& arg_fileDirectory = "")override;
+		std::vector < TextureTag> LoadTexture(const std::vector<std::pair< std::string, std::string>>& arg_vec_filePathAndDirectory)override;
 
-		PixelShaderTag LoadPixelShader(const std::string& arg_filePath, const std::string& arg_fileDirectory = "");
-		std::vector < PixelShaderTag> LoadPixelShader(const std::vector<std::pair< std::string, std::string>>& arg_vec_filePathAndDirectory);
+		PixelShaderTag LoadPixelShader(const std::string& arg_filePath, const std::string& arg_fileDirectory = "")override;
+		std::vector < PixelShaderTag> LoadPixelShader(const std::vector<std::pair< std::string, std::string>>& arg_vec_filePathAndDirectory)override;
 
-		VertexShaderTag LoadVertexShader(const std::string& arg_filePath, const std::string& arg_fileDirectory = "");
-		std::vector < VertexShaderTag> LoadVertexShader(const std::vector<std::pair< std::string, std::string>>& arg_vec_filePathAndDirectory);
+		VertexShaderTag LoadVertexShader(const std::string& arg_filePath, const std::string& arg_fileDirectory = "")override;
+		std::vector < VertexShaderTag> LoadVertexShader(const std::vector<std::pair< std::string, std::string>>& arg_vec_filePathAndDirectory)override;
 
-		GeometryShaderTag LoadGeometryShader(const std::string& arg_filePath, const std::string& arg_fileDirectory = "");
-		std::vector < GeometryShaderTag> LoadGeometryShader(const std::vector<std::pair< std::string, std::string>>& arg_vec_filePathAndDirectory);
+		GeometryShaderTag LoadGeometryShader(const std::string& arg_filePath, const std::string& arg_fileDirectory = "")override;
+		std::vector < GeometryShaderTag> LoadGeometryShader(const std::vector<std::pair< std::string, std::string>>& arg_vec_filePathAndDirectory)override;
 
-		ShaderTag LoadShader(const  ShaderName& arg_shaderNames);
-		std::vector < ShaderTag> LoadShader(const std::vector<ShaderName>& arg_vec_shaderNames);
+		ShaderTag LoadShader(const  ShaderName& arg_shaderNames)override;
+		std::vector < ShaderTag> LoadShader(const std::vector<ShaderName>& arg_vec_shaderNames)override;
 
-		SoundTag LoadSound(const std::string& arg_filePath, const std::string& arg_fileDirectory = "");
-		std::vector < SoundTag> LoadSound(const std::vector<std::pair< std::string, std::string>>& arg_vec_filePathAndDirectory);
+		SoundTag LoadSound(const std::string& arg_filePath, const std::string& arg_fileDirectory = "")override;
+		std::vector < SoundTag> LoadSound(const std::vector<std::pair< std::string, std::string>>& arg_vec_filePathAndDirectory)override;
 
-		ModelTag LoadModel(const std::string& arg_filePath, const std::string& arg_fileDirectory = "");
-		std::vector<ModelTag> LoadModel(const std::vector<std::pair< std::string, std::string>>& arg_vec_filePathAndDirectory);
-		ModelTag LoadModel(std::shared_ptr<Resource_Model> arg_model, const std::string& arg_filePath, const std::string& arg_fileDirectory = "");
+		ModelTag LoadModel(const std::string& arg_filePath, const std::string& arg_fileDirectory = "")override;
+		std::vector<ModelTag> LoadModel(const std::vector<std::pair< std::string, std::string>>& arg_vec_filePathAndDirectory)override;
+		ModelTag LoadModel(std::shared_ptr<IResource_Model> arg_model, const std::string& arg_filePath, const std::string& arg_fileDirectory = "")override;
 
-		MotionTag LoadMotion(const std::string& arg_filePath, const std::string& arg_fileDirectory = "");
-		std::vector<MotionTag> LoadMotion(const std::vector<std::pair< std::string, std::string>>& arg_vec_filePathAndDirectory);
-		MotionTag LoadMotion(std::shared_ptr<Resource_Motion> arg_motion, const std::string& arg_filePath, const std::string& arg_fileDirectory = "");
+		MotionTag LoadMotion(const std::string& arg_filePath, const std::string& arg_fileDirectory = "")override;
+		std::vector<MotionTag> LoadMotion(const std::vector<std::pair< std::string, std::string>>& arg_vec_filePathAndDirectory)override;
+		MotionTag LoadMotion(std::shared_ptr<IResource_Motion> arg_motion, const std::string& arg_filePath, const std::string& arg_fileDirectory = "")override;
 
-		void UnLoadMesh(MeshTag arg_meshTag);
-		void UnLoadTexture(TextureTag arg_textureTag);
-		void UnLoadShader(ShaderTag arg_shaderTag);
-		void UnLoadPixelShader(PixelShaderTag arg_shaderTag);
-		void UnLoadVertexShader(VertexShaderTag arg_shaderTag);
-		void UnLoadGeometryShader(GeometryShaderTag arg_shaderTag);
-		void UnLoadSound(SoundTag arg_soundTag);
-		void UnLoadModel(ModelTag arg_modelTag);
-		void UnLoadMaterial(MaterialTag arg_materialTag);
+		void UnLoadMesh(MeshTag arg_meshTag)override;
+		void UnLoadTexture(TextureTag arg_textureTag)override;
+		void UnLoadShader(ShaderTag arg_shaderTag)override;
+		void UnLoadPixelShader(PixelShaderTag arg_shaderTag)override;
+		void UnLoadVertexShader(VertexShaderTag arg_shaderTag)override;
+		void UnLoadGeometryShader(GeometryShaderTag arg_shaderTag)override;
+		void UnLoadSound(SoundTag arg_soundTag)override;
+		void UnLoadModel(ModelTag arg_modelTag)override;
+		void UnLoadMaterial(MaterialTag arg_materialTag)override;
 		
-		std::string GetTagNameMesh(MeshTag arg_meshTag);
-		std::string GetTagNameTexture(TextureTag arg_textureTag);
-		std::string GetTagNameShader(ShaderTag arg_shaderTag);
-		std::string GetTagNamePixelShader(PixelShaderTag arg_shaderTag);
-		std::string GetTagNameVertexShader(VertexShaderTag arg_shaderTag);
-		std::string GetTagNameGeometryShader(GeometryShaderTag arg_shaderTag);
-		std::string GetTagNameSound(SoundTag arg_soundTag);
-		std::string GetTagNameModel(ModelTag arg_modelTag);
-		std::string GetTagNameMaterial(MaterialTag arg_materiallTag);
-		void Release();
+		std::string GetTagNameMesh(MeshTag arg_meshTag)override;
+		std::string GetTagNameTexture(TextureTag arg_textureTag)override;
+		std::string GetTagNameShader(ShaderTag arg_shaderTag)override;
+		std::string GetTagNamePixelShader(PixelShaderTag arg_shaderTag)override;
+		std::string GetTagNameVertexShader(VertexShaderTag arg_shaderTag)override;
+		std::string GetTagNameGeometryShader(GeometryShaderTag arg_shaderTag)override;
+		std::string GetTagNameSound(SoundTag arg_soundTag)override;
+		std::string GetTagNameModel(ModelTag arg_modelTag)override;
+		std::string GetTagNameMaterial(MaterialTag arg_materiallTag)override;
+		void Release()override;
 
-		void MaterialUpdate();
+		void MaterialUpdate()override;
 
-		MeshTag GetMeshTag(const std::string& arg_key, const std::string& arg_fileDirectory = "");
-		TextureTag GetTextureTag(const std::string& arg_key, const std::string& arg_fileDirectory = "");
-		ShaderTag GetShaderTag(const std::string& arg_key);
-		SoundTag GetSoundTag(const std::string& arg_key, const std::string& arg_fileDirectory = "");
-		MaterialTag GetMaterialTag(const std::string& arg_key, const std::string& arg_fileDirectory = "");
-		ModelTag GetModelTag(const std::string& arg_key, const std::string& arg_fileDirectory = "");
-		MotionTag GetMotionTag(const std::string& arg_key, const std::string& arg_fileDirectory = "");
+		MeshTag GetMeshTag(const std::string& arg_key, const std::string& arg_fileDirectory = "")override;
+		TextureTag GetTextureTag(const std::string& arg_key, const std::string& arg_fileDirectory = "")override;
+		ShaderTag GetShaderTag(const std::string& arg_key)override;
+		SoundTag GetSoundTag(const std::string& arg_key, const std::string& arg_fileDirectory = "")override;
+		MaterialTag GetMaterialTag(const std::string& arg_key, const std::string& arg_fileDirectory = "")override;
+		ModelTag GetModelTag(const std::string& arg_key, const std::string& arg_fileDirectory = "")override;
+		MotionTag GetMotionTag(const std::string& arg_key, const std::string& arg_fileDirectory = "")override;
 
-		inline std::weak_ptr<IResource_Mesh> GetMesh(const  MeshTag& arg_key) {
+		std::weak_ptr<IResource_Mesh> GetMesh(const  MeshTag& arg_key)override {
 			return container_meshes.GetValue(arg_key);
 		}
-		inline std::weak_ptr<IResource_Texture> GetTexture(const TextureTag & arg_key) {
+		std::weak_ptr<IResource_Texture> GetTexture(const TextureTag & arg_key) override {
 			return container_textures.GetValue(arg_key);
 		}
-		inline std::weak_ptr<IResource_Shader> GetShader(const ShaderTag & arg_key) {
+		std::weak_ptr<IResource_Shader> GetShader(const ShaderTag & arg_key)override {
 			return container_shaders.GetValue(arg_key);
 		}
-		inline std::weak_ptr<IResource_Sound> GetSound(const SoundTag & arg_key) {
+		std::weak_ptr<IResource_Sound> GetSound(const SoundTag & arg_key) override {
 			return container_sounds.GetValue(arg_key);
 		}
-		inline std::weak_ptr<IResource_Material>GetMaterial(const MaterialTag& arg_key) {
+		std::weak_ptr<IResource_Material>GetMaterial(const MaterialTag& arg_key) override {
 			return container_materials.GetValue(arg_key);
 		}
-		inline std::weak_ptr<IResource_Model>GetModel(const ModelTag &arg_key) {
+		std::weak_ptr<IResource_Model>GetModel(const ModelTag &arg_key) {
 			return container_models.GetValue(arg_key);
 		}
-		inline std::shared_ptr<ModelAnimation>GetMotion(const MotionTag &arg_key) {
+		std::shared_ptr<ModelAnimation>GetMotion(const MotionTag &arg_key) override {
 			
 			auto motion= container_motions.GetValue(arg_key);
 
@@ -134,7 +115,7 @@ namespace ButiEngine {
 			}
 		}
 
-		void Reload();
+		void Reload()override;
 
 		template<class Archive>
 		void serialize(Archive& archive)

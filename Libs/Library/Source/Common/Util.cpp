@@ -1,5 +1,6 @@
 #include"stdafx.h"
 #include "..\..\Header\Common\Util.h"
+#include"../../Header/GameParts/Application.h"
 
 
 void ButiEngine::Util::WStringtoMultiByte(const std::wstring & src, std::string & dest)

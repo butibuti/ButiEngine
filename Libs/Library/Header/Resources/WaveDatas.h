@@ -1,5 +1,6 @@
 #pragma once
 #include"stdafx.h"
+#include <xaudio2.h>	
 namespace ButiEngine {
 
 	struct WaveDatas:public IObject

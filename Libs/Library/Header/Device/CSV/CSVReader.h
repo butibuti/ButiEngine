@@ -8,7 +8,7 @@ namespace ButiEngine {
 	{
 	public:
 		~CSVReader();
-		static std::shared_ptr<CSVData> GetMatrix(const char filePath[]);
+		static std::shared_ptr<CSVData> GetMatrix(const std::string& filePath);
 	private:
 		CSVReader();
 	};

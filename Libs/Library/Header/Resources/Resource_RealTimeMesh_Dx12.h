@@ -1,7 +1,9 @@
 #pragma once
 #include"stdafx.h"
 #include"Resource_RealTimeMesh.h"
+#include"Header/GameParts/GraphicDevice_Dx12.h"
 namespace ButiEngine {
+	class GraphicDevice_Dx12;
 	class Resource_RealTimeMesh_Dx12 :public Resource_RealTimeMesh
 	{
 	public:

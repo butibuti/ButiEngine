@@ -22,4 +22,3 @@ namespace ButiEngine {
 	};
 
 }
-BUTI_REGIST_BEHAVIOR(ButiEngine::FPSViewBehavior);

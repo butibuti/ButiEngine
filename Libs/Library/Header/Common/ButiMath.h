@@ -64,6 +64,14 @@ namespace ButiEngine {
 		bool ShowUI() { return false; }
 		inline Vector4 operator*(const Vector4& vec4);
 
+		inline Matrix4x4 operator*(const Matrix4x4& arg_matrix) {
+			return (XMMATRIX)(*this) * (XMMATRIX)arg_matrix;
+		}
+		inline Matrix4x4 operator*=(const Matrix4x4& arg_matrix) {
+			*this= (XMMATRIX)(*this) * (XMMATRIX)arg_matrix;
+			return *this;
+		}
+
 		inline operator DirectX::XMMATRIX() const
 		{
 			auto tmp = *this;
@@ -110,7 +118,8 @@ namespace ButiEngine {
 			output._23 = 0.0f;
 			output._33 = 1.0f;
 			return output;
-		}inline Matrix4x4& InValidYZ() {
+		}
+		inline Matrix4x4& InValidYZ() {
 			this->_11 = 1.0f;
 			this->_21 = 0.0f;
 			this->_31 = 0.0f;
@@ -161,6 +170,90 @@ namespace ButiEngine {
 			}
 
 			return true;
+		}
+
+		static inline Matrix4x4 Scale(const Vector3& arg_scale);
+
+		static inline Matrix4x4 RollX(const float Angle) {
+			float    fSinAngle;
+			float    fCosAngle;
+			DirectX::XMScalarSinCos(&fSinAngle, &fCosAngle, Angle);
+
+			Matrix4x4 M;
+			M._11 = 1.0f;
+			M._12 = 0.0f;
+			M._13 = 0.0f;
+			M._14= 0.0f;
+
+			M._21 = 0.0f;
+			M._22 = fCosAngle;
+			M._23 = fSinAngle;
+			M._24 = 0.0f;
+
+			M._31 = 0.0f;
+			M._32 = -fSinAngle;
+			M._33 = fCosAngle;
+			M._34 = 0.0f;
+
+			M._41 = 0.0f;
+			M._42 = 0.0f;
+			M._43 = 0.0f;
+			M._44 = 1.0f;
+			return M;
+		}
+		static inline Matrix4x4 RollY(const float Angle) {
+			float    fSinAngle;
+			float    fCosAngle;
+			XMScalarSinCos(&fSinAngle, &fCosAngle, Angle);
+
+			Matrix4x4 M;
+			M._11 = fCosAngle;
+			M._12 = 0.0f;
+			M._13 = -fSinAngle;
+			M._14 =  0.0f;
+
+			M._21 = 0.0f;
+			M._22 = 1.0f;
+			M._23 = 0.0f;
+			M._24 = 0.0f;
+
+			M._31 = fSinAngle;
+			M._32 = 0.0f;
+			M._33 = fCosAngle;
+			M._34 = 0.0f;
+
+			M._41 = 0.0f;
+			M._42 = 0.0f;
+			M._43 = 0.0f;
+			M._44 = 1.0f;
+			return M;
+		}
+		static inline Matrix4x4 RollZ(const float Angle) {
+			float    fSinAngle;
+			float    fCosAngle;
+			XMScalarSinCos(&fSinAngle, &fCosAngle, Angle);
+
+			Matrix4x4 M;
+			M._11 = fCosAngle;
+			M._12 = fSinAngle;
+			M._13 = 0.0f;
+			M._14 = 0.0f;
+
+			M._21 = -fSinAngle;
+			M._22 = fCosAngle;
+			M._23 = 0.0f;
+			M._24 = 0.0f;
+
+			M._31 = 0.0f;
+			M._32 = 0.0f;
+			M._33 = 1.0f;
+			M._34 = 0.0f;
+
+			M._41 = 0.0f;
+			M._42 = 0.0f;
+			M._43 = 0.0f;
+			M._44 = 1.0f;
+			return M;
 		}
 		~Matrix4x4() {}
 
@@ -445,7 +538,7 @@ namespace ButiEngine {
 			return *this;
 		}
 
-		inline Vector3& operator *(Matrix4x4 value) const
+		inline Vector3 operator *(Matrix4x4 value) const
 		{
 			auto tmp = (Vector3)XMVector3Transform(*this, value);
 			return tmp;
@@ -658,12 +751,12 @@ namespace ButiEngine {
 			w = 0;
 		}
 
-		inline  float* GetData() const
+		inline  float* GetData() 
 		{
-			float output[4] = { x,y,z,w };
-			return output;
-		};
-		inline  void GetData(float* out) const
+			
+			return &(this->x);
+		}
+		inline  void GetData(float* out) 
 		{
 			auto data = GetData();
 			for (int i = 0; i < 4; i++) {
@@ -1568,62 +1661,7 @@ namespace ButiEngine {
 
 		}
 
-		bool ShowUI() {
-			bool ret = false;
-			if (ImGui::TreeNode("SplineCurve Editor")) {
-
-				ImGui::BulletText("StartPoint");
-
-				if (ImGui::DragFloat3("##startdrag", &vec_points[0].x, 0.01f, -500, 500)) {
-					vec_points[1] = vec_points[0];
-					ret = true;
-				}
-				ImGui::BulletText("ControllPoints");
-				for (int i = 2; i < vec_points.size() - 2; i++) {
-					if (ImGui::DragFloat3(("##controlldrag" + std::to_string(i)).c_str(), &vec_points[i].x, 0.01f, -500, 500))
-						ret = true;
-					ImGui::SameLine();
-
-					if (ImGui::Button(("Insert##" + std::to_string(i)).c_str())) {
-						auto itr = vec_points.begin();
-						itr += i;
-						vec_points.insert(itr, Vector3(vec_points[i]));
-						Initialize();
-						ret = true;
-					}
-					if (vec_points.size() > 6) {
-						ImGui::SameLine();
-						if (ImGui::Button(("Delete##" + std::to_string(i)).c_str())) {
-							auto itr = vec_points.begin();
-							itr += i;
-							vec_points.erase(itr);
-							i--;
-							Initialize();
-							ret = true;
-						}
-					}
-
-				}
-
-
-				ImGui::BulletText("EndPoint");
-
-
-				if (ImGui::DragFloat3("##enddrag", &vec_points[vec_points.size() - 2].x, 0.01f, -500, 500)) {
-					vec_points[vec_points.size() - 1] = vec_points[vec_points.size() - 2]; ret = true;
-				}
-
-				if (ImGui::Button("Loop")) {
-					vec_points[0] = vec_points[vec_points.size() - 2];
-					vec_points[1] = vec_points[vec_points.size() - 2];
-					ret = true;
-				}
-
-				ImGui::TreePop();
-
-			}
-			return ret;
-		}
+		bool ShowUI();
 
 		void Initialize() {
 			unit = 1.0f / (vec_points.size() - 3);
@@ -1684,7 +1722,14 @@ namespace ButiEngine {
 			_44 = 1.0f;
 		}
 	}
-
+	inline Matrix4x4 ButiEngine::Matrix4x4::Scale(const Vector3& arg_scale)
+	{
+		Matrix4x4 output;
+		output._11 = arg_scale.x;
+		output._22 = arg_scale.y;
+		output._33 = arg_scale.z;
+		return output;
+	}
 	inline Quat ButiEngine::Matrix4x4::ToQuat() const
 	{
 		Vector3 scale, pos;

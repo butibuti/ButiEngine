@@ -7,7 +7,7 @@
 
 void ButiEngine::BossEnemy::Start()
 {
-	gameObject.lock()->SetGameObjectTag(GameObjectTagManager::GetObjectTag("Enemy"));
+	gameObject.lock()->SetGameObjectTag(gameObject.lock()->GetApplication().lock()->GetGameObjectTagManager()->GetObjectTag("Enemy"));
 
 
 	controller = gameObject.lock()->GetGameObjectManager().lock()->GetGameObject("GameController").lock()->GetGameComponent<GameController>();
@@ -19,7 +19,7 @@ void ButiEngine::BossEnemy::Start()
 void ButiEngine::BossEnemy::OnUpdate()
 {
 	moveForce *= 0.7f;
-	gameObject.lock()->transform->Translate(velocity * speed + moveForce);
+	gameObject.lock()->transform->Translate(velocity * speed * GameDevice::WorldSpeed + moveForce * GameDevice::WorldSpeed);
 
 
 	auto pos = gameObject.lock()->transform->GetWorldPosition();
@@ -41,21 +41,27 @@ void ButiEngine::BossEnemy::OnUpdate()
 
 void ButiEngine::BossEnemy::OnCollisionEnter(std::weak_ptr<GameObject> arg_other)
 {
-	if (arg_other.lock()->GetGameObjectTag() == GameObjectTagManager::GetObjectTag("Bomb")) {
+	if (arg_other.lock()->GetGameObjectTag() == gameObject.lock()->GetApplication().lock()->GetGameObjectTagManager()->GetObjectTag("Bomb")) {
 
 		auto seTag = gameObject.lock()->GetResourceContainer()->GetSoundTag("se_Slash.wav", "Sound/");
 
 		gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSoundManager()->Play(seTag, 0.025);
 		hp--;
 		speed = 0.025;
-		auto effect = gameObject.lock()->GetGameObjectManager().lock()->AddObjectFromCereal("SlashEffect");
+		auto effect = gameObject.lock()->GetGameObjectManager().lock()->AddObjectFromCereal("SlashEffect_Boss");
+		auto effect2 = gameObject.lock()->GetGameObjectManager().lock()->AddObjectFromCereal("SlashEffect_Boss2");
 		effect.lock()->transform->SetWorldPosition((gameObject.lock()->transform->GetWorldPosition()));
+		effect2.lock()->transform->SetWorldPosition((gameObject.lock()->transform->GetWorldPosition()));
 		//velocity = Vector3();
 		//moveForce += ((Vector3)(gameObject.lock()->transform->GetWorldPosition()-arg_other.lock()->transform->GetWorldPosition() )).GetNormalize()*2.0f;
 		if (hp <= 0) {
 			controller->DestroyBoss(score);
 			gameObject.lock()->SetIsRemove(true);
-			gameObject.lock()->GetGameObjectManager().lock()->AddObjectFromCereal("Explosion", ObjectFactory::Create<Transform>(gameObject.lock()->transform->GetWorldPosition()));
+			gameObject.lock()->GetGameObjectManager().lock()->AddObjectFromCereal("Explosion_Boss", ObjectFactory::Create<Transform>(gameObject.lock()->transform->GetWorldPosition()));
+			gameObject.lock()->GetGameObjectManager().lock()->AddObjectFromCereal("Explosion_Boss", ObjectFactory::Create<Transform>(gameObject.lock()->transform->GetWorldPosition() + Vector3(2, 0, 1)));
+			gameObject.lock()->GetGameObjectManager().lock()->AddObjectFromCereal("Explosion_Boss", ObjectFactory::Create<Transform>(gameObject.lock()->transform->GetWorldPosition() + Vector3(4, 6, -4)));
+			gameObject.lock()->GetGameObjectManager().lock()->AddObjectFromCereal("Explosion_Boss", ObjectFactory::Create<Transform>(gameObject.lock()->transform->GetWorldPosition() + Vector3(-2, -5, 3)));
+			gameObject.lock()->GetGameObjectManager().lock()->AddObjectFromCereal("Explosion_Boss", ObjectFactory::Create<Transform>(gameObject.lock()->transform->GetWorldPosition()+Vector3(8,3,0.5)));
 			gameObject.lock()->GetGameObjectManager().lock()->GetGameObject("camera").lock()->GetBehavior< CameraMan>()->ShakeHorizontal(0.3f);
 			gameObject.lock()->GetGameObjectManager().lock()->GetGameObject("camera").lock()->GetBehavior< CameraMan>()->ShakeVartical(0.3f);
 		}
@@ -69,19 +75,19 @@ void ButiEngine::BossEnemy::OnCollisionEnter(std::weak_ptr<GameObject> arg_other
 
 void ButiEngine::BossEnemy::OnShowUI()
 {
-	ImGui::BulletText("HP");
+	GUI::BulletText("HP");
 	int refHp = hp;
-	ImGui::DragInt("##hp", &refHp);
+	GUI::DragInt("##hp", refHp);
 	hp = refHp;
-	ImGui::BulletText("Velocity");
+	GUI::BulletText("Velocity");
 
-	if (ImGui::DragFloat3("##velocity", &velocity.x, 0.01f, -10, 10, "%.3f")) {
+	if (GUI::DragFloat3("##velocity", &velocity.x, 0.01f, -10, 10, "%.3f")) {
 		velocity.Normalize();
 	}
-	ImGui::BulletText("Speed");
+	GUI::BulletText("Speed");
 
-	ImGui::DragFloat("##speed", &speed, 0.01f, -1, 1);
+	GUI::DragFloat("##speed", &speed, 0.01f, -1, 1);
 
-	ImGui::BulletText("Score");
-	ImGui::DragInt("##score", &score, 1, 0, 100);
+	GUI::BulletText("Score");
+	GUI::DragInt("##score", score, 1, 0, 100);
 }

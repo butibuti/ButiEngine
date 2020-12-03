@@ -1,5 +1,6 @@
 #include "stdafx.h"
-#include"Header/Resources/Resource_Material_Dx12.h"
+
+#include"Header/GameParts/GraphicDevice_Dx12.h"
 #include "..\..\Header\Resources\Resource_Material_Dx12.h"
 
 ButiEngine::Resource_Material_Dx12::Resource_Material_Dx12(const MaterialVariable & arg_var, const TextureTag & arg_textureTag, std::weak_ptr<GraphicDevice_Dx12> arg_wkp_graphicDevice) :Resource_Material(arg_var)

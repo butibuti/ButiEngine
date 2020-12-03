@@ -10,7 +10,7 @@ namespace ButiEngine {
 		void Initialize()override {}
 		void PreInitialize()override {}
 		void Update();
-		virtual void Start(){}
+		virtual void Start() {}
 		void Set(std::weak_ptr<GameObject> arg_wkp_gameObj);
 		void SetIsRemove(bool arg_isRemove) {
 			isRemove = arg_isRemove;
@@ -20,14 +20,14 @@ namespace ButiEngine {
 		}
 		void ShowUI() {
 
-			ImGui::Checkbox("IsActive", &isActive);
+			GUI::Checkbox("IsActive", &isActive);
 			OnShowUI();
 		}
 		virtual void OnShowUI() {}
 		virtual void OnSet();
 		virtual void OnRemove();
 		virtual std::string GetGameComponentName() = 0;
-		virtual std::shared_ptr<GameComponent> Clone()=0;
+		virtual std::shared_ptr<GameComponent> Clone() = 0;
 		bool IsRemove() {
 			return isRemove;
 		}
@@ -42,11 +42,9 @@ namespace ButiEngine {
 		std::weak_ptr<GameObjectManager> GetManager();
 		std::weak_ptr<Collision::CollisionManager> GetCollisionManager();
 		std::weak_ptr<GameObject> gameObject;
-		bool isActive=true;
-		bool isRemove=false;
+		bool isActive = true;
+		bool isRemove = false;
 	};
 
-#define BUTI_REGIST_GAMECOMPONENT(T)\
-	CEREAL_REGISTER_TYPE(T);\
-	CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::GameComponent, T);
+
 }

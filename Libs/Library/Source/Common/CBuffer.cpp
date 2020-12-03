@@ -1,20 +1,19 @@
 #include "stdafx.h"
 
-
 void ButiEngine::ICBuffer::ShowUI()
 {
-	if (ImGui::TreeNode((exName+"##"+std::to_string(slot)).c_str())) {
+	if (GUI::TreeNode((exName+"##"+std::to_string(slot)).c_str())) {
 
-		ImGui::InputTextWithHint("Name", exName.c_str(), CallBacks::cbufferName, 64, 64, CallBacks::ImguiCallBack);
-		ImGui::SameLine();
+		GUI::InputTextWithHint("Name", exName.c_str(), GUI::cbufferName, 64, 64);
+		GUI::SameLine();
 
-		if (ImGui::Button("Change")) {
-			exName = (CallBacks::cbufferName);
+		if (GUI::Button("Change")) {
+			exName = (GUI::cbufferName);
 		}
 		if (OnShowUI()) {
 			Update();
 		}
 
-		ImGui::TreePop();
+		GUI::TreePop();
 	}
 }

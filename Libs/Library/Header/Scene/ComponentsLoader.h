@@ -5,7 +5,12 @@
 namespace ButiEngine {
 	class ComponentsLoader :public IObject{
 	public:
-		ComponentsLoader(){}
+
+		static void CreateInstance();
+		static void SaveInstance();
+
+		static  std::shared_ptr< ComponentsLoader> GetInstance();
+
 		void Initialize(){}
 		void PreInitialize(){}
 		void Release();
@@ -35,6 +40,7 @@ namespace ButiEngine {
 			archive(addGameComponents);
 		}
 	private:
+		
 		std::vector<std::shared_ptr<Behavior>> addBehaviors;
 		std::vector<std::shared_ptr<GameComponent>> addGameComponents;
 
@@ -47,6 +53,7 @@ namespace ButiEngine {
 
 		int currentIndex_componentList = 0;
 		int currentIndex_behaviorList = 0;
+		static std::shared_ptr< ComponentsLoader> instance;
 	};
 
 

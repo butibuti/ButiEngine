@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "..\..\Header\Resources\Resource_RealTimeMesh_Dx12.h"
 
+#include"Header/GameParts/GraphicDevice_Dx12.h"
+
 ButiEngine::Resource_RealTimeMesh_Dx12::Resource_RealTimeMesh_Dx12(std::shared_ptr<GraphicDevice> arg_graphicDevice)
 {
 	wkp_graphicDevice = arg_graphicDevice->GetThis<GraphicDevice_Dx12>();

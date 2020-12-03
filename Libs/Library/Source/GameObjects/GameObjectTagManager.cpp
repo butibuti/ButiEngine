@@ -1,7 +1,6 @@
 #include"stdafx.h"
 #include "..\..\Header\GameObjects\GameObjectTagManager.h"
 
-ButiEngine::IDManager<ButiEngine::GameObject> ButiEngine::GameObjectTagManager::idManager;
 
 ButiEngine::GameObjectTag ButiEngine::GameObjectTagManager::CreateGameObjectTag(std::string arg_tagName)
 {

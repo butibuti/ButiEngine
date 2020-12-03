@@ -3,6 +3,7 @@
 #include"Resource_Material.h"
 #include"../Common/CBuffer_Dx12.h"
 namespace ButiEngine {
+	class GraphicDevice_Dx12;
 	class Resource_Material_Dx12:public Resource_Material
 	{
 	public:

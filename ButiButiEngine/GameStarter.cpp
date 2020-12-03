@@ -13,16 +13,6 @@ void ButiEngine::GameStarter::Start()
 void ButiEngine::GameStarter::OnUpdate()
 {
     if (shp_relTimer->Update()) {
-        shp_relTimer->Stop();
-    }
-    if (shp_relTimer->IsOn()) {
-        return;
-    }
-
-    if (GameDevice::input.GetPadButtonTriger(PadButtons::XBOX_A)|| GameDevice::input.GetPadButtonTriger(PadButtons::XBOX_B)
-        || GameDevice::input.GetPadButtonTriger(PadButtons::XBOX_Y)|| GameDevice::input.TriggerKey(Keys::Space)) {
-        pushCount++;
-        if (pushCount >= requestPush) {
             auto player = gameObject.lock()->GetGameObjectManager().lock()->GetGameObject("Player");
             player .lock()->GetBehavior("PlayerBehavior")->SetIsActive(true);
             gameObject.lock()->GetGameObjectManager().lock()->GetGameObject("EnemySpawner").lock()->GetGameComponent("EnemySpawner")->SetIsActive(true);
@@ -33,7 +23,7 @@ void ButiEngine::GameStarter::OnUpdate()
             playerLooker->SetTarget(player.lock()->transform);
 
             SetIsRemove(true);
-        }
+            GameDevice::WorldSpeed = 1.0f;
     }
 }
 
@@ -48,7 +38,7 @@ std::shared_ptr<ButiEngine::GameComponent> ButiEngine::GameStarter::Clone()
 
 void ButiEngine::GameStarter::OnShowUI()
 {
-    ImGui::DragInt("RequestPush", &requestPush);
+    GUI::DragInt("RequestPush", requestPush);
     if(shp_relTimer)
     shp_relTimer->ShowGUI();
 }

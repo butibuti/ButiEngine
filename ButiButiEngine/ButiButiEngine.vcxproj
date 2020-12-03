@@ -208,7 +208,6 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BeforeComponentsLoader.cpp" />
     <ClCompile Include="Booster.cpp" />
     <ClCompile Include="BossEnemy.cpp" />
     <ClCompile Include="BuldingMover.cpp" />
@@ -220,7 +219,6 @@
     <ClCompile Include="cpp\HitTestBehavior.cpp" />
     <ClCompile Include="cpp\main.cpp" />
     <ClCompile Include="cpp\PlayerBehavior.cpp" />
-    <ClCompile Include="cpp\SampleScene.cpp" />
     <ClCompile Include="EnemySpawner.cpp" />
     <ClCompile Include="FailedSceneController.cpp" />
     <ClCompile Include="GameStarter.cpp" />
@@ -241,7 +239,6 @@
     <ClCompile Include="Tilter.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BeforeComponentsLoader.h" />
     <ClInclude Include="Booster.h" />
     <ClInclude Include="BossEnemy.h" />
     <ClInclude Include="BuldingMover.h" />
@@ -256,7 +253,6 @@
     <ClInclude Include="include\GameController.h" />
     <ClInclude Include="include\HitTestBehavior.h" />
     <ClInclude Include="include\PlayerBehavior.h" />
-    <ClInclude Include="include\SampleScene.h" />
     <ClInclude Include="LevelSelecter.h" />
     <ClInclude Include="PlayerLookingCamera.h" />
     <ClInclude Include="Result.h" />

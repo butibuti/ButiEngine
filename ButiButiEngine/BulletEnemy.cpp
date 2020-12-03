@@ -9,7 +9,7 @@
 
 void ButiEngine::BulletEnemy::Start()
 {
-	gameObject.lock()->SetGameObjectTag(GameObjectTagManager::GetObjectTag("Enemy"));
+	gameObject.lock()->SetGameObjectTag(gameObject.lock()->GetApplication().lock()->GetGameObjectTagManager()->GetObjectTag("Enemy"));
 
 
 	controller = gameObject.lock()->GetGameObjectManager().lock()->GetGameObject("GameController").lock()->GetGameComponent<GameController>();
@@ -28,7 +28,7 @@ void ButiEngine::BulletEnemy::OnSet()
 void ButiEngine::BulletEnemy::OnUpdate()
 {
 	moveForce *= 0.7f;
-	gameObject.lock()->transform->Translate(velocity * speed + moveForce);
+	gameObject.lock()->transform->Translate(velocity * speed * GameDevice::WorldSpeed + moveForce * GameDevice::WorldSpeed);
 
 	auto pos = gameObject.lock()->transform->GetWorldPosition();
 	if (pos.x < stagemin.x) {
@@ -59,7 +59,7 @@ void ButiEngine::BulletEnemy::OnUpdate()
 
 void ButiEngine::BulletEnemy::OnCollisionEnter(std::weak_ptr<GameObject> arg_other)
 {
-	if (arg_other.lock()->GetGameObjectTag() == GameObjectTagManager::GetObjectTag("Bomb")) {
+	if (arg_other.lock()->GetGameObjectTag() == gameObject.lock()->GetApplication().lock()->GetGameObjectTagManager()->GetObjectTag("Bomb")) {
 		hp--;
 		speed = 0.025;
 
@@ -88,20 +88,20 @@ void ButiEngine::BulletEnemy::OnCollisionEnter(std::weak_ptr<GameObject> arg_oth
 
 void ButiEngine::BulletEnemy::OnShowUI()
 {
-	ImGui::BulletText("HP");
+	GUI::BulletText("HP");
 	int refHp = hp;
-	ImGui::DragInt("##hp", &refHp);
+	GUI::DragInt("##hp", refHp);
 	hp = refHp;
-	ImGui::BulletText("Velocity");
+	GUI::BulletText("Velocity");
 
-	if (ImGui::DragFloat3("##velocity", &velocity.x, 0.01f, -10, 10, "%.3f")) {
+	if (GUI::DragFloat3("##velocity", &velocity.x, 0.01f, -10, 10, "%.3f")) {
 		velocity.Normalize();
 	}
-	ImGui::BulletText("Speed");
+	GUI::BulletText("Speed");
 
-	ImGui::DragFloat("##speed", &speed, 0.01f, -1, 1);
+	GUI::DragFloat("##speed", &speed, 0.01f, -1, 1);
 
-	ImGui::BulletText("Score");
-	ImGui::DragInt("##score", &score, 1, 0, 100);
+	GUI::BulletText("Score");
+	GUI::DragInt("##score", score, 1, 0, 100);
 	shp_timer->ShowGUI();
 }

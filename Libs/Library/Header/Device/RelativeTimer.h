@@ -27,10 +27,10 @@ namespace ButiEngine {
 		}
 
 		void ShowGUI() {
-			ImGui::Checkbox("On/Off", &isOn);
+			GUI::Checkbox("On/Off", &isOn);
 
-			ImGui::DragFloat("Time", &nowCountFrame, 0.1f, 0, maxCountFrame);
-			ImGui::DragFloat("MaxTime", &maxCountFrame, 0.1f, 0, 1000);
+			GUI::DragFloat("Time", &nowCountFrame, 0.1f, 0, maxCountFrame);
+			GUI::DragFloat("MaxTime", &maxCountFrame, 0.1f, 0, 1000);
 
 
 		}

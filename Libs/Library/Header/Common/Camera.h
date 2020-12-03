@@ -1,7 +1,8 @@
 #pragma once
 #include"stdafx.h"
-#include"CBuffer.h"
 namespace ButiEngine {
+
+
 	class Renderer;
 
 	struct CameraProjProperty {
@@ -39,11 +40,6 @@ namespace ButiEngine {
 		virtual bool GetActive()const=0;
 		virtual void Draw() = 0;
 	protected:
-		struct ShaderVariable
-		{
-			Matrix4x4 viewMatrix;
-			Matrix4x4 projectionMatrix;
-		};
 	};
 
 	class  Camera:public ICamera

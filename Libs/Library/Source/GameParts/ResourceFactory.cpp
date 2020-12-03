@@ -2,7 +2,6 @@
 
 #include"Header/GameParts/ResourceContainer.h"
 #include "..\..\Header\GameParts\ResourceFactory.h"
-
 ButiEngine::ResourceFactory::TextureResourceData ButiEngine::ResourceFactory::GetTextureResourceDataFromFile(const std::string& filePath)
 {
 	TextureResourceData output;
@@ -269,7 +268,7 @@ std::shared_ptr<ButiEngine::Resource_Model> ButiEngine::ResourceFactory::CreateM
 	UINT vertexCount = modelReader.ReadUINT(vertexIndexByteSize);
 
 	MeshTag meshTag;
-	auto resourceContainer = wkp_graphicDevice.lock()->GetApplication().lock()->GetResourceContainer();
+	auto resourceContainer = wkp_graphicDevice.lock()->GetApplication().lock()->GetResourceContainer()->GetThis<ResourceContainer>();
 	switch (type)
 	{
 	case Vertex::VertexType::Vertex_UV_Normal:
@@ -898,7 +897,7 @@ std::shared_ptr<ButiEngine::Resource_Model> ButiEngine::ResourceFactory::CreateM
 		std::vector<UINT> indices;
 		ReadIndex(indices, vertexIndexByteSize, modelReader);
 		vec_vertex.indices = indices;
-		meshTag = resourceContainer->LoadMesh(modelPath, vec_vertex);
+		meshTag = resourceContainer->GetThis<ResourceContainer>()-> LoadMesh(modelPath, vec_vertex);
 	}
 		  break;
 	case 2: {

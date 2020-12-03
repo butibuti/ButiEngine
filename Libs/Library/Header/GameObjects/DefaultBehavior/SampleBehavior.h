@@ -1,5 +1,6 @@
 #pragma once
 #include"Header/GameObjects/Behavior.h"
+#include<complex>
 namespace ButiEngine {
 
 
@@ -27,8 +28,8 @@ namespace ButiEngine {
 	private:
 		std::shared_ptr<Resource_RealTimeMesh> shp_mesh;
 		int t = 0;
+		std::complex<float> pos;
+		std::complex<float> onenDegree;
 	};
 
 }
-
-BUTI_REGIST_BEHAVIOR(ButiEngine::SampleBehavior);

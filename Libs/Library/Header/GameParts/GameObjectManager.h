@@ -36,7 +36,7 @@ namespace ButiEngine {
 			return wkp_scene;
 		}
 
-		std::weak_ptr<Application> GetApplication();
+		std::weak_ptr<IApplication> GetApplication();
 
 		template<class Archive>
 		void serialize(Archive& archive)

@@ -15,36 +15,36 @@ namespace ButiEngine {
 		void ShowGUI() {
 
 
-			if (ImGui::Button("AddEnemy")) {
+			if (GUI::Button("AddEnemy")) {
 				names.push_back("Enemy_Standard");
 			}
 
 			int i = 0;
 			for (auto itr = names.begin(); itr != names.end(); i++) {
-				ImGui::BulletText(itr->c_str());
-				ImGui::SameLine();
+				GUI::BulletText(itr->c_str());
+				GUI::SameLine();
 
-				if (ImGui::Button(("edit" + std::to_string(i)).c_str())) {
-					ImGui::OpenPopup(("edit_popup"+std::to_string(i)).c_str());
+				if (GUI::Button(("edit" + std::to_string(i)).c_str())) {
+					GUI::OpenPopup(("edit_popup"+std::to_string(i)).c_str());
 				}
 
-				if(ImGui::BeginPopup(("edit_popup" + std::to_string(i)).c_str()) ){
+				if(GUI::BeginPopup(("edit_popup" + std::to_string(i)).c_str()) ){
 
-					ImGui::InputTextWithHint("fileName", itr->c_str(), CallBacks::objectName, 64, 64, CallBacks::ImguiCallBack);
+					GUI::InputTextWithHint("fileName", itr->c_str(), GUI::objectName, 64, 64);
 
-					if (ImGui::Button("Change")) {
-						*itr = CallBacks::objectName;
-						CallBacks::ObjectNameReset();
+					if (GUI::Button("Change")) {
+						*itr = GUI::objectName;
+						GUI::ObjectNameReset();
 					}
 
-					if (ImGui::Button("Remove")) {
+					if (GUI::Button("Remove")) {
 						itr = names.erase(itr);
 					}
 					else {
 						itr++;
 					}
 
-					ImGui::EndPopup();
+					GUI::EndPopup();
 				}
 				else {
 					itr++;

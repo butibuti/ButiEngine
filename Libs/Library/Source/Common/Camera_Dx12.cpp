@@ -1,6 +1,7 @@
 #include"stdafx.h"
 
 #include"Header/Common/Camera_Dx12.h"
+#include"Header/GameParts/GraphicDevice_Dx12.h"
 
 ButiEngine::Camera_Dx12::Camera_Dx12(const std::string& arg_cameraName, std::shared_ptr<IRenderer> arg_shp_renderer, std::weak_ptr<GraphicDevice_Dx12> arg_wkp_graphicDevice)
 {

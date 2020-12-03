@@ -10,7 +10,7 @@ ButiEngine::CSVWriter::CSVWriter()
 ButiEngine::CSVWriter::~CSVWriter()
 {
 }
-void  ButiEngine::CSVWriter::Write(CSVData arg_csvData, const char filePath[]) {
+void  ButiEngine::CSVWriter::Write(CSVData arg_csvData, const std::string& filePath) {
 	std::ofstream ofs(filePath);
 	if (!ofs)
 		return;

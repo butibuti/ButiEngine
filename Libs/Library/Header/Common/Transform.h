@@ -8,16 +8,15 @@ namespace ButiEngine {
 
 	public:
 
-		static Matrix4x4 x90Rotate;
 		inline Transform() {
 			localMatrix = nullptr;
-			rotation = DirectX::XMMatrixRotationX(
+			rotation = Matrix4x4::RollX(
 				DirectX::XMConvertToRadians(0)
 			) *
-				DirectX::XMMatrixRotationY(
+				Matrix4x4::RollY(
 					DirectX::XMConvertToRadians(0)
 				) *
-				DirectX::XMMatrixRotationZ(
+				Matrix4x4::RollZ(
 					DirectX::XMConvertToRadians(0)
 				);
 		}
@@ -83,9 +82,13 @@ namespace ButiEngine {
 			}
 			localMatrix = std::make_shared<Matrix4x4>();
 			{
-				*localMatrix = (XMMATRIX)rotation * (
-					DirectX::XMMatrixScaling(scale.x, scale.y, scale.z) *
-					DirectX::XMMatrixTranslation(localPosition.x, localPosition.y, localPosition.z));
+
+				*localMatrix = Matrix4x4().Scale(scale)*rotation
+					
+					;
+				localMatrix->_41 = localPosition.x;
+				localMatrix->_42 = localPosition.y;
+				localMatrix->_43 = localPosition.z;
 
 			}
 
@@ -138,13 +141,13 @@ namespace ButiEngine {
 			if (localMatrix) {
 				localMatrix = nullptr;
 			}
-			return rotation = DirectX::XMMatrixRotationX(
+			return rotation = Matrix4x4::RollX(
 				DirectX::XMConvertToRadians(arg_vec3_rotation.x)
 			) *
-				DirectX::XMMatrixRotationY(
+				Matrix4x4::RollY(
 					DirectX::XMConvertToRadians(arg_vec3_rotation.y)
 				) *
-				DirectX::XMMatrixRotationZ(
+				Matrix4x4::RollZ(
 					DirectX::XMConvertToRadians(arg_vec3_rotation.z)
 				);
 		}
@@ -157,9 +160,9 @@ namespace ButiEngine {
 			if (localMatrix) {
 				localMatrix = nullptr;
 			}
-			return  rotation = DirectX::XMMatrixRotationX(
+			return  rotation = Matrix4x4::RollX(
 				arg_x
-			) * (XMMATRIX)rotation;
+			) * rotation;
 
 		}
 		inline const Matrix4x4& RollWorldRotationX_Degrees(const float arg_x) {
@@ -172,7 +175,7 @@ namespace ButiEngine {
 			if (localMatrix) {
 				localMatrix = nullptr;
 			}
-			return rotation = (XMMATRIX)rotation * DirectX::XMMatrixRotationX(
+			return rotation = rotation * Matrix4x4::RollX(
 				arg_x
 			);
 
@@ -187,9 +190,9 @@ namespace ButiEngine {
 			if (localMatrix) {
 				localMatrix = nullptr;
 			}
-			return  rotation = DirectX::XMMatrixRotationY(
+			return  rotation = Matrix4x4::RollY(
 				arg_y
-			) * (XMMATRIX)rotation;
+			) * rotation;
 
 		}
 		inline const Matrix4x4& RollWorldRotationY_Degrees(const float arg_y) {
@@ -202,7 +205,7 @@ namespace ButiEngine {
 			if (localMatrix) {
 				localMatrix = nullptr;
 			}
-			return rotation = (XMMATRIX)rotation * DirectX::XMMatrixRotationY(
+			return rotation = rotation * Matrix4x4::RollY(
 				arg_y
 			);
 
@@ -217,9 +220,9 @@ namespace ButiEngine {
 			if (localMatrix) {
 				localMatrix = nullptr;
 			}
-			return  rotation = DirectX::XMMatrixRotationZ(
+			return  rotation = Matrix4x4::RollZ(
 				arg_z
-			) * (XMMATRIX)rotation;
+			) * rotation;
 
 		}
 		inline const Matrix4x4& RollWorldRotationZ_Degrees(const float arg_z) {
@@ -232,7 +235,7 @@ namespace ButiEngine {
 			if (localMatrix) {
 				localMatrix = nullptr;
 			}
-			return rotation = (XMMATRIX)rotation * DirectX::XMMatrixRotationZ(
+			return rotation = rotation * Matrix4x4::RollZ(
 				arg_z
 			);
 
@@ -283,7 +286,8 @@ namespace ButiEngine {
 			}
 
 			return  localPosition+=arg_velocity;
-		}inline const Vector3& TranslateX(const float arg_moveX) {
+		}
+		inline const Vector3& TranslateX(const float arg_moveX) {
 			if (localMatrix) {
 				localMatrix->_41 += arg_moveX;
 			}
@@ -452,53 +456,7 @@ namespace ButiEngine {
 		}
 
 
-		inline void ShowUI() {
-			ImGui::BulletText("Position");
-			if (ImGui::DragFloat3("##p", &localPosition.x, 0.02f, -500.0f, 500.0f,"%.3f")) {
-				localMatrix = nullptr;
-			}
-			ImGui::BulletText("Scale");
-			if (ImGui::DragFloat3("##s", &scale.x, 0.01f, -500.0, 500.0f, "%.3f")) {
-				localMatrix = nullptr;
-			}
-			ImGui::BulletText("Rotation");
-			Vector3 euler;
-			if (ImGui::InputFloat3("##R", &euler.x, "%.3f")) {
-				RollWorldRotation(euler);
-			}
-
-			ImGui::PushButtonRepeat(true);
-
-			if (ImGui::Button("X:+")) {
-				RollWorldRotationX_Degrees(1);
-			}ImGui::SameLine();
-
-			if (ImGui::Button("Y:+")) {
-				RollWorldRotationY_Degrees(1);
-			}ImGui::SameLine();
-
-			if (ImGui::Button("Z:+")) {
-				RollWorldRotationZ_Degrees(1);
-			}
-			if (ImGui::Button("X:-")) {
-				RollWorldRotationX_Degrees(-1);
-			}ImGui::SameLine();
-
-			if (ImGui::Button("Y:-")) {
-				RollWorldRotationY_Degrees(-1);
-			}ImGui::SameLine();
-
-			if (ImGui::Button("Z:-")) {
-				RollWorldRotationZ_Degrees(-1);
-			}
-
-			ImGui::PushButtonRepeat(false);
-
-			if (ImGui::Button("Identity"))
-			{
-				RollIdentity();
-			}
-		}
+		void ShowUI();
 
 		template<class Archive>
 		void serialize(Archive& archive)

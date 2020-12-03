@@ -1,7 +1,10 @@
 #pragma once
 #include"stdafx.h"
 #include"Resource_Mesh.h"
+
+#include"Header/GameParts/GraphicDevice_Dx12.h"
 namespace ButiEngine {
+	class GraphicDevice_Dx12;
 	class Resource_Mesh_Dx12:public Resource_Mesh
 	{
 	public:

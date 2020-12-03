@@ -1,19 +1,21 @@
 #pragma once
 #include "stdafx.h"
 #include "..\..\..\Header\GameObjects\DefaultGameComponent\ImmediateParticleController.h"
-#include"Header/GameParts/ResourceContainer.h"
+#include"../../../Header/Resources/Resource_RealTimeMesh.h"
+
+BUTI_REGIST_GAMECOMPONENT(ButiEngine::ImmediateParticleController);
 void ButiEngine::ImmediateParticleController::OnUpdate()
 {
 	auto endItr = vec_particleInfo.end();
 	int i = 0;
 	int remove = 0;
 	for (auto itr = vec_particleInfo.begin(); itr != endItr; i++) {
-		itr->position += itr->velocity + itr->force;
-		itr->force *= itr->accelation;
-		itr->color += itr->colorPase;
-		itr->size += itr->sizePase;
-		itr->angle += itr->anglePase;
-		itr->life-=1.0f;
+		itr->position += itr->velocity* GameDevice::WorldSpeed + itr->force * GameDevice::WorldSpeed;
+		itr->force *= itr->accelation * GameDevice::WorldSpeed;
+		itr->color += itr->colorPase * GameDevice::WorldSpeed;
+		itr->size += itr->sizePase * GameDevice::WorldSpeed;
+		itr->angle += itr->anglePase * GameDevice::WorldSpeed;
+		itr->life-=1.0f * GameDevice::WorldSpeed;
 
 		shp_backUp->vertices.at(i).position = itr->position;
 		shp_backUp->vertices.at(i).uv.x = itr->size;

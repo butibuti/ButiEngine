@@ -45,22 +45,22 @@ void ButiEngine::EnemySpawner::OnShowUI()
 {
 
 
-    if (ImGui::Button("AddEnemyPattern")) {
+    if (GUI::Button("AddEnemyPattern")) {
         vec_enemyPatterns.push_back(EnemyPattern());
     }
 
     for (int i = 0; i < vec_enemyPatterns.size();i++) {
-        if (ImGui::TreeNode(("EnemyPattern"+std::to_string(i)).c_str())) {
+        if (GUI::TreeNode(("EnemyPattern"+std::to_string(i)).c_str())) {
 
             vec_enemyPatterns.at(i).ShowGUI();
 
-            ImGui::TreePop();
+            GUI::TreePop();
         }
         else {
 
-            ImGui::SameLine();
+            GUI::SameLine();
 
-            if (ImGui::Button(("Remove##" + std::to_string(i)).c_str())) {
+            if (GUI::Button(("Remove##" + std::to_string(i)).c_str())) {
                 auto itr = vec_enemyPatterns.begin() + i;
 
                 vec_enemyPatterns.erase(itr);
@@ -74,7 +74,7 @@ void ButiEngine::EnemySpawner::OnShowUI()
 
 void ButiEngine::EnemySpawner::SpawnBoss()
 {
-    std::string bossStr ="Boss_"+ gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneInformation().GetSceneName();
+    std::string bossStr ="Boss_"+ gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneInformation()->GetSceneName();
     auto newEnemy = gameObject.lock()->GetGameObjectManager().lock()->AddObjectFromCereal(bossStr);
     newEnemy.lock()->transform->TranslateZ(70);
 }

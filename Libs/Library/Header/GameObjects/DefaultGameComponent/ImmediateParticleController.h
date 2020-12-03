@@ -62,5 +62,3 @@ namespace ButiEngine {
 	};
 
 }
-
-BUTI_REGIST_GAMECOMPONENT(ButiEngine::ImmediateParticleController);

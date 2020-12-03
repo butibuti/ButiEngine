@@ -1,6 +1,7 @@
 #pragma once
 #include"stdafx.h"
 #include"CArrayBuffer.h"
+#include"Header/GameParts/GraphicDevice_Dx12.h"
 namespace ButiEngine {
 
 	template <class T>

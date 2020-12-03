@@ -45,38 +45,18 @@ namespace ButiEngine {
 		char* ReadCharactor();
 		void* ReadData(const UINT size);
 		void ReadData(char* out,const UINT size);
+
+		void ReadDefrateData(const UINT arg_compressedSize, UINT uncompressedSize, const UINT arraySize, unsigned char* outBuffer);
 		template<typename T>
 		inline void ReadDefratedArrayData(const UINT arg_compressedSize,const UINT arraySize, std::vector< T>& out) {
 			unsigned char* outBuffer;
-			unsigned char * inBuffer;
 
 			UINT uncompressedSize = arraySize * sizeof(T);
 
-			z_stream z;
-
-
-			z.zalloc = Z_NULL;
-			z.zfree = Z_NULL;
-			z.opaque = Z_NULL;
-
-			int res = inflateInit(&z);
-			inBuffer = (unsigned char*)malloc(arg_compressedSize);
 			outBuffer = (unsigned char*)malloc(uncompressedSize);
+			
+			ReadDefrateData(arg_compressedSize, uncompressedSize, arraySize, outBuffer);
 
-			z.next_in = NULL;
-			z.avail_in = 0;
-			z.next_out = outBuffer;
-			z.avail_out = uncompressedSize;
-
-			fin.read((char*)inBuffer, arg_compressedSize);
-
-			z.next_in = inBuffer;
-			z.avail_in = arg_compressedSize;
-
-			res = inflate(&z, Z_SYNC_FLUSH);
-
-
-			inflateEnd(&z);
 
 			out.resize(arraySize);
 
@@ -86,8 +66,7 @@ namespace ButiEngine {
 
 				out.at(i)=(var);
 			}
-			delete outBuffer;
-			delete inBuffer;
+			free( outBuffer);
 		}
 		std::wstring ReadWCharactor(const UINT count);
 		std::wstring ReadShift_jis(const UINT count);

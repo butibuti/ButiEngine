@@ -135,16 +135,18 @@ namespace ButiEngine {
 			archive(vec_p_id);
 		}
 
-		ID<T> ShowGUI(ImGuiIO& arg_io) {
+		ID<T> ShowGUI(GUI::GuiIO& arg_io) {
 			auto enditr = map_values.end();
 			ID<T> out;
 			for (auto itr = map_values.begin(); itr != enditr; itr++) {
-				if (ImGui::Button(Util::ToUTF8( itr->first).c_str())) {
+				if (GUI::Button(Util::ToUTF8( itr->first).c_str())) {
 					out = (itr->second);
 				}
 
-				if (ImGui::IsItemActive()) {
-					ImGui::GetForegroundDrawList()->AddLine(arg_io.MouseClickedPos[0], arg_io.MousePos, ImGui::GetColorU32(ImGuiCol_Button), 4.0f); // Draw a line between the button and the mouse cursor
+				if (GUI::IsItemActive()) {
+					auto p1 = arg_io.MouseClickedPos[0];
+					auto p2 = arg_io.MousePos;
+					GUI::Line(Vector2( p1.x,p1.y), Vector2(p2.x, p2.y), GUI::GetColorU32(GUI::GuiCol_::GuiCol_Button), 4.0f); // Draw a line between the button and the mouse cursor
 					out = (itr->second);
 				}
 			}

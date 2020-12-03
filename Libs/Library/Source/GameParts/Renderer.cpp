@@ -1,7 +1,7 @@
 #pragma once
 #include"stdafx.h"
 #include "..\..\Header\GameParts\Renderer.h"
-#include"Header/GameParts/ResourceContainer.h"
+#include"Header/Common/Camera_Dx12.h"
 
 ButiEngine::Vector2 ComputeFogCoord(float start, float end)
 {
@@ -26,7 +26,7 @@ void ButiEngine::Renderer::Initialize()
 
 	CBuffer_fog->SetExName("FogParameter");
 	CBuffer_fog->Get().fogColor = Vector4(100.0f/256.0f,149.0f/256.0f , 247.0f/256.0f, 0.0f);
-	CBuffer_fog->Get().fogCoord = ComputeFogCoord(25.0f,60.0f);
+	CBuffer_fog->Get().fogCoord = ComputeFogCoord(50,100.0f);
 	CBuffer_fog->SetGraphicDevice(wkp_graphicDevice.lock());
 	CBuffer_fog->CreateBuffer();
 

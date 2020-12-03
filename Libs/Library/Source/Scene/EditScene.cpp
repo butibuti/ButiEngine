@@ -4,10 +4,9 @@
 
 
 #include"include/HitTestBehavior.h"
-#include"Header/GameParts/ResourceContainer.h"
 #include"Header/Resources/ModelAnimation.h"
 #include"Header/Scene/ComponentsLoader.h"
-
+#include"Header/Scene/EditScene.h"
 
 
 
@@ -48,21 +47,21 @@ void ButiEngine::EditScene::OnUpdate()
 
 void ButiEngine::EditScene::UIUpdate()
 {
-	ImGui::Begin("top");
-	if (ImGui::ArrowButton("##play", ImGuiDir_Right)) {
+	GUI::Begin("top");
+	if (GUI::ArrowButton("##play", GUI::GuiDir_Right)) {
 		isActive =!isActive;
 		isPlaying = true;
 		if (isActive) {
 			startCount++;
 			if (startCount==1) {
-				OutputCereal(shp_gameObjectManager,GlobalSettings::GetResourceDirectory()+ "Scene/" + sceneInformation.GetSceneName()+"/objects.gameObjectManager" );
+				OutputCereal(shp_gameObjectManager,GlobalSettings::GetResourceDirectory()+ "Scene/" + sceneInformation->GetSceneName()+"/objects.gameObjectManager" );
 				shp_gameObjectManager->Start();
 			}
 		}
 
 	};
-	ImGui::SameLine();
-	if (ImGui::Button("Reset")) {
+	GUI::SameLine();
+	if (GUI::Button("Reset")) {
 		isPlaying = false;
 		isActive = false;
 		startCount = 0;
@@ -84,7 +83,7 @@ void ButiEngine::EditScene::UIUpdate()
 			shp_soundManager = ObjectFactory::Create<SoundManager>(GetThis<IScene>());
 
 			auto windowSize = GetWindow()->GetSize();
-			std::string fullGameObjectManagerPath = GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation.GetSceneName() + "/objects.gameObjectManager";
+			std::string fullGameObjectManagerPath = GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation->GetSceneName() + "/objects.gameObjectManager";
 			if (Util::IsFileExistence(fullGameObjectManagerPath)) {
 				shp_gameObjectManager = ObjectFactory::CreateFromCereal<GameObjectManager>(fullGameObjectManagerPath);
 
@@ -92,7 +91,7 @@ void ButiEngine::EditScene::UIUpdate()
 				shp_gameObjectManager->Initialize_cereal();
 			}
 			else {
-				_mkdir((GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation.GetSceneName() + "/").c_str());
+				_mkdir((GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation->GetSceneName() + "/").c_str());
 				shp_gameObjectManager = ObjectFactory::Create<GameObjectManager>(GetThis<IScene>());
 			}
 			/*
@@ -114,28 +113,28 @@ void ButiEngine::EditScene::UIUpdate()
 
 	if (!isPlaying) {
 
-		ImGui::SameLine();
-		if (ImGui::Button("Save!!!!")|| ((GameDevice::input.CheckKey(Keys::LeftCtrl) || GameDevice::input.CheckKey(Keys::RightCtrl)) && GameDevice::input.CheckKey(Keys::S))) {
+		GUI::SameLine();
+		if (GUI::Button("Save!!!!")|| ((GameDevice::GetInput()->CheckKey(Keys::LeftCtrl) || GameDevice::GetInput()->CheckKey(Keys::RightCtrl)) && GameDevice::GetInput()->CheckKey(Keys::S))) {
 
-			OutputCereal(shp_gameObjectManager, GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation.GetSceneName() + "/objects.gameObjectManager");
+			OutputCereal(shp_gameObjectManager, GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation->GetSceneName() + "/objects.gameObjectManager");
 
 		};
 	}
-	ImGui::Checkbox("ShowHierarchy", &showHeirarcy);
+	GUI::Checkbox("ShowHierarchy", &showHeirarcy);
 
-	ImGui::SameLine();
-	ImGui::Checkbox("ShowInspector", &showInspector);
+	GUI::SameLine();
+	GUI::Checkbox("ShowInspector", &showInspector);
 
-	ImGui::SameLine();
-	ImGui::Checkbox("ShowContainer", &showContainer);
-
-
-	ImGui::End();
+	GUI::SameLine();
+	GUI::Checkbox("ShowContainer", &showContainer);
 
 
-	/*ImGui::Begin("Bara Bara Slider");
-	ImGui::SliderFloat("pushPower", &t, 0, 1.0f);
-	ImGui::End();*/
+	GUI::End();
+
+
+	/*GUI::Begin("Bara Bara Slider");
+	GUI::SliderFloat("pushPower", &t, 0, 1.0f);
+	GUI::End();*/
 	if(showHeirarcy)
 	shp_gameObjectManager->ShowUI();
 
@@ -148,67 +147,67 @@ void ButiEngine::EditScene::UIUpdate()
 	if (showInspector) {
 
 		auto selectedGameObject = shp_gameObjectManager->GetSelectedUI();
-		ImGui::Begin("Inspector");
+		GUI::Begin("Inspector");
 		if (selectedGameObject.lock()) {
 
 
-			if ((GameDevice::input.CheckKey(Keys::LeftCtrl) || GameDevice::input.CheckKey(Keys::RightCtrl)) && GameDevice::input.CheckKey(Keys::F)) {
+			if ((GameDevice::GetInput()->CheckKey(Keys::LeftCtrl) || GameDevice::GetInput()->CheckKey(Keys::RightCtrl)) && GameDevice::GetInput()->CheckKey(Keys::F)) {
 				GetCamera("edit").lock()->shp_transform->SetLookAtRotation(selectedGameObject.lock()->transform->GetWorldPosition());
 			}
 
-			ImGui::InputTextWithHint("Name", selectedGameObject.lock()->GetGameObjectName().c_str(), CallBacks::objectName, 64, 64, CallBacks::ImguiCallBack);
-			ImGui::SameLine();
+			GUI::InputTextWithHint("Name", selectedGameObject.lock()->GetGameObjectName().c_str(), GUI::objectName, 64, 64);
+			GUI::SameLine();
 
-			if (ImGui::Button("Change")) {
-				selectedGameObject.lock()->SetObjectName(CallBacks::objectName);
-				CallBacks::ObjectNameReset();
+			if (GUI::Button("Change")) {
+				selectedGameObject.lock()->SetObjectName(GUI::objectName);
+				GUI::ObjectNameReset();
 
 			}
 
 
 			selectedGameObject.lock()->ShowUI();
 
-			auto addComponent = shp_componentsLoader->ShowAddGameComponentUI();
+			auto addComponent = ComponentsLoader::GetInstance()-> ShowAddGameComponentUI();
 
 			if (addComponent)
 				selectedGameObject.lock()->AddGameComponent_Insert(addComponent);
 
-			auto addBehavior = shp_componentsLoader->ShowAddBehaviorUI();
+			auto addBehavior = ComponentsLoader::GetInstance()->ShowAddBehaviorUI();
 			if (addBehavior)
 				selectedGameObject.lock()->AddBehavior_Insert(addBehavior);
 
 
-			if (ImGui::Button("Save!", ImVec2(200, 30))) {
+			if (GUI::Button("Save!", Vector2(200, 30))) {
 				OutputCereal(selectedGameObject.lock());
 			}
 		}
 
 
 
-		ImGui::End();
+		GUI::End();
 	}
 
-	if(!isActive&&!ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow))
+	if(!isActive&&!GUI::IsWindowHovered(GUI::GuiHoveredFlags_AnyWindow))
 	EditCamera();
 }
 
 void ButiEngine::EditScene::EditCamera()
 {
 	auto editCam = GetCamera("edit").lock();
-	if (GameDevice::input.GetMouseButton(MouseButtons::RightClick)) {
-		Vector2 move = GameDevice::input.GetMouseMove();
+	if (GameDevice::GetInput()->GetMouseButton(MouseButtons::RightClick)) {
+		Vector2 move = GameDevice::GetInput()->GetMouseMove();
 		editCam->shp_transform->RollWorldRotationY_Degrees(-move.x);
 		editCam->shp_transform->RollLocalRotationX_Degrees(-move.y);
 	}
-	if (GameDevice::input.GetMouseButton(MouseButtons::WheelButton)) {
-		Vector2 move = GameDevice::input.GetMouseMove();
+	if (GameDevice::GetInput()->GetMouseButton(MouseButtons::WheelButton)) {
+		Vector2 move = GameDevice::GetInput()->GetMouseMove();
 
 		Vector3 velocity = editCam->shp_transform->GetRight() * move.x * 0.01f + editCam->shp_transform->GetUp() * move.y*-1 * 0.01f;
 
 		editCam->shp_transform->Translate (velocity);
 	}
-	if (GameDevice::input.GetMouseWheel()) {
-		Vector3 velocity = editCam->shp_transform->GetFront() * 0.001f * GameDevice::input.GetMouseWheelMove();
+	if (GameDevice::GetInput()->GetMouseWheel()) {
+		Vector3 velocity = editCam->shp_transform->GetFront() * 0.001f * GameDevice::GetInput()->GetMouseWheelMove();
 
 		editCam->shp_transform->Translate(velocity);
 	}
@@ -251,10 +250,9 @@ void ButiEngine::EditScene::Draw()
 }
 
 
-ButiEngine::EditScene::EditScene(std::weak_ptr<ISceneManager> arg_wkp_sceneManager, SceneInformation arg_SceneInformation, std::shared_ptr<ComponentsLoader> arg_shp_componentsLoader)
+ButiEngine::EditScene::EditScene(std::weak_ptr<ISceneManager> arg_wkp_sceneManager, std::shared_ptr< SceneInformation> arg_SceneInformation)
 	:sceneInformation ( arg_SceneInformation)
 {
-	shp_componentsLoader = arg_shp_componentsLoader;
 	
 	shp_sceneManager = arg_wkp_sceneManager.lock();
 }
@@ -283,7 +281,7 @@ void ButiEngine::EditScene::Initialize()
 	ActiveCollision(1);
 
 	auto windowSize = GetWindow()->GetSize();
-	std::string fullGameObjectManagerPath = GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation.GetSceneName() + "/objects.gameObjectManager";
+	std::string fullGameObjectManagerPath = GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation->GetSceneName() + "/objects.gameObjectManager";
 	if (Util::IsFileExistence(fullGameObjectManagerPath)) {
 		shp_gameObjectManager = ObjectFactory::CreateFromCereal<GameObjectManager>(fullGameObjectManagerPath);
 
@@ -297,7 +295,7 @@ void ButiEngine::EditScene::Initialize()
 		shp_gameObjectManager->SetScene(GetThis<IScene>());
 		shp_gameObjectManager->Initialize_cereal();
 
-		_mkdir((GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation.GetSceneName() + "/").c_str());
+		_mkdir((GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation->GetSceneName() + "/").c_str());
 	}
 	
 
@@ -331,7 +329,7 @@ void ButiEngine::EditScene::PreInitialize()
 {
 }
 
-std::unique_ptr<ButiEngine::Window>& ButiEngine::EditScene::GetWindow()
+std::unique_ptr<ButiEngine::IWindow>& ButiEngine::EditScene::GetWindow()
 {
 	return shp_sceneManager->GetApplication().lock()->GetWindow();
 }
@@ -392,7 +390,7 @@ void ButiEngine::EditScene::SceneEnd()
 	OnSceneEnd();
 }
 
-std::shared_ptr<ButiEngine::ResourceContainer> ButiEngine::EditScene::GetResourceContainer()
+std::shared_ptr<ButiEngine::IResourceContainer> ButiEngine::EditScene::GetResourceContainer()
 {
 	return shp_sceneManager->GetApplication().lock()->GetResourceContainer();
 }
@@ -417,7 +415,7 @@ std::weak_ptr<ButiEngine::Collision::CollisionManager> ButiEngine::EditScene::Ge
 	return shp_collisionManager;
 }
 
-ButiEngine::SceneInformation ButiEngine::EditScene::GetSceneInformation()
+std::shared_ptr< ButiEngine::SceneInformation > ButiEngine::EditScene::GetSceneInformation()
 {
 	return sceneInformation;
 }

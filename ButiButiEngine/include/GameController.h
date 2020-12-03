@@ -2,6 +2,7 @@
 
 namespace ButiEngine {
 	class ScoreUI;
+	class RemainUI;
 	class GameController :public GameComponent {
 	public:
 		void Start()override;
@@ -56,9 +57,13 @@ namespace ButiEngine {
 		int targetScore;
 		int combo;
 		bool isSpawnBoss=false;
+		bool init = false;
 		std::shared_ptr<RelativeTimer> shp_timer;
 		std::shared_ptr<RelativeTimer> shp_combotimer;
 		std::shared_ptr<ScoreUI> shp_scoreUI;
+		std::shared_ptr<GameObject> shp_scoreUIObject;
+		std::shared_ptr<RemainUI> shp_remainUI;
+		std::shared_ptr<GameObject> shp_remainUIObject;
 	};
 }
 

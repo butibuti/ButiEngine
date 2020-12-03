@@ -4,6 +4,7 @@
 #include"Header/Resources/Resource_Sound_XAudio2.h"
 #include "..\..\Header\GameParts\ResourceContainer.h"
 
+#include "..\..\Header\Common\CerealUtill.h"
 
 ButiEngine::ResourceContainer::ResourceContainer()
 {
@@ -33,53 +34,53 @@ void ButiEngine::ResourceContainer::ShowGUI()
 {
 	static bool isShowShader = false;
 
-	ImGui::Begin("ResourceContainer");
+	GUI::Begin("ResourceContainer");
 
 	auto app = wkp_graphicDevice.lock()->GetApplication().lock();
-	ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_TabListPopupButton;
+	GUI::GuiTabBarFlags tab_bar_flags = GUI::GuiTabBarFlags_TabListPopupButton;
 
-	if (ImGui::BeginTabBar("ResourceContainerTabBar", tab_bar_flags))
+	if (GUI::BeginTabBar("ResourceContainerTabBar", tab_bar_flags))
 	{
-		if (ImGui::BeginTabItem("MeshTags", nullptr, ImGuiTabItemFlags_None)) {
-			ImGui::BeginChild("##MeshTag", ImVec2(0, 0), true);
+		if (GUI::BeginTabItem("MeshTags", nullptr, GUI::GuiTabItemFlags_None)) {
+			GUI::BeginChild("##MeshTag", Vector2(0, 0), true);
 			{
 				app->GetGUIController()->SetResourceTag(
 					container_meshes.ShowGUI(app->GetGUIController()->GetGUIIO())
 				);
 
 			}
-			ImGui::EndChild();
-			ImGui::EndTabItem();
+			GUI::EndChild();
+			GUI::EndTabItem();
 		}
 
-		if (ImGui::BeginTabItem("ModelTags", nullptr, ImGuiTabItemFlags_None)) {
+		if (GUI::BeginTabItem("ModelTags", nullptr, GUI::GuiTabItemFlags_None)) {
 
-			if (ImGui::Button("Add Model")) {
+			if (GUI::Button("Add Model")) {
 
 			}
 
-			auto flags = ImGuiPopupFlags_MouseButtonLeft;
-			if (ImGui::BeginPopupContextItem("Add Model", flags))
+			auto flags = GUI::GuiPopupFlags_MouseButtonLeft;
+			if (GUI::BeginPopupContextItem("Add Model", flags))
 			{
-				ImGui::Text("File name:");
-				ImGui::InputText("##edit", CallBacks::objectName, IM_ARRAYSIZE(CallBacks::objectName));
-				if (ImGui::Button("OK!!")) {
-					LoadModel(CallBacks::objectName, "Model/");
-					CallBacks::ObjectNameReset();
-					ImGui::CloseCurrentPopup();
-				}ImGui::SameLine();
-				if (ImGui::Button("Cancel")) {
-					CallBacks::ObjectNameReset();
-					ImGui::CloseCurrentPopup();
+				GUI::Text("File name:");
+				GUI::InputText("##edit", GUI::objectName, 128);
+				if (GUI::Button("OK!!")) {
+					LoadModel(GUI::objectName, "Model/");
+					GUI::ObjectNameReset();
+					GUI::CloseCurrentPopup();
+				}GUI::SameLine();
+				if (GUI::Button("Cancel")) {
+					GUI::ObjectNameReset();
+					GUI::CloseCurrentPopup();
 				}
-				ImGui::EndPopup();
+				GUI::EndPopup();
 			}
 
-			ImGui::SameLine();
-			ImGui::BeginChild("ModelTagRemove", ImVec2(6 * ImGui::GetFontSize(), ImGui::GetFontSize() * 2), true);
-			ImGui::Text("Remove");
+			GUI::SameLine();
+			GUI::BeginChild("ModelTagRemove", Vector2(6 * GUI::GetFontSize(), GUI::GetFontSize() * 2), true);
+			GUI::Text("Remove");
 
-			if (ImGui::IsWindowHovered()) {
+			if (GUI::IsWindowHovered()) {
 				auto tag = wkp_graphicDevice.lock()->GetApplication().lock()->GetGUIController()->GetModelTag();
 				if (!tag.IsEmpty()) {
 					UnLoadModel(tag);
@@ -87,11 +88,11 @@ void ButiEngine::ResourceContainer::ShowGUI()
 			}
 
 
-			ImGui::EndChild();
+			GUI::EndChild();
 
 
 
-			ImGui::BeginChild("##ModelTag", ImVec2(0, 0), true);
+			GUI::BeginChild("##ModelTag", Vector2(0, 0), true);
 			{
 				app->GetGUIController()->SetResourceTag(
 					container_models.ShowGUI(app->GetGUIController()->GetGUIIO())
@@ -99,20 +100,20 @@ void ButiEngine::ResourceContainer::ShowGUI()
 
 			}
 
-			ImGui::EndChild();
-			ImGui::EndTabItem();
+			GUI::EndChild();
+			GUI::EndTabItem();
 		}
-		if (ImGui::BeginTabItem("MaterialTags", nullptr, ImGuiTabItemFlags_None)) {
+		if (GUI::BeginTabItem("MaterialTags", nullptr, GUI::GuiTabItemFlags_None)) {
 
-			if (ImGui::Button("Add")) {
+			if (GUI::Button("Add")) {
 
 			}
 
-			ImGui::SameLine();
-			ImGui::BeginChild("MaterialTagRemove", ImVec2(6 * ImGui::GetFontSize(), ImGui::GetFontSize() * 2), true);
-			ImGui::Text("Remove");
+			GUI::SameLine();
+			GUI::BeginChild("MaterialTagRemove", Vector2(6 * GUI::GetFontSize(), GUI::GetFontSize() * 2), true);
+			GUI::Text("Remove");
 
-			if (ImGui::IsWindowHovered()) {
+			if (GUI::IsWindowHovered()) {
 				auto tag = wkp_graphicDevice.lock()->GetApplication().lock()->GetGUIController()->GetMaterialTag();
 				if (!tag.IsEmpty()) {
 					UnLoadMaterial(tag);
@@ -120,30 +121,30 @@ void ButiEngine::ResourceContainer::ShowGUI()
 			}
 
 
-			ImGui::EndChild();
+			GUI::EndChild();
 
-			ImGui::BeginChild("##MaterialTag", ImVec2(0, 0), true);
+			GUI::BeginChild("##MaterialTag", Vector2(0, 0), true);
 			{
 				app->GetGUIController()->SetResourceTag(
 					container_materials.ShowGUI(app->GetGUIController()->GetGUIIO())
 				);
 
 			}
-			ImGui::EndChild();
+			GUI::EndChild();
 
-			ImGui::EndTabItem();
+			GUI::EndTabItem();
 		}
-		if (ImGui::BeginTabItem("ShaderTags", nullptr, ImGuiTabItemFlags_None)) {
-			if (ImGui::Button("Add Shader")) {
+		if (GUI::BeginTabItem("ShaderTags", nullptr, GUI::GuiTabItemFlags_None)) {
+			if (GUI::Button("Add Shader")) {
 				isShowShader = !isShowShader;
 			}
 
-			ImGui::SameLine();
+			GUI::SameLine();
 
-			ImGui::BeginChild("ShaderTagRemove", ImVec2(6 * ImGui::GetFontSize(), ImGui::GetFontSize() * 2), true);
-			ImGui::Text("Remove");
+			GUI::BeginChild("ShaderTagRemove", Vector2(6 * GUI::GetFontSize(), GUI::GetFontSize() * 2), true);
+			GUI::Text("Remove");
 
-			if (ImGui::IsWindowHovered()) {
+			if (GUI::IsWindowHovered()) {
 				auto tag = wkp_graphicDevice.lock()->GetApplication().lock()->GetGUIController()->GetShaderTag();
 				if (!tag.IsEmpty()) {
 					UnLoadShader(tag);
@@ -151,45 +152,45 @@ void ButiEngine::ResourceContainer::ShowGUI()
 			}
 
 
-			ImGui::EndChild();
+			GUI::EndChild();
 
 
-			ImGui::BeginChild("##ShaderTag", ImVec2(0, 0), true);
+			GUI::BeginChild("##ShaderTag", Vector2(0, 0), true);
 			{
 				app->GetGUIController()->SetResourceTag(
 					container_shaders.ShowGUI(app->GetGUIController()->GetGUIIO())
 				);
 
 			}
-			ImGui::EndChild();
+			GUI::EndChild();
 
-			ImGui::EndTabItem();
+			GUI::EndTabItem();
 		}
-		if (ImGui::BeginTabItem("VertexShaderTags", nullptr, ImGuiTabItemFlags_None)) {
-			ImGui::Button("Add VertexShader");
-			auto flags = ImGuiPopupFlags_MouseButtonLeft;
-			if (ImGui::BeginPopupContextItem("Add VertexShader", flags))
+		if (GUI::BeginTabItem("VertexShaderTags", nullptr, GUI::GuiTabItemFlags_None)) {
+			GUI::Button("Add VertexShader");
+			auto flags = GUI::GuiPopupFlags_MouseButtonLeft;
+			if (GUI::BeginPopupContextItem("Add VertexShader", flags))
 			{
-				ImGui::Text("File name:");
-				ImGui::InputText("##edit", CallBacks::objectName, IM_ARRAYSIZE(CallBacks::objectName));
-				if (ImGui::Button("OK!!")) {
-					LoadVertexShader(CallBacks::objectName, "Shader/Compiled/");
-					CallBacks::ObjectNameReset();
-					ImGui::CloseCurrentPopup();
-				}ImGui::SameLine();
-				if (ImGui::Button("Cancel")) {
-					CallBacks::ObjectNameReset();
-					ImGui::CloseCurrentPopup();
+				GUI::Text("File name:");
+				GUI::InputText("##edit", GUI::objectName, 128);
+				if (GUI::Button("OK!!")) {
+					LoadVertexShader(GUI::objectName, "Shader/Compiled/");
+					GUI::ObjectNameReset();
+					GUI::CloseCurrentPopup();
+				}GUI::SameLine();
+				if (GUI::Button("Cancel")) {
+					GUI::ObjectNameReset();
+					GUI::CloseCurrentPopup();
 				}
-				ImGui::EndPopup();
+				GUI::EndPopup();
 			}
-			ImGui::SameLine();
+			GUI::SameLine();
 
 
-			ImGui::BeginChild("VertexTagRemove", ImVec2(6 * ImGui::GetFontSize(), ImGui::GetFontSize() * 2), true);
-			ImGui::Text("Remove");
+			GUI::BeginChild("VertexTagRemove", Vector2(6 * GUI::GetFontSize(), GUI::GetFontSize() * 2), true);
+			GUI::Text("Remove");
 
-			if (ImGui::IsWindowHovered()) {
+			if (GUI::IsWindowHovered()) {
 				auto tag = wkp_graphicDevice.lock()->GetApplication().lock()->GetGUIController()->GetVertexShaderTag();
 				if (!tag.IsEmpty()) {
 					UnLoadVertexShader(tag);
@@ -197,46 +198,46 @@ void ButiEngine::ResourceContainer::ShowGUI()
 			}
 
 
-			ImGui::EndChild();
+			GUI::EndChild();
 
 
-			ImGui::BeginChild("##VertexShaderTag", ImVec2(0, 0), true);
+			GUI::BeginChild("##VertexShaderTag", Vector2(0, 0), true);
 			{
 				app->GetGUIController()->SetResourceTag(
 					container_vertexShaders.ShowGUI(app->GetGUIController()->GetGUIIO())
 				);
 
 			}
-			ImGui::EndChild();
+			GUI::EndChild();
 
-			ImGui::EndTabItem();
+			GUI::EndTabItem();
 		}
-		if (ImGui::BeginTabItem("PixelShaderTags", nullptr, ImGuiTabItemFlags_None)) {
+		if (GUI::BeginTabItem("PixelShaderTags", nullptr, GUI::GuiTabItemFlags_None)) {
 
-			ImGui::Button("Add PixelShader");
-			auto flags = ImGuiPopupFlags_MouseButtonLeft;
-			if (ImGui::BeginPopupContextItem("Add PixelShader", flags))
+			GUI::Button("Add PixelShader");
+			auto flags = GUI::GuiPopupFlags_MouseButtonLeft;
+			if (GUI::BeginPopupContextItem("Add PixelShader", flags))
 			{
-				ImGui::Text("File name:");
-				ImGui::InputText("##edit", CallBacks::objectName, IM_ARRAYSIZE(CallBacks::objectName));
-				if (ImGui::Button("OK!!")) {
-					LoadPixelShader(CallBacks::objectName, "Shader/Compiled/");
-					CallBacks::ObjectNameReset();
-					ImGui::CloseCurrentPopup();
-				}ImGui::SameLine();
-				if (ImGui::Button("Cancel")) {
-					CallBacks::ObjectNameReset();
-					ImGui::CloseCurrentPopup();
+				GUI::Text("File name:");
+				GUI::InputText("##edit", GUI::objectName, 128);
+				if (GUI::Button("OK!!")) {
+					LoadPixelShader(GUI::objectName, "Shader/Compiled/");
+					GUI::ObjectNameReset();
+					GUI::CloseCurrentPopup();
+				}GUI::SameLine();
+				if (GUI::Button("Cancel")) {
+					GUI::ObjectNameReset();
+					GUI::CloseCurrentPopup();
 				}
-				ImGui::EndPopup();
+				GUI::EndPopup();
 			}
 
-			ImGui::SameLine();
+			GUI::SameLine();
 
-			ImGui::BeginChild("PixelTagRemove", ImVec2(6 * ImGui::GetFontSize(), ImGui::GetFontSize() * 2), true);
-			ImGui::Text("Remove");
+			GUI::BeginChild("PixelTagRemove", Vector2(6 * GUI::GetFontSize(), GUI::GetFontSize() * 2), true);
+			GUI::Text("Remove");
 
-			if (ImGui::IsWindowHovered()) {
+			if (GUI::IsWindowHovered()) {
 				auto tag = wkp_graphicDevice.lock()->GetApplication().lock()->GetGUIController()->GetPixelShaderTag();
 				if (!tag.IsEmpty()) {
 					UnLoadPixelShader(tag);
@@ -244,46 +245,46 @@ void ButiEngine::ResourceContainer::ShowGUI()
 			}
 
 
-			ImGui::EndChild();
+			GUI::EndChild();
 
 
-			ImGui::BeginChild("##PixelShaderTag", ImVec2(0, 0), true);
+			GUI::BeginChild("##PixelShaderTag", Vector2(0, 0), true);
 			{
 				app->GetGUIController()->SetResourceTag(
 					container_pixelShaders.ShowGUI(app->GetGUIController()->GetGUIIO())
 				);
 
 			}
-			ImGui::EndChild();
+			GUI::EndChild();
 
-			ImGui::EndTabItem();
+			GUI::EndTabItem();
 		}
-		if (ImGui::BeginTabItem("GeometryShaderTags", nullptr, ImGuiTabItemFlags_None)) {
+		if (GUI::BeginTabItem("GeometryShaderTags", nullptr, GUI::GuiTabItemFlags_None)) {
 
-			ImGui::Button("Add GeometryShader");
-			auto flags = ImGuiPopupFlags_MouseButtonLeft;
-			if (ImGui::BeginPopupContextItem("Add GeometryShader", flags))
+			GUI::Button("Add GeometryShader");
+			auto flags = GUI::GuiPopupFlags_MouseButtonLeft;
+			if (GUI::BeginPopupContextItem("Add GeometryShader", flags))
 			{
-				ImGui::Text("File name:");
-				ImGui::InputText("##edit", CallBacks::objectName, IM_ARRAYSIZE(CallBacks::objectName));
-				if (ImGui::Button("OK!!")) {
-					LoadGeometryShader(CallBacks::objectName, "Shader/Compiled/");
-					CallBacks::ObjectNameReset();
-					ImGui::CloseCurrentPopup();
-				}ImGui::SameLine();
-				if (ImGui::Button("Cancel")) {
-					CallBacks::ObjectNameReset();
-					ImGui::CloseCurrentPopup();
+				GUI::Text("File name:");
+				GUI::InputText("##edit", GUI::objectName, 128);
+				if (GUI::Button("OK!!")) {
+					LoadGeometryShader(GUI::objectName, "Shader/Compiled/");
+					GUI::ObjectNameReset();
+					GUI::CloseCurrentPopup();
+				}GUI::SameLine();
+				if (GUI::Button("Cancel")) {
+					GUI::ObjectNameReset();
+					GUI::CloseCurrentPopup();
 				}
-				ImGui::EndPopup();
+				GUI::EndPopup();
 			}
-			ImGui::SameLine();
+			GUI::SameLine();
 
 
-			ImGui::BeginChild("GeometryTagRemove", ImVec2(6 * ImGui::GetFontSize(), ImGui::GetFontSize() * 2), true);
-			ImGui::Text("Remove");
+			GUI::BeginChild("GeometryTagRemove", Vector2(6 * GUI::GetFontSize(), GUI::GetFontSize() * 2), true);
+			GUI::Text("Remove");
 
-			if (ImGui::IsWindowHovered()) {
+			if (GUI::IsWindowHovered()) {
 				auto tag = wkp_graphicDevice.lock()->GetApplication().lock()->GetGUIController()->GetGeometryShaderTag();
 				if (!tag.IsEmpty()) {
 					UnLoadGeometryShader(tag);
@@ -291,33 +292,33 @@ void ButiEngine::ResourceContainer::ShowGUI()
 			}
 
 
-			ImGui::EndChild();
+			GUI::EndChild();
 
 
-			ImGui::BeginChild("##GeometryShaderTag", ImVec2(0, 0), true);
+			GUI::BeginChild("##GeometryShaderTag", Vector2(0, 0), true);
 			{
 				app->GetGUIController()->SetResourceTag(
 					container_geometryShaders.ShowGUI(app->GetGUIController()->GetGUIIO())
 				);
 
 			}
-			ImGui::EndChild();
+			GUI::EndChild();
 
-			ImGui::EndTabItem();
+			GUI::EndTabItem();
 		}
 
 
-		ImGui::EndTabBar();
+		GUI::EndTabBar();
 	}
 
 
 
 
-	ImGui::End();
+	GUI::End();
 
 	if (isShowShader) {
 
-		ImGui::Begin("AddShader");
+		GUI::Begin("AddShader");
 		{
 			static VertexShaderTag vstag;
 			static PixelShaderTag pstag;
@@ -325,12 +326,12 @@ void ButiEngine::ResourceContainer::ShowGUI()
 
 			{
 
-				ImGui::BulletText("VertexShaderTag");
+				GUI::BulletText("VertexShaderTag");
 				auto tagName = GetTagNameVertexShader(vstag);
-				(ImGui::BeginChild("VSTagWin", ImVec2(ImGui::GetFontSize()* (tagName.size() + 2), ImGui::GetFontSize() * 2), true));
-				ImGui::Text(Util::ToUTF8(tagName).c_str());
+				(GUI::BeginChild("VSTagWin", Vector2(GUI::GetFontSize()* (tagName.size() + 2), GUI::GetFontSize() * 2), true));
+				GUI::Text(Util::ToUTF8(tagName).c_str());
 
-				if (ImGui::IsWindowHovered()) {
+				if (GUI::IsWindowHovered()) {
 					auto tag = wkp_graphicDevice.lock()->GetApplication().lock()->GetGUIController()->GetVertexShaderTag();
 					if (!tag.IsEmpty()) {
 						vstag = tag;
@@ -338,17 +339,17 @@ void ButiEngine::ResourceContainer::ShowGUI()
 				}
 
 
-				ImGui::EndChild();
+				GUI::EndChild();
 
 			}
 			{
 
-				ImGui::BulletText("PixelShaderTag");
+				GUI::BulletText("PixelShaderTag");
 				auto tagName = GetTagNamePixelShader(pstag);
-				(ImGui::BeginChild("PSTagWin", ImVec2(ImGui::GetFontSize() * (tagName.size() + 2), ImGui::GetFontSize() * 2), true));
-				ImGui::Text(Util::ToUTF8(tagName).c_str());
+				(GUI::BeginChild("PSTagWin", Vector2(GUI::GetFontSize() * (tagName.size() + 2), GUI::GetFontSize() * 2), true));
+				GUI::Text(Util::ToUTF8(tagName).c_str());
 
-				if (ImGui::IsWindowHovered()) {
+				if (GUI::IsWindowHovered()) {
 					auto tag = wkp_graphicDevice.lock()->GetApplication().lock()->GetGUIController()->GetPixelShaderTag();
 					if (!tag.IsEmpty()) {
 						pstag = tag;
@@ -356,17 +357,17 @@ void ButiEngine::ResourceContainer::ShowGUI()
 				}
 
 
-				ImGui::EndChild();
+				GUI::EndChild();
 
 			}
 			{
 
-				ImGui::BulletText("GeometryShaderTag");
+				GUI::BulletText("GeometryShaderTag");
 				auto tagName = GetTagNameGeometryShader(gstag);
-				(ImGui::BeginChild("GSTagWin", ImVec2(ImGui::GetFontSize() * (tagName.size() + 2), ImGui::GetFontSize() * 2), true));
-				ImGui::Text(Util::ToUTF8(tagName).c_str());
+				(GUI::BeginChild("GSTagWin", Vector2(GUI::GetFontSize() * (tagName.size() + 2), GUI::GetFontSize() * 2), true));
+				GUI::Text(Util::ToUTF8(tagName).c_str());
 
-				if (ImGui::IsWindowHovered()) {
+				if (GUI::IsWindowHovered()) {
 					auto tag = wkp_graphicDevice.lock()->GetApplication().lock()->GetGUIController()->GetGeometryShaderTag();
 					if (!tag.IsEmpty()) {
 						gstag = tag;
@@ -374,27 +375,27 @@ void ButiEngine::ResourceContainer::ShowGUI()
 				}
 
 
-				ImGui::EndChild();
+				GUI::EndChild();
 
 			}
 
-			ImGui::Text("ShaderName");
-			ImGui::InputText("##edit", CallBacks::objectName, IM_ARRAYSIZE(CallBacks::objectName));
-			if (ImGui::Button("OK!!")) {
+			GUI::Text("ShaderName");
+			GUI::InputText("##edit", GUI::objectName, 128);
+			if (GUI::Button("OK!!")) {
 
 				ShaderName sn;
 
-				sn.shaderName = CallBacks::objectName;
+				sn.shaderName = GUI::objectName;
 				sn.geometryShaderName = GetTagNameGeometryShader(gstag);
 				sn.vertexShaderName = GetTagNameVertexShader(vstag);
 				sn.pixelShaderName= GetTagNamePixelShader(pstag);
 
 				LoadShader(sn);
 
-				CallBacks::ObjectNameReset();
-				ImGui::SameLine();
+				GUI::ObjectNameReset();
+				GUI::SameLine();
 			}
-			ImGui::End();
+			GUI::End();
 		}
 
 	}
@@ -605,7 +606,7 @@ std::vector < ButiEngine::ModelTag>  ButiEngine::ResourceContainer::LoadModel(co
 	return out;
 }
 
-ButiEngine::ModelTag ButiEngine::ResourceContainer::LoadModel(std::shared_ptr<Resource_Model> arg_model, const std::string& arg_filePath, const std::string& arg_fileDirectory)
+ButiEngine::ModelTag ButiEngine::ResourceContainer::LoadModel(std::shared_ptr<IResource_Model> arg_model, const std::string& arg_filePath, const std::string& arg_fileDirectory)
 {
 	if (container_models.ContainValue(arg_fileDirectory + arg_filePath)) {
 		return container_models.GetTag(arg_fileDirectory + arg_filePath);
@@ -634,7 +635,7 @@ std::vector<ButiEngine::MotionTag> ButiEngine::ResourceContainer::LoadMotion(con
 	return out;
 }
 
-ButiEngine::MotionTag ButiEngine::ResourceContainer::LoadMotion(std::shared_ptr<Resource_Motion> arg_motion, const std::string& arg_filePath, const std::string& arg_fileDirectory)
+ButiEngine::MotionTag ButiEngine::ResourceContainer::LoadMotion(std::shared_ptr<IResource_Motion> arg_motion, const std::string& arg_filePath, const std::string& arg_fileDirectory)
 {
 	
 	return container_motions.AddValue(arg_motion, arg_fileDirectory + arg_filePath);

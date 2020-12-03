@@ -7,7 +7,7 @@ float ButiEngine::BuildingMover::startZ = 230;
 
 void ButiEngine::BuildingMover::OnUpdate()
 {
-    gameObject.lock()->transform->Translate(velocity);
+    gameObject.lock()->transform->Translate(velocity * GameDevice::WorldSpeed);
     if (gameObject.lock()->transform->GetLocalPosition().z < endZ) {
         gameObject.lock()->transform->SetLocalPosition().z = startZ;
     }
@@ -22,7 +22,7 @@ std::shared_ptr<ButiEngine::GameComponent> ButiEngine::BuildingMover::Clone()
 
 void ButiEngine::BuildingMover::OnShowUI()
 {
-    ImGui::DragFloat3("Velocity", &velocity.x);
-    ImGui::DragFloat("StartZ", &startZ);
-    ImGui::DragFloat("EndZ", &endZ);
+    GUI::DragFloat3("Velocity", &velocity.x);
+    GUI::DragFloat("StartZ", &startZ);
+    GUI::DragFloat("EndZ", &endZ);
 }

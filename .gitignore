@@ -38,7 +38,8 @@
 .vs/
 Temp/
 output/
-ButiButiEngine/Resources/
+ButiEngine_User/Resources/
 
 Libs/Library/cereal/
 Libs/Library/imGUI/
+Libs/Library/lib

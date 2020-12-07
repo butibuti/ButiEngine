@@ -639,41 +639,6 @@ void ButiEngine::MeshHelper::CreatePlane(Vector2 size, Vector3 offset, float til
 }
 
 
-void ButiEngine::MeshHelper::CreateLine(Vector2 pointA, Vector2 pointB, float width, const std::vector<Color>& arg_colors, BackupData<Vertex::Vertex_UV_Normal_Color>& outputMeshData)
-{
-	auto vectorAB = Calculator::Normalize2D(Calculator::Float2Addition(Calculator::Float2Multiplication(pointA, -1), pointB));
-
-	auto range = Calculator::Float2Multiplication(Calculator::Normalize2D(Calculator::Float2Verticalize(vectorAB)), width);
-
-	auto p0 = Calculator::Float2Addition(pointA, Calculator::Float2Multiplication(range, -1));
-	auto p1 = Calculator::Float2Addition(pointA, Calculator::Float2Multiplication(range, 1));
-
-	auto p2 = Calculator::Float2Addition(pointB, Calculator::Float2Multiplication(range, -1));
-	auto p3 = Calculator::Float2Addition(pointB, Calculator::Float2Multiplication(range, 1));
-
-
-	std::vector<Vertex::Vertex_UV_Normal_Color> vertices
-	{
-		Vertex::Vertex_UV_Normal_Color(Vector3(p0.x, p0.y, 0.0f),Vector2(0.0f,0.0f)),
-		Vertex::Vertex_UV_Normal_Color(Vector3(p1.x, p1.y, 0.0f),Vector2(1.0f,0.0f)),
-		Vertex::Vertex_UV_Normal_Color(Vector3(p2.x, p2.y, 0.0f),Vector2(0.0f,1.0f)),
-		Vertex::Vertex_UV_Normal_Color(Vector3(p3.x, p3.y, 0.0f),Vector2(1.0f,1.0f)),
-		//BackSide
-	};
-
-
-	std::vector<UINT>indices{
-		0,1,2,
-		3,2,1,
-		2,1,0,
-		1,2,3
-	};
-
-	VertexFlatConverter(vertices);
-	VertexAttachColor(arg_colors, vertices);
-	outputMeshData.vertices = vertices;
-	outputMeshData.indices = indices;
-}
 
 void ButiEngine::MeshHelper::CreateHexergon(Vector2 size, const std::vector<Color>& arg_colors, bool flat, BackupData<Vertex::Vertex_UV_Normal_Color>& outputMeshData)
 {

@@ -1,6 +1,6 @@
 #pragma once
-#include"stdafx.h"
-#include <D3dx12.h>
+#include <wincodec.h>
+#include"../Common/ButiMath.h"
 namespace ButiEngine {
 
 	struct Resource {
@@ -8,7 +8,7 @@ namespace ButiEngine {
 		virtual void  UpdateResourceRelease() {}
 	};
 	enum class CullMode {
-		none =D3D12_CULL_MODE_NONE, front = D3D12_CULL_MODE_FRONT, back = D3D12_CULL_MODE_BACK
+		none =1, front = 2, back =3
 	}; 
 
 	enum class BlendMode {
@@ -18,7 +18,10 @@ namespace ButiEngine {
 		none = 0, full = 1, x = 2, y = 3, z = 4
 	};
 	enum class TopologyType {
-		triangleList = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, point = D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT,  line = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE, triangle = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, pointList = D3D_PRIMITIVE_TOPOLOGY_POINTLIST,
+		triangleList = 4, point = 1,  line = 2, triangle = 3, pointList = 1,
+	};
+	enum class FillMode {
+		solid= 3,wire= 2
 	};
 
 	struct DrawSettings
@@ -27,23 +30,23 @@ namespace ButiEngine {
 		DrawSettings(CullMode arg_cullMode) :cullMode(arg_cullMode) {}
 		DrawSettings(CullMode arg_cullMode, bool arg_isFill) :cullMode(arg_cullMode) {
 			if (!arg_isFill) {
-				isFill = D3D12_FILL_MODE_WIREFRAME;
+				isFill = FillMode::wire;
 			}
 		}
 		DrawSettings(BlendMode arg_blendMode) :blendMode(arg_blendMode) {}
 		DrawSettings(bool arg_isFill)  {
 			if (!arg_isFill) {
-				isFill = D3D12_FILL_MODE_WIREFRAME;
+				isFill = FillMode::wire;
 			}
 		}
 		DrawSettings(BlendMode arg_blendMode, CullMode arg_cullMode) :cullMode(arg_cullMode), blendMode(arg_blendMode) {}
 		DrawSettings(BlendMode arg_blendMode, CullMode arg_cullMode, bool arg_isFill) :cullMode(arg_cullMode), blendMode(arg_blendMode) {
 			if (!arg_isFill) {
-				isFill = D3D12_FILL_MODE_WIREFRAME;
+				isFill = FillMode::wire;
 			}
 		}
 		CullMode cullMode = CullMode::back;
-		D3D12_FILL_MODE isFill = D3D12_FILL_MODE_SOLID;
+		FillMode isFill = FillMode::solid;
 		BlendMode blendMode = BlendMode::AlphaBlend;
 		BillBoardMode billboardMode = BillBoardMode::none;
 		TopologyType topologyType = TopologyType::triangleList;

@@ -1,9 +1,14 @@
 #pragma once
-#include"stdafx.h"
+
 namespace ButiEngine {
 	class ISceneManager;
 	class Renderer;
 	class Window;
+
+	namespace Collision{
+		class CollisionManager;
+	}
+
 	class IScene:public IObject
 	{
 	public:
@@ -24,6 +29,8 @@ namespace ButiEngine {
 		virtual void SceneEnd()=0;
 		virtual void Release() = 0;
 		virtual std::shared_ptr< SceneInformation> GetSceneInformation() = 0;
+		virtual std::shared_ptr< SceneChangeInformation> GetSceneChangeInformation() = 0;
+		virtual std::shared_ptr< SceneRenderingInformation> GetSceneRenderingInformation() = 0;
 	protected:
 	};
 

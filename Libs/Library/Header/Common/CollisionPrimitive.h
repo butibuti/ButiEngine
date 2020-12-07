@@ -1,5 +1,7 @@
 #pragma once
-#include"stdafx.h"
+#ifndef CollisionPrim_H
+#define CollisionPrim_H
+#include<memory>
 
 #include"../Common/Geometry.h"
 namespace ButiEngine {
@@ -427,3 +429,6 @@ namespace ButiEngine {
 		};
 	}
 }
+
+
+#endif // !CollisionPrim_H

@@ -18,7 +18,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\ApplicationCreater.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Common.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Common\ButiMath.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Header\Common\ButiMathInc.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Common\Camera.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Common\Camera_Dx12.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Common\CArrayBuffer.h" />
@@ -36,8 +35,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\BinaryReader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\Calculator.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\CSV\CSVData.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\CSV\CSVReader.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\CSV\CSVWriter.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\DescriptorHeapManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\Easing.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\FBXNodeStructure.h" />
@@ -55,7 +52,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\PadButtons.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\PipelineStateManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\RandomMaker.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\RelativeTimer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\ResourceFileCreater.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\Timer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\Behavior.h" />
@@ -127,7 +123,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Scene\SceneManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)Header\ApplicationCreater.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Header\Resources\Resource_RealTimeMesh.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Header\Resources\ShaderVariable.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)imGUI\imgui.cpp" />
@@ -145,7 +140,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Common\Util.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Common\Window.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Device\BinaryReader.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Source\Device\Calculator.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Device\CSV\CSVReader.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Device\CSV\CSVWriter.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Device\DescriptorHeapManager.cpp" />
@@ -181,6 +175,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\GameObject.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\GameObjectTagManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameParts\Application.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameParts\ApplicationCreater.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameParts\CollisionLayer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameParts\CollisionManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameParts\GameObjectManager.cpp" />

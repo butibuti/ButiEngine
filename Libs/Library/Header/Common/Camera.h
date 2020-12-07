@@ -1,5 +1,5 @@
 #pragma once
-#include"stdafx.h"
+#include"../Device/ObjectFactory.h"
 namespace ButiEngine {
 
 
@@ -20,6 +20,28 @@ namespace ButiEngine {
 		bool isPararell = false;
 		UINT layer = 0;
 		float clearDepth = 1.0f;
+		TextureTag projectionTexture;
+		std::string cameraName;
+
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(width);
+			archive(height);
+			archive(left);
+			archive(top);
+			archive(front);
+			archive(depth);
+			archive(farClip);
+			archive(nearClip);
+			archive(isPararell);
+			archive(layer);
+			archive(front);
+			archive(clearDepth);
+			archive(projectionTexture);
+			archive(cameraName);
+		}
+
 	};
 
 	class ICamera :public IObject {

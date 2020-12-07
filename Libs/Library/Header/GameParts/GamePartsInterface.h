@@ -1,4 +1,7 @@
-#include"stdafx.h"
+#ifndef GamePartInterface
+#define GamePartInterface
+
+#include"../Device/ObjectFactory.h"
 
 namespace ButiEngine 
 {
@@ -107,21 +110,34 @@ namespace ButiEngine
 			std::string shaderName;
 			std::string vertexShaderName;
 			std::string pixelShaderName;
-			std::string vertexShaderDirectory = "";
-			std::string pixelShaderDirectory = "";
 			std::string geometryShaderName = "none";
-			std::string geometryShaderDirectory = "";
 			template<class Archive>
 			void serialize(Archive& archive)
 			{
 				archive(shaderName);
 				archive(vertexShaderName);
 				archive(pixelShaderName);
-				archive(vertexShaderDirectory);
-				archive(pixelShaderDirectory);
 				archive(geometryShaderName);
-				archive(geometryShaderDirectory);
 			}
+		};
+		struct MaterialLoadInfo {
+			MaterialLoadInfo(std::string arg_fileName) {
+				fileName = arg_fileName;
+			}
+			MaterialLoadInfo(){}
+			std::string materialName;
+			std::string fileName="none";
+			MaterialVariable var;
+			std::vector<TextureTag> vec_texture;
+			template<class Archive>
+			void serialize(Archive& archive)
+			{
+				archive(materialName);
+				archive(fileName);
+				archive(var);
+				archive(vec_texture);
+			}
+
 		};
 
 		virtual void SetGraphicDevice(std::weak_ptr<GraphicDevice> arg_shp_graphicDevice)=0;
@@ -133,33 +149,34 @@ namespace ButiEngine
 		virtual MaterialTag LoadMaterial(const MaterialVariable& arg_resourceMaterial, const TextureTag& arg_textureTag, const std::string& arg_filePath, const std::string& arg_fileDirectory = "")=0;
 		virtual MaterialTag LoadMaterial(const std::string& arg_filePath, const std::string& arg_fileDirectory = "")=0;
 
-		virtual std::vector < MaterialTag> LoadMaterial(const std::vector<std::pair< std::string, std::string>>& arg_vec_filePathAndDirectory)=0;
+		virtual std::vector < MaterialTag> LoadMaterial(const std::vector<std::string>& arg_vec_filePathAndDirectory) = 0;
+		virtual std::vector < MaterialTag> LoadMaterial(const std::vector<MaterialLoadInfo>& arg_vec_loadInfo)=0;
 		virtual MaterialTag LoadMaterial(const std::wstring& arg_filePath, const std::string& arg_fileDirectory = "")=0;
 
 		virtual TextureTag LoadTexture(const std::string& arg_filePath, const std::string& arg_fileDirectory = "")=0;
-		virtual std::vector < TextureTag> LoadTexture(const std::vector<std::pair< std::string, std::string>>& arg_vec_filePathAndDirectory)=0;
+		virtual std::vector < TextureTag> LoadTexture(const std::vector<std::string>& arg_vec_filePathAndDirectory)=0;
 
 		virtual PixelShaderTag LoadPixelShader(const std::string& arg_filePath, const std::string& arg_fileDirectory = "")=0;
-		virtual std::vector < PixelShaderTag> LoadPixelShader(const std::vector<std::pair< std::string, std::string>>& arg_vec_filePathAndDirectory)=0;
+		virtual std::vector < PixelShaderTag> LoadPixelShader(const std::vector<std::string>& arg_vec_filePathAndDirectory)=0;
 
 		virtual VertexShaderTag LoadVertexShader(const std::string& arg_filePath, const std::string& arg_fileDirectory = "")=0;
-		virtual std::vector < VertexShaderTag> LoadVertexShader(const std::vector<std::pair< std::string, std::string>>& arg_vec_filePathAndDirectory)=0;
+		virtual std::vector < VertexShaderTag> LoadVertexShader(const std::vector<std::string>& arg_vec_filePathAndDirectory)=0;
 
 		virtual GeometryShaderTag LoadGeometryShader(const std::string& arg_filePath, const std::string& arg_fileDirectory = "")=0;
-		virtual std::vector < GeometryShaderTag> LoadGeometryShader(const std::vector<std::pair< std::string, std::string>>& arg_vec_filePathAndDirectory)=0;
+		virtual std::vector < GeometryShaderTag> LoadGeometryShader(const std::vector<std::string>& arg_vec_filePathAndDirectory)=0;
 
 		virtual ShaderTag LoadShader(const  ShaderName& arg_shaderNames)=0;
 		virtual std::vector < ShaderTag> LoadShader(const std::vector<ShaderName>& arg_vec_shaderNames)=0;
 
 		virtual SoundTag LoadSound(const std::string& arg_filePath, const std::string& arg_fileDirectory = "")=0;
-		virtual std::vector < SoundTag> LoadSound(const std::vector<std::pair< std::string, std::string>>& arg_vec_filePathAndDirectory)=0;
+		virtual std::vector < SoundTag> LoadSound(const std::vector<std::string>& arg_vec_filePathAndDirectory)=0;
 
 		virtual ModelTag LoadModel(const std::string& arg_filePath, const std::string& arg_fileDirectory = "")=0;
-		virtual std::vector<ModelTag> LoadModel(const std::vector<std::pair< std::string, std::string>>& arg_vec_filePathAndDirectory)=0;
+		virtual std::vector<ModelTag> LoadModel(const std::vector<std::string>& arg_vec_filePathAndDirectory)=0;
 		virtual ModelTag LoadModel(std::shared_ptr<IResource_Model> arg_model, const std::string& arg_filePath, const std::string& arg_fileDirectory = "")=0;
 
 		virtual MotionTag LoadMotion(const std::string& arg_filePath, const std::string& arg_fileDirectory = "")=0;
-		virtual std::vector<MotionTag> LoadMotion(const std::vector<std::pair< std::string, std::string>>& arg_vec_filePathAndDirectory)=0;
+		virtual std::vector<MotionTag> LoadMotion(const std::vector<std::string>& arg_vec_filePathAndDirectory)=0;
 		virtual MotionTag LoadMotion(std::shared_ptr<IResource_Motion> arg_motion, const std::string& arg_filePath, const std::string& arg_fileDirectory = "")=0;
 
 		virtual void UnLoadMesh(MeshTag arg_meshTag)=0;
@@ -221,3 +238,5 @@ namespace ButiEngine
 		virtual void Exit()=0;
 	};
 }
+
+#endif // !GamePartInterface

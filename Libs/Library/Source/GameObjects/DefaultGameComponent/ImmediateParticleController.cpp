@@ -3,7 +3,6 @@
 #include "..\..\..\Header\GameObjects\DefaultGameComponent\ImmediateParticleController.h"
 #include"../../../Header/Resources/Resource_RealTimeMesh.h"
 
-BUTI_REGIST_GAMECOMPONENT(ButiEngine::ImmediateParticleController);
 void ButiEngine::ImmediateParticleController::OnUpdate()
 {
 	auto endItr = vec_particleInfo.end();
@@ -44,7 +43,7 @@ void ButiEngine::ImmediateParticleController::OnUpdate()
 
 void ButiEngine::ImmediateParticleController::OnSet()
 {
-	auto meshTag = gameObject.lock()->GetResourceContainer()->GetMeshTag(meshName);
+	meshTag = gameObject.lock()->GetResourceContainer()->GetMeshTag("Particle");
 	shp_mesh = gameObject.lock()->GetResourceContainer()->GetMesh(meshTag).lock()->GetThis<Resource_RealTimeMesh>();
 	shp_backUp = shp_mesh->GetBackupData_Row()->GetThis<BackupData<Vertex::Vertex_UV_Normal_Color>>();
 }
@@ -69,7 +68,7 @@ void ButiEngine::ImmediateParticleController::AddParticle(const Particle3D& arg_
 std::shared_ptr<ButiEngine::GameComponent> ButiEngine::ImmediateParticleController::Clone()
 {
 	auto ret= ObjectFactory::Create<ImmediateParticleController>();
-	ret->meshName = meshName;
+	ret->meshTag = meshTag;
 	return ret;
 }
 

@@ -1,10 +1,11 @@
 #pragma once
-#include"stdafx.h"
+#include<string>
 #include <stack>
+#include<fstream>
 namespace ButiEngine {
-	typedef long long longLong;
-	typedef unsigned long long ulongLong;
-	typedef unsigned short ushort;
+	using  longLong=long long;
+	using ulongLong= unsigned long long ;
+	using ushort= unsigned short ;
 
 	class BinaryHelper {
 	public:

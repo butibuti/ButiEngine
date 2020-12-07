@@ -30,7 +30,6 @@ void ButiEngine::Renderer::Initialize()
 	CBuffer_fog->SetGraphicDevice(wkp_graphicDevice.lock());
 	CBuffer_fog->CreateBuffer();
 
-	AddLayer();
 }
 void ButiEngine::Renderer::Update()
 {
@@ -108,7 +107,7 @@ void ButiEngine::Renderer::ClearDrawObjects()
 UINT* ButiEngine::Renderer::RegistDrawObject(std::weak_ptr<IDrawObject> arg_wkp_drawObject, const bool arg_afterDraw, const UINT arg_layer)
 {
 
-	if (arg_layer > vec_drawLayers.size()) {
+	if (arg_layer >= vec_drawLayers.size()) {
 		return nullptr;
 	}
 

@@ -1,6 +1,7 @@
 #pragma once
 #include"../GameComponent.h"
 
+#include"../../GameComponentHeader.h"
 #include"Header//Resources/DrawData/IDrawData.h"
 namespace ButiEngine {
 	class ModelAnimation;

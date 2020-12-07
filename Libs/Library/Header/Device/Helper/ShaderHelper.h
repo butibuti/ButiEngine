@@ -1,5 +1,7 @@
 #pragma once
 #include"stdafx.h"
+
+#include <D3dx12.h>
 namespace ButiEngine {
 	class ShaderHelper
 	{	

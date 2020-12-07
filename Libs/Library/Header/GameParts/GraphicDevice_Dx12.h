@@ -1,5 +1,6 @@
 #pragma once
-#include"stdafx.h"
+#include"GraphicDevice.h"
+#include <D3dx12.h>
 namespace ButiEngine {
 	class DescriptorHeapManager;
 	class PipelineStateManager;

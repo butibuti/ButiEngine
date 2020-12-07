@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Header/GameObjects/DefaultGameComponent/SucideComponent.h"
 
-BUTI_REGIST_GAMECOMPONENT(ButiEngine::SucideComponent);
 ButiEngine::SucideComponent::SucideComponent(const float arg_float)
 {
 	count = arg_float;

@@ -1,5 +1,6 @@
 #pragma once
-#include"stdafx.h"
+#include"../Common/ButiMath.h"
+#include<string>
 
 namespace ButiEngine {
 
@@ -8,31 +9,31 @@ namespace ButiEngine {
 
 	namespace GUI
 	{
-		typedef int GuiCol;               
-		typedef int GuiCond;              
-		typedef int GuiDataType;          
-		typedef int GuiDir;               
-		typedef int GuiKey;               
-		typedef int DrawCornerFlags;
-		typedef int DrawListFlags;
-		typedef int FontAtlasFlags;
-		typedef int GuiBackendFlags;
-		typedef int GuiButtonFlags;
-		typedef int GuiColorEditFlags;
-		typedef int GuiConfigFlags;
-		typedef int GuiComboFlags;
-		typedef int GuiDragDropFlags;
-		typedef int GuiFocusedFlags;
-		typedef int GuiHoveredFlags;
-		typedef int GuiInputTextFlags;
-		typedef int GuiKeyModFlags;
-		typedef int GuiPopupFlags;
-		typedef int GuiSelectableFlags;
-		typedef int GuiSliderFlags;
-		typedef int GuiTabBarFlags;
-		typedef int GuiTabItemFlags;
-		typedef int GuiTreeNodeFlags;
-		typedef int GuiWindowFlags;
+		using GuiCol=int;
+		using GuiCond=int;
+		using GuiDataType=int;
+		using GuiDir=int;
+		using GuiKey=int;
+		using DrawCornerFlags=int;
+		using DrawListFlags=int;
+		using FontAtlasFlags=int;
+		using GuiBackendFlags=int;
+		using GuiButtonFlags=int;
+		using GuiColorEditFlags=int;
+		using GuiConfigFlags=int;
+		using GuiComboFlags=int;
+		using GuiDragDropFlags=int;
+		using GuiFocusedFlags=int;
+		using GuiHoveredFlags=int;
+		using GuiInputTextFlags=int;
+		using GuiKeyModFlags=int;
+		using GuiPopupFlags=int;
+		using GuiSelectableFlags=int;
+		using GuiSliderFlags=int;
+		using GuiTabBarFlags=int;
+		using GuiTabItemFlags=int;
+		using GuiTreeNodeFlags=int;
+		using GuiWindowFlags=int;
 
 
 
@@ -448,7 +449,7 @@ namespace ButiEngine {
 			GuiDragDropFlags_AcceptPeekOnly = GuiDragDropFlags_AcceptBeforeDelivery | GuiDragDropFlags_AcceptNoDrawDefaultRect  // For peeking ahead and inspecting the payload before delivery.
 		};
 
-// A prary data type
+
 		enum GuiDataType_
 		{
 			GuiDataType_S8,       // signed char / char (with sensible compilers)
@@ -464,7 +465,7 @@ namespace ButiEngine {
 			GuiDataType_COUNT
 		};
 
-		// A cardinal direction
+
 		enum GuiDir_
 		{
 			GuiDir_None = -1,
@@ -475,7 +476,7 @@ namespace ButiEngine {
 			GuiDir_COUNT
 		};
 
-		// User fill GuiIO.KeyMap[] array with indices into the GuiIO.KeysDown[512] array
+
 		enum GuiKey_
 		{
 			GuiKey_Tab,
@@ -578,11 +579,18 @@ namespace ButiEngine {
 		static char objectName[128];
 		static char newObjectName[128];
 		static char cbufferName[128];
+		static char tagName[128];
 		static void ObjectNameReset() {
 			memset(objectName, 0, sizeof(objectName));
 		}
 		static void NewObjectNameReset() {
 			memset(newObjectName, 0, sizeof(newObjectName));
+		}
+		static void CBufferNameReset() {
+			memset(cbufferName, 0, sizeof(cbufferName));
+		}
+		static void TagNameReset() {
+			memset(tagName, 0, sizeof(tagName));
 		}
 
 
@@ -1005,6 +1013,7 @@ namespace ButiEngine {
 		unsigned int GetColorU32(unsigned int col);
 
 		bool  ColorEdit3(const std::string& label, Vector3& col, GuiColorEditFlags flags = 0);
+		bool  ColorEdit4(const std::string& label, Vector4& col, GuiColorEditFlags flags = 0);
 		bool  ColorPicker3(const std::string& label, Vector3& col, GuiColorEditFlags flags = 0);
 		bool  ColorPicker4(const std::string& label, Vector4& col, GuiColorEditFlags flags = 0, const float* ref_col = nullptr);
 		bool  ColorButton(const std::string& desc_id, const Vector4& col, GuiColorEditFlags flags = 0, Vector2 size = Vector2(0, 0)); // display a color square/button, hover for details, return true when pressed.

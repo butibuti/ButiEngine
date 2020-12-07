@@ -1,9 +1,11 @@
 #pragma once
+
 #include"stdafx.h"
-#include"CollisionLayer.h"
+
+#include"..\..\Header\GameParts\CollisionLayer.h"
 namespace ButiEngine {
 	namespace Collision {
-		class CollisionManager:public IObject
+		class CollisionManager :public IObject
 		{
 		public:
 			CollisionManager(const int arg_initLayerCount);
@@ -11,7 +13,7 @@ namespace ButiEngine {
 			void PreInitialize()override {}
 			void Update();
 			UINT* RegistCollisionObject(const int layerNum, std::shared_ptr< CollisionObject> arg_registObj);
-			void UnRegistCollisionObject(const int layerNum,UINT* registNum);
+			void UnRegistCollisionObject(const int layerNum, UINT* registNum);
 			UINT GetLayerCount();
 		private:
 			std::vector<std::shared_ptr< CollisionLayer>> vec_collisionLayer;

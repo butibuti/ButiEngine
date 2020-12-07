@@ -2,6 +2,7 @@
 #include"Header/Device/Helper/ShaderHelper.h"
 #pragma comment(lib, "d3dcompiler.lib")
 #include <d3dcompiler.h>
+#include <D3dx12.h>
 void ButiEngine::ShaderHelper::Compile(const std::string& filePath, const CompileType& type)
 {
 

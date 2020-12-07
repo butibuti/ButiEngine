@@ -29,8 +29,6 @@ namespace ButiEngine {
 				
 		static void CreatePlane(Vector2 size, Vector3 offset,float tilt,  float UVMax, const UINT arg_verticalSeparate, const UINT arg_horizontalSeparate, const std::vector<Color>& arg_colors, bool flat, BackupData<Vertex::Vertex_UV_Normal_Color>& outputMeshData);
 		
-		static void CreateLine(Vector2 pointA, Vector2 pointB, float width, const std::vector<Color>& arg_colors, BackupData<Vertex::Vertex_UV_Normal_Color>& outputMeshData);
-		
 		static void CreateHexergon(Vector2 size, const std::vector<Color>& arg_colors, bool flat, BackupData<Vertex::Vertex_UV_Normal_Color>& outputMeshData);
 		
 		static void CreateFourSidesPirabid(Vector3 size, const std::vector<Color>& arg_colors, bool flat, BackupData<Vertex::Vertex_UV_Normal_Color>& outputMeshData);

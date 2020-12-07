@@ -1,8 +1,6 @@
 #include"stdafx.h"
 #include "..\..\..\Header\GameObjects\DefaultGameComponent\SplineCurveMover.h"
 
-#include "..\..\Header\Common\CerealUtill.h"
-BUTI_REGIST_GAMECOMPONENT(ButiEngine::SplineCurveMover);
 void ButiEngine::SplineCurveMover::OnUpdate()
 {
 	PositionSet();

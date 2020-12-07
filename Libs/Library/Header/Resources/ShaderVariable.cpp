@@ -37,6 +37,15 @@ bool ButiEngine::ParticleParameter::ShowUI()
 
 			ret = true;
 		}
+		if (GUI::ColorEdit4("StartColor", startColor)) {
+
+			ret = true;
+		}
+		if (GUI::ColorEdit4("EndColor", endColor)) {
+
+			ret = true;
+		}
+
 
 		return ret;
 	}

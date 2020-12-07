@@ -1,5 +1,4 @@
 #pragma once
-#include"stdafx.h"
 #include"MeshDrawComponent.h"
 
 namespace ButiEngine {
@@ -28,4 +27,4 @@ namespace ButiEngine {
 
 }
 
-
+BUTI_REGIST_GAMECOMPONENT(ButiEngine::ModelDrawComponent)

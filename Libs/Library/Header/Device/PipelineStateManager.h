@@ -1,5 +1,6 @@
 #include"stdafx.h"
 
+#include <D3dx12.h>
 namespace ButiEngine
 {
 	class GraphicDevice_Dx12;

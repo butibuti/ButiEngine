@@ -1,5 +1,5 @@
 #pragma once
-#include"stdafx.h"
+#include"../../GameComponentHeader.h"
 #include"../../Resources/DrawData/IDrawData.h"
 #include"Header/Common/CBuffer_Dx12.h"
 #include"Header/Common/CArrayBuffer_Dx12.h"
@@ -90,3 +90,11 @@ namespace ButiEngine {
 		bool isCereal = true;
 	};
 }
+BUTI_REGIST_GAMECOMPONENT(ButiEngine::MeshDrawComponent)
+
+BUTI_REGIST_CBUFFER(ButiEngine::TestGSVariable);
+
+
+BUTI_REGIST_CBUFFER(ButiEngine::LightVariable);
+
+BUTI_REGIST_CBUFFER(ButiEngine::ParticleParameter);

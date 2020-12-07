@@ -1,5 +1,5 @@
 #include"stdafx.h"
-#include"Header/Resources/ModelAnimation.h"
+#include"../Resources/ModelAnimation.h"
 
 namespace ButiEngine {
 	class Resource_Motion:public IResource_Motion {

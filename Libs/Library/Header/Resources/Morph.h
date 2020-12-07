@@ -1,5 +1,6 @@
 #pragma once
-#include"stdafx.h"
+#include"../Common/ButiMath.h"
+#include<string>
 namespace ButiEngine {
 	namespace Morph {
 

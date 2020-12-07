@@ -1,5 +1,5 @@
 #pragma once
-#include"stdafx.h"
+
 namespace ButiEngine {
 	class IScene;
 	class GameObjectManager :public IObject

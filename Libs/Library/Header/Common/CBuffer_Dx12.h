@@ -1,7 +1,7 @@
 #pragma once
-#include"stdafx.h"
+
 #include"../Device/DescriptorHeapManager.h"
-#include"Header/GameParts/GraphicDevice_Dx12.h"
+#include"../GameParts/GraphicDevice_Dx12.h"
 namespace ButiEngine {
 	template <class T>
 	class CBuffer_Dx12 :public CBuffer<T>,public Resource

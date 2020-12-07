@@ -1,5 +1,6 @@
 #pragma once
-#include"Header/BehaviorHeader.h"
+#include"../../BehaviorHeader.h"
+
 namespace ButiEngine {
 	class FPSViewBehavior :public Behavior
 	{
@@ -22,3 +23,5 @@ namespace ButiEngine {
 	};
 
 }
+
+BUTI_REGIST_BEHAVIOR(ButiEngine::FPSViewBehavior);

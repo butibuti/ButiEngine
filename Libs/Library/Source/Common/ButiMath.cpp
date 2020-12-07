@@ -216,3 +216,29 @@ bool ButiEngine::SplineCurve::ShowUI()
 	}
 	return ret;
 }
+
+char ButiEngine::MathHelper::GetByteSize(const int arg_check)
+{
+		if (arg_check <= CharMax) {
+			return 1;
+		}
+		else if (arg_check <= ShortMax) {
+			return 2;
+		}
+		else if (arg_check <= IntMax) {
+			return 4;
+		}
+}
+
+char ButiEngine::MathHelper::GetUnsignedByteSize(const UINT arg_check)
+{
+	if (arg_check <= CharMax * 2) {
+		return 1;
+	}
+	else if (arg_check <= ShortMax * 2) {
+		return 2;
+	}
+	else if (arg_check <= IntMax * 2) {
+		return 4;
+	}
+}

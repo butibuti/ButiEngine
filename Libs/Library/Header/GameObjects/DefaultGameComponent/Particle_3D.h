@@ -27,3 +27,4 @@ namespace ButiEngine {
 	};
 
 }
+BUTI_REGIST_GAMECOMPONENT(ButiEngine::Particle_3D)

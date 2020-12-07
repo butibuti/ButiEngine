@@ -3,6 +3,10 @@
 #include"../Device/Input.h"
 namespace ButiEngine {
 
+	struct BlankSpace {
+		UINT index;
+		UINT size;
+	};
 	class GameDevice
 	{
 	public:

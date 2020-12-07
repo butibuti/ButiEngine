@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "Header/BehaviorHeader.h"
+#pragma once
+#include "../../BehaviorHeader.h"
 
 namespace ButiEngine {
 	class CameraMan :public Behavior {

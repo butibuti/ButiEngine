@@ -2,8 +2,6 @@
 #include "..\..\..\Header\GameObjects\DefaultGameComponent\ChaseComponent.h"
 
 
-BUTI_REGIST_GAMECOMPONENT(ButiEngine::ChaseComponent);
-
 ButiEngine::ChaseComponent::ChaseComponent(std::shared_ptr<Transform> arg_shp_target, const float arg_speed)
 {
 	shp_target = arg_shp_target;
@@ -25,6 +23,48 @@ void ButiEngine::ChaseComponent::OnSet()
 void ButiEngine::ChaseComponent::OnShowUI()
 {
 	GUI::SliderFloat("speed", &speed, 0.0, 1.0, "%.3f");
+
+
+	std::string target = "ChaseTransform:";
+	if (shp_target) {
+		target += "Existence";
+	}
+	else {
+		target += "nullptr";
+	}
+
+
+	GUI::BeginChild("##BaseTransform", Vector2((GUI::GetFontSize()) * (target.size() + 2), GUI::GetFontSize() * 2), true);
+	GUI::BulletText((target).c_str());
+	if (shp_target) {
+		GUI::SameLine();
+		if (GUI::Button("Detach")) {
+			shp_target = nullptr;
+		}
+	}
+	GUI::SameLine();
+	if (GUI::Button("Attach New")) {
+		if (!shp_target)
+			shp_target=ObjectFactory::Create<Transform>();
+		else {
+			shp_target = shp_target->GetBaseTransform()->Clone();
+		}
+	}
+
+	if (GUI::IsWindowHovered())
+	{
+		auto obj =gameObject.lock()-> GetApplication().lock()->GetGUIController()->GetDraggingObject();
+
+
+		if (obj && obj->IsThis<GameObject>()) {
+
+			auto trans = obj->GetThis<GameObject>()->transform;
+			shp_target = trans;
+		}
+
+	}
+	GUI::EndChild();
+
 }
 
 std::shared_ptr<ButiEngine::GameComponent> ButiEngine::ChaseComponent::Clone()

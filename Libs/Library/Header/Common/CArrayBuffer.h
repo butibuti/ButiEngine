@@ -1,5 +1,4 @@
 #pragma once
-#include"stdafx.h"
 #include"CBuffer.h"
 namespace ButiEngine {
 	template <class T>

@@ -1,5 +1,6 @@
 #pragma once
-#include"stdafx.h"
+#include<string>
+#include<memory>
 
 namespace ButiEngine {
 	struct CSVData :public std::enable_shared_from_this<CSVData>
@@ -37,5 +38,22 @@ namespace ButiEngine {
 		int** data;
 		int size_x;
 		int size_y;
+	};
+
+	class CSVReader
+	{
+	public:
+		~CSVReader();
+		static std::shared_ptr<CSVData> GetMatrix(const std::string& filePath);
+	private:
+		CSVReader();
+	};
+	class CSVWriter
+	{
+	public:
+		~CSVWriter();
+		static void Write(CSVData arg_csvData, const std::string& filePath);
+	private:
+		CSVWriter();
 	};
 }

@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "Header/GameObjects/DefaultGameComponent/LookAtComponent.h"
-#include "..\..\..\Header\GameObjects\DefaultGameComponent\LookAtComponent.h"
 
-BUTI_REGIST_GAMECOMPONENT(ButiEngine::LookAtComponent);
 ButiEngine::LookAtComponent::LookAtComponent(std::shared_ptr<Transform> arg_shp_lookTarget)
 {
 	shp_lookTarget = arg_shp_lookTarget;

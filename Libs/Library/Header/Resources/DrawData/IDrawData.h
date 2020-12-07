@@ -2,7 +2,7 @@
 #include"stdafx.h"
 #include"../Vertex.h"
 #include"IDrawObject.h"
-#include"Header/Common/CArrayBuffer.h"
+#include"../../Common/CArrayBuffer.h"
 namespace ButiEngine {
 	
 	struct DrawInformation :public IObject {

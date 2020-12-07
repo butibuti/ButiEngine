@@ -1,6 +1,6 @@
 #pragma once
 #include"stdafx.h"
-#include"Header/Common/CollisionPrimitive.h"
+#include"../Common/CollisionPrimitive.h"
 namespace ButiEngine {
 
 	namespace Collision {

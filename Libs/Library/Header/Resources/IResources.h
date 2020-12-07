@@ -1,4 +1,4 @@
-#include"stdafx.h"
+#include"../Common/ID.h"
 
 namespace ButiEngine {
 	class IResource_Mesh;

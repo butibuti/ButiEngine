@@ -44,9 +44,16 @@ void ButiEngine::Transform::ShowUI()
 		localMatrix = nullptr;
 	}
 	GUI::BulletText("Rotation");
-	Vector3 euler;
-	if (GUI::InputFloat3("##R", &euler.x, "%.3f")) {
-		//RollWorldRotation(euler);
+	static Vector3 euler;
+	(GUI::DragFloat3("##R", euler, 0.01, -360, 360, "%.3f"));
+	if (GUI::Button("Roll")) {
+
+		RollWorldRotation(euler);
+	}
+	GUI::SameLine();
+	if (GUI::Button("SetRotation")) {
+		RollIdentity();
+		RollWorldRotation(euler);
 	}
 
 	GUI::PushButtonRepeat(true);

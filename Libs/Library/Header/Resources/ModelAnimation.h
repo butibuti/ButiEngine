@@ -1,5 +1,5 @@
 #pragma once
-#include"stdafx.h"
+#include<map>
 #include"Bone.h"
 namespace ButiEngine {
 	class IBoneDrawObject;

@@ -1,5 +1,6 @@
 #pragma once
-#include"stdafx.h"
+#include<memory>
+#include<vector>
 namespace ButiEngine {
 	class GameObject;
 	using GameObjectTag = ID<GameObject>;
@@ -11,9 +12,6 @@ namespace ButiEngine {
 	class GraphicDevice;
 	class GameObject:public IObject
 	{
-		enum CollisionTiming {
-			enter,keep,leave
-		};
 		friend class Behavior;
 		friend class GameComponent;
 	public:
@@ -30,10 +28,7 @@ namespace ButiEngine {
 
 		void SetActive(bool arg_isActive);
 
-		void SetGameObjectManager(std::weak_ptr<GameObjectManager> arg_wkp_gameObjectManager) {
-			wkp_gameObjManager = arg_wkp_gameObjectManager;
-		}
-
+		void SetGameObjectManager(std::weak_ptr<GameObjectManager> arg_wkp_gameObjectManager);
 		bool GetActive();
 
 		void SetIsRemove(bool arg_isRemove);

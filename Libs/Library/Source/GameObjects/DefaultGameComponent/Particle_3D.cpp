@@ -1,9 +1,6 @@
 #include"stdafx.h"
-#include "..\..\..\Header\GameObjects\DefaultGameComponent\Particle_3D.h"
-#include "Header/GameObjects/DefaultGameComponent/MeshDrawComponent.h"
-
-#include "..\..\Header\Common\CerealUtill.h"
-BUTI_REGIST_GAMECOMPONENT(ButiEngine::Particle_3D)
+#include "Header/GameObjects/DefaultGameComponent/Particle_3D.h"
+#include"Header/Resources/DrawData/IDrawData.h"
 void ButiEngine::Particle_3D::OnSet()
 {
 	if (IsCereal()) {

@@ -1,6 +1,7 @@
-#include "stdafx.h"
+#include <cmath>
 namespace ButiEngine {
 
+    #define PI 3.141592653589793
 
     namespace Easing {
         enum class EasingType {
@@ -40,14 +41,14 @@ namespace ButiEngine {
             return x * x * (3 - 2 * x);
         }
         static float EaseInSin(const float x) {
-            return 1 - std::cos((x * DirectX::XM_PI) / 2);
+            return 1 - std::cos((x * PI) / 2);
         }
 
         static float EaseOutSin(const float x) {
-            return std::sin((x * DirectX::XM_PI) / 2);
+            return std::sin((x * PI) / 2);
         }
         static float EaseInOutSin(const float x) {
-            return -(std::cos(DirectX::XM_PI * x) - 1) / 2;
+            return -(std::cos(PI * x) - 1) / 2;
         }
         static float EaseInQuad(const float x) {
             return x * x;
@@ -126,7 +127,7 @@ namespace ButiEngine {
                 ? 1
                 : std::pow(2, -10 * x) * std::sin((x * 10 - 0.75) * c4) + 1;
         }
-        const float c5 = (2 * DirectX::XM_PI) / 4.5;;
+        const float c5 = (2 * PI) / 4.5;;
         static float EaseInOutElastic(const float x) {
 
             return x == 0

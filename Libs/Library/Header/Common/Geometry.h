@@ -1,5 +1,6 @@
 #pragma once
-#include"stdafx.h"
+//#include"stdafx.h"
+#include"ButiMath.h"
 namespace ButiEngine {
     namespace Geometry
     {
@@ -82,7 +83,7 @@ namespace ButiEngine {
                 if (d1 <= 0.0f && d2<= 0.0f)
                 {
                     closest = arg_vertices[0];
-                    return Calculator::Distance(closest, arg_point);
+                    return  closest.Distance(arg_point);
                 }
 
                 Vector3 p1_pt = arg_point - arg_vertices[1];
@@ -93,7 +94,7 @@ namespace ButiEngine {
                 if (d3>= 0.0f && d4 <= d3)
                 {
                     closest = arg_vertices[1];
-                    return Calculator::Distance(closest, arg_point);
+                    return closest.Distance(arg_point);
                 }
 
 
@@ -102,7 +103,7 @@ namespace ButiEngine {
                 {
                     float v = d1 / (d1 - d3);
                     closest = arg_vertices[0]+ v * p0_p1;
-                    return Calculator::Distance(closest, arg_point);
+                    return closest.Distance( arg_point);
                 }
 
 
@@ -113,7 +114,7 @@ namespace ButiEngine {
                 if (d6 >= 0.0f && d5 <= d6)
                 {
                     closest = arg_vertices[2];
-                    return Calculator::Distance(closest, arg_point);
+                    return  closest.Distance(arg_point);
                 }
 
 
@@ -122,7 +123,7 @@ namespace ButiEngine {
                 {
                     float w = d2 / (d2 - d6);
                     closest = arg_vertices[0]+ w * p0_p2;
-                    return Calculator::Distance(closest, arg_point);
+                    return  closest.Distance(arg_point);
                 }
 
 
@@ -131,7 +132,7 @@ namespace ButiEngine {
                 {
                     float w = (d4 - d3) / ((d4 - d3) + (d5 - d6));
                     closest = arg_vertices[1] + w * (arg_vertices[2] - arg_vertices[1]);
-                    return Calculator::Distance(closest, arg_point);
+                    return  closest.Distance(arg_point);
                 }
 
                 float denom = 1.0f / (va + vb + vc);
@@ -139,7 +140,7 @@ namespace ButiEngine {
                 float w = vc * denom;
                 closest = arg_vertices[0] + p0_p1 * v + p0_p2 * w;
 
-                return Calculator::Distance(closest, arg_point);
+                return  closest.Distance(arg_point);
             }
 
             static inline float IsHitSpherePolygon(const Sphere& arg_sphere, const std::vector<Vector3>& arg_vertices) {

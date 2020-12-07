@@ -1,8 +1,7 @@
 #include"stdafx.h"
 #include "..\..\..\Header\GameObjects\DefaultGameComponent\Particle_Standard.h"
 
-#include "..\..\Header\Common\CerealUtill.h"
-BUTI_REGIST_GAMECOMPONENT(ButiEngine::Particle_Standard)
+#include"Header/Resources/DrawData/IDrawData.h"
 void ButiEngine::Particle_Standard::OnSet()
 {
 	if (!shp_drawComponent) {

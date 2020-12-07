@@ -160,7 +160,7 @@ void ButiEngine::DrawData_Dx12::CreatePipeLineState(const UINT arg_exCBuffer)
 	rasterizerStateDesc = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
 
 	rasterizerStateDesc.CullMode = (D3D12_CULL_MODE)shp_drawInfo->drawSettings.cullMode;
-	rasterizerStateDesc.FillMode =shp_drawInfo->drawSettings.isFill;
+	rasterizerStateDesc.FillMode =(D3D12_FILL_MODE)shp_drawInfo->drawSettings.isFill;
 	//rasterizerStateDesc.MultisampleEnable = true;
 	auto pipeLineTopology = shp_drawInfo->drawSettings.topologyType;
 	if (pipeLineTopology == TopologyType::triangleList) {

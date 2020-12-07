@@ -1,6 +1,5 @@
 #include"stdafx.h"
 #include "..\..\Header\GameObjects\GameObject.h"
-
 #include "..\..\Header\Common\CerealUtill.h"
 
 ButiEngine::GameObject::GameObject()
@@ -41,6 +40,14 @@ void ButiEngine::GameObject::SetActive(bool arg_isActive)
 	for (auto itr = vec_childGameObjects.begin(); itr != vec_childGameObjects.end(); itr++) {
 		itr->lock()->SetActive(arg_isActive);
 	}
+}
+
+void ButiEngine::GameObject::SetGameObjectManager(std::weak_ptr<GameObjectManager> arg_wkp_gameObjectManager)
+{
+	
+	wkp_gameObjManager = arg_wkp_gameObjectManager;
+	
+	gameObjectTag = GetApplication().lock()->GetGameObjectTagManager()->GetObjectTag(tagName);
 }
 
 bool ButiEngine::GameObject::GetActive()
@@ -179,15 +186,23 @@ void ButiEngine::GameObject::RemoveGameComponent(const std::string& arg_key)
 
 void ButiEngine::GameObject::ShowUI()
 {
-
-
+	if (GUI::TreeNode("Tag")) {
+		GUI::InputTextWithHint("##tagname", tagName, GUI::tagName, sizeof(GUI::tagName));
+		if (GUI::Button("Set Tag!!")) {
+			tagName = GUI::tagName;
+			GUI::TagNameReset();
+			gameObjectTag = GetApplication().lock()->GetGameObjectTagManager()->GetObjectTag(tagName);
+		}
+		GUI::TreePop();
+	}
+	
 
 
 
 	if (GUI::TreeNode("Transform")) {
 		transform->ShowUI();
 
-		std::string target = "Looking:";
+		std::string target = "BaseTransform:";
 		if (transform->GetBaseTransform()) {
 			target += "Existence";
 		}

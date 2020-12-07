@@ -1,5 +1,5 @@
 #pragma once
-#include"stdafx.h"
+#include<memory>
 namespace ButiEngine {
 	namespace Collision {
 		class CollisionManager;

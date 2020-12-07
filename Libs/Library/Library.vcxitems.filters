@@ -81,9 +81,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Common\ButiMath.h">
       <Filter>header\Common</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)Header\Common\ButiMathInc.h">
-      <Filter>header\Common</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Common\Camera.h">
       <Filter>header\Common</Filter>
     </ClInclude>
@@ -141,9 +138,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\Vertex.h">
       <Filter>header\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\MeshDrawComponent.h">
-      <Filter>header\GameObjects\DefaultGameComponent</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultBehavior\SampleBehavior.h">
       <Filter>header\GameObjects\DefaultBehavior</Filter>
     </ClInclude>
@@ -171,16 +165,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\RandomMaker.h">
       <Filter>header\Device</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\RelativeTimer.h">
-      <Filter>header\Device</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\CSV\CSVData.h">
-      <Filter>header\Device\CSV</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\CSV\CSVReader.h">
-      <Filter>header\Device\CSV</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\CSV\CSVWriter.h">
       <Filter>header\Device\CSV</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\Helper\MeshHelper.h">
@@ -291,9 +276,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameParts\ResourceFactory_Dx12.h">
       <Filter>header\GameParts</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\ModelDrawComponent.h">
-      <Filter>header\GameObjects\DefaultGameComponent</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\FBXNodeStructure.h">
       <Filter>header\Device</Filter>
     </ClInclude>
@@ -321,17 +303,11 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Common\Geometry.h">
       <Filter>header\Common</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\ColliderComponent.h">
-      <Filter>header\GameObjects\DefaultGameComponent</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameParts\CollisionLayer.h">
       <Filter>header\GameParts</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameParts\CollisionManager.h">
       <Filter>header\GameParts</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\SimpleBoneAnimanotorComponent.h">
-      <Filter>header\GameObjects\DefaultGameComponent</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\Resource_Motion.h">
       <Filter>header\Resources</Filter>
@@ -363,32 +339,11 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultBehavior\FPSViewBehavior.h">
       <Filter>header\GameObjects\DefaultBehavior</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\ChaseComponent.h">
-      <Filter>header\GameObjects\DefaultGameComponent</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\LookAtComponent.h">
-      <Filter>header\GameObjects\DefaultGameComponent</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\SucideComponent.h">
-      <Filter>header\GameObjects\DefaultGameComponent</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\CameraMan.h">
       <Filter>header\GameObjects\DefaultBehavior</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Scene\ComponentsLoader.h">
       <Filter>header\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\Particle_3D.h">
-      <Filter>header\GameObjects\DefaultGameComponent</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\Particle_Standard.h">
-      <Filter>header\GameObjects\DefaultGameComponent</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\SplineCurveMover.h">
-      <Filter>header\GameObjects\DefaultGameComponent</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\TransformAnimation.h">
-      <Filter>header\GameObjects\DefaultGameComponent</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\Resource_RealTimeMesh.h">
       <Filter>header\Resources</Filter>
@@ -396,16 +351,51 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\Resource_RealTimeMesh_Dx12.h">
       <Filter>header\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\ImmediateParticleController.h">
-      <Filter>header\GameObjects\DefaultGameComponent</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\GUI.h">
       <Filter>header\Device</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Common\CerealUtill.h">
       <Filter>header\Common</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)Header\ApplicationCreater.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\ApplicationCreater.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\ChaseComponent.h">
+      <Filter>header\GameObjects\DefaultGameComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\ColliderComponent.h">
+      <Filter>header\GameObjects\DefaultGameComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\ImmediateParticleController.h">
+      <Filter>header\GameObjects\DefaultGameComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\LookAtComponent.h">
+      <Filter>header\GameObjects\DefaultGameComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\MeshDrawComponent.h">
+      <Filter>header\GameObjects\DefaultGameComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\ModelDrawComponent.h">
+      <Filter>header\GameObjects\DefaultGameComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\Particle_3D.h">
+      <Filter>header\GameObjects\DefaultGameComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\Particle_Standard.h">
+      <Filter>header\GameObjects\DefaultGameComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\SimpleBoneAnimanotorComponent.h">
+      <Filter>header\GameObjects\DefaultGameComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\SplineCurveMover.h">
+      <Filter>header\GameObjects\DefaultGameComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\SucideComponent.h">
+      <Filter>header\GameObjects\DefaultGameComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\TransformAnimation.h">
+      <Filter>header\GameObjects\DefaultGameComponent</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Common\Camera.cpp">
@@ -503,9 +493,6 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Resources\WaveDatas.cpp">
       <Filter>source\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)Source\Device\Calculator.cpp">
-      <Filter>source\Device</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameParts\SoundManager.cpp">
       <Filter>source\GameParts</Filter>
@@ -680,6 +667,8 @@
       <Filter>source\Device</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)Header\Resources\ShaderVariable.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Header\ApplicationCreater.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameParts\ApplicationCreater.cpp">
+      <Filter>source\GameParts</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

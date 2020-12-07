@@ -1,12 +1,15 @@
-#include "stdafx.h"
 
+#ifndef GUIController_H
+#define GUIController_H
 namespace ButiEngine {
 
 
 
-    class Window;
+    class IWindow;
     class GraphicDevice_Dx12;
+
     class ImguiController {
+		class ImguiControllerInstance;
     public:
         ImguiController(std::unique_ptr<IWindow>& unq_window, std::shared_ptr<GraphicDevice_Dx12>shp_graphicDevice);
         void Start();
@@ -23,48 +26,36 @@ namespace ButiEngine {
 		void SetResourceTag(VertexShaderTag arg_tag);
 		void SetResourceTag(PixelShaderTag arg_tag);
 		void SetResourceTag(GeometryShaderTag arg_tag);
+		void SetResourceTag(TextureTag arg_tag);
 
 
 		
 		
-		std::shared_ptr<IObject> GetDraggingObject() {
-			return shp_draggingObject;
-		}
+		std::shared_ptr<IObject> GetDraggingObject();
 
-		MeshTag GetMeshTag() {
-			return currentMeshTag;
-		}
-		SoundTag GetSoundTag() {
-			return currentSoundTag;
-		}
-		MotionTag GetMotionTag() {
-			return currentMotionTag;
-		}
-		MaterialTag GetMaterialTag() {
-			return currentMaterialTag;
-		}
-		ModelTag GetModelTag() {
-			return currentModelTag;
-		}
-		ShaderTag GetShaderTag() {
-			return currentShaderTag;
-		}
-		VertexShaderTag GetVertexShaderTag() {
-			return currentVertexShaderTag;
-		}
-		PixelShaderTag GetPixelShaderTag() {
-			return currentPixelShaderTag;
-		}
-		GeometryShaderTag GetGeometryShaderTag() {
-			return currentGeometryShaderTag;
-		}
+		MeshTag GetMeshTag();
+		SoundTag GetSoundTag();
+		MotionTag GetMotionTag();
+		MaterialTag GetMaterialTag();
+		ModelTag GetModelTag();
+		ShaderTag GetShaderTag();
+		VertexShaderTag GetVertexShaderTag();
+		PixelShaderTag GetPixelShaderTag();
+		GeometryShaderTag GetGeometryShaderTag();
+		TextureTag GetTextureTag();
 
-		GUI::GuiIO& GetGUIIO() {
-			return io;
-		}
+		GUI::GuiIO& GetGUIIO();
 
     private:
-        std::weak_ptr<GraphicDevice_Dx12>wkp_graphicDevice;
+
+
+		std::unique_ptr<ImguiControllerInstance> unq_instance;
+		
+    };
+
+	class ImguiController::ImguiControllerInstance {
+	public:
+		std::weak_ptr<GraphicDevice_Dx12>wkp_graphicDevice;
 		GUI::GuiIO io;
 		GUI::GuiIO befIo;
 		std::shared_ptr<IObject> shp_draggingObject;
@@ -77,7 +68,9 @@ namespace ButiEngine {
 		VertexShaderTag currentVertexShaderTag;
 		PixelShaderTag currentPixelShaderTag;
 		GeometryShaderTag currentGeometryShaderTag;
+		TextureTag currentTextureTag;
 		bool isWindowOpen;
-		
-    };
+	};
 }
+
+#endif // !GUIController_H

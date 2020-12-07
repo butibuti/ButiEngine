@@ -1,5 +1,5 @@
 
-#include"Header/GameObjects/GameComponent.h"
+#include"Header/GameComponentHeader.h"
 namespace ButiEngine {
 
 
@@ -32,3 +32,4 @@ namespace ButiEngine {
 	};
 
 }
+BUTI_REGIST_GAMECOMPONENT(ButiEngine::SplineCurveMover)

@@ -550,11 +550,11 @@ void ButiEngine::ModelFileConverter::FBXtoB3M(const std::string& arg_fbxFileName
 		vertexCount += geometryMeshNodes.at(i)->GetPolygonVertexIndexNode()->GetPolygonIndex().size();
 	}
 
-	char vertexIndexByteSize = Calculator::GetByteSize(vertexCount);
+	char vertexIndexByteSize = MathHelper::GetByteSize(vertexCount);
 	b3mWriter.WriteVariable<char>(vertexIndexByteSize);
-	char materialIndexByteSize = Calculator::GetByteSize(materialCount);
+	char materialIndexByteSize = MathHelper::GetByteSize(materialCount);
 	b3mWriter.WriteVariable<char>(materialIndexByteSize);
-	char boneIndexByteSize = Calculator::GetByteSize(boneNodes.size());
+	char boneIndexByteSize = MathHelper::GetByteSize(boneNodes.size());
 	b3mWriter.WriteVariable<char>(boneIndexByteSize);
 	char morphIndexByteSize = 1;
 	b3mWriter.WriteVariable<char>(morphIndexByteSize);

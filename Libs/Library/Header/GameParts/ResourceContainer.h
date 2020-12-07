@@ -24,34 +24,34 @@ namespace ButiEngine {
 
 		MaterialTag LoadMaterial(const MaterialVariable& arg_resourceMaterial, const TextureTag& arg_textureTag, const std::string& arg_filePath, const std::string& arg_fileDirectory = "")override;
 		MaterialTag LoadMaterial(const std::string& arg_filePath, const std::string& arg_fileDirectory = "")override;
-
-		std::vector < MaterialTag> LoadMaterial(const std::vector<std::pair< std::string, std::string>>& arg_vec_filePathAndDirectory)override;
+		std::vector < MaterialTag> LoadMaterial(const std::vector<MaterialLoadInfo>& arg_vec_loadInfo)override;
+		std::vector < MaterialTag> LoadMaterial(const std::vector<std::string>& arg_vec_filePathAndDirectory)override;
 		MaterialTag LoadMaterial(const std::wstring& arg_filePath, const std::string& arg_fileDirectory = "")override;
 
 		TextureTag LoadTexture(const std::string& arg_filePath, const std::string& arg_fileDirectory = "")override;
-		std::vector < TextureTag> LoadTexture(const std::vector<std::pair< std::string, std::string>>& arg_vec_filePathAndDirectory)override;
+		std::vector < TextureTag> LoadTexture(const std::vector<std::string>& arg_vec_filePathAndDirectory)override;
 
 		PixelShaderTag LoadPixelShader(const std::string& arg_filePath, const std::string& arg_fileDirectory = "")override;
-		std::vector < PixelShaderTag> LoadPixelShader(const std::vector<std::pair< std::string, std::string>>& arg_vec_filePathAndDirectory)override;
+		std::vector < PixelShaderTag> LoadPixelShader(const std::vector<std::string>& arg_vec_filePathAndDirectory)override;
 
 		VertexShaderTag LoadVertexShader(const std::string& arg_filePath, const std::string& arg_fileDirectory = "")override;
-		std::vector < VertexShaderTag> LoadVertexShader(const std::vector<std::pair< std::string, std::string>>& arg_vec_filePathAndDirectory)override;
+		std::vector < VertexShaderTag> LoadVertexShader(const std::vector<std::string>& arg_vec_filePathAndDirectory)override;
 
 		GeometryShaderTag LoadGeometryShader(const std::string& arg_filePath, const std::string& arg_fileDirectory = "")override;
-		std::vector < GeometryShaderTag> LoadGeometryShader(const std::vector<std::pair< std::string, std::string>>& arg_vec_filePathAndDirectory)override;
+		std::vector < GeometryShaderTag> LoadGeometryShader(const std::vector<std::string>& arg_vec_filePathAndDirectory)override;
 
 		ShaderTag LoadShader(const  ShaderName& arg_shaderNames)override;
 		std::vector < ShaderTag> LoadShader(const std::vector<ShaderName>& arg_vec_shaderNames)override;
 
 		SoundTag LoadSound(const std::string& arg_filePath, const std::string& arg_fileDirectory = "")override;
-		std::vector < SoundTag> LoadSound(const std::vector<std::pair< std::string, std::string>>& arg_vec_filePathAndDirectory)override;
+		std::vector < SoundTag> LoadSound(const std::vector<std::string>& arg_vec_filePathAndDirectory)override;
 
 		ModelTag LoadModel(const std::string& arg_filePath, const std::string& arg_fileDirectory = "")override;
-		std::vector<ModelTag> LoadModel(const std::vector<std::pair< std::string, std::string>>& arg_vec_filePathAndDirectory)override;
+		std::vector<ModelTag> LoadModel(const std::vector<std::string>& arg_vec_filePathAndDirectory)override;
 		ModelTag LoadModel(std::shared_ptr<IResource_Model> arg_model, const std::string& arg_filePath, const std::string& arg_fileDirectory = "")override;
 
 		MotionTag LoadMotion(const std::string& arg_filePath, const std::string& arg_fileDirectory = "")override;
-		std::vector<MotionTag> LoadMotion(const std::vector<std::pair< std::string, std::string>>& arg_vec_filePathAndDirectory)override;
+		std::vector<MotionTag> LoadMotion(const std::vector<std::string>& arg_vec_filePathAndDirectory)override;
 		MotionTag LoadMotion(std::shared_ptr<IResource_Motion> arg_motion, const std::string& arg_filePath, const std::string& arg_fileDirectory = "")override;
 
 		void UnLoadMesh(MeshTag arg_meshTag)override;
@@ -131,7 +131,6 @@ namespace ButiEngine {
 			archive(container_sounds);
 			archive(container_models);
 
-			archive(vec_filePathAndDirectory_mat);
 			archive(vec_filePathAndDirectory_tex);
 			archive(vec_filePathAndDirectory_ps);
 			archive(vec_filePathAndDirectory_vs);
@@ -140,12 +139,12 @@ namespace ButiEngine {
 			archive(vec_filePathAndDirectory_model);
 			archive(vec_filePathAndDirectory_motion);
 			archive(vec_shaderNames);
+			archive(vec_materialLoadInfos);
 		}
 
 	private:
 
 		//backupdata
-		std::vector<std::string> vec_filePathAndDirectory_mat;
 		std::vector<std::string> vec_filePathAndDirectory_tex;
 		std::vector<std::string> vec_filePathAndDirectory_ps;
 		std::vector<std::string> vec_filePathAndDirectory_vs;
@@ -154,6 +153,7 @@ namespace ButiEngine {
 		std::vector<std::string> vec_filePathAndDirectory_model;
 		std::vector<std::string> vec_filePathAndDirectory_motion;
 		std::vector<ShaderName> vec_shaderNames;
+		std::vector<MaterialLoadInfo> vec_materialLoadInfos;
 
 
 		std::weak_ptr<GraphicDevice> wkp_graphicDevice;

@@ -3,22 +3,6 @@
 #include"Header/Resources/DrawData/DrawData_Dx12.h"
 #include "..\..\..\Header\GameObjects\DefaultGameComponent\MeshDrawComponent.h"
 
-#include "..\..\Header\Common\CerealUtill.h"
-
-CEREAL_REGISTER_TYPE(ButiEngine::MeshDrawComponent);
-
-CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::GameComponent, ButiEngine::MeshDrawComponent)
-
-
-BUTI_REGIST_CBUFFER(ButiEngine::TestGSVariable);
-
-
-BUTI_REGIST_CBUFFER(ButiEngine::LightVariable);
-
-BUTI_REGIST_CBUFFER(ButiEngine::ParticleParameter);
-
-
-BUTI_REGIST_CARRAYBUFFER(ButiEngine::Matrix4x4);
 ButiEngine::MeshDrawComponent::MeshDrawComponent(const MeshTag& arg_meshTag, const ShaderTag& arg_shaderTag, const MaterialTag& arg_materialTag, std::shared_ptr<DrawInformation> arg_shp_drawInfo, const UINT arg_layer, std::shared_ptr<Transform> arg_shp_transform)
 {
 	layer = arg_layer;
@@ -396,6 +380,8 @@ void ButiEngine::MeshDrawComponent::CreateData()
 
 	}
 	else {
+		if(!materialTag.size())
+		materialTag .push_back( MaterialTag());
 		data = ObjectFactory::Create<MeshDrawData_Dx12>(meshTag, shaderTag, materialTag, renderer, gameObject.lock()->GetGraphicDevice()->GetThis<GraphicDevice_Dx12>(), shp_drawInfo, shp_transform);
 
 

@@ -1,8 +1,8 @@
+#pragma once
 #include"stdafx.h"
 #include "..\..\..\Header\GameObjects\DefaultGameComponent\TransformAnimation.h"
 
-#include "..\..\Header\Common\CerealUtill.h"
-BUTI_REGIST_GAMECOMPONENT(ButiEngine::TransformAnimation);
+
 void ButiEngine::TransformAnimation::OnUpdate()
 {
 
@@ -184,7 +184,7 @@ void ButiEngine::TransformAnimation::PositionSet()
     gameObject.lock()->transform->SetLocalScale(shp_initTransform->GetLocalScale()+(shp_targetTransform->GetLocalScale()-shp_initTransform->GetLocalScale())*time);
 
     
-    gameObject.lock()->transform->SetLocalRotation(Calculator::SphereLerp(shp_initTransform->GetLocalRotation().ToQuat(), shp_targetTransform->GetLocalRotation().ToQuat(),time).ToMatrix());
+    gameObject.lock()->transform->SetLocalRotation(MathHelper::LearpQuat(shp_initTransform->GetLocalRotation().ToQuat(), shp_targetTransform->GetLocalRotation().ToQuat(),time).ToMatrix());
 }
 
 void ButiEngine::TransformAnimation::OnSet()

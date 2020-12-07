@@ -1,5 +1,7 @@
 #pragma once
-#include "stdafx.h"
+#include<memory>
+#include<map>
+#include<vector>
 namespace ButiEngine {
 
 	template <class T>
@@ -50,7 +52,12 @@ namespace ButiEngine {
 			}
 			if ((*arg_tag.GetID()) < vec_p_resource.size())
 				return vec_p_resource.at((*arg_tag.GetID()));
-			else {
+			else if (vec_p_resource.size()) 
+			{
+				return vec_p_resource.at(0);
+			}
+			else
+			{
 				return nullptr;
 			}
 		}

@@ -33,6 +33,7 @@ void ButiEngine::ResourceContainer::PreInitialize()
 void ButiEngine::ResourceContainer::ShowGUI()
 {
 	static bool isShowShader = false;
+	static bool isShowAddMaterial = false;
 
 	GUI::Begin("ResourceContainer");
 
@@ -105,8 +106,8 @@ void ButiEngine::ResourceContainer::ShowGUI()
 		}
 		if (GUI::BeginTabItem("MaterialTags", nullptr, GUI::GuiTabItemFlags_None)) {
 
-			if (GUI::Button("Add")) {
-
+			if (GUI::Button("Add Material")) {
+				isShowAddMaterial = !isShowAddMaterial;
 			}
 
 			GUI::SameLine();
@@ -159,6 +160,52 @@ void ButiEngine::ResourceContainer::ShowGUI()
 			{
 				app->GetGUIController()->SetResourceTag(
 					container_shaders.ShowGUI(app->GetGUIController()->GetGUIIO())
+				);
+
+			}
+			GUI::EndChild();
+
+			GUI::EndTabItem();
+		}
+		if (GUI::BeginTabItem("TextureTags", nullptr, GUI::GuiTabItemFlags_None)) {
+			GUI::Button("Add Texture");
+			auto flags = GUI::GuiPopupFlags_MouseButtonLeft;
+			if (GUI::BeginPopupContextItem("Add Texture", flags))
+			{
+				GUI::Text("File name:");
+				GUI::InputText("##edit", GUI::objectName, 128);
+				if (GUI::Button("OK!!")) {
+					LoadTexture(GUI::objectName, "Texture/");
+					GUI::ObjectNameReset();
+					GUI::CloseCurrentPopup();
+				}GUI::SameLine();
+				if (GUI::Button("Cancel")) {
+					GUI::ObjectNameReset();
+					GUI::CloseCurrentPopup();
+				}
+				GUI::EndPopup();
+			}
+			GUI::SameLine();
+
+
+			GUI::BeginChild("TextureTagRemove", Vector2(6 * GUI::GetFontSize(), GUI::GetFontSize() * 2), true);
+			GUI::Text("Remove");
+
+			if (GUI::IsWindowHovered()) {
+				auto tag = wkp_graphicDevice.lock()->GetApplication().lock()->GetGUIController()->GetTextureTag();
+				if (!tag.IsEmpty()) {
+					UnLoadTexture(tag);
+				}
+			}
+
+
+			GUI::EndChild();
+
+
+			GUI::BeginChild("##TextureTag", Vector2(0, 0), true);
+			{
+				app->GetGUIController()->SetResourceTag(
+					container_textures.ShowGUI(app->GetGUIController()->GetGUIIO())
 				);
 
 			}
@@ -328,7 +375,7 @@ void ButiEngine::ResourceContainer::ShowGUI()
 
 				GUI::BulletText("VertexShaderTag");
 				auto tagName = GetTagNameVertexShader(vstag);
-				(GUI::BeginChild("VSTagWin", Vector2(GUI::GetFontSize()* (tagName.size() + 2), GUI::GetFontSize() * 2), true));
+				(GUI::BeginChild("VSTagWin", Vector2(GUI::GetFontSize() * (tagName.size() + 2), GUI::GetFontSize() * 2), true));
 				GUI::Text(Util::ToUTF8(tagName).c_str());
 
 				if (GUI::IsWindowHovered()) {
@@ -381,17 +428,62 @@ void ButiEngine::ResourceContainer::ShowGUI()
 
 			GUI::Text("ShaderName");
 			GUI::InputText("##edit", GUI::objectName, 128);
-			if (GUI::Button("OK!!")) {
+			if (GUI::Button("OK!!") && !gstag.IsEmpty() && !vstag.IsEmpty() && !pstag.IsEmpty()) {
 
 				ShaderName sn;
 
 				sn.shaderName = GUI::objectName;
 				sn.geometryShaderName = GetTagNameGeometryShader(gstag);
 				sn.vertexShaderName = GetTagNameVertexShader(vstag);
-				sn.pixelShaderName= GetTagNamePixelShader(pstag);
+				sn.pixelShaderName = GetTagNamePixelShader(pstag);
 
 				LoadShader(sn);
 
+				GUI::ObjectNameReset();
+				GUI::SameLine();
+			}
+			GUI::End();
+		}
+
+	}
+	if (isShowAddMaterial) {
+
+		GUI::Begin("AddMaterial");
+		{
+			static TextureTag textag;
+			static MaterialVariable matVar;
+			{
+
+				GUI::BulletText("TextureTag");
+				auto tagName = GetTagNameTexture(textag);
+				(GUI::BeginChild("TexTagWin", Vector2(GUI::GetFontSize() * (tagName.size() + 2), GUI::GetFontSize() * 2), true));
+				GUI::Text(Util::ToUTF8(tagName).c_str());
+
+				if (GUI::IsWindowHovered()) {
+					auto tag = wkp_graphicDevice.lock()->GetApplication().lock()->GetGUIController()->GetTextureTag();
+					if (!tag.IsEmpty()) {
+						textag = tag;
+					}
+				}
+
+
+				GUI::EndChild();
+
+			}
+			GUI::Text("MaterialName");
+			GUI::InputText("##edit", GUI::objectName, 128);
+			GUI::ColorEdit4("diffuse", matVar.diffuse);
+			GUI::ColorEdit4("ambient", matVar.ambient);
+			GUI::ColorEdit4("emissive", matVar.emissive);
+			GUI::ColorEdit4("specular", matVar.specular);
+
+			if (GUI::Button("OK!!")&& !textag.IsEmpty()) {
+
+				MaterialLoadInfo sn;
+				sn.var = matVar;
+				sn.materialName = GUI::objectName;
+				sn.vec_texture.push_back(textag);
+				LoadMaterial(sn.var, sn.vec_texture.at(0), sn.materialName);
 				GUI::ObjectNameReset();
 				GUI::SameLine();
 			}
@@ -409,7 +501,11 @@ ButiEngine::MaterialTag ButiEngine::ResourceContainer::LoadMaterial(const Materi
 	if (container_materials.ContainValue(arg_fileDirectory + arg_filePath)) {
 		return container_materials.GetTag(arg_fileDirectory + arg_filePath);
 	}
-
+	MaterialLoadInfo info;
+	info.materialName = arg_fileDirectory + arg_filePath;
+	info.var = arg_resourceMaterial;
+	info.vec_texture.push_back(arg_textureTag);
+	vec_materialLoadInfos.push_back(info);
 	return container_materials.AddValue(unq_resourceFactory->CreateMaterial(arg_resourceMaterial, arg_textureTag), arg_fileDirectory + arg_filePath);
 }
 
@@ -418,17 +514,38 @@ ButiEngine::MaterialTag ButiEngine::ResourceContainer::LoadMaterial(const std::s
 	if (container_materials.ContainValue(arg_fileDirectory + arg_filePath)) {
 		return container_materials.GetTag(arg_fileDirectory + arg_filePath);
 	}
-	vec_filePathAndDirectory_mat.push_back(arg_fileDirectory + arg_filePath);
+	MaterialLoadInfo info;
+	info.materialName = arg_fileDirectory + arg_filePath;
+	info.fileName = arg_fileDirectory + arg_filePath;
+	vec_materialLoadInfos.push_back(info);
 	return container_materials.AddValue(unq_resourceFactory->CreateMaterial(arg_filePath, arg_fileDirectory), arg_fileDirectory + arg_filePath);
+
 }
 
-std::vector < ButiEngine::MaterialTag> ButiEngine::ResourceContainer::LoadMaterial(const std::vector<std::pair<std::string, std::string>>& arg_vec_filePathAndDirectory)
+std::vector < ButiEngine::MaterialTag> ButiEngine::ResourceContainer::LoadMaterial(const std::vector<MaterialLoadInfo>& arg_vec_filePathAndDirectory)
 {
 	std::vector<MaterialTag> out;
 	out.reserve(arg_vec_filePathAndDirectory.size());
 
 	for (auto itr = arg_vec_filePathAndDirectory.begin(); itr != arg_vec_filePathAndDirectory.end(); itr++) {
-		out.push_back(LoadMaterial(itr->first, itr->second));
+		if(itr->fileName!="none")
+		out.push_back(LoadMaterial(itr->fileName));
+		else {
+			out.push_back(LoadMaterial(itr->var,itr->vec_texture.at(0),itr->materialName));
+		}
+
+		
+	}
+
+	return out;
+}
+std::vector < ButiEngine::MaterialTag> ButiEngine::ResourceContainer::LoadMaterial(const std::vector<std::string>& arg_vec_filePathAndDirectory)
+{
+	std::vector<MaterialTag> out;
+	out.reserve(arg_vec_filePathAndDirectory.size());
+
+	for (auto itr = arg_vec_filePathAndDirectory.begin(); itr != arg_vec_filePathAndDirectory.end(); itr++) {
+		out.push_back(LoadMaterial(*itr));
 	}
 
 	return out;
@@ -456,13 +573,13 @@ ButiEngine::TextureTag ButiEngine::ResourceContainer::LoadTexture(const std::str
 	return container_textures.AddValue(tex, arg_fileDirectory + arg_filePath);
 }
 
-std::vector < ButiEngine::TextureTag>  ButiEngine::ResourceContainer::LoadTexture(const std::vector<std::pair<std::string, std::string>>& arg_vec_filePathAndDirectory)
+std::vector < ButiEngine::TextureTag>  ButiEngine::ResourceContainer::LoadTexture(const std::vector<std::string>& arg_vec_filePathAndDirectory)
 {
 	std::vector<TextureTag> out;
 	out.reserve(arg_vec_filePathAndDirectory.size());
 
 	for (auto itr = arg_vec_filePathAndDirectory.begin(); itr != arg_vec_filePathAndDirectory.end(); itr++) {
-		out.push_back(LoadTexture(itr->first, itr->second));
+		out.push_back(LoadTexture(*itr));
 	}
 
 	return out;
@@ -481,13 +598,13 @@ ButiEngine::PixelShaderTag ButiEngine::ResourceContainer::LoadPixelShader(const 
 	return container_pixelShaders.AddValue(unq_resourceFactory->CreatePixelShaderFromFile(GlobalSettings::GetResourceDirectory() + arg_fileDirectory + arg_filePath),arg_fileDirectory+arg_filePath);
 }
 
-std::vector<ButiEngine::PixelShaderTag> ButiEngine::ResourceContainer::LoadPixelShader(const std::vector<std::pair<std::string, std::string>>& arg_vec_filePathAndDirectory)
+std::vector<ButiEngine::PixelShaderTag> ButiEngine::ResourceContainer::LoadPixelShader(const std::vector<std::string>& arg_vec_filePathAndDirectory)
 {
 	std::vector<PixelShaderTag> out;
 	out.reserve(arg_vec_filePathAndDirectory.size());
 
 	for (auto itr = arg_vec_filePathAndDirectory.begin(); itr != arg_vec_filePathAndDirectory.end(); itr++) {
-		out.push_back(LoadPixelShader(itr->first, itr->second));
+		out.push_back(LoadPixelShader(*itr));
 	}
 
 	return out;
@@ -506,13 +623,13 @@ ButiEngine::VertexShaderTag ButiEngine::ResourceContainer::LoadVertexShader(cons
 	return container_vertexShaders.AddValue(unq_resourceFactory->CreateVertexShaderFromFile(GlobalSettings::GetResourceDirectory() + arg_fileDirectory + arg_filePath), arg_fileDirectory + arg_filePath);
 }
 
-std::vector<ButiEngine::VertexShaderTag> ButiEngine::ResourceContainer::LoadVertexShader(const std::vector<std::pair<std::string, std::string>>& arg_vec_filePathAndDirectory)
+std::vector<ButiEngine::VertexShaderTag> ButiEngine::ResourceContainer::LoadVertexShader(const std::vector<std::string>& arg_vec_filePathAndDirectory)
 {
 	std::vector<VertexShaderTag> out;
 	out.reserve(arg_vec_filePathAndDirectory.size());
 
 	for (auto itr = arg_vec_filePathAndDirectory.begin(); itr != arg_vec_filePathAndDirectory.end(); itr++) {
-		out.push_back(LoadVertexShader(itr->first, itr->second));
+		out.push_back(LoadVertexShader(*itr));
 	}
 
 	return out;
@@ -528,13 +645,13 @@ ButiEngine::GeometryShaderTag ButiEngine::ResourceContainer::LoadGeometryShader(
 	return container_geometryShaders.AddValue(unq_resourceFactory->CreateGeometryShaderFromFile(GlobalSettings::GetResourceDirectory() + arg_fileDirectory + arg_filePath), arg_fileDirectory + arg_filePath);;
 }
 
-std::vector< ButiEngine::GeometryShaderTag> ButiEngine::ResourceContainer::LoadGeometryShader(const std::vector<std::pair<std::string, std::string>>& arg_vec_filePathAndDirectory)
+std::vector< ButiEngine::GeometryShaderTag> ButiEngine::ResourceContainer::LoadGeometryShader(const std::vector<std::string>& arg_vec_filePathAndDirectory)
 {
 	std::vector<GeometryShaderTag> out;
 	out.reserve(arg_vec_filePathAndDirectory.size());
 
 	for (auto itr = arg_vec_filePathAndDirectory.begin(); itr != arg_vec_filePathAndDirectory.end(); itr++) {
-		out.push_back(LoadGeometryShader(itr->first, itr->second));
+		out.push_back(LoadGeometryShader(*itr));
 	}
 
 	return out;
@@ -542,10 +659,13 @@ std::vector< ButiEngine::GeometryShaderTag> ButiEngine::ResourceContainer::LoadG
 
 ButiEngine::ShaderTag ButiEngine::ResourceContainer::LoadShader(const  ShaderName& arg_shaderNames)
 {
+	if (container_shaders.ContainValue(arg_shaderNames.shaderName)) {
+		return ShaderTag();
+	}
 
 	vec_shaderNames.push_back(arg_shaderNames);
-	return container_shaders.AddValue(ObjectFactory::Create<Resource_Shader>(container_vertexShaders.GetValue(arg_shaderNames.vertexShaderDirectory+arg_shaderNames.vertexShaderName), container_pixelShaders.GetValue(arg_shaderNames.pixelShaderDirectory + arg_shaderNames.pixelShaderName), container_geometryShaders.GetValue(arg_shaderNames.geometryShaderDirectory + arg_shaderNames.geometryShaderName)
-		, arg_shaderNames.vertexShaderDirectory + arg_shaderNames.vertexShaderName + arg_shaderNames.geometryShaderDirectory + arg_shaderNames.pixelShaderName + arg_shaderNames.geometryShaderDirectory + arg_shaderNames.geometryShaderName
+	return container_shaders.AddValue(ObjectFactory::Create<Resource_Shader>(container_vertexShaders.GetValue(arg_shaderNames.vertexShaderName), container_pixelShaders.GetValue( arg_shaderNames.pixelShaderName), container_geometryShaders.GetValue( arg_shaderNames.geometryShaderName)
+		,  arg_shaderNames.vertexShaderName +  arg_shaderNames.pixelShaderName + arg_shaderNames.geometryShaderName
 		), arg_shaderNames.shaderName);
 }
 
@@ -572,13 +692,13 @@ ButiEngine::SoundTag ButiEngine::ResourceContainer::LoadSound(const std::string&
 	return container_sounds.AddValue(ObjectFactory::Create<Resource_Sound_XAudio2>(GlobalSettings::GetResourceDirectory() + arg_fileDirectory + arg_filePath),arg_fileDirectory+arg_filePath);
 }
 
-std::vector<ButiEngine::SoundTag> ButiEngine::ResourceContainer::LoadSound(const std::vector<std::pair<std::string, std::string>>& arg_vec_filePathAndDirectory)
+std::vector<ButiEngine::SoundTag> ButiEngine::ResourceContainer::LoadSound(const std::vector<std::string>& arg_vec_filePathAndDirectory)
 {
 	std::vector<SoundTag> out;
 	out.reserve(arg_vec_filePathAndDirectory.size());
 
 	for (auto itr = arg_vec_filePathAndDirectory.begin(); itr != arg_vec_filePathAndDirectory.end(); itr++) {
-		out.push_back(LoadSound(itr->first, itr->second));
+		out.push_back(LoadSound(*itr));
 	}
 
 	return out;
@@ -594,13 +714,13 @@ ButiEngine::ModelTag ButiEngine::ResourceContainer::LoadModel(const std::string&
 	return container_models.AddValue(unq_resourceFactory->CreateModel(arg_filePath, arg_fileDirectory), arg_fileDirectory + arg_filePath);
 }
 
-std::vector < ButiEngine::ModelTag>  ButiEngine::ResourceContainer::LoadModel(const std::vector<std::pair<std::string, std::string>>& arg_vec_filePathAndDirectory)
+std::vector < ButiEngine::ModelTag>  ButiEngine::ResourceContainer::LoadModel(const std::vector<std::string>& arg_vec_filePathAndDirectory)
 {
 	std::vector<ModelTag> out;
 	out.reserve(arg_vec_filePathAndDirectory.size());
 
 	for (auto itr = arg_vec_filePathAndDirectory.begin(); itr != arg_vec_filePathAndDirectory.end(); itr++) {
-		out.push_back(LoadModel(itr->first, itr->second));
+		out.push_back(LoadModel(*itr));
 	}
 
 	return out;
@@ -623,13 +743,13 @@ ButiEngine::MotionTag ButiEngine::ResourceContainer::LoadMotion(const std::strin
 	return container_motions.AddValue(unq_resourceFactory->CreateMotion(arg_filePath, arg_fileDirectory), arg_fileDirectory + arg_filePath);
 }
 
-std::vector<ButiEngine::MotionTag> ButiEngine::ResourceContainer::LoadMotion(const std::vector<std::pair<std::string, std::string>>& arg_vec_filePathAndDirectory)
+std::vector<ButiEngine::MotionTag> ButiEngine::ResourceContainer::LoadMotion(const std::vector<std::string>& arg_vec_filePathAndDirectory)
 {
 	std::vector<MotionTag> out;
 	out.reserve(arg_vec_filePathAndDirectory.size());
 
 	for (auto itr = arg_vec_filePathAndDirectory.begin(); itr != arg_vec_filePathAndDirectory.end(); itr++) {
-		out.push_back(LoadMotion(itr->first, itr->second));
+		out.push_back(LoadMotion(*itr));
 	}
 
 	return out;
@@ -908,22 +1028,22 @@ void ButiEngine::ResourceContainer::Reload()
 		(LoadSound(*itr));
 	}
 
+	auto  matCopy = vec_materialLoadInfos;
+	vec_materialLoadInfos.clear();
+	LoadMaterial(matCopy);
+
 	copy = vec_filePathAndDirectory_model;
 	vec_filePathAndDirectory_model.clear();
 	for (auto itr = copy.begin(); itr != copy.end(); itr++) {
 		(LoadModel(*itr));
-	}
-	copy = vec_filePathAndDirectory_mat;
-	vec_filePathAndDirectory_mat.clear();
-	for (auto itr = copy.begin(); itr != copy.end(); itr++) {
-		auto fullPath = (*itr);
-		LoadMaterial(StringHelper::GetFileName(fullPath,true),StringHelper::GetDirectory(fullPath));
 	}
 	copy = vec_filePathAndDirectory_tex;
 	vec_filePathAndDirectory_tex.clear();
 	for (auto itr = copy.begin(); itr != copy.end(); itr++) {
 		(LoadTexture(*itr));
 	}
+
+
 	copy = vec_filePathAndDirectory_motion;
 	vec_filePathAndDirectory_motion.clear();
 	for (auto itr = copy.begin(); itr != copy.end(); itr++) {

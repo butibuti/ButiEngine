@@ -9,7 +9,7 @@ namespace ButiEngine {
 		void OnUpdate() override;
 		void OnSet()override;
 		std::string GetGameComponentName()override {
-			return "ChaseBehavior";
+			return "ChaseComponent";
 		};
 		void OnShowUI()override;
 
@@ -29,3 +29,5 @@ namespace ButiEngine {
 	};
 
 }
+
+BUTI_REGIST_GAMECOMPONENT(ButiEngine::ChaseComponent)

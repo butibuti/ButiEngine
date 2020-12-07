@@ -1,5 +1,5 @@
 #pragma once
-#include"stdafx.h"
+#include"../Device/ObjectFactory.h"
 #include <xaudio2.h>	
 namespace ButiEngine {
 

@@ -1,3 +1,4 @@
+#pragma once
 #include"stdafx.h"
 #include "..\..\Header\Scene\Scene.h"
 #include"Header/GameParts/SoundManager.h"
@@ -205,5 +206,15 @@ std::weak_ptr<ButiEngine::Collision::CollisionManager> ButiEngine::Scene::GetCol
 std::shared_ptr< ButiEngine::SceneInformation >ButiEngine::Scene::GetSceneInformation()
 {
 	return sceneInformation;
+}
+
+std::shared_ptr<ButiEngine::SceneChangeInformation> ButiEngine::Scene::GetSceneChangeInformation()
+{
+	return shp_changeInfo;
+}
+
+std::shared_ptr<ButiEngine::SceneRenderingInformation> ButiEngine::Scene::GetSceneRenderingInformation()
+{
+	return shp_renderingInfo;
 }
 

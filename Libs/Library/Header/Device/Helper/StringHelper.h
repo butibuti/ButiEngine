@@ -1,5 +1,6 @@
 #pragma once
-#include"stdafx.h"
+#include<string>
+#include<vector>
 class StringHelper
 {
 public:

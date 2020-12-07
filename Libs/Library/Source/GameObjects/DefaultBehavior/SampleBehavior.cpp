@@ -2,8 +2,6 @@
 #include"stdafx.h"
 #include "..\..\..\Header\GameObjects\DefaultBehavior\SampleBehavior.h"
 
-#include "..\..\Header\Common\CerealUtill.h"
-BUTI_REGIST_BEHAVIOR(ButiEngine::SampleBehavior);
 void ButiEngine::SampleBehavior::OnUpdate()
 {
 	if (GameDevice::GetInput()->CheckKey(Keys::W)) {
@@ -26,7 +24,6 @@ void ButiEngine::SampleBehavior::OnUpdate()
 	}
 
 	//shp_mesh->Update();
-	pos *= onenDegree;
 
 	//gameObject.lock()->transform->SetLocalPosition(Vector3( pos.real(),pos.imag(),0));
 }
@@ -37,8 +34,6 @@ void ButiEngine::SampleBehavior::OnSet()
 
 void ButiEngine::SampleBehavior::Start()
 {
-	onenDegree = std::polar(1.0f, DirectX::XM_2PI / 2 / 180);
-	pos = std::complex<float>(4, 3);
 }
 
 std::shared_ptr<ButiEngine::Behavior> ButiEngine::SampleBehavior::Clone()

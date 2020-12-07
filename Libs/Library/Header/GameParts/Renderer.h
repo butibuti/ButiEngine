@@ -1,6 +1,6 @@
 #pragma once
 #include"stdafx.h"
-#include"Header/Resources/DrawData/IDrawObject.h"
+#include"../Resources/DrawData/IDrawObject.h"
 namespace ButiEngine {
 	struct DrawLayer {
 		void Clear();

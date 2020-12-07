@@ -1,14 +1,12 @@
 #pragma once
-#include"stdafx.h"
+#include<memory>
+#include <commctrl.h> 
+#include <D3dx12.h>
 namespace ButiEngine {
 	struct HandleInformation {
 		CD3DX12_GPU_DESCRIPTOR_HANDLE GPUHandle;
 		CD3DX12_CPU_DESCRIPTOR_HANDLE CPUHandle;
 		UINT index;
-	};
-	struct BlankSpace {
-		UINT index;
-		UINT size;
 	};
 	struct BackUpConstantBufferData {
 		UINT top;

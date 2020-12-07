@@ -51,14 +51,15 @@ namespace ButiEngine {
 		void serialize(Archive& archive)
 		{
 			archive(isActive);
-			archive(meshName);
+			archive(meshTag);
 		}
 	private:
 		std::vector<Particle3D> vec_particleInfo;
-		std::string meshName= "Particle";
+		MeshTag meshTag;
 		std::shared_ptr<BackupData<Vertex::Vertex_UV_Normal_Color>> shp_backUp;
 		std::shared_ptr<Resource_RealTimeMesh> shp_mesh;
 		int addParticleCount = 0;
 	};
 
 }
+BUTI_REGIST_GAMECOMPONENT(ButiEngine::ImmediateParticleController)

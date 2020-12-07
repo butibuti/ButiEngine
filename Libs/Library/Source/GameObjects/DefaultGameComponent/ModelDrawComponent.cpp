@@ -3,8 +3,6 @@
 #include"Header/Resources/ModelAnimation.h"
 #include "..\..\..\Header\GameObjects\DefaultGameComponent\ModelDrawComponent.h"
 
-#include "..\..\Header\Common\CerealUtill.h"
-BUTI_REGIST_GAMECOMPONENT(ButiEngine::ModelDrawComponent);
 
 ButiEngine::ModelDrawComponent::ModelDrawComponent(const ModelTag& arg_modelTag, const ShaderTag& arg_shaderTag, std::shared_ptr< DrawInformation >arg_shp_drawInfo, const UINT arg_layer,  std::shared_ptr<Transform> arg_shp_transform)
 {

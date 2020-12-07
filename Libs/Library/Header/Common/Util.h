@@ -1,6 +1,8 @@
 #pragma once
-#include"stdafx.h"
+#include<string>
+#include<ctime>
 #include<random>
+#include<memory>
 namespace ButiEngine {
 	namespace BitFlag {
 		const unsigned int FLAG_MAX = 16;

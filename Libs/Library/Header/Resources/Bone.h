@@ -1,5 +1,6 @@
 #pragma once
-#include"stdafx.h"
+#include"../Common/Transform.h"
+#include<string>
 namespace ButiEngine {
 	struct Bone;
 	struct IKLink {

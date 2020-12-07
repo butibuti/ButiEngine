@@ -1,7 +1,7 @@
 #pragma once
-#include "stdafx.h"
-#include "Header/GameObjects/Behavior.h"
-#include "Header/GameObjects/GameComponent.h"
+
+#include "../GameObjects/Behavior.h"
+#include "../GameObjects/GameComponent.h"
 namespace ButiEngine {
 	class ComponentsLoader :public IObject{
 	public:
@@ -31,6 +31,16 @@ namespace ButiEngine {
 		template <typename T>
 		void AddGameComponent() {
 				AddGameComponent(ObjectFactory::Create<T>());
+		}
+
+
+		template <typename T>
+		void RemoveComponent() {
+			RemoveComponent(ObjectFactory::Create<T>()->GetGameComponentName());
+		}
+		template <typename T>
+		void RemoveBehavior() {
+			RemoveBehavior( ObjectFactory::Create<T>()->GetBehaviorName());
 		}
 
 		template<class Archive>

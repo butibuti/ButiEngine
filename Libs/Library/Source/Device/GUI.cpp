@@ -124,7 +124,10 @@ ButiEngine::GUI::GuiIO ConvertIO( ImGuiIO& arg_io) {
 
 	int KeyMods;
 	out.MousePosPrev = ButiEngine::Vector2(arg_io.MousePos.x, arg_io.MousePos.y);
-	memcpy_s(out.MouseClickedPos, 5, arg_io.MouseClickedPos, 5);
+	for (int i = 0; i < 5; i++) {
+		out.MouseClickedPos[i].x = arg_io.MouseClickedPos[i].x;
+		out.MouseClickedPos[i].y = arg_io.MouseClickedPos[i].y;
+	}
 	memcpy_s(out.MouseClickedTime, 5, arg_io.MouseClickedTime, 5);
 	memcpy_s(out.MouseClicked, 5, arg_io.MouseClicked, 5);
 	memcpy_s(out.MouseDoubleClicked, 5, arg_io.MouseDoubleClicked, 5);
@@ -997,12 +1000,12 @@ void ButiEngine::GUI::SetKeyboardFocusHere(int offset)
 
 bool ButiEngine::GUI::IsItemHovered(GuiHoveredFlags flags)
 {
-	return IsItemHovered(flags);
+	return ImGui::IsItemHovered(flags);
 }
 
 bool ButiEngine::GUI::IsItemActive()
 {
-	return IsItemActivated();
+	return ImGui::IsItemActive();
 }
 
 bool ButiEngine::GUI::IsItemFocused()
@@ -1225,6 +1228,11 @@ unsigned int ButiEngine::GUI::GetColorU32(unsigned int col)
 bool ButiEngine::GUI::ColorEdit3(const std::string& label, Vector3& col, GuiColorEditFlags flags)
 {
 	return ImGui::ColorEdit3(label.c_str(), &col.x, flags);
+}
+
+bool ButiEngine::GUI::ColorEdit4(const std::string& label, Vector4& col, GuiColorEditFlags flags)
+{
+	return ImGui::ColorEdit4(label.c_str(), &col.x, flags);
 }
 
 bool ButiEngine::GUI::ColorPicker3(const std::string& label, Vector3 &col, GuiColorEditFlags flags)

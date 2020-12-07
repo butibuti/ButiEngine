@@ -1,10 +1,8 @@
 #pragma once
-#include"Header/GameObjects/Behavior.h"
-#include<complex>
+#include"../../BehaviorHeader.h"
 namespace ButiEngine {
 
 
-	class Resource_RealTimeMesh;
 	class SampleBehavior:public Behavior
 	{
 	public:
@@ -26,10 +24,8 @@ namespace ButiEngine {
 		void OnShowUI()override;
 		void PositionSet();
 	private:
-		std::shared_ptr<Resource_RealTimeMesh> shp_mesh;
-		int t = 0;
-		std::complex<float> pos;
-		std::complex<float> onenDegree;
 	};
 
 }
+
+BUTI_REGIST_BEHAVIOR(ButiEngine::SampleBehavior);

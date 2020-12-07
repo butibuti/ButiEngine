@@ -80,7 +80,7 @@ void ButiEngine::BoneMotionTimeLine::FrameSet(const UINT frame)
 		
 		//std::cout << t << std::endl;
 
-		auto nowRotation = Calculator::LearpQuat(initRotate, nowMotionItr->pose.rotation, rotateT);
+		auto nowRotation = MathHelper::LearpQuat(initRotate, nowMotionItr->pose.rotation, rotateT);
 
 		bone->transform->SetLocalRotation(Matrix4x4((nowRotation)));
 		
@@ -89,7 +89,7 @@ void ButiEngine::BoneMotionTimeLine::FrameSet(const UINT frame)
 		auto yt = nowMotionItr->larp.translationYBezier.GetYFromNuton(t);
 		auto zt = nowMotionItr->larp.translationZBezier.GetYFromNuton(t);
 
-		bone->transform->SetLocalPosition(Calculator::LarpPosition(initPosition, nowMotionItr->pose.position,xt,yt,zt));
+		bone->transform->SetLocalPosition(MathHelper::LarpPosition(initPosition, nowMotionItr->pose.position,xt,yt,zt));
 	}
 }
 

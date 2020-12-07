@@ -1,8 +1,8 @@
 #pragma once
 #include"stdafx.h"
-#include"Header/Device/FBXNodeStructure.h"
-#include"Header/Resources/ModelAnimation.h"
-#include"Header/Resources/Vertex.h"
+#include"../Device/FBXNodeStructure.h"
+#include"../Resources/ModelAnimation.h"
+#include"../Resources/Vertex.h"
 namespace ButiEngine {
 	class ModelFileConverter
 	{

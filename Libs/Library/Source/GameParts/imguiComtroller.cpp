@@ -1,4 +1,5 @@
 #pragma once
+#include"../../Header/GameParts/imguiComtroller.h"
 #include "stdafx.h"
 
 
@@ -10,11 +11,16 @@
 
 #include "Header/Device/DescriptorHeapManager.h"
 #include"Header/Device/GraphicResourceUtil_Dx12.h"
-ButiEngine::ImguiController::ImguiController(std::unique_ptr<IWindow>& unq_window, std::shared_ptr<GraphicDevice_Dx12> shp_graphicDevice)
+
+using namespace ButiEngine;
+
+
+ImguiController::ImguiController(std::unique_ptr<IWindow>& unq_window, std::shared_ptr<GraphicDevice_Dx12> shp_graphicDevice)
 {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    ImGuiIO& io = ImGui::GetIO(); 
+    (void)io;
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
@@ -32,116 +38,186 @@ ButiEngine::ImguiController::ImguiController(std::unique_ptr<IWindow>& unq_windo
 
     io.Fonts->AddFontFromFileTTF((GlobalSettings::GetResourceDirectory()+ "Font\\meiryo.ttc").c_str(), 18.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
 
-    wkp_graphicDevice = shp_graphicDevice;
+    unq_instance = std::make_unique<ImguiController::ImguiControllerInstance>();
+
+    unq_instance->wkp_graphicDevice = shp_graphicDevice;
 }
 
-void ButiEngine::ImguiController::Start()
+void ImguiController::Start()
 {
 
     ImGui_ImplDX12_NewFrame();
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
-    befIo = io;
-    io = GUI::GetIO();
+    unq_instance->befIo = unq_instance->io;
+    unq_instance->io = GUI::GetIO();
 }
 
-void ButiEngine::ImguiController::Update()
+void ImguiController::Update()
 {
 }
 
-void ButiEngine::ImguiController::Draw()
+void ImguiController::Draw()
 {
 
     ImGui::Render();
 
 
-    ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), &wkp_graphicDevice.lock()->GetCommandList());
+    ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), &unq_instance->wkp_graphicDevice.lock()->GetCommandList());
 
 }
 
-void ButiEngine::ImguiController::Release()
+void ImguiController::Release()
 {
     ImGui_ImplDX12_Shutdown();
     ImGui_ImplWin32_Shutdown();
     ImGui::DestroyContext();
 }
 
-void ButiEngine::ImguiController::SetDraggingObject(std::shared_ptr<IObject> arg_shp_draggingObject)
+void ImguiController::SetDraggingObject(std::shared_ptr<IObject> arg_shp_draggingObject)
 {
-    if (befIo.MouseDown[0]) {
+    if (unq_instance->befIo.MouseDown[0]) {
         return;
     }
-    shp_draggingObject = arg_shp_draggingObject;
+    unq_instance->shp_draggingObject = arg_shp_draggingObject;
 }
 
-void ButiEngine::ImguiController::SetResourceTag(MeshTag arg_tag)
+void ImguiController::SetResourceTag(MeshTag arg_tag)
 {
-    if (befIo.MouseDown[0]) {
+    if (unq_instance->befIo.MouseDown[0]) {
         return;
     }
-    currentMeshTag = arg_tag;
+    unq_instance->currentMeshTag = arg_tag;
 }
 
-void ButiEngine::ImguiController::SetResourceTag(SoundTag arg_tag)
+void ImguiController::SetResourceTag(SoundTag arg_tag)
 {
-    if (befIo.MouseDown[0]) {
+    if (unq_instance->befIo.MouseDown[0]) {
         return;
     }
-    currentSoundTag = arg_tag;
+    unq_instance->currentSoundTag = arg_tag;
 }
 
-void ButiEngine::ImguiController::SetResourceTag(MotionTag arg_tag)
+void ImguiController::SetResourceTag(MotionTag arg_tag)
 {
-    if (befIo.MouseDown[0]) {
+    if (unq_instance->befIo.MouseDown[0]) {
         return;
     }
-    currentMotionTag = arg_tag;
+    unq_instance->currentMotionTag = arg_tag;
 }
 
-void ButiEngine::ImguiController::SetResourceTag(MaterialTag arg_tag)
+void ImguiController::SetResourceTag(MaterialTag arg_tag)
 {
-    if (befIo.MouseDown[0]) {
+    if (unq_instance->befIo.MouseDown[0]) {
         return;
     }
-    currentMaterialTag = arg_tag;
+    unq_instance->currentMaterialTag = arg_tag;
 }
 
-void ButiEngine::ImguiController::SetResourceTag(ModelTag arg_tag)
+void ImguiController::SetResourceTag(ModelTag arg_tag)
 {
-    if (befIo.MouseDown[0]) {
+    if (unq_instance->befIo.MouseDown[0]) {
         return;
     }
-    currentModelTag = arg_tag;
+    unq_instance->currentModelTag = arg_tag;
 }
 
-void ButiEngine::ImguiController::SetResourceTag(ShaderTag arg_tag)
+void ImguiController::SetResourceTag(ShaderTag arg_tag)
 {
-    if (befIo.MouseDown[0]) {
+    if (unq_instance->befIo.MouseDown[0]) {
         return;
     }
-    currentShaderTag = arg_tag;
+    unq_instance->currentShaderTag = arg_tag;
 }
 
-void ButiEngine::ImguiController::SetResourceTag(VertexShaderTag arg_tag)
+void ImguiController::SetResourceTag(VertexShaderTag arg_tag)
 {
-    if (befIo.MouseDown[0]) {
+    if (unq_instance->befIo.MouseDown[0]) {
         return;
     }
-    currentVertexShaderTag = arg_tag;
+    unq_instance->currentVertexShaderTag = arg_tag;
 }
 
-void ButiEngine::ImguiController::SetResourceTag(PixelShaderTag arg_tag)
+void ImguiController::SetResourceTag(PixelShaderTag arg_tag)
 {
-    if (befIo.MouseDown[0]) {
+    if (unq_instance->befIo.MouseDown[0]) {
         return;
     }
-    currentPixelShaderTag = arg_tag;
+    unq_instance->currentPixelShaderTag = arg_tag;
 }
 
-void ButiEngine::ImguiController::SetResourceTag(GeometryShaderTag arg_tag)
+void ImguiController::SetResourceTag(GeometryShaderTag arg_tag)
 {
-    if (befIo.MouseDown[0]) {
+    if (unq_instance->befIo.MouseDown[0]) {
         return;
     }
-    currentGeometryShaderTag = arg_tag;
+    unq_instance->currentGeometryShaderTag = arg_tag;
+}
+
+void ImguiController::SetResourceTag(TextureTag arg_tag)
+{
+    if (unq_instance->befIo.MouseDown[0]) {
+        return;
+    }
+    unq_instance->currentTextureTag = arg_tag;
+}
+
+std::shared_ptr<IObject> ImguiController::GetDraggingObject()
+{
+    return unq_instance->shp_draggingObject;
+}
+
+MeshTag ImguiController::GetMeshTag()
+{
+    return unq_instance->currentMeshTag;
+}
+
+SoundTag ImguiController::GetSoundTag()
+{
+    return unq_instance->currentSoundTag;
+}
+
+MotionTag ImguiController::GetMotionTag()
+{
+    return unq_instance->currentMotionTag;
+}
+
+MaterialTag ImguiController::GetMaterialTag()
+{
+    return unq_instance->currentMaterialTag;
+}
+
+ModelTag ImguiController::GetModelTag()
+{
+    return unq_instance->currentModelTag;
+}
+
+ShaderTag ImguiController::GetShaderTag()
+{
+    return unq_instance->currentShaderTag;
+}
+
+VertexShaderTag ImguiController::GetVertexShaderTag()
+{
+    return unq_instance->currentVertexShaderTag;
+}
+
+PixelShaderTag ImguiController::GetPixelShaderTag()
+{
+    return unq_instance->currentPixelShaderTag;
+}
+
+GeometryShaderTag ImguiController::GetGeometryShaderTag()
+{
+    return unq_instance->currentGeometryShaderTag;
+}
+
+TextureTag ImguiController::GetTextureTag()
+{
+    return unq_instance->currentTextureTag;
+}
+
+GUI::GuiIO& ImguiController::GetGUIIO()
+{
+    return unq_instance->io;
 }

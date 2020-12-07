@@ -6,7 +6,6 @@
 
 #include "..\..\Header\Common\CerealUtill.h"
 
-BUTI_REGIST_GAMECOMPONENT(ButiEngine::Collision::ColliderComponent)
 ButiEngine::Collision::ColliderComponent::ColliderComponent(std::shared_ptr<CollisionPrimitive> arg_shp_collisionPrim, const UINT arg_layerNum)
 {
 	shp_collisionPrim = arg_shp_collisionPrim;

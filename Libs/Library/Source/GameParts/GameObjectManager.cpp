@@ -63,7 +63,7 @@ void ButiEngine::GameObjectManager::ShowUI()
 		if (GUI::IsItemActive()) {
 			auto p1 = GetApplication().lock()->GetGUIController()->GetGUIIO().MouseClickedPos[0];
 			auto p2 = GetApplication().lock()->GetGUIController()->GetGUIIO().MousePos;
-			GUI::Line(Vector2(p1.x,p1.y), Vector2(p2.x, p2.y), GUI::GetColorU32(GUI::GuiCol_Button), 4.0f);
+			GUI::Line(p1, p2, GUI::GetColorU32(GUI::GuiCol_Button), 4.0f);
 			shp_dragging = *itr;
 		}
 
@@ -110,7 +110,7 @@ void ButiEngine::GameObjectManager::ShowUI()
 
 		std::string name = GUI::newObjectName;
 		GUI::NewObjectNameReset();
-		if (name.size()) {
+		if (name.size()&&Util::CheckFileExistence(GlobalSettings::GetResourceDirectory()+"GameObject/"+name)) {
 			AddObjectFromCereal(name);
 		}else
 		AddObject(ObjectFactory::Create<Transform>());

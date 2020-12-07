@@ -1,5 +1,5 @@
 #pragma once
-#include"stdafx.h"
+#include"../../GameComponentHeader.h"
 #include"Header/Common/CollisionPrimitive.h"
 namespace ButiEngine {
 	namespace Collision {
@@ -39,3 +39,4 @@ namespace ButiEngine {
 		};
 	}
 }
+BUTI_REGIST_GAMECOMPONENT(ButiEngine::Collision::ColliderComponent)

@@ -1,9 +1,7 @@
 #include "stdafx.h"
-#include"Header/GameObjects/DefaultGameComponent/MeshDrawComponent.h"
 #include"Header/GameParts/SoundManager.h"
 #include "..\..\..\Header\GameObjects\DefaultBehavior\FPSViewBehavior.h"
 
-BUTI_REGIST_BEHAVIOR(ButiEngine::FPSViewBehavior);
 void ButiEngine::FPSViewBehavior::Start()
 {
 	auto headTransform = ObjectFactory::Create<Transform>(Vector3(0, 2.0f, 0.0f));

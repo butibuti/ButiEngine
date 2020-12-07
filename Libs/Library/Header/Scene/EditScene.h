@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "Header/Common/CBuffer_Dx12.h"
-#include"Header/GameParts/CollisionManager.h"
+#include "../Common/CBuffer_Dx12.h"
+#include"../GameParts/CollisionManager.h"
 namespace ButiEngine {
 	class ComponentsLoader;
 	class EditScene :public IScene {
@@ -40,6 +40,8 @@ namespace ButiEngine {
 		std::weak_ptr< ISceneManager> GetSceneManager()override;
 		std::weak_ptr<Collision::CollisionManager> GetCollisionManager()override;
 		std::shared_ptr< SceneInformation> GetSceneInformation()override;
+		std::shared_ptr< SceneChangeInformation> GetSceneChangeInformation() override;
+		std::shared_ptr< SceneRenderingInformation> GetSceneRenderingInformation()override;
 	protected:
 		std::shared_ptr<ISceneManager> shp_sceneManager;
 		std::shared_ptr<GameObjectManager> shp_gameObjectManager;
@@ -63,7 +65,8 @@ namespace ButiEngine {
 		bool showContainer = true;
 
 		UINT startCount = 0;
-
+		std::shared_ptr< SceneRenderingInformation> shp_renderingInfo;
+		std::shared_ptr< SceneChangeInformation> shp_changeInfo;
 
 
 	};

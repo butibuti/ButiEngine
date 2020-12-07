@@ -1,5 +1,8 @@
 #pragma once
-#include"stdafx.h"
+#include <DirectXMath.h>
+#include<vector>
+using namespace DirectX;
+
 namespace ButiEngine {
 
 	struct Vector2;
@@ -597,6 +600,12 @@ namespace ButiEngine {
 			// TODO: return ステートメントをここに挿入します
 		}
 
+		inline float Distance(const Vector3& arg_point) {
+
+			return sqrt((this->x - arg_point.x) * (this->x - arg_point.x) + (this->y - arg_point.y) * (this->y - arg_point.y) + (this->z - arg_point.z) * (this->z - arg_point.z));
+			
+		}
+
 		inline float Dot(const Vector3& vec1) const
 		{
 			return ((Vector3)XMVector3Dot(*this, vec1)).x;
@@ -998,6 +1007,34 @@ namespace ButiEngine {
 			XMVECTOR Vec;
 			return (Matrix4x4)XMMatrixInverse(&Vec, mat);
 		}
+
+		static float ToRadian(float deg) {
+
+			return deg * XM_PI / 180.0f;
+		}
+		static float ToDegree(float rad) {
+
+			return rad * 180.0f / XM_PI;
+		}
+
+
+		static inline Quat LearpQuat(const Quat& arg_firstQuat, const Quat& arg_secondQuat, const float pase);
+		static inline Vector3 LarpPosition(const Vector3& arg_startPoint, const Vector3& arg_endPoint, const float t) {
+			return arg_startPoint + (arg_endPoint - arg_startPoint) * t;
+
+		}
+
+		static inline Vector3 LarpPosition(const Vector3& arg_startPoint, const Vector3& arg_endPoint, const float xt, const float yt, const float zt) {
+			return Vector3(arg_startPoint.x + (arg_endPoint.x - arg_startPoint.x) * xt, arg_startPoint.y + (arg_endPoint.y - arg_startPoint.y) * yt, arg_startPoint.z + (arg_endPoint.z - arg_startPoint.z) * zt);
+
+		}
+
+		static const int IntMax = 2147483647;
+		static const char CharMax = 127;
+		static const short ShortMax = 32767;
+
+		static char GetByteSize(const int arg_check);
+		static char GetUnsignedByteSize(const UINT arg_check);
 	private:
 		MathHelper() {};
 	};
@@ -1404,6 +1441,32 @@ namespace ButiEngine {
 			return XMQuaternionIsInfinite(*this);
 		}
 	};
+
+
+	inline Quat MathHelper::LearpQuat(const Quat& arg_firstQuat, const Quat& arg_secondQuat, const float pase)
+	{
+		Quat out = Quat();
+		const float len1 = arg_firstQuat.GetLength();
+		const float len2 = arg_firstQuat.GetLength();
+
+		if (len1 == 0.0f || len2 == 0.0f)
+			return out;
+
+		const float cos_val = (arg_firstQuat[0] * arg_secondQuat[0] + arg_firstQuat[1] * arg_secondQuat[1] + arg_firstQuat[2] * arg_secondQuat[2] + arg_firstQuat[3] * arg_secondQuat[3]) / (len1 * len2);
+		const float w = acosf(cos_val);
+
+
+		const float sin_w = sinf(w);
+		const float sin_t_w = sinf(pase * w);
+		const float sin_inv_t_w = sinf((1.0f - pase) * w);
+		const float mult_q1 = sin_inv_t_w / sin_w;
+		const float mult_q2 = sin_t_w / sin_w;
+
+		for (int i = 0; i < 4; i++)
+			out[i] = mult_q1 * arg_firstQuat[i] + mult_q2 * arg_secondQuat[i];
+
+		return out;
+	}
 
 	struct Line {
 		Vector3 point;

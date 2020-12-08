@@ -1,7 +1,7 @@
 #include"stdafx.h"
 
-#include"Header/Common/Camera_Dx12.h"
 #include"Header/GameParts/GraphicDevice_Dx12.h"
+#include "..\..\Header\Common\Camera_Dx12.h"
 
 ButiEngine::Camera_Dx12::Camera_Dx12(const std::string& arg_cameraName, std::shared_ptr<IRenderer> arg_shp_renderer, std::weak_ptr<GraphicDevice_Dx12> arg_wkp_graphicDevice)
 {
@@ -98,4 +98,95 @@ void ButiEngine::Camera_Dx12::Stop() const
 
 void ButiEngine::Camera_Dx12::ChangeMode(const BlendMode& arg_blendMode)
 {
+}
+
+void ButiEngine::Camera_Dx12::ShowUI()
+{
+
+
+		//Transform
+		if(GUI::TreeNode("Transform"))
+		{
+
+			shp_transform->ShowUI();
+			std::string target = "BaseTransform:";
+			if (shp_transform->GetBaseTransform()) {
+				target += "Existence";
+			}
+			else {
+				target += "nullptr";
+			}
+
+
+			GUI::BeginChild("##BaseTransform", Vector2((GUI::GetFontSize()) * (target.size() + 2), GUI::GetFontSize() * 2), true);
+			GUI::BulletText((target).c_str());
+			if (shp_transform->GetBaseTransform()) {
+				GUI::SameLine();
+				if (GUI::Button("Detach")) {
+					shp_transform->SetBaseTransform(nullptr);
+				}
+			}
+			GUI::SameLine();
+			if (GUI::Button("Attach New")) {
+				if (!shp_transform->GetBaseTransform())
+					shp_transform->SetBaseTransform(ObjectFactory::Create<Transform>(), true);
+				else {
+					shp_transform->SetBaseTransform(shp_transform->GetBaseTransform()->Clone(), true);
+				}
+			}
+			if (GUI::IsWindowHovered())
+			{
+				auto obj = wkp_graphicDevice.lock()->GetApplication().lock()->GetGUIController()->GetDraggingObject();
+
+				if (obj && obj->IsThis<GameObject>()) {
+					auto trans = obj->GetThis<GameObject>()->transform;
+					shp_transform->SetBaseTransform(trans, true);
+				}
+
+			}
+			GUI::EndChild();
+			GUI::TreePop();
+		}
+
+		if(GetName()!="main"&&GetName()!="edit")
+		GUI::Checkbox("isActive", &isActive);
+
+		bool isEdit = false;
+
+
+		if (GUI::DragInt2("##projectionSize", &cameraViewProp.width, 1, 0, 100000)) {
+			isEdit = true;
+		}
+		if (
+			GUI::DragInt2("##projctionPos", &cameraViewProp.left, 1, 0, 100000)) {
+			isEdit = true;
+		}
+		if (GUI::DragFloat2("##FarClipAndNearClip", &cameraViewProp.farClip, 0.01f, 0.01f, 100000000)) {
+			isEdit = true;
+		}
+		if (GUI::Checkbox("isPararell", &cameraViewProp.isPararell)) {
+			isEdit = true;
+		}
+
+
+		GUI::BulletText("ProjectionTexture");
+		auto tagName =wkp_graphicDevice.lock()->GetApplication().lock()-> GetResourceContainer()->GetTagNameTexture(cameraViewProp.projectionTexture);
+		(GUI::BeginChild("MeshTagWin", Vector2(GUI::GetFontSize() * (tagName.size() + 2), GUI::GetFontSize() * 2), true));
+		GUI::Text(Util::ToUTF8(tagName).c_str());
+
+		if (GUI::IsWindowHovered()) {
+			auto tag = wkp_graphicDevice.lock()->GetApplication().lock()->GetGUIController()->GetTextureTag();
+			if (!tag.IsEmpty()) {
+				cameraViewProp.projectionTexture = tag;
+			}
+		}
+
+
+		GUI::EndChild();
+
+		if (isEdit) {
+			Initialize();
+		}
+
+
 }

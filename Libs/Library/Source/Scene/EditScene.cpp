@@ -86,6 +86,11 @@ void ButiEngine::EditScene::UIUpdate()
 		if (GUI::Button("Save!!!!")|| ((GameDevice::GetInput()->CheckKey(Keys::LeftCtrl) || GameDevice::GetInput()->CheckKey(Keys::RightCtrl)) && GameDevice::GetInput()->CheckKey(Keys::S))) {
 
 			OutputCereal(shp_gameObjectManager, GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation->GetSceneName() + "/objects.gameObjectManager");
+
+			for (int i = 0; i < vec_cameras.size(); i++) {
+				shp_renderingInfo->vec_cameraProperty[i] = vec_cameras[i]->GetCameraProperty();
+			}
+
 			OutputCereal(shp_renderingInfo, GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation->GetSceneName() + "/rendering.renderingInfo");
 		};
 	}
@@ -102,6 +107,8 @@ void ButiEngine::EditScene::UIUpdate()
 
 	GUI::SameLine();
 	GUI::Checkbox("ShowContainer", &showContainer);
+	GUI::SameLine();
+	GUI::Checkbox("ShowCameraEditor", &showCamera);
 
 
 	GUI::End();
@@ -158,6 +165,46 @@ void ButiEngine::EditScene::UIUpdate()
 		}
 
 
+
+		GUI::End();
+	}
+
+	if (showCamera) {
+
+		(GUI::Begin("Camera"));
+
+		if (GUI::Button("Add Layer")) {
+			shp_renderer->AddLayer();
+		}
+		GUI::SameLine();
+		GUI::Text(std::to_string( shp_renderer->GetLayerCount()));
+
+		for (auto camItr = vec_cameras.begin(); camItr != vec_cameras.end(); camItr++) {
+
+			if (GUI::TreeNode(((*camItr)->GetName()))) {
+				static char inputCameraName[128] = {};
+				GUI::InputTextWithHint("##cameraNameInput", (*camItr)->GetName(), inputCameraName, sizeof(inputCameraName));
+				GUI::SameLine();
+
+				if (GUI::Button("Rename")) {
+					(*camItr)->SetName(inputCameraName);
+					memset(inputCameraName, 0, sizeof(inputCameraName));
+				}
+
+				(*camItr)->ShowUI();
+				GUI::TreePop();
+			}
+		}
+
+		if (GUI::Button("Add Camera")) {
+			auto prop = CameraProjProperty();
+			prop.cameraName = "Camera";
+			auto size = GetSceneManager().lock()->GetApplication().lock()->GetWindow()->GetSize();
+			prop.width = size.x;
+			prop.height = size.y;
+			prop.layer = 0;
+			AddCamera(prop,"Camera",true);
+		}
 
 		GUI::End();
 	}

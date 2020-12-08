@@ -33,6 +33,11 @@ void ButiEngine::Camera::Draw()
 	shp_renderer->Rendering(cameraViewProp.layer);
 }
 
+ButiEngine::CameraProjProperty& ButiEngine::Camera::GetCameraProperty()
+{
+	return cameraViewProp;
+}
+
 std::shared_ptr< ButiEngine::ICamera> ButiEngine::CameraCreater::CreateCamera(const CameraProjProperty& arg_cameraViewProp, const std::string& cameraName, const bool initActive, std::shared_ptr<IRenderer> arg_shp_renderer, std::weak_ptr<GraphicDevice> arg_wkp_graphicDevice)
 {
 	std::shared_ptr<ICamera> out;

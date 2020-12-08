@@ -64,6 +64,8 @@ namespace ButiEngine {
 
 		bool showContainer = true;
 
+		bool showCamera = false;
+
 		UINT startCount = 0;
 		std::shared_ptr< SceneRenderingInformation> shp_renderingInfo;
 		std::shared_ptr< SceneChangeInformation> shp_changeInfo;

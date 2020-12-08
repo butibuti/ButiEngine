@@ -9,10 +9,10 @@ namespace ButiEngine {
 		CameraProjProperty() {};
 		CameraProjProperty(const UINT widthScale, const UINT heightScale, const UINT x, const UINT y,const bool arg_isPararell=false, UINT arg_layer=0) ;
 
-		UINT width=0;
-		UINT height=0;
-		UINT left=0;
-		UINT top=0;
+		int width=0;
+		int height=0;
+		int left=0;
+		int top=0;
 		float front = 0.0f;
 		float depth=1.0f;
 		float farClip = 50.0f;
@@ -61,6 +61,8 @@ namespace ButiEngine {
 		virtual void SetActive(const bool arg_active)=0;
 		virtual bool GetActive()const=0;
 		virtual void Draw() = 0;
+		virtual void ShowUI() = 0;
+		virtual CameraProjProperty& GetCameraProperty() = 0;
 	protected:
 	};
 
@@ -73,14 +75,15 @@ namespace ButiEngine {
 		void SetActive(const bool arg_active) override;
 		bool GetActive()const override;
 		void Draw()override;
+		CameraProjProperty& GetCameraProperty()override;
 	protected:
 		Matrix4x4 projectionMatrix;
 		Matrix4x4 viewMatrix;
 		CameraProjProperty cameraViewProp; 
 		std::shared_ptr<IRenderer> shp_renderer;
-	private:
-		bool isActive=true;
+		bool isActive = true;
 		std::string cameraName;
+	private:
 
 	};
 	class CameraCreater {

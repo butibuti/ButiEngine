@@ -12,6 +12,33 @@ ButiEngine::SceneManager::SceneManager(std::weak_ptr<IApplication> arg_wkp_app)
 	wkp_app = arg_wkp_app;
 }
 
+void ButiEngine::SceneManager::Update()
+{
+	if (isReload) {
+
+		if (currentScene->IsThis<EditScene>()) {
+			RemoveScene(currentScene->GetSceneInformation()->GetSceneName());
+			LoadScene_EditMode(currentScene->GetSceneInformation()->GetSceneName());
+			ChangeScene(currentScene->GetSceneInformation()->GetSceneName());
+		}
+		else
+			if (currentScene->IsThis<Scene>()) {
+
+				RemoveScene(currentScene->GetSceneInformation()->GetSceneName());
+				LoadScene(currentScene->GetSceneInformation()->GetSceneName());
+				ChangeScene(currentScene->GetSceneInformation()->GetSceneName());
+			}
+		isReload = false;
+	}
+
+	if (sceneChangeTimer->Update())
+	{
+		RenewalScene();
+		sceneChangeTimer->Stop();
+	}
+	return currentScene->Update();
+}
+
 void ButiEngine::SceneManager::Initialize()
 {
 }
@@ -29,7 +56,7 @@ void ButiEngine::SceneManager::RemoveScene(const std::string& arg_sceneName)
 	}
 }
 
-void ButiEngine::SceneManager::ChangeScene(std::string arg_sceneName, float sceneChangeDalay)
+void ButiEngine::SceneManager::ChangeScene(const std::string& arg_sceneName, float sceneChangeDalay)
 {
 	if (!map_iscene.count(arg_sceneName)) {
 		return;
@@ -95,6 +122,35 @@ void ButiEngine::SceneManager::LoadScene_Init_EditMode(const std::string& arg_sc
 		}
 
 		SetScene_Init(arg_sceneName, ObjectFactory::Create<EditScene>(GetThis<ISceneManager>(), shp_sceneInfo));
+	}
+}
+
+void ButiEngine::SceneManager::ReloadScene()
+{
+	isReload = true;
+}
+
+void ButiEngine::SceneManager::ReloadScene(const std::string& arg_sceneName)
+{
+	if (!map_iscene.count(arg_sceneName)) {
+		return;
+	}
+	if (map_iscene[arg_sceneName] == currentScene) {
+		ReloadScene();
+		return;
+	}
+	if (map_iscene[arg_sceneName]->IsThis<EditScene>()) {
+
+		RemoveScene(map_iscene[arg_sceneName]->GetSceneInformation()->GetSceneName());
+		LoadScene_EditMode(map_iscene[arg_sceneName]->GetSceneInformation()->GetSceneName());
+		ChangeScene(map_iscene[arg_sceneName]->GetSceneInformation()->GetSceneName());
+	}
+	else if (map_iscene[arg_sceneName]->IsThis<Scene>()) {
+
+
+		RemoveScene(map_iscene[arg_sceneName]->GetSceneInformation()->GetSceneName());
+		LoadScene(map_iscene[arg_sceneName]->GetSceneInformation()->GetSceneName());
+		ChangeScene(map_iscene[arg_sceneName]->GetSceneInformation()->GetSceneName());
 	}
 }
 

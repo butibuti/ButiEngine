@@ -49,3 +49,8 @@ std::weak_ptr<ButiEngine::Collision::CollisionManager> ButiEngine::GameComponent
 {
 	return gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetCollisionManager();
 }
+
+std::unique_ptr<ButiEngine::GameObjectTagManager>& ButiEngine::GameComponent::GetTagManager()
+{
+	return gameObject.lock()->GetApplication().lock()->GetGameObjectTagManager();
+}

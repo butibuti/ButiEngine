@@ -41,7 +41,9 @@ namespace ButiEngine {
 		std::weak_ptr<ICamera>& GetCamera(const std::string& arg_camName);
 		std::weak_ptr<GameObjectManager> GetManager();
 		std::weak_ptr<Collision::CollisionManager> GetCollisionManager();
+		std::unique_ptr<GameObjectTagManager>& GetTagManager();
 		std::weak_ptr<GameObject> gameObject;
+
 		bool isActive = true;
 		bool isRemove = false;
 	};

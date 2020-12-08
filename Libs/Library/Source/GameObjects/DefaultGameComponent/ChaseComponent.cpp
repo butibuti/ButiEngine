@@ -22,7 +22,7 @@ void ButiEngine::ChaseComponent::OnSet()
 
 void ButiEngine::ChaseComponent::OnShowUI()
 {
-	GUI::SliderFloat("speed", &speed, 0.0, 1.0, "%.3f");
+	GUI::DragFloat("speed", &speed,0.01, 0.0, 100.0, "%.3f");
 
 
 	std::string target = "ChaseTransform:";

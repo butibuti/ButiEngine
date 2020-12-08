@@ -65,8 +65,20 @@ void ButiEngine::EditScene::UIUpdate()
 		}
 
 	};
+	static char sceneName[128] = {};
 	GUI::SameLine();
-	
+	(GUI::InputTextWithHint("##SceneName",sceneInformation->GetSceneName(), sceneName, sizeof(sceneName)));
+	GUI::SameLine();
+	if (GUI::Button("Change")) {
+		GetSceneManager().lock()->RemoveScene(sceneName);
+		GetSceneManager().lock()->LoadScene_EditMode(sceneName);
+		GetSceneManager().lock()->ChangeScene(sceneName);
+		memset(sceneName, 0, sizeof(sceneName));
+	}
+	GUI::SameLine();
+	if (GUI::Button("Reload")) {
+		GetSceneManager().lock()->ReloadScene();
+	}
 
 	if (!isPlaying) {
 

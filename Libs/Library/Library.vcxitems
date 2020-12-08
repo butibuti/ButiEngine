@@ -33,7 +33,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Common\Window.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\AbsoluteTimer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\BinaryReader.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\Calculator.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\CSV\CSVData.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\DescriptorHeapManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\Easing.h" />

@@ -93,8 +93,10 @@ namespace ButiEngine
 		virtual void LoadScene_EditMode(const std::string& arg_sceneName, std::shared_ptr<SceneInformation> shp_scene = nullptr) = 0;
 		virtual void LoadScene_Init_EditMode(const std::string& arg_sceneName, std::shared_ptr<SceneInformation> shp_scene = nullptr) = 0;
 		virtual void RemoveScene(const std::string& arg_sceneName) = 0;
-		virtual void ChangeScene(std::string arg_sceneName, float sceneChangeDalay = 0) = 0;
+		virtual void ChangeScene(const std::string& arg_sceneName, float sceneChangeDalay = 0) = 0;
 		virtual void RenewalScene() = 0;
+		virtual void ReloadScene() = 0;
+		virtual void ReloadScene(const std::string& arg_sceneName)=0;
 		virtual inline std::shared_ptr<IScene> GetCurrentScene() = 0;
 		virtual std::weak_ptr<IApplication> GetApplication() = 0;
 		virtual void Release() = 0;

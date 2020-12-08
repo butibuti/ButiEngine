@@ -192,9 +192,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\WaveDatas.h">
       <Filter>header\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\Calculator.h">
-      <Filter>header\Device</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameParts\SoundManager.h">
       <Filter>header\GameParts</Filter>
     </ClInclude>

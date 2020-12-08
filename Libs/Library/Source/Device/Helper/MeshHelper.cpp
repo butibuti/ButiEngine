@@ -1,5 +1,4 @@
 #include"stdafx.h"
-#include"Header/Device/Helper/MeshHelper.h"
 #include "..\..\..\Header\Device\Helper\MeshHelper.h"
 ButiEngine::MeshHelper::~MeshHelper()
 {

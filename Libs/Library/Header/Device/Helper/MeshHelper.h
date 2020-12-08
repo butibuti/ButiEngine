@@ -1,5 +1,4 @@
-#pragma once
-#include"stdafx.h"
+#include<vector>
 #include"../../Resources/Vertex.h"
 namespace ButiEngine {
 	class MeshHelper

@@ -81,7 +81,6 @@ void ButiEngine::GameObjectManager::ShowUI()
 				else if(GUI::Button("Copy")) {
 					auto obj= AddObject((*itr)->Clone());
 
-
 					obj.lock()->Init_RegistGameComponents();
 					obj.lock()->Init_RegistBehaviors();
 

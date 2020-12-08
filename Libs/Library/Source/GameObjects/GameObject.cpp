@@ -344,6 +344,7 @@ std::shared_ptr<ButiEngine::GameObject> ButiEngine::GameObject::Clone()
 {
 	auto output= ObjectFactory::Create<GameObject>(transform->Clone(), GetGameObjectName());
 	output->SetGameObjectTag(gameObjectTag);
+	output->tagName = tagName;
 	auto componentsEndItr = vec_gameComponents.end();
 	for (auto itr = vec_gameComponents.begin(); itr != componentsEndItr;itr++) {
 		auto cloneComponent = (*itr)->Clone();

@@ -1445,6 +1445,10 @@ namespace ButiEngine {
 
 	inline Quat MathHelper::LearpQuat(const Quat& arg_firstQuat, const Quat& arg_secondQuat, const float pase)
 	{
+		Quat secQ = arg_secondQuat;
+		if (arg_firstQuat.Dot(secQ) < 0) {
+			secQ = -secQ;
+		}
 		Quat out = Quat();
 		const float len1 = arg_firstQuat.GetLength();
 		const float len2 = arg_firstQuat.GetLength();
@@ -1452,7 +1456,7 @@ namespace ButiEngine {
 		if (len1 == 0.0f || len2 == 0.0f)
 			return out;
 
-		const float cos_val = (arg_firstQuat[0] * arg_secondQuat[0] + arg_firstQuat[1] * arg_secondQuat[1] + arg_firstQuat[2] * arg_secondQuat[2] + arg_firstQuat[3] * arg_secondQuat[3]) / (len1 * len2);
+		const float cos_val = (arg_firstQuat[0] * secQ[0] + arg_firstQuat[1] * secQ[1] + arg_firstQuat[2] * secQ[2] + arg_firstQuat[3] * secQ[3]) / (len1 * len2);
 		const float w = acosf(cos_val);
 
 
@@ -1463,7 +1467,7 @@ namespace ButiEngine {
 		const float mult_q2 = sin_t_w / sin_w;
 
 		for (int i = 0; i < 4; i++)
-			out[i] = mult_q1 * arg_firstQuat[i] + mult_q2 * arg_secondQuat[i];
+			out[i] = mult_q1 * arg_firstQuat[i] + mult_q2 * secQ[i];
 
 		return out;
 	}

@@ -30,18 +30,22 @@ void ButiEngine::Scene::Draw()
 
 	shp_renderer->BefRendering();
 
-
-
+	std::vector<std::shared_ptr<ICamera>> cams;
 	for (auto cameraItr = vec_cameras.begin(); cameraItr != vec_cameras.end(); cameraItr++) {
 		if (!(*cameraItr)->GetActive()) {
 			continue;
 		}
 
+		cams.push_back(*cameraItr);
+	}
+
+	for (auto cameraItr = cams.begin(); cameraItr != cams.end(); cameraItr++) {
+
 		(*cameraItr)->Start();
 
 		(*cameraItr)->Draw();
 
-		if (cameraItr + 1 == vec_cameras.end())
+		if (cameraItr + 1 == cams.end())
 			shp_sceneManager->GetApplication().lock()->GetGUIController()->Draw();
 
 		(*cameraItr)->Stop();
@@ -69,38 +73,77 @@ void ButiEngine::Scene::Release()
 
 void ButiEngine::Scene::Initialize()
 {
-	//shp_gameObjectManager = ObjectFactory::Create<GameObjectManager>(GetThis<IScene>());
-
-
 	shp_renderer = ObjectFactory::Create<Renderer>(GetThis<IScene>());
-	shp_renderer->AddLayer();
+	{
 
+		std::string fullRenderingInfoPath = GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation->GetSceneName() + "/rendering.renderingInfo";
+		if (Util::IsFileExistence(fullRenderingInfoPath)) {
+			shp_renderingInfo = std::make_shared<SceneRenderingInformation>();
+			InputCereal(shp_renderingInfo, fullRenderingInfoPath);
+		}
+		else {
+
+			shp_renderingInfo = std::make_shared<SceneRenderingInformation>();
+
+			auto windowSize = GetWindow()->GetSize();
+			auto prop = CameraProjProperty(windowSize.x, windowSize.y, 0, 0);
+			prop.farClip = 200.0f;
+			prop.cameraName = "main";
+			shp_renderingInfo->vec_cameraProperty.push_back(prop);
+			prop.cameraName = "edit";
+			shp_renderingInfo->vec_cameraProperty.push_back(prop);
+
+
+			shp_renderingInfo->vec_cameraTransform.push_back(ObjectFactory::Create<Transform>());
+			auto editTransform = ObjectFactory::Create<Transform>(Vector3(5, 5, -5)); editTransform->SetLookAtRotation(Vector3());
+			shp_renderingInfo->vec_cameraTransform.push_back(editTransform);
+
+			_mkdir((GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation->GetSceneName() + "/").c_str());
+		}
+	}
+	for (int i = 0; i < shp_renderingInfo->layerCount; i++) {
+
+		shp_renderer->AddLayer();
+	}
 	shp_soundManager = ObjectFactory::Create<SoundManager>(GetThis<IScene>());
 
 	ActiveCollision(1);
-	auto windowSize = GetWindow()->GetSize();
-	std::string fullGameObjectManagerPath = GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation->GetSceneName() + "/objects.gameObjectManager";
-	if (Util::IsFileExistence(fullGameObjectManagerPath)) {
-		shp_gameObjectManager = ObjectFactory::CreateFromCereal<GameObjectManager>(fullGameObjectManagerPath);
 
-		shp_gameObjectManager->SetScene(GetThis<IScene>());
-		shp_gameObjectManager->Initialize_cereal();
-	}
-	else {
-		_mkdir(fullGameObjectManagerPath.c_str());
-		shp_gameObjectManager = ObjectFactory::Create<GameObjectManager>(GetThis<IScene>());
+	{
+
+		std::string fullGameObjectManagerPath = GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation->GetSceneName() + "/objects.gameObjectManager";
+		if (Util::IsFileExistence(fullGameObjectManagerPath)) {
+			shp_gameObjectManager = ObjectFactory::CreateFromCereal<GameObjectManager>(fullGameObjectManagerPath);
+
+			shp_gameObjectManager->SetScene(GetThis<IScene>());
+			shp_gameObjectManager->Initialize_cereal();
+		}
+		else {
+			auto defaultPath = GlobalSettings::GetResourceDirectory() + "Scene/" + "DefaultScene" + "/objects.gameObjectManager";
+			shp_gameObjectManager = ObjectFactory::CreateFromCereal<GameObjectManager>(defaultPath);
+
+			shp_gameObjectManager->SetScene(GetThis<IScene>());
+			shp_gameObjectManager->Initialize_cereal();
+
+			_mkdir((GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation->GetSceneName() + "/").c_str());
+		}
 	}
 
-	auto prop = CameraProjProperty(windowSize.x, windowSize.y, 0, 0);
-	prop.farClip = 150.0;
-	AddCamera(prop, "main", true);
-	auto prop2 = CameraProjProperty(windowSize.x, windowSize.y, 0, 0, true, 1);
-	AddCamera(prop2, "ui", true);
+	for (int i = 0; i < shp_renderingInfo->vec_cameraProperty.size(); i++) {
+		auto prop = shp_renderingInfo->vec_cameraProperty[i];
+		AddCamera(prop, prop.cameraName, true).lock()->shp_transform = shp_renderingInfo->vec_cameraTransform[i];
+		
+	}
+	GetCamera("main").lock()->SetActive(true);
+	auto editCam = GetCamera("edit");
+
+	if (editCam.lock()) {
+		editCam.lock()->SetActive(false);
+	}
 
 	//auto prop3 = CameraProjProperty(windowSize.x, windowSize.y, 0, 0, true, 2);
 	//AddCamera(prop3, "backGround", true);
 	OnInitialize();
-
 }
 
 void ButiEngine::Scene::ActiveCollision(const UINT arg_layerCount)

@@ -35,6 +35,8 @@
 *.db
 *.opendb
 
+*.zip
+
 .vs/
 Temp/
 output/

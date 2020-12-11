@@ -193,9 +193,9 @@ void ButiEngine::Resource_Texture_Dx12::CreateTexture(Image* srcImages, size_t n
 void ButiEngine::Resource_Texture_Dx12::CreateTextureUploadHeap()
 {
 	const UINT64 uploadBufferSize = GetRequiredIntermediateSize(texture.Get(), 0, 1);
+	auto hr = wkp_graphicDevice.lock()->GetDevice().GetDeviceRemovedReason();
 
-
-	auto hr = wkp_graphicDevice.lock()->GetDevice().CreateCommittedResource(
+	hr= wkp_graphicDevice.lock()->GetDevice().CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
 		D3D12_HEAP_FLAG_NONE,
 		&CD3DX12_RESOURCE_DESC::Buffer(uploadBufferSize),

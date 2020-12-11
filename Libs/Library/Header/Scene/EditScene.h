@@ -30,7 +30,7 @@ namespace ButiEngine {
 		void Initialize()override final;
 		std::weak_ptr<ICamera> GetCamera(const std::string& arg_camName) override final;
 		std::weak_ptr<ICamera> GetCamera(const UINT arg_camNum = 0) override final;
-		std::weak_ptr<ICamera> AddCamera(const CameraProjProperty& arg_prop, const std::string arg_cameraName, const bool arg_initActive) override final;
+		std::weak_ptr<ICamera> AddCamera(CameraProjProperty& arg_prop, const std::string& arg_cameraName, const bool arg_initActive) override final;
 		void RemoveCamera(const std::string& arg_camName) override final;
 		void RemoveCamera(const UINT arg_camNum) override final;
 		void SceneEnd()override final;

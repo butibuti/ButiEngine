@@ -48,13 +48,17 @@ void ButiEngine::EditScene::OnUpdate()
 void ButiEngine::EditScene::UIUpdate()
 {
 	GUI::Begin("top");
-	if (GUI::ArrowButton("##play", GUI::GuiDir_Right)) {
+	if (GUI::ArrowButton("##play", GUI::GuiDir_Right)||GameDevice::GetInput()->TriggerKey(Keys::F5)) {
 		isActive =!isActive;
 
-		GetCamera("edit").lock()->SetActive(!GetCamera("edit").lock()->GetActive());
-		GetCamera("main").lock()->SetActive(!GetCamera("main").lock()->GetActive());
 		isPlaying = true;
 		if (isActive) {
+
+			for (auto camItr = vec_cameras.begin(); camItr != vec_cameras.end(); camItr++) {
+				(*camItr)->SetActive(true);
+			}
+			GetCamera("edit").lock()->SetActive(false);
+
 			startCount++;
 			if (startCount==1) {
 				OutputCereal(shp_gameObjectManager,GlobalSettings::GetResourceDirectory()+ "Scene/" + sceneInformation->GetSceneName()+"/objects.gameObjectManager" );
@@ -62,6 +66,13 @@ void ButiEngine::EditScene::UIUpdate()
 
 				shp_gameObjectManager->Start();
 			}
+		}
+		else {
+
+			for (auto camItr = vec_cameras.begin(); camItr != vec_cameras.end(); camItr++) {
+				(*camItr)->SetActive(false);
+			}
+			GetCamera("edit").lock()->SetActive(true);
 		}
 
 	};
@@ -86,11 +97,13 @@ void ButiEngine::EditScene::UIUpdate()
 		if (GUI::Button("Save!!!!")|| ((GameDevice::GetInput()->CheckKey(Keys::LeftCtrl) || GameDevice::GetInput()->CheckKey(Keys::RightCtrl)) && GameDevice::GetInput()->CheckKey(Keys::S))) {
 
 			OutputCereal(shp_gameObjectManager, GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation->GetSceneName() + "/objects.gameObjectManager");
-
+			shp_renderingInfo->vec_cameraProperty.clear(); 
+			shp_renderingInfo->vec_cameraTransform.clear();
 			for (int i = 0; i < vec_cameras.size(); i++) {
-				shp_renderingInfo->vec_cameraProperty[i] = vec_cameras[i]->GetCameraProperty();
+				shp_renderingInfo->vec_cameraProperty.push_back(vec_cameras[i]->GetCameraProperty());
+				shp_renderingInfo->vec_cameraTransform.push_back(vec_cameras[i]->shp_transform);
 			}
-
+			shp_renderingInfo->layerCount = shp_renderer->GetLayerCount();
 			OutputCereal(shp_renderingInfo, GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation->GetSceneName() + "/rendering.renderingInfo");
 		};
 	}
@@ -179,7 +192,7 @@ void ButiEngine::EditScene::UIUpdate()
 		GUI::SameLine();
 		GUI::Text(std::to_string( shp_renderer->GetLayerCount()));
 
-		for (auto camItr = vec_cameras.begin(); camItr != vec_cameras.end(); camItr++) {
+		for (auto camItr = vec_cameras.begin(); camItr != vec_cameras.end(); ) {
 
 			if (GUI::TreeNode(((*camItr)->GetName()))) {
 				static char inputCameraName[128] = {};
@@ -190,9 +203,27 @@ void ButiEngine::EditScene::UIUpdate()
 					(*camItr)->SetName(inputCameraName);
 					memset(inputCameraName, 0, sizeof(inputCameraName));
 				}
+				GUI::SameLine();
+				bool isRemove = false;
+				if (GUI::Button("Remove")) {
+					isRemove = true;
+				}
+				else {
+				}
 
 				(*camItr)->ShowUI();
 				GUI::TreePop();
+				if (isRemove) {
+
+					camItr = vec_cameras.erase(camItr);
+				}
+				else {
+
+					camItr++;
+				}
+			}
+			else {
+				camItr++;
 			}
 		}
 
@@ -258,8 +289,10 @@ void ButiEngine::EditScene::Draw()
 
 		(*cameraItr)->Draw();
 		
-		if(cameraItr+1== cams.end())
-		shp_sceneManager->GetApplication().lock()->GetGUIController()->Draw();
+		if (cameraItr + 1 == cams.end()) {
+			shp_sceneManager->GetApplication().lock()->GetGraphicDevice()->SetDefaultRenderTarget();
+			shp_sceneManager->GetApplication().lock()->GetGUIController()->Draw();
+		}
 
 		(*cameraItr)->Stop();
 	}
@@ -350,7 +383,7 @@ void ButiEngine::EditScene::Initialize()
 	} 
 
 	bool isContainEditCam = false;
-	for (int i = 0; i < shp_renderingInfo->vec_cameraProperty.size(); i++) {
+	for (int i = 0; i < shp_renderingInfo->vec_cameraTransform.size(); i++) {
 		auto prop = shp_renderingInfo->vec_cameraProperty[i];
 		AddCamera(prop, prop.cameraName, true).lock()->shp_transform=shp_renderingInfo->vec_cameraTransform[i];
 		if (prop.cameraName == "edit") {
@@ -409,11 +442,24 @@ std::weak_ptr<ButiEngine::ICamera> ButiEngine::EditScene::GetCamera(const UINT a
 	return vec_cameras.at(arg_camNum);
 }
 
-std::weak_ptr<ButiEngine::ICamera> ButiEngine::EditScene::AddCamera(const CameraProjProperty& arg_prop, const std::string arg_cameraName, const bool arg_initActive)
+std::weak_ptr<ButiEngine::ICamera> ButiEngine::EditScene::AddCamera(CameraProjProperty& arg_prop, const std::string& arg_cameraName, const bool arg_initActive)
 {
-
-
-	auto out = CameraCreater::CreateCamera(arg_prop, arg_cameraName, arg_initActive, shp_renderer, shp_sceneManager->GetApplication().lock()->GetGraphicDevice());
+	bool isContain =true;
+	int count = 0;
+	while (isContain) {
+		for (auto itr = vec_cameras.begin(); itr != vec_cameras.end(); itr++) {
+			if ((*itr)->GetName() == arg_cameraName||(*itr)->GetName() == arg_cameraName + "_" + std::to_string(count)) {
+				count++;
+				isContain = true;
+				break;
+			}
+		}
+		isContain = false;
+	}
+	if (count > 0) {
+		arg_prop.cameraName += "_""_" + std::to_string(count);
+	}
+	auto out = CameraCreater::CreateCamera(arg_prop, arg_prop.cameraName, arg_initActive, shp_renderer, shp_sceneManager->GetApplication().lock()->GetGraphicDevice());
 	vec_cameras.push_back(out);
 	return out;
 }

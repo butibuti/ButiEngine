@@ -182,11 +182,24 @@ std::weak_ptr<ButiEngine::ICamera> ButiEngine::Scene::GetCamera(const UINT arg_c
 	return vec_cameras.at(arg_camNum);
 }
 
-std::weak_ptr<ButiEngine::ICamera> ButiEngine::Scene::AddCamera(const CameraProjProperty& arg_prop, const std::string arg_cameraName, const bool arg_initActive)
+std::weak_ptr<ButiEngine::ICamera> ButiEngine::Scene::AddCamera(CameraProjProperty& arg_prop, const std::string& arg_cameraName, const bool arg_initActive)
 {
-
-
-	auto out = CameraCreater::CreateCamera(arg_prop, arg_cameraName, arg_initActive,shp_renderer,shp_sceneManager->GetApplication().lock()->GetGraphicDevice());
+	bool isContain = true;
+	int count = 0;
+	while (isContain) {
+		for (auto itr = vec_cameras.begin(); itr != vec_cameras.end(); itr++) {
+			if ((*itr)->GetName() == arg_cameraName || (*itr)->GetName() == arg_cameraName + "_" + std::to_string(count)) {
+				count++;
+				isContain = true;
+				break;
+			}
+		}
+		isContain = false;
+	}
+	if (count > 0) {
+		arg_prop.cameraName += "_""_" + std::to_string(count);
+	}
+	auto out = CameraCreater::CreateCamera(arg_prop, arg_prop.cameraName, arg_initActive, shp_renderer, shp_sceneManager->GetApplication().lock()->GetGraphicDevice());
 	vec_cameras.push_back(out);
 	return out;
 }

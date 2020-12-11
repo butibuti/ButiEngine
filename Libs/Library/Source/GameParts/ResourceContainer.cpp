@@ -22,8 +22,16 @@ void ButiEngine::ResourceContainer::SetGraphicDevice(std::weak_ptr<GraphicDevice
 }
 
 void ButiEngine::ResourceContainer::Initialize()
-{
-
+{/*
+	vec_filePathAndDirectory_gs.clear();
+	vec_filePathAndDirectory_model.clear();
+	vec_filePathAndDirectory_motion.clear();
+	vec_filePathAndDirectory_ps.clear();
+	vec_filePathAndDirectory_sound.clear();
+	vec_filePathAndDirectory_tex.clear();
+	vec_filePathAndDirectory_vs.clear();
+	vec_shaderNames.clear();
+	vec_materialLoadInfos.clear();*/
 }
 
 void ButiEngine::ResourceContainer::PreInitialize()
@@ -168,7 +176,7 @@ void ButiEngine::ResourceContainer::ShowGUI()
 			GUI::EndTabItem();
 		}
 		if (GUI::BeginTabItem("TextureTags", nullptr, GUI::GuiTabItemFlags_None)) {
-			GUI::Button("Add Texture");
+			GUI::Button("Add Texture fromFile");
 			auto flags = GUI::GuiPopupFlags_MouseButtonLeft;
 			if (GUI::BeginPopupContextItem("Add Texture", flags))
 			{
@@ -176,6 +184,28 @@ void ButiEngine::ResourceContainer::ShowGUI()
 				GUI::InputText("##edit", GUI::objectName, 128);
 				if (GUI::Button("OK!!")) {
 					LoadTexture(GUI::objectName, "Texture/");
+					GUI::ObjectNameReset();
+					GUI::CloseCurrentPopup();
+				}GUI::SameLine();
+				if (GUI::Button("Cancel")) {
+					GUI::ObjectNameReset();
+					GUI::CloseCurrentPopup();
+				}
+				GUI::EndPopup();
+			}
+			GUI::SameLine(); GUI::Button("Add RenderTargetTexture");
+			if (GUI::BeginPopupContextItem("Add RenderTargetTexture", flags))
+			{
+				GUI::Text("Texture name:");
+				GUI::InputText("##edit", GUI::objectName, 128);
+
+				static int texWidth;
+				static int texHeight;
+				GUI::DragInt("texWidth", texWidth, 1.0, 0, 1000000);
+				GUI::DragInt("texHeight", texHeight, 1.0, 0, 1000000);
+
+				if (GUI::Button("OK!!")) {
+					LoadTexture(":/"+std::string( GUI::objectName)+"/"+std::to_string(texWidth)+"/"+std::to_string(texHeight));
 					GUI::ObjectNameReset();
 					GUI::CloseCurrentPopup();
 				}GUI::SameLine();
@@ -560,6 +590,24 @@ ButiEngine::MaterialTag ButiEngine::ResourceContainer::LoadMaterial(const std::w
 
 ButiEngine::TextureTag ButiEngine::ResourceContainer::LoadTexture(const std::string& arg_filePath, const std::string& arg_fileDirectory)
 {
+	if (arg_filePath[0] == ':') {
+
+		if (container_textures.ContainValue( arg_filePath)) {
+			return container_textures.GetTag(arg_filePath);
+		}
+
+
+		auto split = StringHelper::Split(arg_filePath, "/");
+		if (split.size() < 4) {
+			return TextureTag();
+		}
+		vec_filePathAndDirectory_tex.push_back( arg_filePath);
+
+		auto tex = unq_resourceFactory->CreateRenderTargetTexture(std::stoi(split[2]), std::stoi(split[3]));
+		tex->SetFilePath(arg_filePath);
+		return container_textures.AddValue(tex,arg_filePath);
+	}
+
 	if (!Util::CheckFileExistence(GlobalSettings::GetResourceDirectory() + arg_fileDirectory + arg_filePath)) {
 		return TextureTag();
 	}
@@ -887,9 +935,9 @@ void ButiEngine::ResourceContainer::UnLoadMaterial(MaterialTag arg_materialTag)
 	}
 	auto tagName = container_materials.GetIDName(arg_materialTag);
 
-	for (auto itr = vec_filePathAndDirectory_model.begin(); itr != vec_filePathAndDirectory_model.end(); itr++) {
-		if ((*itr) == tagName) {
-			vec_filePathAndDirectory_model.erase(itr);
+	for (auto itr = vec_materialLoadInfos.begin(); itr != vec_materialLoadInfos.end(); itr++) {
+		if ((*itr).materialName == tagName) {
+			vec_materialLoadInfos.erase(itr);
 			break;
 		}
 	}

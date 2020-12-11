@@ -755,7 +755,7 @@ void ButiEngine::ModelFileConverter::FBXtoB3M(const std::string& arg_fbxFileName
 			{
 				std::string path;
 				if (diffiseTextureNode.lock()) {
-					path = diffiseTextureNode.lock()->GetChildNode("RelativeFilename")->GetProperty<FBXAnalyze::FBXNode_StringProperty>()->nodeProperty;
+					path ="../"+ diffiseTextureNode.lock()->GetChildNode("RelativeFilename")->GetProperty<FBXAnalyze::FBXNode_StringProperty>()->nodeProperty;
 					bmaWriter.WriteVariable<int>(path.size());
 					bmaWriter.WriteCharactor(path);
 

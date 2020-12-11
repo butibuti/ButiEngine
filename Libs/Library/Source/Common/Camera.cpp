@@ -11,6 +11,7 @@ std::string ButiEngine::Camera::GetName() const
 void ButiEngine::Camera::SetName(const std::string& arg_name)
 {
 	cameraName = arg_name;
+	cameraViewProp.cameraName = arg_name;
 }
 
 void ButiEngine::Camera::Switch()

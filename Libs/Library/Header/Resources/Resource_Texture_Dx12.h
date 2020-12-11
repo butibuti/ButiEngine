@@ -16,7 +16,8 @@ namespace ButiEngine {
 			TEX_DIMENSION_TEXTURE1D = 2,
 			TEX_DIMENSION_TEXTURE2D = 3,
 			TEX_DIMENSION_TEXTURE3D = 4,
-		}; enum TEX_MISC_FLAG
+		}; 
+		enum TEX_MISC_FLAG
 		// Subset here matches D3D10_RESOURCE_MISC_FLAG and D3D11_RESOURCE_MISC_FLAG
 		{
 			TEX_MISC_TEXTURECUBE = 0x4L,
@@ -75,18 +76,18 @@ namespace ButiEngine {
 		};
 		Resource_Texture_Dx12(const std::vector<BYTE>& buffer, int width, int height, std::shared_ptr<GraphicDevice> arg_graphicDevice);
 		~Resource_Texture_Dx12() {
-			int f = 0;
 		}
 		void SetGraphicDevice(std::shared_ptr<GraphicDevice> arg_graphicDevice) override;
 		void Attach(int slot)override;
 		void CreateTexture(Image* srcImages, size_t nimages, const TexMetadata& metadata);
-		void CreateTextureUploadHeap();
+		virtual void CreateTextureUploadHeap();
 		void Initialize()override;
 		Microsoft::WRL::ComPtr<ID3D12Resource> GetTexture();
 		Microsoft::WRL::ComPtr<ID3D12Resource> GetTextureUploadHeap();
 		D3D12_RESOURCE_DESC GetTextureDesc();
-	private:
-
+	 protected:
+		 Resource_Texture_Dx12() {
+		 }
 		void UpdateResourceRelease()override;
 		void ResourceUpdate() override;
 		CD3DX12_GPU_DESCRIPTOR_HANDLE handle;

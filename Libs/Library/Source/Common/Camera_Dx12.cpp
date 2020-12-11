@@ -9,7 +9,7 @@ ButiEngine::Camera_Dx12::Camera_Dx12(const std::string& arg_cameraName, std::sha
 	cameraViewProp.top = 0;
 	cameraViewProp.left = 0;
 	cameraViewProp.width = wkp_graphicDevice.lock()->GetApplication().lock()->GetWindow()->GetSize().x;
-	cameraViewProp.height = wkp_graphicDevice.lock()->GetApplication().lock()->GetWindow()->GetSize().x;
+	cameraViewProp.height = wkp_graphicDevice.lock()->GetApplication().lock()->GetWindow()->GetSize().y;
 	SetName(arg_cameraName);
 	cameraViewProp = (CameraProjProperty());
 	shp_renderer = arg_shp_renderer;
@@ -59,11 +59,27 @@ void ButiEngine::Camera_Dx12::Initialize()
 	viewport.Height = static_cast<FLOAT>(cameraViewProp.height);
 	viewport.MinDepth = cameraViewProp.front;
 	viewport.MaxDepth = cameraViewProp.depth;
+	if ((!cameraViewProp.projectionTexture.IsEmpty())) {
+		auto tex= wkp_graphicDevice.lock()->GetApplication().lock()->GetResourceContainer()->GetTexture(cameraViewProp.projectionTexture);
+		if (tex.lock()->IsThis<IRenderTarget>()) {
+			shp_renderTarget = tex.lock()->GetThis<IRenderTarget>();
+		}
+	}
 }
 
 void ButiEngine::Camera_Dx12::Start()
 {
 	wkp_graphicDevice.lock()->DrawStart();
+	
+	if (shp_renderTarget) {
+		auto clear = Vector4(0.0, 0.0, 0.0, 0.0);
+		shp_renderTarget->SetRenderTarget(clear);
+	}
+	else {
+		wkp_graphicDevice.lock()->CommandList_SetRenderTargetView();
+		wkp_graphicDevice.lock()->CommandList_SetScissorRect();
+	}
+
 	wkp_graphicDevice.lock()->ClearDepthStancil(cameraViewProp.clearDepth);
 	viewMatrix = shp_transform->GetMatrix().GetInverse();
 
@@ -93,6 +109,9 @@ void ButiEngine::Camera_Dx12::Start()
 
 void ButiEngine::Camera_Dx12::Stop() const
 {
+	if (shp_renderTarget) {
+		shp_renderTarget->EndRenderTarget();
+	}
 	wkp_graphicDevice.lock()->Set();
 }
 
@@ -145,6 +164,9 @@ void ButiEngine::Camera_Dx12::ShowUI()
 
 			}
 			GUI::EndChild();
+			if (shp_transform->GetBaseTransform()) {
+				shp_transform->GetBaseTransform()->ShowUI();
+			}
 			GUI::TreePop();
 		}
 
@@ -153,6 +175,17 @@ void ButiEngine::Camera_Dx12::ShowUI()
 
 		bool isEdit = false;
 
+		if (GUI::ArrowButton("##minLayer", GUI::GuiDir_Left)) {
+			if(cameraViewProp.layer!=0)
+			cameraViewProp.layer--;
+		}
+		GUI::SameLine();
+		GUI::Text(std::to_string(cameraViewProp.layer));
+		GUI::SameLine();
+		if (GUI::ArrowButton("##plusLayer", GUI::GuiDir_Right)) {
+			cameraViewProp.layer++;
+			cameraViewProp.layer = min(shp_renderer->GetLayerCount()-1, cameraViewProp.layer);
+		}
 
 		if (GUI::DragInt2("##projectionSize", &cameraViewProp.width, 1, 0, 100000)) {
 			isEdit = true;
@@ -178,9 +211,14 @@ void ButiEngine::Camera_Dx12::ShowUI()
 			auto tag = wkp_graphicDevice.lock()->GetApplication().lock()->GetGUIController()->GetTextureTag();
 			if (!tag.IsEmpty()) {
 				cameraViewProp.projectionTexture = tag;
+				isEdit = true;
 			}
 		}
-
+		GUI::SameLine();
+		if (GUI::Button("Detach")) {
+			cameraViewProp.projectionTexture = TextureTag();
+			isEdit = true;
+		}
 
 		GUI::EndChild();
 

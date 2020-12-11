@@ -18,6 +18,7 @@ namespace ButiEngine {
 		};
 	public:
 		virtual std::shared_ptr<Resource_Texture> CreateTextureFromFile(const std::string& filePath) = 0;
+		virtual	std::shared_ptr<Resource_Texture> CreateRenderTargetTexture(const UINT width, const UINT height)=0;
 		TextureResourceData GetTextureResourceDataFromFile(const std::string& filePath);
 		std::shared_ptr<Resource_Material> CreateMaterial(const std::string& arg_filePath, const std::string& arg_fileDirectory = "");
 		virtual std::shared_ptr<Resource_Material> CreateMaterial(const MaterialVariable& arg_materialVar, const TextureTag& arg_textureTag) = 0;

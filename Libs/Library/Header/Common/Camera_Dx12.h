@@ -19,6 +19,6 @@ namespace ButiEngine {
 		std::weak_ptr<GraphicDevice_Dx12> wkp_graphicDevice;
 
 		D3D12_VIEWPORT    viewport;
-
+		std::shared_ptr<IRenderTarget> shp_renderTarget;
 	};
 }

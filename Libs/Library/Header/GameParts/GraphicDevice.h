@@ -108,7 +108,7 @@ namespace ButiEngine {
 		virtual void ResourceUploadRelease(){}
 
 		virtual void DrawStart(){}
-
+		virtual void SetDefaultRenderTarget() = 0;
 		virtual void ClearWindow() = 0;
 		virtual void ClearDepthStancil(const float arg_depth) = 0;
 		Matrix4x4 GetProjectionMatrix();

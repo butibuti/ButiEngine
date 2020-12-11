@@ -8,7 +8,8 @@ namespace ButiEngine {
 	class ResourceFactory_Dx12 :public ResourceFactory {
 	public:
 		ResourceFactory_Dx12(std::weak_ptr<GraphicDevice> arg_wkp_graphicDevice);
-		std::shared_ptr<Resource_Texture> CreateTextureFromFile(const std::string& filePath )override;
+		std::shared_ptr<Resource_Texture> CreateTextureFromFile(const std::string& filePath)override;
+		std::shared_ptr<Resource_Texture> CreateRenderTargetTexture(const UINT width, const UINT height )override;
 
 
 		std::shared_ptr<Resource_PixelShader> CreatePixelShaderFromFile(const std::string& filePath )override;

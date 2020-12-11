@@ -36,6 +36,13 @@ namespace ButiEngine {
 		class Morph;
 	}
 
+	class IRenderTarget {
+	public:
+		virtual void SetRenderTarget(Vector4& arg_clearColor) = 0;
+		virtual void SetRenderTargetWithoutDepth(Vector4& arg_clearColor) = 0;
+		virtual void EndRenderTarget() = 0;
+	};
+
 	class IResource_Motion :public IObject {
 	public:
 		virtual std::shared_ptr<ModelAnimation> GetAnimation() = 0;

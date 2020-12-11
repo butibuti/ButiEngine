@@ -121,11 +121,9 @@ namespace ButiEngine {
 			}
 		}
 		void Remove(ID<T> arg_id) {
+			auto idName = GetIDName(arg_id);
+			map_values.erase(idName);
 			auto index = *arg_id.GetID();
-			auto mapItr = map_values.begin();
-			for (auto i = 0; i < index; i++)
-				mapItr++;
-			map_values.erase(mapItr->first);
 			if(vec_p_resource.size()>index)
 			vec_p_resource.erase(vec_p_resource.begin() + index);
 

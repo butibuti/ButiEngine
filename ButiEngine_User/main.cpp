@@ -5,8 +5,6 @@
 
 
 
-
-
 #include"Header/GameObjects/DefaultGameComponent/ChaseComponent.h"
 using namespace::ButiEngine;
 

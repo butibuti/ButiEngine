@@ -498,6 +498,12 @@ void ButiEngine::GraphicDevice_Dx12::SetCommandList(ID3D12GraphicsCommandList* a
 	currentCommandList = arg_currentCommandList;
 }
 
+void ButiEngine::GraphicDevice_Dx12::SetDefaultRenderTarget()
+{
+	CommandList_SetScissorRect();
+	CommandList_SetRenderTargetView();
+}
+
 void ButiEngine::GraphicDevice_Dx12::CommandList_SetScissorRect()
 {
 	currentCommandList->RSSetScissorRects(1, &scissorRect);
@@ -561,23 +567,11 @@ void ButiEngine::GraphicDevice_Dx12::DrawStart()
 {
 	CommandListHelper::Reset(pipelineState, drawCommandList, GetThis<GraphicDevice_Dx12>());
 	SetCommandList(drawCommandList.Get());
-	CommandList_SetScissorRect();
-	CommandList_SetRenderTargetView();
-	ID3D12DescriptorHeap* ppHeaps[] = { shp_descripterManager->GetDescriptorHeap().Get(), shp_descripterManager->GetSamplerHeap().Get() };
-	auto heapCount = _countof(ppHeaps);
-	currentCommandList->SetDescriptorHeaps(heapCount, ppHeaps);
-}
-
-void ButiEngine::GraphicDevice_Dx12::GUIDrawStart()
-{
-	CommandListHelper::Reset(pipelineState, guiCommandList, GetThis<GraphicDevice_Dx12>());
-	SetCommandList(guiCommandList.Get());
 	ID3D12DescriptorHeap* ppHeaps[] = { shp_descripterManager->GetDescriptorHeap().Get(), shp_descripterManager->GetSamplerHeap().Get() };
 	auto heapCount = _countof(ppHeaps);
 	currentCommandList->SetDescriptorHeaps(heapCount, ppHeaps);
 
 }
-
 
 Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> ButiEngine::GraphicDevice_Dx12::GetRtvHeap() const
 {

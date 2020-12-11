@@ -24,9 +24,15 @@
     <ClCompile Include="DefaultGameComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TestBehavior.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx_u.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TestBehavior.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

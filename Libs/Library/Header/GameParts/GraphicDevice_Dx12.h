@@ -67,7 +67,7 @@ namespace ButiEngine {
 		void ClearWindow() override;
 
 		void SetCommandList(ID3D12GraphicsCommandList* arg_currentCommandList);
-
+		void SetDefaultRenderTarget()override;
 		void CommandList_SetScissorRect();
 
 		void CommandList_SetRenderTargetView();
@@ -78,7 +78,6 @@ namespace ButiEngine {
 		void ResourceUpload()override;
 
 		void DrawStart()override;
-		void GUIDrawStart();
 
 		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> GetRtvHeap() const;
 

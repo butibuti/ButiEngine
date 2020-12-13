@@ -33,6 +33,7 @@
 
 *.suo
 *.db
+*.pdb
 *.opendb
 
 *.zip

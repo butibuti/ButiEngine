@@ -2,6 +2,7 @@
 #include"stdafx.h"
 #include "..\..\Header\GameParts\Renderer.h"
 #include"Header/Common/Camera_Dx12.h"
+#include"Header/GameParts/CollisionLayer.h"
 
 ButiEngine::Vector2 ComputeFogCoord(float start, float end)
 {
@@ -146,6 +147,19 @@ void ButiEngine::Renderer::MaterialAttach(const MaterialTag& arg_materialTag)
 	wkp_resourceContainer.lock()->GetMaterial(arg_materialTag).lock()->Attach(GetThis<Renderer>());
 }
 
+std::vector< std::shared_ptr<ButiEngine::IDrawObject>> ButiEngine::Renderer::GetHitDrawObjects(std::shared_ptr<Collision::CollisionPrimitive> arg_prim, const int arg_layer)
+{
+	std::vector< std::shared_ptr<ButiEngine::IDrawObject>> output;
+
+	if (vec_drawLayers.size() <= arg_layer) {
+		return output;
+	}
+
+	vec_drawLayers.at(arg_layer).shp_collisionLayer->Check(arg_prim,output);
+
+	return output;
+}
+
 
 void ButiEngine::Renderer::Release()
 {
@@ -170,6 +184,11 @@ std::shared_ptr< ButiEngine::CBuffer_Dx12< ButiEngine::Fog>> ButiEngine::Rendere
 	return CBuffer_fog;
 }
 
+ButiEngine::DrawLayer::DrawLayer()
+{
+	shp_collisionLayer = ObjectFactory::Create<Collision::CollisionLayer<IDrawObject>>(5,Vector3(-500, -500, -500),Vector3(500,500,500));
+}
+
 void ButiEngine::DrawLayer::Clear()
 {
 	vec_afterDrawObj.clear();
@@ -185,6 +204,7 @@ void ButiEngine::DrawLayer::Clear()
 
 void ButiEngine::DrawLayer::BefRendering()
 {
+	shp_collisionLayer->Update();
 	{
 
 		auto endItr = vec_befDrawObj.end();
@@ -201,8 +221,14 @@ void ButiEngine::DrawLayer::BefRendering()
 	}
 }
 
-UINT* ButiEngine::DrawLayer::Regist(std::weak_ptr<IDrawObject> arg_wkp_drawObject, const bool arg_isAfterRendering)
+UINT* ButiEngine::DrawLayer::Regist(std::weak_ptr<IDrawObject> arg_wkp_drawObject, const bool arg_isAfterRendering, std::shared_ptr<Collision::CollisionPrimitive_Box_OBB> arg_ret_prim )
 {
+	if (!arg_ret_prim) {
+		arg_ret_prim= arg_wkp_drawObject.lock()->GetMeshOBB();
+	}
+	arg_wkp_drawObject.lock()->SetPrimitive(arg_ret_prim);
+	arg_wkp_drawObject.lock()->SetOctRegistPtr( shp_collisionLayer->RegistCollisionObj(arg_ret_prim,arg_wkp_drawObject.lock()));
+
 	if (arg_isAfterRendering) {
 
 		UINT* index = new UINT(vec_afterDrawObj.size());
@@ -223,6 +249,7 @@ UINT* ButiEngine::DrawLayer::Regist(std::weak_ptr<IDrawObject> arg_wkp_drawObjec
 
 void ButiEngine::DrawLayer::UnRegist(UINT* arg_index, const bool arg_isAfterRendering)
 {
+
 	if (arg_isAfterRendering) {
 
 		auto index = *arg_index;
@@ -231,6 +258,8 @@ void ButiEngine::DrawLayer::UnRegist(UINT* arg_index, const bool arg_isAfterRend
 		}
 		auto itr = vec_afterDrawObj.begin() + index;
 
+
+		shp_collisionLayer->UnRegistCollisionObj((*itr).lock()->GetOctRegistPtr());
 
 		vec_afterDrawObj.erase(itr);
 
@@ -250,7 +279,8 @@ void ButiEngine::DrawLayer::UnRegist(UINT* arg_index, const bool arg_isAfterRend
 		return;
 	}
 	auto itr = vec_befDrawObj.begin() + index;
-
+	auto obj = (*itr).lock();
+	shp_collisionLayer->UnRegistCollisionObj(obj->GetOctRegistPtr());
 
 	vec_befDrawObj.erase(itr);
 

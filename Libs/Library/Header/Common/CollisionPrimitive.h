@@ -14,6 +14,7 @@ namespace ButiEngine {
 		class CollisionPrimitive_Surface;
 		class CollisionPrimitive_PLane;
 		class CollisionPrimitive_Ray;
+		class CollisionPrimitive_Segment;
 		class CollisionPrimitive :public IObject
 		{
 		public:
@@ -29,6 +30,7 @@ namespace ButiEngine {
 			virtual bool IsHitBox_AABB(CollisionPrimitive_Box_AABB* other) { return false; }
 			virtual bool IsHitBox_OBB(CollisionPrimitive_Box_OBB* other) { return false; }
 			virtual bool IsHitRay(CollisionPrimitive_Ray* other) { return false; }
+			virtual bool IsHitSegment(CollisionPrimitive_Segment* other) { return false; }
 			virtual void GetMaxPointAndMinPoint(Vector3& arg_outputMax, Vector3& arg_outputMin) const = 0;
 			virtual std::shared_ptr<CollisionPrimitive> Clone() = 0;
 			virtual void ShowUI() = 0;
@@ -80,11 +82,11 @@ namespace ButiEngine {
 			}
 
 		private:
-		}; 
-		class CollisionPrimitive_Ray :public CollisionPrimitive,public Line
+		};
+		class CollisionPrimitive_Ray :public CollisionPrimitive, public Line
 		{
 		public:
-			inline CollisionPrimitive_Ray(std::weak_ptr<Transform> arg_weak_transform,const Vector3& arg_velocity)
+			inline CollisionPrimitive_Ray(std::weak_ptr<Transform> arg_weak_transform, const Vector3& arg_velocity)
 			{
 				wkp_transform = arg_weak_transform;
 				initVelocity = arg_velocity;
@@ -95,6 +97,8 @@ namespace ButiEngine {
 			bool IsHitSphere(CollisionPrimitive_Sphere* other)override;
 			bool IsHitPolygon(CollisionPrimitive_Polygon* other)override;
 			bool IsHitSurface(CollisionPrimitive_Surface* other)override;
+			bool IsHitBox_AABB(CollisionPrimitive_Box_AABB* other)override;
+			bool IsHitBox_OBB(CollisionPrimitive_Box_OBB* other)override;
 			inline void Update()override {
 				point = wkp_transform.lock()->GetWorldPosition();
 				velocity = initVelocity;
@@ -107,8 +111,8 @@ namespace ButiEngine {
 
 			}
 			inline void GetMaxPointAndMinPoint(Vector3& arg_outputMax, Vector3& arg_outputMin) const override {
-				arg_outputMax = Vector3(100, 100, 100);
-				arg_outputMin = Vector3(-100, -100, -100);
+				arg_outputMax = Vector3(0, 0, 0);
+				arg_outputMin = Vector3(0, 0, 0);
 			}
 
 			std::shared_ptr<CollisionPrimitive> Clone()override {
@@ -134,6 +138,62 @@ namespace ButiEngine {
 
 		private:
 			Vector3 initVelocity;
+		};
+		class CollisionPrimitive_Segment  :public CollisionPrimitive, public Segment
+		{
+		public:
+			inline CollisionPrimitive_Segment(std::weak_ptr<Transform> arg_weak_transform, const Vector3& arg_endPoint)
+			{
+				wkp_transform = arg_weak_transform;
+				point = wkp_transform.lock()->GetWorldPosition();
+				endPos = arg_endPoint;
+				velocity = ((Vector3)(endPos - point)).GetNormalize();
+			}
+			inline CollisionPrimitive_Segment()
+			{
+			}
+			inline void Update()override {
+				point = wkp_transform.lock()->GetWorldPosition();
+				velocity= ((Vector3)(endPos - point)).GetNormalize();
+			}
+			inline bool IsHit(std::weak_ptr< CollisionPrimitive> other)override
+			{
+				return other.lock()->IsHitSegment(this);
+
+
+			}
+			inline void GetMaxPointAndMinPoint(Vector3& arg_outputMax, Vector3& arg_outputMin) const override {/*
+				arg_outputMax = Vector3(max(point.x,endPos.x) , max(point.y, endPos.y), max(point.z, endPos.z));
+				arg_outputMin = Vector3(min(point.x, endPos.x), min(point.y, endPos.y), min(point.z, endPos.z));*/
+				arg_outputMax = Vector3();
+				arg_outputMin = Vector3();
+			}
+
+
+			bool IsHitBox_AABB(CollisionPrimitive_Box_AABB* other)override;
+			bool IsHitBox_OBB(CollisionPrimitive_Box_OBB* other)override;
+
+			std::shared_ptr<CollisionPrimitive> Clone()override {
+				auto ret = ObjectFactory::Create< CollisionPrimitive_Segment>();
+				ret->endPos= endPos;
+				ret->wkp_transform = wkp_transform;
+				return ret;
+			}
+
+			void ShowUI() override {
+				GUI::BulletText("Ray");
+				if (GUI::DragFloat3("##EndPoint", endPos, 0.01f, -500, 500)); {
+				}
+			}
+
+			template<class Archive>
+			void serialize(Archive& archive)
+			{
+				archive(wkp_transform);
+				archive(endPos);
+			}
+
+		private:
 		};
 		class CollisionPrimitive_Sphere :public CollisionPrimitive, public Geometry::Sphere
 		{
@@ -344,7 +404,8 @@ namespace ButiEngine {
 			bool IsHitBox_OBB(CollisionPrimitive_Box_OBB* other)override;
 			bool IsHitPolygon(CollisionPrimitive_Polygon* other)override;
 			bool IsHitSurface(CollisionPrimitive_Surface* other)override;
-
+			bool IsHitRay(CollisionPrimitive_Ray* other)override;
+			bool IsHitSegment(CollisionPrimitive_Segment* other)override;
 			void ShowUI() override {
 
 				if (GUI::TreeNode("Box_AABB")) {
@@ -401,6 +462,10 @@ namespace ButiEngine {
 			bool IsHitBox_OBB(CollisionPrimitive_Box_OBB* other)override;
 			bool IsHitPolygon(CollisionPrimitive_Polygon* other)override;
 			bool IsHitSurface(CollisionPrimitive_Surface* other)override;
+			bool IsHitRay(CollisionPrimitive_Ray* other)override;
+			bool IsHitSegment(CollisionPrimitive_Segment* other)override;
+
+			Geometry::Box_AABB ToAABB();
 
 			void ShowUI() override {
 
@@ -424,8 +489,8 @@ namespace ButiEngine {
 				archive(initLengthes);
 				archive(halfLengthes);
 			}
-		private:
 			Vector3 initLengthes;
+		private:
 		};
 	}
 }

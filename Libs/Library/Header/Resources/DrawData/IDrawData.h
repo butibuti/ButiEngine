@@ -5,6 +5,7 @@
 #include"../../Common/CArrayBuffer.h"
 namespace ButiEngine {
 	
+
 	struct DrawInformation :public IObject {
 		DrawInformation() {}
 		DrawInformation(const DrawSettings arg_DrawSettings) :drawSettings(arg_DrawSettings) {}
@@ -64,7 +65,6 @@ namespace ButiEngine {
 
 			return output;
 		}
-
 	};
 	struct DrawData {
 		
@@ -79,7 +79,6 @@ namespace ButiEngine {
 
 			return viewPos.z;
 		}
-
 		
 		ModelTag modelTag;
 		
@@ -92,7 +91,6 @@ namespace ButiEngine {
 
 		std::shared_ptr< DrawInformation >shp_drawInfo;
 
-		BoxEightCorner boxEightCorner;
 		std::shared_ptr<IRenderer> shp_renderer;
 		virtual std::shared_ptr<ICBuffer> AddICBuffer(std::shared_ptr<ICBuffer> arg_cbuffer) {
 			shp_drawInfo-> vec_exCBuffer.push_back(arg_cbuffer);
@@ -133,6 +131,8 @@ namespace ButiEngine {
 	protected:
 		UINT cBufferCount = 0;
 		std::shared_ptr < CBuffer<ShaderVariable>> cbuffer;
+		std::shared_ptr<Collision::CollisionPrimitive>shp_primitive;
+		unsigned int* collisionRegistPtr;
 	};
 
 	struct MeshDrawData:public DrawData,public IDrawObject,public IObject {
@@ -145,6 +145,13 @@ namespace ButiEngine {
 		virtual void SetTransform(std::shared_ptr<Transform>& arg_transform) = 0;
 		virtual void SetBlendMode(const BlendMode& arg_blendMode) = 0;
 
+		std::shared_ptr<Collision::CollisionPrimitive_Box_AABB> GetMeshAABB()override;
+		std::shared_ptr<Collision::CollisionPrimitive_Box_OBB> GetMeshOBB()override;
+
+		void SetPrimitive(std::shared_ptr<Collision::CollisionPrimitive>arg_prim) override;
+		void SetOctRegistPtr(unsigned int* arg_ptr) override;
+		std::shared_ptr<Collision::CollisionPrimitive> GetPrimitive() override;
+		unsigned int* GetOctRegistPtr() override;
 	};
 	struct ModelDrawData :public IBoneDrawObject
 	{

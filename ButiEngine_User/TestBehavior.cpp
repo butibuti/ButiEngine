@@ -4,7 +4,7 @@
 
 void ButiEngine::TestBehavior::OnUpdate()
 {
-    if (GameDevice::GetInput()->CheckKey(Keys::A)) {
+    /*if (GameDevice::GetInput()->CheckKey(Keys::A)) {
         gameObject.lock()->transform->RollLocalRotationY_Degrees(1);
     }
     if (GameDevice::GetInput()->CheckKey(Keys::D)) {
@@ -36,10 +36,15 @@ void ButiEngine::TestBehavior::OnUpdate()
             anim->SetTargetTransform(gameObject.lock()->transform->Clone());
             anim->SetReverse(false);
         }
+    }*/ GUI::Begin("In Visibility!!");
+    shp_AABB->Update();
+    auto mainCamera = GetCamera("main");
+    if (mainCamera.lock()->IsContaineVisibility(shp_AABB)) {
+        GUI::Text(u8"Œ©‚¦‚Ä‚é‰J‚¤”„‰J");
+
     }
 
-
-
+    GUI::End();
 }
 
 void ButiEngine::TestBehavior::OnSet()
@@ -47,6 +52,11 @@ void ButiEngine::TestBehavior::OnSet()
 }
 
 void ButiEngine::TestBehavior::Start()
+{
+    shp_AABB = ObjectFactory::Create<Collision::CollisionPrimitive_Box_AABB>(Vector3(1,1,1), gameObject.lock()->transform);
+}
+
+void ButiEngine::TestBehavior::OnCollision(std::weak_ptr<GameObject> arg_other)
 {
 }
 

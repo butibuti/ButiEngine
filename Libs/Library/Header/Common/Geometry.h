@@ -40,10 +40,12 @@ namespace ButiEngine {
             inline float GetLength(const UINT index)const { return *(&halfLengthes.x + index); }
             inline float GetMin(const UINT index)const { return position.Get(index) - *(&halfLengthes.x + index); }
             inline float GetMax(const UINT index)const { return position.Get(index) + *(&halfLengthes.x + index); }
+            inline Vector3 GetMinPoint()const { return position -halfLengthes ; }
+            inline Vector3 GetMaxPoint()const { return position + halfLengthes; }
         };
         class Box_OBB_Static
         {
-        protected:
+        public:
             Vector3 position;
             Vector3 directs[3] = { Vector3(1,0,0),Vector3(0,1,0) ,Vector3(0,0,1) };
             Vector3 halfLengthes = Vector3(0.5f, 0.5f, 0.5f);
@@ -57,6 +59,18 @@ namespace ButiEngine {
             }
             inline const float GetLength(const UINT index) const {
                 return (*(&halfLengthes.x + index));
+            }
+            inline Vector3 GetAABBMax()const {
+                return position + halfLengthes;
+            }
+            inline Vector3 GetAABBMin()const {
+                return position - halfLengthes;
+            }
+            inline Vector3 GetMax()const {
+                return halfLengthes;
+            }
+            inline Vector3 GetMin()const {
+                return - halfLengthes;
             }
             Vector3 GetPos() const {
                 return  position;
@@ -304,11 +318,127 @@ namespace ButiEngine {
 
                 return GeometryUtill::IsContainPointInPolygon(penetrationPoint, normal, arg_vertices);
             }
-        }
-        namespace RayHit {
-            static inline float GetDistanceRayPoint(const Line& arg_ray,const Vector3& arg_point) {
+
+            static inline bool IsFrontPoint(const Vector3& point, const Vector3& surfacePoint, const Vector3& surfaceNormal) {
+                if (((Vector3)(point - surfacePoint)).Dot(surfaceNormal) > 0) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+
+            static inline bool IsHitAABBSurfase(const Box_AABB& arg_AABB, const Vector3& surfacePoint, const Vector3& surfaceNormal) {
+
+                Vector3 maxPoint =
+                    arg_AABB.GetMinPoint();
+                if (surfaceNormal.x > 0)
+                {
+                    maxPoint.x += arg_AABB.halfLengthes.x*2;
+                }
+                if (surfaceNormal.y > 0)
+                {
+                    maxPoint.y += arg_AABB.halfLengthes.y*2;
+                }
+                if (surfaceNormal.z > 0)
+                {
+                    maxPoint.z += arg_AABB.halfLengthes.z*2;
+                } 
+
+                return IsFrontPoint(maxPoint, surfacePoint, surfaceNormal);
+                
+                /*Vector3 minPoint =
+                    arg_AABB.GetMinPoint();
+                if (surfaceNormal.x < 0)
+                {
+                    minPoint.x += arg_AABB.halfLengthes.x*2;
+                }
+                if (surfaceNormal.y < 0)
+                {
+                    minPoint.y += arg_AABB.halfLengthes.y*2;
+                }
+                if (surfaceNormal.z < 0)
+                {
+                    minPoint.z += arg_AABB.halfLengthes.z*2;
+                }*/
+
+
 
             }
+
+            static inline bool IsHitAABBCameraFrustum(const Box_AABB& arg_AABB, std::shared_ptr<Transform> arg_transform, const Matrix4x4& arg_projectionMatrix ,float nearClip, float farClip) {
+                
+                Vector3 surfacePoints[6] = {};
+                Vector3 surfaceNormals[6] = {};
+
+                for (int i = 0; i < 4; i++)
+                {
+                    float a, b, c, d;
+                    int r = i / 2;
+                    if (i % 2 == 0)
+                    {
+                        // •½–Ê‚Ì•û’öŽ®
+                        // ax + by + cz + d = 0
+                        a = arg_projectionMatrix.m[3][ 0] - arg_projectionMatrix.m[r][ 0];
+                        b = arg_projectionMatrix.m[3][ 1] - arg_projectionMatrix.m[r][ 1];
+                        c = arg_projectionMatrix.m[3][ 2] - arg_projectionMatrix.m[r][ 2];
+                        d = arg_projectionMatrix.m[3][ 3] - arg_projectionMatrix.m[r][ 3];
+                    }
+                    else
+                    {
+                        a = arg_projectionMatrix.m[3][ 0] + arg_projectionMatrix.m[r][ 0];
+                        b = arg_projectionMatrix.m[3][ 1] + arg_projectionMatrix.m[r][ 1];
+                        c = arg_projectionMatrix.m[3][ 2] + arg_projectionMatrix.m[r][ 2];
+                        d = arg_projectionMatrix.m[3][ 3] + arg_projectionMatrix.m[r][ 3];
+                    }
+
+                    Vector3 normal =  Vector3(a, b, c).GetNormalize();
+                   
+                    normal = normal*arg_transform->GetWorldRotation() ;
+                    surfaceNormals[i] = normal;
+                    surfacePoints[i] = arg_transform->GetWorldPosition();
+                }
+
+                // for the near plane
+                {
+                    float a = arg_projectionMatrix.m[3][ 0] + arg_projectionMatrix.m[2][ 0];
+                    float b = arg_projectionMatrix.m[3][ 1] + arg_projectionMatrix.m[2][ 1];
+                    float c = arg_projectionMatrix.m[3][ 2] + arg_projectionMatrix.m[2][ 2];
+                    float d = arg_projectionMatrix.m[3][ 3] + arg_projectionMatrix.m[2][ 3];
+
+                    Vector3 normal = Vector3(a, b, c).GetNormalize();
+                    normal = normal*arg_transform->GetWorldRotation();
+
+                    Vector3 pos = arg_transform->GetWorldPosition ()+ (arg_transform->GetFront() * nearClip);
+                    surfacePoints[4] =  pos;
+                    surfaceNormals[4] = normal;
+                }
+
+                // for the far plane
+                {
+                    float a = arg_projectionMatrix.m[3][ 0] - arg_projectionMatrix.m[2][ 0];
+                    float b = arg_projectionMatrix.m[3][ 1] - arg_projectionMatrix.m[2][ 1];
+                    float c = arg_projectionMatrix.m[3][ 2] - arg_projectionMatrix.m[2][ 2];
+                    float d = arg_projectionMatrix.m[3][ 3] - arg_projectionMatrix.m[2][ 3];
+
+                    Vector3 normal = Vector3(a, b, c).GetNormalize();
+                    normal = normal*arg_transform->GetWorldRotation ();
+
+                    Vector3 pos = arg_transform->GetWorldPosition() + (arg_transform->GetFront() * nearClip) + (arg_transform->GetFront() * farClip);
+                    surfaceNormals[5] = normal;
+                    surfacePoints[5] = pos;
+                }
+
+
+                for (int i = 0; i < 6; i++) {
+                    if (!IsHitAABBSurfase(arg_AABB, surfacePoints[i], surfaceNormals[i])) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+        namespace RayHit {
 
             static inline bool HitRaySphere(const Line& arg_ray, const Sphere& arg_sphere) {
                 Vector3 spherePos = arg_sphere.position;
@@ -337,13 +467,197 @@ namespace ButiEngine {
 
                 return true;
             }
-            static inline bool HitRayPolygon(const Line& arg_ray, const std::vector<Vector3> arg_polygon) {
+            static inline bool IsHitRayAABB(const Line& arg_ray, const Box_AABB& arg_box,Vector3& colPos) {
 
+
+                float t;
+
+                Vector3 min = arg_box.GetMinPoint();
+                Vector3 max = arg_box.GetMaxPoint();
+
+
+                t = -FLT_MAX;
+                float t_max = FLT_MAX;
+
+                for (int i = 0; i < 3; ++i) {
+                    if (abs(arg_ray.velocity.GetData_const()[i]) < FLT_EPSILON) {
+                        if (arg_ray.point.GetData_const()[i] < min.GetData()[i] || arg_ray.point.GetData_const()[i]> max.GetData()[i])
+                            return false; 
+                    }
+                    else {
+
+                        float odd = 1.0f / arg_ray.velocity.GetData_const()[i];
+                        float t1 = (min.GetData()[i] - arg_ray.point.GetData_const()[i]) * odd;
+                        float t2 = (max.GetData()[i]- arg_ray.point.GetData_const()[i]) * odd;
+                        if (( t1) > (t2)) {
+                            float tmp = t1; t1 = t2; t2 = tmp;
+                        }
+
+                        if (t1 > t) 
+                            t = t1;
+                        if (t2 < t_max) 
+                            t_max = t2;
+
+
+                        if (t >= t_max)
+                            return false;
+                    }
+                }
+
+                if (t < 0) {
+                    return false;
+                }
+                colPos = arg_ray .point+ t * (arg_ray.velocity);
+                
+                return true;
+            }
+            static inline bool IsHitRayOBB(const Line& arg_ray, const Box_OBB_Static& arg_box, const Matrix4x4& arg_transform, Vector3& colPos) {
+                Matrix4x4 invRotate = arg_transform.GetInverse();
+                Vector3 p_l  = arg_ray.point * invRotate;
+
+                invRotate._41 = 0;
+                invRotate._42 = 0;
+                invRotate._43 = 0;
+
+                Vector3 dir_l = arg_ray.velocity * invRotate;
+
+                float t;
+                Vector3 min = arg_box.GetMin();
+                Vector3 max = arg_box.GetMax();
+
+
+                t = -FLT_MAX;
+                float t_max = FLT_MAX;
+
+                for (int i = 0; i < 3; ++i) {
+                    if (abs(dir_l.GetData_const()[i]) < FLT_EPSILON) {
+                        if (p_l.GetData_const()[i] < min.GetData()[i] || p_l.GetData_const()[i]> max.GetData()[i])
+                            return false;
+                    }
+                    else {
+
+                        float odd = 1.0f / dir_l.GetData_const()[i];
+                        float t1 = (min.GetData()[i] - p_l.GetData_const()[i]) * odd;
+                        float t2 = (max.GetData()[i] - p_l.GetData_const()[i]) * odd;
+                        if ((t1) > (t2)) {
+                            float tmp = t1; t1 = t2; t2 = tmp;
+                        }
+
+                        if (t1 > t) t = t1;
+                        if (t2 < t_max) t_max = t2;
+
+
+                        if (t >= t_max)
+                            return false;
+                    }
+                }
+
+                if (t < 0) {
+                    return false;
+                }
+                colPos = arg_ray.point + t * (arg_ray.velocity);
+
+
+                return true;
             }
 
-            static inline bool HitRaySurfase(const Line& arg_ray, const Vector3& arg_point, const Vector3& arg_normal) {
+            
+            static inline bool IsHitSegmentAABB(const Segment& arg_ray, const Box_AABB& arg_box,Vector3& colPos) {
 
+
+                float t;
+
+                Vector3 min = arg_box.GetMinPoint();
+                Vector3 max = arg_box.GetMaxPoint();
+
+
+                t = -FLT_MAX;
+                float t_max = FLT_MAX;
+
+                for (int i = 0; i < 3; ++i) {
+                    if (abs(arg_ray.velocity.GetData_const()[i]) < FLT_EPSILON) {
+                        if (arg_ray.point.GetData_const()[i] < min.GetData()[i] || arg_ray.point.GetData_const()[i]> max.GetData()[i])
+                            return false; 
+                    }
+                    else {
+
+                        float odd = 1.0f / arg_ray.velocity.GetData_const()[i];
+                        float t1 = (min.GetData()[i] - arg_ray.point.GetData_const()[i]) * odd;
+                        float t2 = (max.GetData()[i]- arg_ray.point.GetData_const()[i]) * odd;
+                        if (( t1) > (t2)) {
+                            float tmp = t1; t1 = t2; t2 = tmp;
+                        }
+
+                        if (t1 > t) 
+                            t = t1;
+                        if (t2 < t_max) 
+                            t_max = t2;
+
+
+                        if (t >= t_max)
+                            return false;
+                    }
+                }
+
+
+                if (t < 0 || t * t>arg_ray.LengthSqr()) {
+                    return false;
+                }
+                colPos = arg_ray .point+ t * (arg_ray.velocity);
+                
+                return true;
             }
+
+            static inline bool IsHitSegmentOBB(const Segment& arg_ray, const Box_OBB_Static& arg_box, const Matrix4x4& arg_transform, Vector3& colPos) {
+                Matrix4x4 invRotate = arg_transform.GetInverse();
+                Vector3 p_l = arg_ray.point * invRotate;
+
+                invRotate._41 = 0;
+                invRotate._42 = 0;
+                invRotate._43 = 0;
+                Vector3 dir_l = arg_ray.velocity * invRotate;
+
+                float t;
+                Vector3 min = arg_box.GetMin();
+                Vector3 max = arg_box.GetMax();
+
+
+                t = -FLT_MAX;
+                float t_max = FLT_MAX;
+
+                for (int i = 0; i < 3; ++i) {
+                    if (abs(dir_l.GetData_const()[i]) < FLT_EPSILON) {
+                        if (p_l.GetData_const()[i] < min.GetData()[i] || p_l.GetData_const()[i]> max.GetData()[i])
+                            return false;
+                    }
+                    else {
+
+                        float odd = 1.0f / dir_l.GetData_const()[i];
+                        float t1 = (min.GetData()[i] - p_l.GetData_const()[i]) * odd;
+                        float t2 = (max.GetData()[i] - p_l.GetData_const()[i]) * odd;
+                        if ((t1) > (t2)) {
+                            float tmp = t1; t1 = t2; t2 = tmp;
+                        }
+
+                        if (t1 > t) t = t1;
+                        if (t2 < t_max) t_max = t2;
+
+
+                        if (t >= t_max)
+                            return false;
+                    }
+                }
+
+
+                if (t < 0||t>arg_ray.Length()) {
+                    return false;
+                }
+                colPos = arg_ray.point + t * (arg_ray.velocity);
+
+
+                return true;
+            }
+
         }
 
         namespace BoxHit {

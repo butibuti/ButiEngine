@@ -14,16 +14,20 @@ namespace ButiEngine {
 		template<class Archive>
 		void serialize(Archive& archive)
 		{
+			//archive(isActive);
+			//archive(cameraName);
 		}
 		std::shared_ptr<Behavior> Clone()override {
 			return ObjectFactory::Create<CameraMan>();
 		}
+		void OnShowUI()override;
 	private:
 		float vertQuake;
 		static float vertQuakeMax;
 		float horizonQuake;
 		static float horizonQuakeMax;
 		std::shared_ptr<Transform> child;
+		std::string cameraName="main";
 	};
 }
 

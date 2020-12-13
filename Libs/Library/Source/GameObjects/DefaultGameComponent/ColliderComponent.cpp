@@ -1,6 +1,5 @@
 #pragma once
 #include "stdafx.h"
-#include"Header/GameParts/CollisionLayer.h"
 #include "..\..\..\Header\GameObjects\DefaultGameComponent\ColliderComponent.h"
 #include"Header/GameParts/CollisionManager.h"
 
@@ -10,6 +9,8 @@ ButiEngine::Collision::ColliderComponent::ColliderComponent(std::shared_ptr<Coll
 {
 	shp_collisionPrim = arg_shp_collisionPrim;
 	layerNum = arg_layerNum;
+
+
 }
 
 void ButiEngine::Collision::ColliderComponent::Initialize()
@@ -43,6 +44,9 @@ void ButiEngine::Collision::ColliderComponent::OnRemove()
 
 void ButiEngine::Collision::ColliderComponent::Start()
 {
+
+	auto obb = ObjectFactory::Create<Collision::CollisionPrimitive_Box_OBB>(Vector3(1, 1, 1), gameObject.lock()->transform);
+	obb->ToAABB();
 	CollisionStart();
 
 }
@@ -58,9 +62,9 @@ void ButiEngine::Collision::ColliderComponent::CollisionStart()
 	}
 
 
-	auto registObj = ObjectFactory::Create< CollisionObject>(shp_collisionPrim, gameObject.lock());
 
-	p_index = GetCollisionManager().lock()->RegistCollisionObject(layerNum, registObj);
+	p_index = GetCollisionManager().lock()->RegistCollisionObject(layerNum, shp_collisionPrim,gameObject.lock());
+
 
 }
 

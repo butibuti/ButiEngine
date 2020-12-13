@@ -136,8 +136,6 @@ namespace ButiEngine {
 		template<class Archive>
 		void serialize(Archive& archive)
 		{
-			archive(map_values);
-			archive(vec_p_id);
 		}
 
 		ID<T> ShowGUI(GUI::GuiIO& arg_io) {

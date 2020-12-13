@@ -84,6 +84,18 @@ bool ButiEngine::Collision::CollisionPrimitive_Box_AABB::IsHitSurface(CollisionP
     return false;
 }
 
+bool ButiEngine::Collision::CollisionPrimitive_Box_AABB::IsHitRay(CollisionPrimitive_Ray* other)
+{
+    Vector3 colPos;
+    return Geometry::RayHit::IsHitRayAABB(*other, *this, colPos);
+}
+
+bool ButiEngine::Collision::CollisionPrimitive_Box_AABB::IsHitSegment(CollisionPrimitive_Segment* other)
+{
+    Vector3 colPos;
+    return Geometry::RayHit::IsHitSegmentAABB(*other, *this, colPos);
+}
+
 
 bool ButiEngine::Collision::CollisionPrimitive_Box_OBB::IsHitPoint(CollisionPrimitive_Point* other)
 {
@@ -113,6 +125,24 @@ bool ButiEngine::Collision::CollisionPrimitive_Box_OBB::IsHitPolygon(CollisionPr
 bool ButiEngine::Collision::CollisionPrimitive_Box_OBB::IsHitSurface(CollisionPrimitive_Surface* other)
 {
     return false;
+}
+
+bool ButiEngine::Collision::CollisionPrimitive_Box_OBB::IsHitRay(CollisionPrimitive_Ray* other)
+{
+    Vector3 colPos;
+    return Geometry::RayHit::IsHitRayOBB(*other, *this, wkp_transform.lock()->GetMatrix_WithoutScale(), colPos);
+}
+
+bool ButiEngine::Collision::CollisionPrimitive_Box_OBB::IsHitSegment(CollisionPrimitive_Segment* other)
+{
+    Vector3 colPos;
+    return Geometry::RayHit::IsHitSegmentOBB(*other, *this, wkp_transform.lock()->GetMatrix_WithoutScale(), colPos);
+}
+
+ButiEngine::Geometry::Box_AABB ButiEngine::Collision::CollisionPrimitive_Box_OBB::ToAABB()
+{
+    auto length = Geometry::BoxHit::GetBox_OBBContainAABBLength(*this);
+    return Geometry::Box_AABB(wkp_transform.lock()->GetWorldPosition(),length );
 }
 
 bool ButiEngine::Collision::CollisionPrimitive_Point::IsHitPoint(CollisionPrimitive_Point* other)
@@ -230,4 +260,28 @@ bool ButiEngine::Collision::CollisionPrimitive_Ray::IsHitPolygon(CollisionPrimit
 bool ButiEngine::Collision::CollisionPrimitive_Ray::IsHitSurface(CollisionPrimitive_Surface* other)
 {
     return Geometry::SurfaceHit::IsHitLineSurface(*this, other->wkp_transform.lock()->GetWorldPosition(), other->normal);
+}
+
+bool ButiEngine::Collision::CollisionPrimitive_Ray::IsHitBox_AABB(CollisionPrimitive_Box_AABB* other)
+{
+    Vector3 colPos;
+    return Geometry::RayHit::IsHitRayAABB(*this, *other,colPos);
+}
+
+bool ButiEngine::Collision::CollisionPrimitive_Ray::IsHitBox_OBB(CollisionPrimitive_Box_OBB* other)
+{
+    Vector3 colPos;
+    return Geometry::RayHit::IsHitRayOBB(*this, *other, other->wkp_transform.lock()->GetMatrix_WithoutScale(),colPos);
+}
+
+bool ButiEngine::Collision::CollisionPrimitive_Segment::IsHitBox_AABB(CollisionPrimitive_Box_AABB* other)
+{
+    Vector3 colPos;
+    return Geometry::RayHit::IsHitSegmentAABB(*this, *other, colPos);
+}
+
+bool ButiEngine::Collision::CollisionPrimitive_Segment::IsHitBox_OBB(CollisionPrimitive_Box_OBB* other)
+{
+    Vector3 colPos;
+    return Geometry::RayHit::IsHitSegmentOBB(*this, *other, other->wkp_transform.lock()->GetMatrix_WithoutScale(), colPos);
 }

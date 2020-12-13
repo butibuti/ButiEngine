@@ -1,7 +1,7 @@
 #include"stdafx.h"
 #include"Header/Common/Camera_Dx12.h"
-#include "..\..\Header\Common\Camera.h"
 
+#include"Header/Common/CollisionPrimitive.h"
 
 std::string ButiEngine::Camera::GetName() const
 {
@@ -37,6 +37,23 @@ void ButiEngine::Camera::Draw()
 ButiEngine::CameraProjProperty& ButiEngine::Camera::GetCameraProperty()
 {
 	return cameraViewProp;
+}
+
+bool ButiEngine::Camera::IsContaineVisibility(std::shared_ptr<Geometry::Box_AABB> arg_AABB)
+{
+	if (Geometry::SurfaceHit::IsHitAABBCameraFrustum(*arg_AABB, shp_transform, projectionMatrix, cameraViewProp.nearClip, cameraViewProp.farClip)) {
+
+
+		auto ray = ObjectFactory::Create<Collision::CollisionPrimitive_Segment>(shp_transform, arg_AABB->position);
+		//ray->Update();
+		auto objects = shp_renderer->GetHitDrawObjects(ray, cameraViewProp.layer);
+
+		if (objects.size()==1) {
+			return true;
+		}
+		GUI::Text(std::to_string(objects.size()));
+	}
+	return false;
 }
 
 std::shared_ptr< ButiEngine::ICamera> ButiEngine::CameraCreater::CreateCamera(const CameraProjProperty& arg_cameraViewProp, const std::string& cameraName, const bool initActive, std::shared_ptr<IRenderer> arg_shp_renderer, std::weak_ptr<GraphicDevice> arg_wkp_graphicDevice)

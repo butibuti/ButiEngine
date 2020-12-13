@@ -16,6 +16,7 @@ std::string ButiEngine::GlobalSettings::resourceDirectory = "Resources/";
 ButiEngine::Vector3 ButiEngine::Vector3::XAxis = ButiEngine::Vector3(1, 0, 0);
 ButiEngine::Vector3 ButiEngine::Vector3::YAxis = ButiEngine::Vector3(0, 1, 0);
 ButiEngine::Vector3 ButiEngine::Vector3::ZAxis = ButiEngine::Vector3(0, 0, 1);
+ButiEngine::Vector3 ButiEngine::Vector3::Zero = ButiEngine::Vector3(0, 0, 0);
 
 
 const float frame_min = (1.0f / 60.0f) * 1000;
@@ -159,7 +160,7 @@ void ButiEngine::Application::InitLoadResources()
 		normalVertices.Clear();
 		uv_normalVertices.Clear();
 
-		MeshHelper::CreateCube(Vector3(0.5f, 0.5f, 0.5f), colors, testVertices, true);
+		MeshHelper::CreateCube(Vector3(1.0f, 1.0f, 1.0f), colors, testVertices, true);
 		Vertex::VertexHelper::VertexConvert(testVertices, uv_normalVertices);
 		container->LoadMesh("Cube_UV_Normal", uv_normalVertices);
 		Vertex::VertexHelper::VertexConvert(testVertices, normalVertices);
@@ -223,6 +224,9 @@ void ButiEngine::Application::InitLoadResources()
 		Vertex::VertexHelper::VertexConvert(testVertices, uv_normalVertices);
 		container->LoadMesh("Bar", uv_normalVertices);
 
+
+		container->LoadMesh("Camera", uv_normalVertices);
+		
 	}
 
 	shp_resourceContainer->Reload();

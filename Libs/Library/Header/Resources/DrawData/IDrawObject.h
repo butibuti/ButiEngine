@@ -8,12 +8,24 @@
 namespace ButiEngine {
 
 
+	namespace Collision {
+		class CollisionPrimitive;
+		class CollisionPrimitive_Box_AABB;
+		class CollisionPrimitive_Box_OBB;
+	}
 
 	class IDrawObject {
 	public:
 		virtual void Draw() = 0;
 		virtual void DrawBefore() {}
 		virtual float GetZ() = 0;
+
+		virtual std::shared_ptr<Collision::CollisionPrimitive_Box_AABB> GetMeshAABB() = 0;
+		virtual std::shared_ptr<Collision::CollisionPrimitive_Box_OBB> GetMeshOBB() = 0;
+		virtual void SetPrimitive(std::shared_ptr<Collision::CollisionPrimitive>arg_prim) = 0;
+		virtual void SetOctRegistPtr(unsigned int* arg_ptr) = 0;
+		virtual std::shared_ptr<Collision::CollisionPrimitive> GetPrimitive() = 0;
+		virtual unsigned int* GetOctRegistPtr() = 0;
 	};
 	class IBoneDrawObject {
 	public:

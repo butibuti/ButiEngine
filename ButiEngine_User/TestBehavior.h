@@ -1,5 +1,6 @@
 #pragma once
 #include"Header/BehaviorHeader.h"
+#include"Header/Common/CollisionPrimitive.h"
 namespace ButiEngine {
 
 
@@ -11,7 +12,8 @@ namespace ButiEngine {
 		}
 		void OnUpdate()override;
 		void OnSet()override;
-		void Start()override;
+		void Start()override; 
+		void OnCollision(std::weak_ptr<GameObject> arg_other)override;
 		std::shared_ptr<Behavior> Clone()override;
 		template<class Archive>
 		void serialize(Archive& archive)
@@ -19,6 +21,7 @@ namespace ButiEngine {
 			archive(isActive);
 		}
 	private:
+		std::shared_ptr<Collision::CollisionPrimitive_Box_AABB> shp_AABB;
 	};
 
 }

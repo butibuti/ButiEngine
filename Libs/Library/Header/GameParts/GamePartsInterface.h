@@ -5,6 +5,9 @@
 
 namespace ButiEngine 
 {
+	namespace Collision {
+		class CollisionPrimitive;
+	}
 
 	class GlobalSettings {
 	public:
@@ -50,6 +53,8 @@ namespace ButiEngine
 		virtual void UpdateFog(const Fog& arg_param) = 0;
 		virtual void ReleaseFogBuffer() = 0;
 		virtual std::shared_ptr<CBuffer_Dx12<Fog>> GetFogCBuffer() = 0;
+
+		virtual std::vector< std::shared_ptr<IDrawObject>> GetHitDrawObjects(std::shared_ptr<Collision::CollisionPrimitive> arg_prim, const int arg_layer)=0;
 	};
 
 

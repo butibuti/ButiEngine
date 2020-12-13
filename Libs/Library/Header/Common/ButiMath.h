@@ -367,19 +367,78 @@ namespace ButiEngine {
 			return -1*(*this);
 		}
 
-		inline Vector2& Floor(int len)
+		inline Vector2& Floor(int len=1)
 		{
-			// TODO: return ステートメントをここに挿入します
+			if (len <= 0) {
+				return *this;
+			}
+			*this *= std::pow(10, len - 1);
+			x = std::floor(x);
+			y = std::floor(y);
+			*this /= std::pow(10, len - 1);
+			return *this;
 		}
 
-		inline Vector2& Round(int len)
+		inline Vector2& Round(int len=1)
 		{
-			// TODO: return ステートメントをここに挿入します
+			if (len <= 0) {
+				return *this;
+			}
+			*this *= std::pow(10, len - 1);
+			x = std::round(x);
+			y = std::round(y);
+			*this /= std::pow(10, len - 1);
+			return *this;
 		}
 
-		inline Vector2& Ceil(int len)
+		inline Vector2& Ceil(int len=1)
 		{
-			// TODO: return ステートメントをここに挿入します
+			if (len <= 0) {
+				return *this;
+			}
+			*this *= std::pow(10, len - 1);
+			x = std::ceil(x);
+			y = std::ceil(y);
+			*this /= std::pow(10, len - 1);
+			return *this;
+		}
+
+
+		inline Vector2 GetRound(int len = 1)const
+		{
+			if (len <= 0) {
+				return *this;
+			}
+			Vector2 output;
+			output *= std::pow(10, len - 1);
+			output.x = std::round(x);
+			output.y = std::round(y);
+			output /= std::pow(10, len - 1);
+			return output;
+		}
+		inline Vector2 GetFloor(int len = 1)const
+		{
+			if (len <= 0) {
+				return *this;
+			}
+			Vector2 output;
+			output *= std::pow(10, len - 1);
+			output.x = std::floor(x);
+			output.y = std::floor(y);
+			output /= std::pow(10, len - 1);
+			return output;
+		}
+		inline Vector2 GetCeil(int len = 1)const
+		{
+			if (len <= 0) {
+				return *this;
+			}
+			Vector2 output;
+			output *= std::pow(10, len - 1);
+			output.x = std::ceil(x);
+			output.y = std::ceil(y);
+			output /= std::pow(10, len - 1);
+			return output;
 		}
 
 		inline float Dot(const Vector2& vec1) const
@@ -434,6 +493,7 @@ namespace ButiEngine {
 		static Vector3 XAxis;
 		static Vector3 YAxis;
 		static Vector3 ZAxis;
+		static Vector3 Zero;
 
 		inline Vector3(const DirectX::XMVECTOR other)
 		{
@@ -466,6 +526,14 @@ namespace ButiEngine {
 			out[0] = x;
 			out[1] = y;
 			out[2] = z;
+		}
+		inline const float* GetData_const()const
+		{
+			return &x;
+		}
+		inline float* GetData()
+		{
+			return &x;
 		}
 		inline Vector3& operator=(const DirectX::XMVECTOR other)
 		{
@@ -585,19 +653,84 @@ namespace ButiEngine {
 		}
 
 
-		inline Vector3& Floor(int len)
+		inline Vector3& Floor(int len=1)
 		{
-			// TODO: return ステートメントをここに挿入します
+			if (len <= 0) {
+				return *this;
+			}
+			*this *= std::pow(10, len - 1);
+			x = std::floor(x);
+			y = std::floor(y);
+			z = std::floor(z);
+			*this /= std::pow(10, len - 1);
+			return *this;
 		}
 
-		inline Vector3& Round(int len)
+		inline Vector3& Round(int len=1)
 		{
-			// TODO: return ステートメントをここに挿入します
+			if (len <= 0) {
+				return *this;
+			}
+			*this *= std::pow( 10,len-1);
+			x = std::round(x);
+			y = std::round(y);
+			z = std::round(z);
+			*this /= std::pow(10, len - 1);
+			return *this;
 		}
 
-		inline Vector3& Ceil(int len)
+		inline Vector3& Ceil(int len=1)
 		{
-			// TODO: return ステートメントをここに挿入します
+			if (len <= 0) {
+				return *this;
+			}
+			*this *= std::pow(10, len - 1);
+			x= std::ceil(x);
+			y=std::ceil(y);
+			z=std::ceil(z);
+			*this /= std::pow(10, len - 1);
+			return *this;
+		}
+
+
+		inline Vector3 GetRound(int len = 1)const
+		{
+			if (len <= 0) {
+				return *this;
+			}
+			Vector3 output;
+			output *= std::pow(10, len - 1);
+			output.x = std::round(x);
+			output.y = std::round(y);
+			output.z = std::round(z);
+			output /= std::pow(10, len - 1);
+			return output;
+		}
+		inline Vector3 GetFloor(int len = 1)const
+		{
+			if (len <= 0) {
+				return *this;
+			}
+			Vector3 output;
+			output *= std::pow(10, len - 1);
+			output.x = std::floor(x);
+			output.y = std::floor(y);
+			output.z = std::floor(z);
+			output /= std::pow(10, len - 1);
+			return output;
+		}
+		inline Vector3 GetCeil(int len = 1)const
+		{
+			if (len <= 0) {
+				return *this;
+			}
+			Vector3 output;
+			output *= std::pow(10, len - 1);
+			output.x = std::ceil(x);
+			output.y = std::ceil(y);
+			output.z = std::ceil(z);
+			output /= std::pow(10, len - 1);
+			return output;
 		}
 
 		inline float Distance(const Vector3& arg_point) {
@@ -1495,7 +1628,7 @@ namespace ButiEngine {
 
 	struct Segment : public Line {
 		Segment() {}
-		Segment(const Vector3& startPoint, const Vector3& endPoint) :Line(startPoint, endPoint - startPoint), endPos(endPoint) {}
+		Segment(const Vector3& startPoint, const Vector3& endPoint) :Line(startPoint,((Vector3)( endPoint - startPoint)).GetNormalize()), endPos(endPoint) {}
 
 		// 終点を取得
 		inline Vector3 GetEndPoint() const {
@@ -1503,6 +1636,12 @@ namespace ButiEngine {
 		}
 		inline Vector3 GetPoint(float t) const override {
 			return point + (endPos - point) * t;
+		}
+		float Length()const {
+			return ((Vector3)(endPos - point)).GetLength();
+		}
+		float LengthSqr()const {
+			return ((Vector3)(endPos - point)).GetLengthSqr();
 		}
 		Vector3 endPos;
 	};

@@ -5,26 +5,36 @@ namespace ButiEngine {
 
 	namespace Collision {
 		const char MaxLevel = 7;
-		class OctCell; 
+
+		template<typename T>
+		class OctCell;
+		template<typename T>
 		class OctRegistObj;
-		struct CollisionObject:public IObject {
-			CollisionObject(std::weak_ptr<CollisionPrimitive> arg_wkp_coliisionPrim, std::weak_ptr<GameObject> arg_wkp_gameObj) {
+
+		template<typename T>
+		struct CollisionObject :public IObject {
+
+			CollisionObject(std::weak_ptr<CollisionPrimitive> arg_wkp_coliisionPrim, std::weak_ptr<T> arg_wkp_obj) {
 				wkp_coliisionPrim = arg_wkp_coliisionPrim;
-				wkp_gameObj = arg_wkp_gameObj;
+				wkp_obj = arg_wkp_obj;
 			}
-			~CollisionObject(){
+			~CollisionObject() {
 
 			}
 			void Initialize()override {}
 			void PreInitialize()override {}
 			std::weak_ptr<CollisionPrimitive> wkp_coliisionPrim;
-			std::weak_ptr<GameObject> wkp_gameObj;
+			std::weak_ptr<T> wkp_obj;
 		};
 
-		class OctRegistObj:public std::enable_shared_from_this<OctRegistObj>
+		using CollisionObject_GameObject = CollisionObject<GameObject>;
+		using CollisionObject_DrawObject = CollisionObject<IDrawObject>;
+
+		template<typename T>
+		class OctRegistObj:public std::enable_shared_from_this<OctRegistObj<T>>
 		{
 		public:
-			inline OctRegistObj(std::shared_ptr< CollisionObject> arg_shp_collisionObj) {
+			inline OctRegistObj(std::shared_ptr<CollisionObject <T>> arg_shp_collisionObj) {
 
 				shp_collisionObject = arg_shp_collisionObj;
 
@@ -32,24 +42,44 @@ namespace ButiEngine {
 			~OctRegistObj() {
 				shp_collisionObject = nullptr;
 			}
-			OctCell* p_cell=nullptr;			
-			std::shared_ptr< CollisionObject> shp_collisionObject;				
-			std::shared_ptr<OctRegistObj> shp_next=nullptr;	
-			std::shared_ptr<OctRegistObj> shp_bef=nullptr;	
+			OctCell<T>* p_cell=nullptr;		
+			std::shared_ptr<CollisionObject< T>> shp_collisionObject;				
+			std::shared_ptr<OctRegistObj<T>> shp_next=nullptr;	
+			std::shared_ptr<OctRegistObj<T>> shp_bef=nullptr;	
 
-			bool Remove();
+			bool Remove()
+			{
+				if (!p_cell)
+					return false;
 
-			void RegistCell(OctCell* arg_pCell)
+
+				if (shp_next)
+				{
+					shp_next->shp_bef = shp_bef;
+				}
+				if (shp_bef)
+				{
+					shp_bef->shp_next = shp_next;
+				}
+				p_cell->OnRemove(this);
+				shp_next = nullptr;
+				shp_bef = nullptr;
+				p_cell = nullptr;
+				return true;
+			}
+
+			void RegistCell(OctCell<T>* arg_pCell)
 			{
 				p_cell = arg_pCell;
 			}
 
-			std::shared_ptr<OctRegistObj> GetBefObj() {
+			std::shared_ptr<OctRegistObj<T>> GetBefObj() {
 				return shp_bef;
 			}
 		};
 
 
+		template<typename T>
 		class OctCell {
 		public:
 			OctCell() {
@@ -63,7 +93,7 @@ namespace ButiEngine {
 				}
 				shp_head = nullptr;
 			}
-			inline void RegistObject(std::shared_ptr<OctRegistObj> arg_obj) {
+			inline void RegistObject(std::shared_ptr<OctRegistObj< T>> arg_obj) {
 
 				if (arg_obj->p_cell == this||!arg_obj)
 					return;
@@ -80,24 +110,48 @@ namespace ButiEngine {
 
 				shp_head = arg_obj;
 			}
-			void OnRemove(OctRegistObj* arg_remove)
+			void OnRemove(OctRegistObj< T>* arg_remove)
 			{
 				if ((shp_head.get() ==arg_remove )&& arg_remove) {
 					shp_head = shp_head->shp_next;
 				}
 			}
-			std::shared_ptr< OctRegistObj>& GetHead() {
+			std::shared_ptr< OctRegistObj<T>>& GetHead() {
 				return shp_head;
 			}
 		private:
-			std::shared_ptr< OctRegistObj> shp_head;
+			std::shared_ptr< OctRegistObj< T>> shp_head;
 
 		};
 
+		template<typename T>
 		class CollisionLayer :public IObject
 		{
 		public:
-			CollisionLayer(const unsigned char  arg_level,const Vector3& arg_minPos,const Vector3& arg_maxPos);
+			CollisionLayer(const unsigned char  arg_level,const Vector3& arg_minPos,const Vector3& arg_maxPos) {
+
+				if (arg_level <= MaxLevel)
+					maxLevel = arg_level;
+				else {
+					maxLevel = MaxLevel;
+				}
+				rangeMax = arg_maxPos;
+				rangeMin = arg_minPos;
+				width = rangeMax - rangeMin;
+				OctPow[0] = 1;
+				OctPowSevenDevided[0] = 0;
+				for (int i = 1; i < MaxLevel + 1; i++) {
+					OctPow[i] = OctPow[i - 1] * 8;
+					OctPowSevenDevided[i] = (OctPow[i] - 1) / 7;
+				}
+				maxCellNum = OctPowSevenDevided[MaxLevel - 1];
+
+				unit = width / ((float)(1 << maxLevel));
+				ary_cells = new OctCell<T> * [maxCellNum]();
+
+				CreateCell(0);
+
+			}
 			~CollisionLayer() {
 				vec_shp_collisionObjs.clear();
 				for (auto itr = vec_index.begin(); itr != vec_index.end(); itr++) {
@@ -109,14 +163,43 @@ namespace ButiEngine {
 				}
 				delete[] ary_cells;
 			}
-			unsigned int* RegistCollisionObj(std::shared_ptr< CollisionObject> arg_collisionObj);
-			void UnRegistCollisionObj(unsigned int* arg_index);
-			void Initialize()override;
+			unsigned int* RegistCollisionObj(std::shared_ptr< CollisionPrimitive> arg_primitive, std::shared_ptr< T> arg_collisionObj) {
+
+				UINT* index = new UINT(vec_shp_collisionObjs.size());
+
+				vec_shp_collisionObjs.push_back(std::make_shared<OctRegistObj<T>>(ObjectFactory::Create<CollisionObject<T>>(arg_primitive,arg_collisionObj)));
+
+				vec_index.push_back(index);
+				return index;
+
+			}
+			void UnRegistCollisionObj(unsigned int* arg_index) {
+				auto index = *arg_index;
+				if (index >= vec_shp_collisionObjs.size()) {
+					return;
+				}
+				auto itr = vec_shp_collisionObjs.begin();
+				itr += index;
+				(*itr)->Remove();
+				vec_shp_collisionObjs.erase(itr);
+
+				delete arg_index;
+				auto numItr = vec_index.begin() + index;
+				numItr = vec_index.erase(numItr);
+
+				for (; numItr != vec_index.end(); numItr++) {
+					*(*numItr) -= 1;
+				}
+			}
+			void Initialize()override{}
 			void PreInitialize()override{}
-			void Update();
+			void Update() {
+				RegistOctree();
+
+			}
 			inline void RegistOctree() {
+				Vector3 minPoint, maxPoint;
 				for (auto itr = vec_shp_collisionObjs.begin(); itr != vec_shp_collisionObjs.end(); itr++) {
-					Vector3 minPoint, maxPoint;
 					(*itr)->shp_collisionObject-> wkp_coliisionPrim.lock()->GetMaxPointAndMinPoint(maxPoint, minPoint);
 					auto cellNum = GetMortonSpace(minPoint, maxPoint);
 
@@ -129,7 +212,53 @@ namespace ButiEngine {
 					ary_cells[cellNum]->RegistObject(*itr);
 				}
 			}
-			void HitCheck();
+			void Check(std::vector<std::shared_ptr<CollisionObject< T>>>& vec_collisionObjects) {
+				std::list<std::shared_ptr<CollisionObject< T>>> list_objStack;
+
+
+				CreateCollisionObjectList(0, vec_collisionObjects, list_objStack);
+
+			}
+
+			void Check(std::shared_ptr<CollisionPrimitive> arg_shp_checkPrimitive, std::vector<std::shared_ptr<CollisionObject< T>>>& arg_vec_collisionObjects) {
+
+				Vector3 minPoint, maxPoint;
+
+				arg_shp_checkPrimitive->GetMaxPointAndMinPoint(maxPoint, minPoint);
+				auto cellNum = GetMortonSpace(minPoint, maxPoint);
+				if (!ary_cells[cellNum] && cellNum < maxCellNum) {
+					CreateCell(cellNum);
+				}
+				std::vector<std::shared_ptr<CollisionObject< T>>> vec_collisionObjects;
+				CreateObjectList(cellNum, vec_collisionObjects);
+				auto endItr = vec_collisionObjects.end();
+				for (auto itr = vec_collisionObjects.begin(); itr != endItr; itr++) {
+					if ((*itr)->wkp_coliisionPrim.lock()->IsHit(arg_shp_checkPrimitive)) {
+						arg_vec_collisionObjects.push_back((*itr));
+					}
+				}
+
+			}
+			void Check(std::shared_ptr<CollisionPrimitive> arg_shp_checkPrimitive, std::vector<std::shared_ptr< T>>& arg_vec_collisionObjects) {
+
+				Vector3 minPoint, maxPoint;
+
+				arg_shp_checkPrimitive->GetMaxPointAndMinPoint(maxPoint, minPoint);
+				auto cellNum = GetMortonSpace(minPoint, maxPoint);
+				if (!ary_cells[cellNum] && cellNum < maxCellNum) {
+					CreateCell(cellNum);
+				}
+				std::vector<std::shared_ptr<CollisionObject< T>>> vec_collisionObjects;
+				CreateObjectList(cellNum, vec_collisionObjects);
+				auto endItr = vec_collisionObjects.end();
+				for (auto itr = vec_collisionObjects.begin(); itr != endItr; itr++) {
+					if ((*itr)->wkp_coliisionPrim.lock()->IsHit(arg_shp_checkPrimitive)) {
+						arg_vec_collisionObjects.push_back((*itr)->wkp_obj.lock());
+					}
+				}
+
+			}
+
 		private:
 			inline DWORD  Get3DMortonNumber(const unsigned char  x,const unsigned char  y,const unsigned char  z)
 			{
@@ -143,7 +272,9 @@ namespace ButiEngine {
 					(unsigned char)((arg_position.z - rangeMin.z) / unit.z));
 			}
 			inline unsigned short GetMortonSpace(const Vector3& arg_minPos, const Vector3& arg_maxPos) {
-				
+				if (arg_minPos == Vector3::Zero && arg_maxPos == Vector3::Zero) {
+					return 0;
+				}
 				auto maxSpace = Get3DMortonNumber(arg_maxPos );
 				auto levelCheckFlag = Get3DMortonNumber(arg_minPos) ^maxSpace;
 				auto level = OctreeHelper::GetLevel(levelCheckFlag,maxLevel);
@@ -152,15 +283,15 @@ namespace ButiEngine {
 				num += OctPowSevenDevided[maxLevel - level];
 				return (unsigned short)num;
 			}
-			inline void CreateCollisionObjectList(const unsigned short arg_cellNum, std::vector<std::shared_ptr< CollisionObject>>& arg_output, std::list<std::shared_ptr< CollisionObject>>& arg_stack) {
-				
-				auto objItr= ary_cells[arg_cellNum]->GetHead();
+			inline void CreateCollisionObjectList(const unsigned short arg_cellNum, std::vector<std::shared_ptr< CollisionObject<T>>>& arg_output, std::list<std::shared_ptr<  CollisionObject<T>>>& arg_stack) {
+
+				auto objItr = ary_cells[arg_cellNum]->GetHead();
 				while (objItr)
 				{
-					auto rObjItr =objItr->shp_next;
-					while (rObjItr!=nullptr) {
+					auto rObjItr = objItr->shp_next;
+					while (rObjItr != nullptr) {
 						// 衝突リスト作成
-						arg_output.push_back( objItr->shp_collisionObject);
+						arg_output.push_back(objItr->shp_collisionObject);
 						arg_output.push_back(rObjItr->shp_collisionObject);
 
 						rObjItr = rObjItr->shp_next;
@@ -189,7 +320,7 @@ namespace ButiEngine {
 							}
 						}
 						ChildFlag = true;
-						CreateCollisionObjectList(arg_cellNum * 8 + 1 + i, arg_output, arg_stack);	
+						CreateCollisionObjectList(arg_cellNum * 8 + 1 + i, arg_output, arg_stack);
 					}
 				}
 
@@ -200,12 +331,35 @@ namespace ButiEngine {
 				}
 
 			}
+			inline void CreateObjectList(const unsigned short arg_cellNum, std::vector<std::shared_ptr<  CollisionObject<T>>>& arg_output) {
+
+				auto objItr = ary_cells[arg_cellNum]->GetHead();
+				while (objItr)
+				{
+					arg_output.push_back(objItr->shp_collisionObject);
+					
+					objItr = objItr->shp_next;
+				}
+
+				// ③ 子空間に移動
+				DWORD ObjNum = 0;
+				DWORD i, nextCellNum;
+				for (i = 0; i < 8; i++) {
+					nextCellNum = arg_cellNum * 8 + 1 + i;
+					if (nextCellNum < maxCellNum && ary_cells[arg_cellNum * 8 + 1 + i]) {
+						
+						CreateObjectList(arg_cellNum * 8 + 1 + i, arg_output);
+					}
+				}
+
+
+			}
 			inline void CreateCell(unsigned short arg_cellNum) {
 
 				while (!ary_cells[arg_cellNum])
 				{
 					// 指定の要素番号に空間を新規作成
-					ary_cells[arg_cellNum]= new OctCell();
+					ary_cells[arg_cellNum]= new OctCell<T>();
 
 					// 親空間にジャンプ
 					arg_cellNum = (arg_cellNum - 1) >> 3;
@@ -213,9 +367,9 @@ namespace ButiEngine {
 				}
 
 			}
-			std::vector<std::shared_ptr< OctRegistObj>> vec_shp_collisionObjs;
+			std::vector<std::shared_ptr< OctRegistObj<T>>> vec_shp_collisionObjs;
 			std::vector<UINT*>vec_index;
-			OctCell** ary_cells;
+			OctCell<T>** ary_cells;
 			UINT OctPow[MaxLevel + 1];
 			UINT OctPowSevenDevided[MaxLevel + 1];
 			Vector3 width;	

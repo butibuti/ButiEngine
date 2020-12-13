@@ -2,16 +2,24 @@
 #include"stdafx.h"
 #include"../Resources/DrawData/IDrawObject.h"
 namespace ButiEngine {
+
+	namespace Collision {
+		template<typename T>
+		class CollisionLayer;
+	}
+
 	struct DrawLayer {
+		DrawLayer();
 		void Clear();
 		void BefRendering();
-		UINT* Regist(std::weak_ptr< IDrawObject> arg_wkp_drawObject, const bool arg_isAfterRendering);
+		UINT* Regist(std::weak_ptr< IDrawObject> arg_wkp_drawObject, const bool arg_isAfterRendering, std::shared_ptr<Collision::CollisionPrimitive_Box_OBB> arg_ret_pim=nullptr);
 		void UnRegist(UINT* arg_path,const bool arg_isAfterRendering);
 
 		std::vector<std::weak_ptr< IDrawObject>> vec_befDrawObj;
 		std::vector<std::weak_ptr< IDrawObject>> vec_afterDrawObj;
 		std::vector<UINT*> vec_index;
 		std::vector<UINT*> vec_afterIndex;
+		std::shared_ptr<Collision::CollisionLayer<IDrawObject>> shp_collisionLayer;
 	};
 
 	class Renderer:public IRenderer
@@ -32,6 +40,8 @@ namespace ButiEngine {
 		void TextureAttach(const TextureTag& arg_textureTag, const UINT slot)override;
 		void ShaderAttach(const ShaderTag& arg_shaderTag)override;
 		void MaterialAttach(const MaterialTag& arg_materialTag)override;
+
+		std::vector< std::shared_ptr<IDrawObject>> GetHitDrawObjects(std::shared_ptr<Collision::CollisionPrimitive> arg_prim,const int arg_layer)override;
 
 		UINT* RegistDrawObject(std::weak_ptr< IDrawObject> arg_wkp_drawObject, const bool arg_afterDraw,const UINT arg_layer=0)override;
 

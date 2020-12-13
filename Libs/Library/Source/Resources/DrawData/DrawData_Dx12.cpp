@@ -18,7 +18,7 @@ ButiEngine::MeshDrawData_Dx12::MeshDrawData_Dx12(const MeshTag & arg_meshTag,  c
 	vec_materialTags = arg_materialTag;
 	wkp_graphicDevice = arg_wkp_graphicDevice;
 	subset.push_back(wkp_graphicDevice.lock()->GetApplication().lock()-> GetResourceContainer()->GetMesh(meshTag).lock()->GetIndexCount());
-	boxEightCorner = wkp_graphicDevice.lock()->GetApplication().lock()->GetResourceContainer()->GetMesh(meshTag).lock()->GetBackUpdata().GetBoxEightCorner();
+	//boxEightCorner = wkp_graphicDevice.lock()->GetApplication().lock()->GetResourceContainer()->GetMesh(meshTag).lock()->GetBackUpdata().GetBoxEightCorner();
 	shp_drawInfo = arg_shp_drawInfo;
 	transform = arg_shp_transform;
 }

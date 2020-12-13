@@ -74,6 +74,30 @@ namespace ButiEngine {
 			}
 			return output;
 		}
+		inline Matrix4x4 GetMatrix_WithoutScale()
+		{
+			Matrix4x4 output = rotation;
+			output._41 = localPosition.x;
+			output._42 = localPosition.y;
+			output._43 = localPosition.z;
+			if (baseTransform != nullptr) {
+				auto baseMatrix = baseTransform->GetMatrix_WithoutScale();
+				output = (XMMATRIX)output * (XMMATRIX)baseMatrix;
+			}
+
+			return output;
+		}
+		inline Matrix4x4 GetTranslateMatrix()
+		{
+			Matrix4x4 output;
+			Vector3 world = GetWorldPosition();
+
+			output._41 = world.x;
+			output._42 = world.y;
+			output._43 = world.z;
+
+			return output;
+		}
 
 		inline const Matrix4x4 GetLocalMatrix()
 		{

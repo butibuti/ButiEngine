@@ -1,5 +1,6 @@
 #pragma once
 #include"../Device/ObjectFactory.h"
+#include"Geometry.h"
 namespace ButiEngine {
 
 
@@ -63,6 +64,7 @@ namespace ButiEngine {
 		virtual void Draw() = 0;
 		virtual void ShowUI() = 0;
 		virtual CameraProjProperty& GetCameraProperty() = 0;
+		virtual bool IsContaineVisibility(std::shared_ptr<Geometry::Box_AABB>arg_AABB) = 0;
 	protected:
 	};
 
@@ -76,6 +78,7 @@ namespace ButiEngine {
 		bool GetActive()const override;
 		void Draw()override;
 		CameraProjProperty& GetCameraProperty()override;
+		bool IsContaineVisibility(std::shared_ptr<Geometry::Box_AABB>arg_AABB)override;
 	protected:
 		Matrix4x4 projectionMatrix;
 		Matrix4x4 viewMatrix;

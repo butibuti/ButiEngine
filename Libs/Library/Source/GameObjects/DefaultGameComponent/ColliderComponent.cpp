@@ -88,10 +88,29 @@ std::shared_ptr< ButiEngine::GameComponent> ButiEngine::Collision::ColliderCompo
 	}
 }
 
+std::shared_ptr<ButiEngine::Collision::CollisionPrimitive> ButiEngine::Collision::ColliderComponent::GetCollisionPrimitive()
+{
+	return shp_collisionPrim;
+}
+
 void ButiEngine::Collision::ColliderComponent::OnShowUI()
 {
+	GUI::BulletText("Layer");
+	int layer=layerNum;
+	if (GUI::DragInt("##layer", layer, 1, 0, 100)) {
+		CollisionStop();
+		layerNum = layer;
+		CollisionStart();
+	}
+
 	if (shp_collisionPrim) {
 		shp_collisionPrim->ShowUI();
+
+		if (GUI::Button("RemovePrimitive")) {
+
+			CollisionStop();
+			shp_collisionPrim = nullptr;
+		}
 	}
 	else {
 		if (GUI::Button("Point")) {

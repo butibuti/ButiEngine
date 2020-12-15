@@ -40,6 +40,8 @@ namespace ButiEngine {
 
 		static void CreateCirclePolygon(const float radius,const UINT	tessellation, BackupData<Vertex::Vertex_UV_Normal_Color>& outputMeshData);
 
+		static void CreateCameraFrustum(const float angle, const float width,const float height,const float nearclip, const float farclip, BackupData<Vertex::Vertex_UV_Normal_Color>& outputMeshData);
+		
 		static void CreateImmediateMeshForParticle(const UINT arg_particleCount, BackupData<Vertex::Vertex_UV_Normal_Color>& outputMeshData);
 	private:
 		MeshHelper();

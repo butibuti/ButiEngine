@@ -12,7 +12,7 @@ namespace ButiEngine {
 		static std::shared_ptr< FBXAnalyze::FBXNodeStructure> ReadNodeRecord(BinaryReader& fbxReader, std::unordered_multimap<std::string, std::shared_ptr< ButiEngine::FBXAnalyze::FBXNodeStructure>>& arg_vetor, std::shared_ptr< FBXAnalyze::FBXNodeStructure> parent=nullptr);
 
 		template <class T>
-		static void WriteVertex(const FBXAnalyze::FBXGlobalSettings arg_globalSettings,const std::vector<T>& arg_vertices,const Matrix4x4& arg_transformMatrix ,const std::vector<int>& arg_polygonIndex, BinaryWriter& arg_writer, std::shared_ptr<FBXAnalyze::FBXNodeStructure> arg_UVLayerNode, std::shared_ptr<FBXAnalyze::FBXNodeStructure> arg_normalLayerNode)
+		static void WriteVertex(const FBXAnalyze::FBXGlobalSettings arg_globalSettings,const std::vector<T>& arg_vertices,const Matrix4x4& arg_transformMatrix ,const std::vector<int>& arg_polygonIndex, BinaryWriter& arg_writer, std::shared_ptr<FBXAnalyze::FBXNodeStructure> arg_UVLayerNode, std::shared_ptr<FBXAnalyze::FBXNodeStructure> arg_normalLayerNode,Matrix4x4* arg_transform)
 		{
 
 
@@ -25,7 +25,7 @@ namespace ButiEngine {
 
 
 
-			auto vertexNormals = arg_normalLayerNode->GetChildNode("Normals")->GetProperty<FBXAnalyze::FBXNode_DoubleArrayProperty>()->CreateVector3(arg_globalSettings);
+			auto vertexNormals = arg_normalLayerNode->GetChildNode("Normals")->GetProperty<FBXAnalyze::FBXNode_DoubleArrayProperty>()->CreateVector3(arg_globalSettings,arg_transform);
 
 			bool isNormalMappingPolygpn = FBXAnalyze::UVUTill::GetUVMappingMode(arg_normalLayerNode);
 			bool isNormalReferenceIndexDirect = FBXAnalyze::UVUTill::GetUVReferenceMode(arg_normalLayerNode);

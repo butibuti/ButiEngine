@@ -396,6 +396,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\Resource_Texture_Dx12_RenderTarget.h">
       <Filter>header\Resources</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\CubeTransformAnimation.h">
+      <Filter>header\GameObjects\DefaultGameComponent</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Common\Camera.cpp">
@@ -475,9 +478,6 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\GameObjectTagManager.cpp">
       <Filter>source\GameObjects</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)Source\Scene\IScene.cpp">
-      <Filter>source\Scene</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Scene\Scene.cpp">
       <Filter>source\Scene</Filter>
@@ -672,6 +672,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Resources\Resource_Texture_Dx12_RenderTarget.cpp">
       <Filter>source\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\DefaultGameComponent\CubeTransformAnimation.cpp">
+      <Filter>source\GameObjects\DefaultGameComponent</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

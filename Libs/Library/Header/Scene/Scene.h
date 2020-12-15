@@ -2,7 +2,6 @@
 #ifndef _Scene_H_
 #define _Scene_H_
 #include"stdafx.h"
-#include"../GameParts/CollisionManager.h"
 namespace ButiEngine {
 
 	class Scene :public IScene
@@ -32,14 +31,14 @@ namespace ButiEngine {
 		std::shared_ptr<IRenderer> GetRenderer()override;
 		std::shared_ptr<ISoundManager> GetSoundManager()override;
 		std::weak_ptr< ISceneManager> GetSceneManager()override;
-		std::weak_ptr<Collision::CollisionManager> GetCollisionManager()override;
+		std::weak_ptr<ICollisionManager> GetCollisionManager()override;
 		std::shared_ptr< SceneInformation> GetSceneInformation()override;
 		std::shared_ptr< SceneChangeInformation> GetSceneChangeInformation() override;
 		std::shared_ptr< SceneRenderingInformation> GetSceneRenderingInformation()override;
 	protected:
 		std::shared_ptr<ISceneManager> shp_sceneManager;
 		std::shared_ptr<GameObjectManager> shp_gameObjectManager;
-		std::shared_ptr<Collision::CollisionManager> shp_collisionManager;
+		std::shared_ptr<ICollisionManager> shp_collisionManager;
 	private:
 		std::shared_ptr<ISoundManager>shp_soundManager;
 		std::shared_ptr<IRenderer>shp_renderer;

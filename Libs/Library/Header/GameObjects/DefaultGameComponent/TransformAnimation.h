@@ -31,9 +31,9 @@ namespace ButiEngine {
 			archive(isReverse);
 		}
 		void OnShowUI()override;
-		void PositionSet();
+		virtual void PositionSet();
 		void OnSet()override;
-	private:
+	protected:
 		int direction = 1;
 		float t = 0;
 		std::shared_ptr<Transform> shp_targetTransform;

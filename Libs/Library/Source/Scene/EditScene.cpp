@@ -8,6 +8,7 @@
 #include"Header/Scene/ComponentsLoader.h"
 #include"Header/Scene/EditScene.h"
 
+#include"Header/GameParts/CollisionManager.h"
 
 
 void ButiEngine::EditScene::Update() {
@@ -63,7 +64,8 @@ void ButiEngine::EditScene::UIUpdate()
 			if (startCount==1) {
 				OutputCereal(shp_gameObjectManager,GlobalSettings::GetResourceDirectory()+ "Scene/" + sceneInformation->GetSceneName()+"/objects.gameObjectManager" );
 				OutputCereal(shp_renderingInfo, GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation->GetSceneName() + "/rendering.renderingInfo");
-
+				
+				OutputCereal(shp_collisionManager->GetThis<Collision::CollisionManager>(), GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation->GetSceneName() + "/collision.collisionManager");
 				shp_gameObjectManager->Start();
 			}
 		}
@@ -104,6 +106,7 @@ void ButiEngine::EditScene::UIUpdate()
 				shp_renderingInfo->vec_cameraTransform.push_back(vec_cameras[i]->shp_transform);
 			}
 			shp_renderingInfo->layerCount = shp_renderer->GetLayerCount();
+			OutputCereal(shp_collisionManager->GetThis<Collision::CollisionManager>(), GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation->GetSceneName() + "/collision.collisionManager");
 			OutputCereal(shp_renderingInfo, GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation->GetSceneName() + "/rendering.renderingInfo");
 		};
 	}
@@ -122,6 +125,8 @@ void ButiEngine::EditScene::UIUpdate()
 	GUI::Checkbox("ShowContainer", &showContainer);
 	GUI::SameLine();
 	GUI::Checkbox("ShowCameraEditor", &showCamera);
+	GUI::SameLine();
+	GUI::Checkbox("ShowCollisionManager", &showCollisionManager);
 
 
 	GUI::End();
@@ -238,6 +243,10 @@ void ButiEngine::EditScene::UIUpdate()
 		}
 
 		GUI::End();
+	}
+
+	if (showCollisionManager) {
+		shp_collisionManager->ShowGUI();
 	}
 
 	if(!isActive&&!GUI::IsWindowHovered(GUI::GuiHoveredFlags_AnyWindow))
@@ -410,10 +419,18 @@ void ButiEngine::EditScene::Initialize()
 void ButiEngine::EditScene::ActiveCollision(const UINT arg_layerCount)
 {
 	if (!shp_collisionManager) {
-		shp_collisionManager = ObjectFactory::Create<Collision::CollisionManager>(arg_layerCount);
+		std::string path = GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation->GetSceneName() + "/collision.collisionManager";
+		if (Util::IsFileExistence(path)) {
+			auto temp= ObjectFactory::Create<Collision::CollisionManager>();
+			InputCereal(temp,path);
+			temp->ReCreateLayers();
+			shp_collisionManager = temp;
+		}
+		else
+		{
+			shp_collisionManager = ObjectFactory::Create<Collision::CollisionManager>(arg_layerCount);
+		}
 	}
-	else if(arg_layerCount != shp_collisionManager->GetLayerCount())
-	shp_collisionManager = ObjectFactory::Create<Collision::CollisionManager>(arg_layerCount);
 }
 
 void ButiEngine::EditScene::PreInitialize()
@@ -514,7 +531,7 @@ std::weak_ptr< ButiEngine::ISceneManager> ButiEngine::EditScene::GetSceneManager
 	return shp_sceneManager;
 }
 
-std::weak_ptr<ButiEngine::Collision::CollisionManager> ButiEngine::EditScene::GetCollisionManager()
+std::weak_ptr<ButiEngine::ICollisionManager> ButiEngine::EditScene::GetCollisionManager()
 {
 	return shp_collisionManager;
 }

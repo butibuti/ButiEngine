@@ -29,6 +29,22 @@ namespace ButiEngine
 	template<typename T>
 	class CBuffer_Dx12;
 	class SceneInformation;
+
+	class ICollisionManager :public IObject
+	{
+	public:
+		void Initialize()override {}
+		void PreInitialize()override {}
+		virtual void Update()= 0;
+		virtual UINT* RegistCollisionObject(const int layerNum, std::shared_ptr< Collision::CollisionPrimitive>arg_prim, std::shared_ptr<GameObject> arg_registObj)= 0;
+		virtual void UnRegistCollisionObject(const int layerNum, UINT* registNum)= 0;
+		virtual UINT GetLayerCount()= 0;
+		virtual void AddLayer(const Vector3& size, const int level)= 0;
+		virtual void RemoveLayer(const int arg_layer)= 0;
+		virtual bool IsWillHit(std::shared_ptr< Collision::CollisionPrimitive>arg_prim, int arg_layer)= 0;
+		virtual void ShowGUI()= 0;
+	};
+
 	class IRenderer :public IObject {
 	public:
 		void PreInitialize()override {}
@@ -209,13 +225,21 @@ namespace ButiEngine
 
 		virtual void MaterialUpdate()=0;
 
-		virtual MeshTag GetMeshTag(const std::string& arg_key, const std::string& arg_fileDirectory = "")=0;
-		virtual TextureTag GetTextureTag(const std::string& arg_key, const std::string& arg_fileDirectory = "")=0;
-		virtual ShaderTag GetShaderTag(const std::string& arg_key)=0;
-		virtual SoundTag GetSoundTag(const std::string& arg_key, const std::string& arg_fileDirectory = "")=0;
-		virtual MaterialTag GetMaterialTag(const std::string& arg_key, const std::string& arg_fileDirectory = "")=0;
-		virtual ModelTag GetModelTag(const std::string& arg_key, const std::string& arg_fileDirectory = "")=0;
-		virtual MotionTag GetMotionTag(const std::string& arg_key, const std::string& arg_fileDirectory = "")=0;
+		virtual MeshTag GetMeshTag(const std::string& arg_key, const std::string& arg_fileDirectory = "") = 0;
+		virtual TextureTag GetTextureTag(const std::string& arg_key, const std::string& arg_fileDirectory = "") = 0;
+		virtual ShaderTag GetShaderTag(const std::string& arg_key) = 0;
+		virtual SoundTag GetSoundTag(const std::string& arg_key, const std::string& arg_fileDirectory = "") = 0;
+		virtual MaterialTag GetMaterialTag(const std::string& arg_key, const std::string& arg_fileDirectory = "") = 0;
+		virtual ModelTag GetModelTag(const std::string& arg_key, const std::string& arg_fileDirectory = "") = 0;
+		virtual MotionTag GetMotionTag(const std::string& arg_key, const std::string& arg_fileDirectory = "") = 0;
+
+		virtual MeshTag GetMeshTag(const MeshTag& arg_tag) = 0;
+		virtual TextureTag GetTextureTag(const TextureTag& arg_tag) = 0;
+		virtual ShaderTag GetShaderTag(const ShaderTag& arg_tag) = 0;
+		virtual SoundTag GetSoundTag(const SoundTag& arg_tag) = 0;
+		virtual MaterialTag GetMaterialTag(const MaterialTag& arg_tag) = 0;
+		virtual ModelTag GetModelTag(const ModelTag& arg_tag) = 0;
+		virtual MotionTag GetMotionTag(const MotionTag& arg_tag) = 0;
 
 		virtual std::weak_ptr<IResource_Mesh> GetMesh(const  MeshTag& arg_key)=0;
 		virtual std::weak_ptr<IResource_Texture> GetTexture(const TextureTag& arg_key)=0;
@@ -238,7 +262,7 @@ namespace ButiEngine
 		virtual std::shared_ptr<GraphicDevice> GetGraphicDevice()=0;
 		virtual std::shared_ptr<IResourceContainer> GetResourceContainer()=0;
 		virtual std::unique_ptr<ImguiController>& GetGUIController()=0;
-		virtual std::unique_ptr<GameObjectTagManager>& GetGameObjectTagManager()=0;
+		virtual std::shared_ptr<GameObjectTagManager> GetGameObjectTagManager()=0;
 		virtual bool Update()=0;
 		virtual int Run()=0;
 		virtual void InitLoadResources()=0;

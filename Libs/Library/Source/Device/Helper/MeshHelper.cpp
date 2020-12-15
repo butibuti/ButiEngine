@@ -880,6 +880,65 @@ void ButiEngine::MeshHelper::CreateCirclePolygon(const float radius, const UINT 
 	outputMeshData.indices=indices ;
 }
 
+void ButiEngine::MeshHelper::CreateCameraFrustum(const float angle, const float width, const float height, const float nearclip, const float farclip, BackupData<Vertex::Vertex_UV_Normal_Color>& outputMeshData)
+{
+	outputMeshData.Clear();
+	Matrix4x4 projInv= DirectX::XMMatrixPerspectiveFovLH(
+		DirectX::XMConvertToRadians(angle),
+		width / height,
+		nearclip,
+		farclip
+	);;
+
+	projInv.Inverse();
+
+
+	Vector3 top;//0
+	Vector3 leftup =( projInv*Vector4(-1, 1, 1,1)).GetVec3()*farclip;//1
+	Vector3 leftbottom =( projInv * Vector4(-1, -1, 1, 1)).GetVec3() * farclip;//2
+	Vector3 rightup = (projInv * Vector4(1, 1, 1, 1)).GetVec3() * farclip;//3
+	Vector3 rightbottom =( projInv * Vector4(1, -1, 1, 1)).GetVec3() * farclip;//4
+
+	outputMeshData.vertices.push_back(Vertex::Vertex_UV_Normal_Color(top, Vector2(), Vector3(0, 0, -1)));
+	outputMeshData.vertices.push_back(Vertex::Vertex_UV_Normal_Color(leftup, Vector2(), Vector3(0, 0, -1)));
+	outputMeshData.vertices.push_back(Vertex::Vertex_UV_Normal_Color(leftbottom, Vector2(), Vector3(0, 0, -1)));
+	outputMeshData.vertices.push_back(Vertex::Vertex_UV_Normal_Color(rightup, Vector2(), Vector3(0, 0, -1)));
+	outputMeshData.vertices.push_back(Vertex::Vertex_UV_Normal_Color(rightbottom, Vector2(), Vector3(0, 0, -1)));
+
+	outputMeshData.indices.push_back(0);
+	outputMeshData.indices.push_back(1);
+	outputMeshData.indices.push_back(3);
+
+	outputMeshData.indices.push_back(0);
+	outputMeshData.indices.push_back(3);
+	outputMeshData.indices.push_back(4);
+
+	outputMeshData.indices.push_back(0);
+	outputMeshData.indices.push_back(2);
+	outputMeshData.indices.push_back(1);
+
+	outputMeshData.indices.push_back(0);
+	outputMeshData.indices.push_back(4);
+	outputMeshData.indices.push_back(2);
+
+	outputMeshData.indices.push_back(2);
+	outputMeshData.indices.push_back(3);
+	outputMeshData.indices.push_back(1);
+
+	outputMeshData.indices.push_back(2);
+	outputMeshData.indices.push_back(4);
+	outputMeshData.indices.push_back(3);
+
+	outputMeshData.eightCorner.up_left_front = Vector3(leftup);
+	outputMeshData.eightCorner.up_right_front = Vector3(rightup);
+	outputMeshData.eightCorner.down_left_front = Vector3(leftbottom);
+	outputMeshData.eightCorner.down_right_front = Vector3(rightbottom);
+	outputMeshData.eightCorner.up_left_back  =	Vector3();
+	outputMeshData.eightCorner.up_right_back =	Vector3();
+	outputMeshData.eightCorner.down_left_back =Vector3();
+	outputMeshData.eightCorner.down_right_back=Vector3();
+}
+
 void ButiEngine::MeshHelper::CreateImmediateMeshForParticle(const UINT arg_particleCount, BackupData<Vertex::Vertex_UV_Normal_Color>& outputMeshData)
 {
 	outputMeshData.Clear();

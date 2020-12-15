@@ -109,7 +109,7 @@ void ButiEngine::GameObjectManager::ShowUI()
 
 		std::string name = GUI::newObjectName;
 		GUI::NewObjectNameReset();
-		if (name.size()&&Util::CheckFileExistence(GlobalSettings::GetResourceDirectory()+"GameObject/"+name)) {
+		if (name.size()&&Util::IsFileExistence(GlobalSettings::GetResourceDirectory()+"GameObject/"+name+".gameObject")) {
 			AddObjectFromCereal(name);
 		}else
 		AddObject(ObjectFactory::Create<Transform>());

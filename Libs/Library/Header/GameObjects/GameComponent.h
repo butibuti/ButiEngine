@@ -1,9 +1,6 @@
 #pragma once
 #include<memory>
 namespace ButiEngine {
-	namespace Collision {
-		class CollisionManager;
-	}
 	class GameComponent :public IObject
 	{
 	public:
@@ -40,8 +37,8 @@ namespace ButiEngine {
 		std::weak_ptr<ICamera>& GetCamera(const UINT arg_camNum);
 		std::weak_ptr<ICamera>& GetCamera(const std::string& arg_camName);
 		std::weak_ptr<GameObjectManager> GetManager();
-		std::weak_ptr<Collision::CollisionManager> GetCollisionManager();
-		std::unique_ptr<GameObjectTagManager>& GetTagManager();
+		std::weak_ptr<ICollisionManager> GetCollisionManager();
+		std::shared_ptr<GameObjectTagManager> GetTagManager();
 		std::weak_ptr<GameObject> gameObject;
 
 		bool isActive = true;

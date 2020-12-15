@@ -19,7 +19,22 @@ void ButiEngine::DescriptorHeapManager::Initialize(ID3D12Device& device)
 	
 
 	auto SamplerDescriptorHandle = samplerDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-	SamplerHelper::CreateSampler(SamplerState::LinearClamp, SamplerDescriptorHandle,device);
+	auto samplerSize = device.GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER);
+	SamplerHelper::CreateSampler(SamplerState::LinearClamp, SamplerDescriptorHandle, device);
+	SamplerDescriptorHandle.ptr += samplerSize;
+	SamplerHelper::CreateSampler(SamplerState::LinearWrap, SamplerDescriptorHandle, device);
+	SamplerDescriptorHandle.ptr += samplerSize;
+	SamplerHelper::CreateSampler(SamplerState::SamplerNone, SamplerDescriptorHandle, device);
+	SamplerDescriptorHandle.ptr += samplerSize;
+	SamplerHelper::CreateSampler(SamplerState::PointWrap, SamplerDescriptorHandle, device);
+	SamplerDescriptorHandle.ptr += samplerSize;
+	SamplerHelper::CreateSampler(SamplerState::PointClamp, SamplerDescriptorHandle, device);
+	SamplerDescriptorHandle.ptr += samplerSize;
+	SamplerHelper::CreateSampler(SamplerState::AnisotropicWrap, SamplerDescriptorHandle, device);
+	SamplerDescriptorHandle.ptr += samplerSize;
+	SamplerHelper::CreateSampler(SamplerState::AnisotropicClamp, SamplerDescriptorHandle, device);
+	SamplerDescriptorHandle.ptr += samplerSize;
+	SamplerHelper::CreateSampler(SamplerState::ComparisonLinear, SamplerDescriptorHandle, device);
 
 	cbvSize =((UINT64) maxCbv) * 0x100;
 

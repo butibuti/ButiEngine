@@ -48,8 +48,11 @@ void ButiEngine::Application::CreateInstances(const std::string windowName, cons
 		shp_sceneManager = std::make_unique<SceneManager>(GetThis<IApplication>());
 	}
 
-	if (!unq_gameObjTagManager) {
-		unq_gameObjTagManager = std::make_unique<GameObjectTagManager>();
+	if (!shp_gameObjTagManager) {
+		shp_gameObjTagManager = std::make_shared<GameObjectTagManager>();
+
+
+		InputCereal(shp_gameObjTagManager, "Application/GameObjectTagManager.tagmanager");
 	}
 
 	ButiRandom::Initialize();
@@ -89,9 +92,9 @@ std::unique_ptr<ButiEngine::ImguiController>& ButiEngine::Application::GetGUICon
 	return unq_imguiController;
 }
 
-std::unique_ptr<ButiEngine::GameObjectTagManager>& ButiEngine::Application::GetGameObjectTagManager()
+std::shared_ptr<ButiEngine::GameObjectTagManager> ButiEngine::Application::GetGameObjectTagManager()
 {
-	return unq_gameObjTagManager;
+	return shp_gameObjTagManager;
 }
 
 bool ButiEngine::Application::Update()
@@ -225,6 +228,9 @@ void ButiEngine::Application::InitLoadResources()
 		container->LoadMesh("Bar", uv_normalVertices);
 
 
+		MeshHelper::CreateCameraFrustum(60, 1280,360, 0.1, 50, testVertices);
+		Vertex::VertexHelper::VertexConvert(testVertices, uv_normalVertices);
+
 		container->LoadMesh("Camera", uv_normalVertices);
 		
 	}
@@ -353,6 +359,7 @@ void ButiEngine::Application::Exit()
 	shp_sceneManager->Release();
 	unq_window->Release();
 	OutputCereal(shp_resourceContainer->GetThis<ResourceContainer>());
+	OutputCereal(shp_gameObjTagManager, "Application/GameObjectTagManager.tagmanager");
 	shp_resourceContainer->Release();
 	unq_imguiController->Release();
 	shp_graphicDevice->Release();

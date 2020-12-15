@@ -15,20 +15,21 @@ namespace ButiEngine {
             EaseInElastic, EaseOutElastic, EaseInOutElastic,
             EaseInQuint, EaseOutQuint, EaseInOutQuint,
             EaseInExpo, EaseOutExpo, EaseInOutExpo,
-            Parabola, Liner
+            Parabola, Liner,none, CubeRotate90, CubeRotate180, CubeRotateMin90, CubeRotateMin180
         };
         static std::string  EasingTypeNames[] = {
             "EaseIn"," EaseOut"," EaseInOut",
             "EaseInSin"," EaseOutSin"," EaseInOutSin",
             "EaseInQuad"," EaseOutQuad"," EaseInOutQuad",
-            "EaseInCubic"," EaseOutCubic"," EaseInOutCubic",
-            "EaseInQuart"," EaseOutQuart"," EaseInOutQuart",
+            "EaseInCubic","EaseOutCubic"," EaseInOutCubic",
+            "EaseInQuart","EaseOutQuart"," EaseInOutQuart",
             "EaseInCirc"," EaseOutCirc"," EaseInOutCirc",
             "EaseInBack"," EaseOutBack"," EaseInOutBack",
             "EaseInElastic"," EaseOutElastic"," EaseInOutElastic",
             "EaseInQuint"," EaseOutQuint"," EaseInOutQuint",
             "EaseInExpo"," EaseOutExpo"," EaseInOutExpo",
-            "Parabola"," Liner"
+            "Parabola"," Liner","none",
+            "CubeRotate90","CubeRotate180","CubeRotateMin90","CubeRotateMin180"
         };
         static float EaseIn(const float x) {
             return x * x;
@@ -168,7 +169,21 @@ namespace ButiEngine {
         static float Liner(const float x) {
             return x;
         }
-
+        static float none(const float x) {
+            return 0;
+        }
+        static float CubeRotate90(const float x) {
+            return std::sin((x * 0.5 + 0.25) * PI) - std::sin((0.25) * PI);
+        }
+        static float CubeRotate180(const float x) {
+            return  CubeRotate90(x) * PI/2;
+        }
+        static float CubeRotateMin90(const float x) {
+            return -(std::sin((x * 0.5 + 0.25) * PI) - std::sin((0.25) * PI));
+        }
+        static float CubeRotateMin180(const float x) {
+            return  CubeRotateMin90(x) * PI/2;
+        }
 
         static  float (*EaseFunctions[])(const float) = { EaseIn, EaseOut, EaseInOut,
                  EaseInSin, EaseOutSin, EaseInOutSin,
@@ -180,7 +195,7 @@ namespace ButiEngine {
                  EaseInElastic, EaseOutElastic, EaseInOutElastic,
                  EaseInQuint, EaseOutQuint, EaseInOutQuint,
                  EaseInExpo, EaseOutExpo, EaseInOutExpo,
-                 Parabola, Liner };
+                 Parabola, Liner,none,CubeRotate90 ,CubeRotate180,CubeRotateMin90 ,CubeRotateMin180 };
         static float GetEase(float x, EasingType type) {
             return (EaseFunctions)[(UINT)type](x);
         }

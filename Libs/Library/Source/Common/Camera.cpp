@@ -39,7 +39,7 @@ ButiEngine::CameraProjProperty& ButiEngine::Camera::GetCameraProperty()
 	return cameraViewProp;
 }
 
-bool ButiEngine::Camera::IsContaineVisibility(std::shared_ptr<Geometry::Box_AABB> arg_AABB)
+int ButiEngine::Camera::IsContaineVisibility(std::shared_ptr<Geometry::Box_AABB> arg_AABB)
 {
 	if (Geometry::SurfaceHit::IsHitAABBCameraFrustum(*arg_AABB, shp_transform, projectionMatrix, cameraViewProp.nearClip, cameraViewProp.farClip)) {
 
@@ -48,12 +48,9 @@ bool ButiEngine::Camera::IsContaineVisibility(std::shared_ptr<Geometry::Box_AABB
 		//ray->Update();
 		auto objects = shp_renderer->GetHitDrawObjects(ray, cameraViewProp.layer);
 
-		if (objects.size()==1) {
-			return true;
-		}
-		GUI::Text(std::to_string(objects.size()));
+		return objects.size();
 	}
-	return false;
+	return -1;
 }
 
 std::shared_ptr< ButiEngine::ICamera> ButiEngine::CameraCreater::CreateCamera(const CameraProjProperty& arg_cameraViewProp, const std::string& cameraName, const bool initActive, std::shared_ptr<IRenderer> arg_shp_renderer, std::weak_ptr<GraphicDevice> arg_wkp_graphicDevice)

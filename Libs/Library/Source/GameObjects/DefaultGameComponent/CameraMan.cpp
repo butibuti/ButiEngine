@@ -10,6 +10,7 @@ void ButiEngine::CameraMan::Start()
 	auto camera = GetCamera(cameraName);
 	child = ObjectFactory::Create<Transform>();
 	child->SetBaseTransform(gameObject.lock()->transform,true);
+	if(camera.lock())
 	camera.lock()->shp_transform =child;
 }
 
@@ -38,7 +39,7 @@ void ButiEngine::CameraMan::OnShowUI()
 {
 	GUI::BulletText("CameraName");
 	static char cameraNameBuf[128] = {};
-	GUI::InputText("##cameraName",cameraNameBuf,128);
+	GUI::InputTextWithHint("##cameraName",cameraName,cameraNameBuf,128);
 	GUI::SameLine();
 	if (GUI::Button("Change")) {
 		cameraName = cameraNameBuf;

@@ -1046,6 +1046,41 @@ ButiEngine::MotionTag ButiEngine::ResourceContainer::GetMotionTag(const std::str
 	return container_motions.GetTag(arg_fileDirectory + arg_key);
 }
 
+ButiEngine::MeshTag ButiEngine::ResourceContainer::GetMeshTag(const MeshTag& arg_tag)
+{
+	return container_meshes.IDUpdate(arg_tag);
+}
+
+ButiEngine::TextureTag ButiEngine::ResourceContainer::GetTextureTag(const TextureTag& arg_tag)
+{
+	return container_textures.IDUpdate(arg_tag);
+}
+
+ButiEngine::ShaderTag ButiEngine::ResourceContainer::GetShaderTag(const ShaderTag& arg_tag)
+{
+	return container_shaders.IDUpdate(arg_tag);
+}
+
+ButiEngine::SoundTag ButiEngine::ResourceContainer::GetSoundTag(const SoundTag& arg_tag)
+{
+	return container_sounds.IDUpdate(arg_tag);
+}
+
+ButiEngine::MaterialTag ButiEngine::ResourceContainer::GetMaterialTag(const MaterialTag& arg_tag)
+{
+	return container_materials.IDUpdate(arg_tag);
+}
+
+ButiEngine::ModelTag ButiEngine::ResourceContainer::GetModelTag(const ModelTag& arg_tag)
+{
+	return container_models.IDUpdate(arg_tag);
+}
+
+ButiEngine::MotionTag ButiEngine::ResourceContainer::GetMotionTag(const MotionTag& arg_tag)
+{
+	return container_motions.IDUpdate(arg_tag);
+}
+
 void ButiEngine::ResourceContainer::Reload()
 {
 

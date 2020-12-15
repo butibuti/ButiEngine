@@ -103,8 +103,8 @@ void ButiEngine::TransformAnimation::OnShowUI()
 
     if (GUI::ArrowButton("##EaseType_UP", GUI::GuiDir_Up)) {
         easeType =((Easing::EasingType)(((int)easeType)+ 1));
-        if ((int)easeType >(int) Easing::EasingType::Liner) {
-            easeType = Easing::EasingType::Liner;
+        if ((int)easeType >(int) Easing::EasingType::CubeRotate90) {
+            easeType = Easing::EasingType::CubeRotate90;
         }
     }
     GUI::SameLine();

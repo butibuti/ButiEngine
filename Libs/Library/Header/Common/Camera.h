@@ -15,7 +15,7 @@ namespace ButiEngine {
 		int left=0;
 		int top=0;
 		float front = 0.0f;
-		float depth=1.0f;
+		float angle=60.0f;
 		float farClip = 50.0f;
 		float nearClip = 0.1f;
 		bool isPararell = false;
@@ -23,7 +23,7 @@ namespace ButiEngine {
 		float clearDepth = 1.0f;
 		TextureTag projectionTexture;
 		std::string cameraName;
-
+		Vector4 clearColor;
 		template<class Archive>
 		void serialize(Archive& archive)
 		{
@@ -32,7 +32,7 @@ namespace ButiEngine {
 			archive(left);
 			archive(top);
 			archive(front);
-			archive(depth);
+			archive(angle);
 			archive(farClip);
 			archive(nearClip);
 			archive(isPararell);
@@ -41,6 +41,7 @@ namespace ButiEngine {
 			archive(clearDepth);
 			archive(projectionTexture);
 			archive(cameraName);
+			archive(clearColor);
 		}
 
 	};
@@ -64,7 +65,7 @@ namespace ButiEngine {
 		virtual void Draw() = 0;
 		virtual void ShowUI() = 0;
 		virtual CameraProjProperty& GetCameraProperty() = 0;
-		virtual bool IsContaineVisibility(std::shared_ptr<Geometry::Box_AABB>arg_AABB) = 0;
+		virtual int IsContaineVisibility(std::shared_ptr<Geometry::Box_AABB>arg_AABB) = 0;
 	protected:
 	};
 
@@ -78,7 +79,7 @@ namespace ButiEngine {
 		bool GetActive()const override;
 		void Draw()override;
 		CameraProjProperty& GetCameraProperty()override;
-		bool IsContaineVisibility(std::shared_ptr<Geometry::Box_AABB>arg_AABB)override;
+		int IsContaineVisibility(std::shared_ptr<Geometry::Box_AABB>arg_AABB)override;
 	protected:
 		Matrix4x4 projectionMatrix;
 		Matrix4x4 viewMatrix;

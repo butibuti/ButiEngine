@@ -20,7 +20,7 @@ namespace ButiEngine {
 		std::shared_ptr<GraphicDevice> GetGraphicDevice()override;
 		std::shared_ptr<IResourceContainer> GetResourceContainer()override;
 		std::unique_ptr<ImguiController>& GetGUIController()override;
-		std::unique_ptr<GameObjectTagManager>& GetGameObjectTagManager()override;
+		std::shared_ptr<GameObjectTagManager> GetGameObjectTagManager()override;
 		bool Update()override;
 		int Run()override;
 		void InitLoadResources()override;
@@ -31,7 +31,7 @@ namespace ButiEngine {
 		std::unique_ptr<ImguiController> unq_imguiController;
 		std::shared_ptr< ISceneManager> shp_sceneManager;
 		std::shared_ptr<IResourceContainer>shp_resourceContainer;
-		std::unique_ptr<GameObjectTagManager> unq_gameObjTagManager;
+		std::shared_ptr<GameObjectTagManager> shp_gameObjTagManager;
 		std::timespec befTs;
 		std::timespec nowTs;
 	};

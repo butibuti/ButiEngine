@@ -1579,7 +1579,7 @@ namespace ButiEngine {
 	inline Quat MathHelper::LearpQuat(const Quat& arg_firstQuat, const Quat& arg_secondQuat, const float pase)
 	{
 		Quat secQ = arg_secondQuat;
-		if (arg_firstQuat.Dot(secQ) < 0) {
+		if (arg_firstQuat.Dot(secQ) <= 0) {
 			secQ = -secQ;
 		}
 		Quat out = Quat();

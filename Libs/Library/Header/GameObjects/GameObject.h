@@ -154,7 +154,6 @@ namespace ButiEngine {
 		std::shared_ptr<IResourceContainer> GetResourceContainer();
 		std::shared_ptr<GraphicDevice> GetGraphicDevice();
 
-		void UpdateTagName();
 
 		std::shared_ptr<GameObject> Clone();
 
@@ -163,7 +162,7 @@ namespace ButiEngine {
 		{
 			archive(transform);
 			archive(objectName);
-			archive(tagName);
+			archive(gameObjectTag);
 
 			archive(vec_behaviors);
 			archive(vec_gameComponents);
@@ -195,7 +194,6 @@ namespace ButiEngine {
 		std::vector<std::shared_ptr<Behavior>>vec_newBehavior;
 
 		std::string objectName;
-		std::string tagName;
 		GameObjectTag gameObjectTag;
 
 		std::weak_ptr<GameObjectManager> wkp_gameObjManager;

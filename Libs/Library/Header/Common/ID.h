@@ -96,6 +96,14 @@ namespace ButiEngine {
 			vec_p_resource.push_back(arg_value);
 		}
 
+		ID<T> IDUpdate(ID<T> arg_id) {
+			if (arg_id.IsEmpty()) {
+				return arg_id;
+			}
+
+			return vec_p_id.at(*arg_id.GetID());
+		}
+
 		bool ContainValue(const std::string& arg_key, const std::string& arg_directory = "") {
 			if (map_values.count(arg_directory + arg_key)) {
 
@@ -198,11 +206,12 @@ namespace ButiEngine {
 				if (arg_id.IsEmpty()) {
 					return "none";
 				}
-				auto index = *arg_id.GetID();
-				auto mapItr = map_values.begin();
-				for (auto i = 0; i < index; i++)
-					mapItr++;
-				return mapItr->first;
+				auto endItr = map_values.end();
+				for (auto mapItr = map_values.begin(); mapItr != endItr; mapItr++) {
+					if (mapItr->second == arg_id)
+						return mapItr->first;
+				}
+				return "none";
 			}
 			void Remove(const std::string& arg_key, const std::string& arg_directory = "") {
 				if (!map_values.count(arg_directory + arg_key)) {

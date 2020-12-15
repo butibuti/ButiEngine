@@ -85,6 +85,14 @@ namespace ButiEngine {
 		ModelTag GetModelTag(const std::string& arg_key, const std::string& arg_fileDirectory = "")override;
 		MotionTag GetMotionTag(const std::string& arg_key, const std::string& arg_fileDirectory = "")override;
 
+		MeshTag GetMeshTag(const MeshTag& arg_tag) override;
+		TextureTag GetTextureTag(const TextureTag& arg_tag) override;
+		ShaderTag GetShaderTag(const ShaderTag& arg_tag) override;
+		SoundTag GetSoundTag(const SoundTag& arg_tag) override;
+		MaterialTag GetMaterialTag(const MaterialTag& arg_tag) override;
+		ModelTag GetModelTag(const ModelTag& arg_tag) override;
+		MotionTag GetMotionTag(const MotionTag& arg_tag) override;
+
 		std::weak_ptr<IResource_Mesh> GetMesh(const  MeshTag& arg_key)override {
 			return container_meshes.GetValue(arg_key);
 		}

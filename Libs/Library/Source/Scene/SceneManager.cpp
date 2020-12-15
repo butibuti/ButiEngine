@@ -19,7 +19,17 @@ void ButiEngine::SceneManager::Update()
 		if (currentScene->IsThis<EditScene>()) {
 			RemoveScene(currentScene->GetSceneInformation()->GetSceneName());
 			LoadScene_EditMode(currentScene->GetSceneInformation()->GetSceneName());
-			ChangeScene(currentScene->GetSceneInformation()->GetSceneName());
+
+			if (!map_iscene.count(currentScene->GetSceneInformation()->GetSceneName())) {
+				return;
+			}
+			newScene = map_iscene.at(currentScene->GetSceneInformation()->GetSceneName());
+
+			if (currentScene != nullptr)
+				currentScene->SceneEnd();
+			currentScene = newScene;
+			newScene = nullptr;
+
 		}
 		else
 			if (currentScene->IsThis<Scene>()) {

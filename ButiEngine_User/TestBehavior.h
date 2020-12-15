@@ -1,8 +1,9 @@
 #pragma once
 #include"Header/BehaviorHeader.h"
-#include"Header/Common/CollisionPrimitive.h"
 namespace ButiEngine {
-
+	namespace Collision {
+		class CollisionPrimitive_Box_AABB;
+	}
 
 	class TestBehavior :public Behavior
 	{

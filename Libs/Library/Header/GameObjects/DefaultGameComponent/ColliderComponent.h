@@ -22,7 +22,7 @@ namespace ButiEngine {
 				return "ColliderComponent";
 			}
 			std::shared_ptr<GameComponent> Clone()override;
-
+			std::shared_ptr<CollisionPrimitive> GetCollisionPrimitive();
 			void OnShowUI()override;
 
 			template<class Archive>

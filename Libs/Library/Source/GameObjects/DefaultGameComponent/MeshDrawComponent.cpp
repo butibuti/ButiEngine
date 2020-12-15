@@ -81,6 +81,17 @@ void ButiEngine::MeshDrawComponent::OnSet()
 		}
 	}
 	else {
+
+		auto graphicDevice = gameObject.lock()->GetGraphicDevice();
+		meshTag = graphicDevice->GetApplication().lock()->GetResourceContainer()->GetMeshTag(meshTag);
+		shaderTag = graphicDevice->GetApplication().lock()->GetResourceContainer()->GetShaderTag(shaderTag);
+		modelTag = graphicDevice->GetApplication().lock()->GetResourceContainer()->GetModelTag(modelTag);
+
+		auto matEnd = materialTag.end();
+		for (auto itr = materialTag.begin(); itr != matEnd; itr++) {
+			(*itr)= graphicDevice->GetApplication().lock()->GetResourceContainer()->GetMaterialTag(*itr);
+		}
+
 		auto endItr = shp_drawInfo->vec_exCBuffer.end();
 		for (auto itr = shp_drawInfo->vec_exCBuffer.begin(); itr != endItr; itr++) {
 			(*itr)->Initialize();
@@ -326,9 +337,23 @@ void ButiEngine::MeshDrawComponent::OnShowUI()
 			shp_drawInfo->drawSettings.blendMode = BlendMode::Reverse;
 			ReRegist();
 		}
+		GUI::BulletText("Culling");
+		if (GUI::Button("None")) {
+			shp_drawInfo->drawSettings.cullMode = CullMode::none;
+			ReRegist();
+		}
+		GUI::SameLine();
+		if (GUI::Button("Front")) {
+			shp_drawInfo->drawSettings.cullMode = CullMode::front;
+			ReRegist();
+		}
+		GUI::SameLine();
+		if (GUI::Button("Back")) {
+			shp_drawInfo->drawSettings.cullMode = CullMode::back;
+			ReRegist();
+		}
 
-
-		GUI::BulletText("BillBoarsMode");
+		GUI::BulletText("BillBoardMode");
 		if (GUI::Button("None")) {
 			shp_drawInfo->drawSettings.billboardMode = BillBoardMode::none;
 			ReRegist();

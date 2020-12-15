@@ -30,21 +30,23 @@ ButiEngine::Camera_Dx12::~Camera_Dx12()
 void ButiEngine::Camera_Dx12::Initialize()
 {
 
-
+	if (cameraViewProp.angle <= 5) {
+		cameraViewProp.angle = 60;
+	}
 
 	if (cameraViewProp.isPararell) {
 
 		projectionMatrix = DirectX::XMMatrixOrthographicOffCenterLH(
 			-(float)cameraViewProp.width / 2, (float)cameraViewProp.width / 2,
 			-(float)cameraViewProp.height / 2, (float)cameraViewProp.height / 2,
-			-50.0f,
-			200.0f
+			cameraViewProp.nearClip,
+			cameraViewProp.farClip
 		);
 	}
 	else {
 		projectionMatrix =
 			DirectX::XMMatrixPerspectiveFovLH(
-				DirectX::XMConvertToRadians(60.0f),
+				DirectX::XMConvertToRadians(cameraViewProp.angle),
 				(float)cameraViewProp.width / (float)cameraViewProp.height,
 				cameraViewProp.nearClip,
 				cameraViewProp.farClip
@@ -58,7 +60,7 @@ void ButiEngine::Camera_Dx12::Initialize()
 	viewport.Width = static_cast<FLOAT>(cameraViewProp.width);
 	viewport.Height = static_cast<FLOAT>(cameraViewProp.height);
 	viewport.MinDepth = cameraViewProp.front;
-	viewport.MaxDepth = cameraViewProp.depth;
+	viewport.MaxDepth = cameraViewProp.clearDepth;
 	if ((!cameraViewProp.projectionTexture.IsEmpty())) {
 		auto tex= wkp_graphicDevice.lock()->GetApplication().lock()->GetResourceContainer()->GetTexture(cameraViewProp.projectionTexture);
 		if (tex.lock()->IsThis<IRenderTarget>()) {
@@ -72,8 +74,8 @@ void ButiEngine::Camera_Dx12::Start()
 	wkp_graphicDevice.lock()->DrawStart();
 	
 	if (shp_renderTarget) {
-		auto clear = Vector4(0.0, 0.0, 0.0, 0.0);
-		shp_renderTarget->SetRenderTarget(clear);
+
+		shp_renderTarget->SetRenderTarget(cameraViewProp.clearColor);
 	}
 	else {
 		wkp_graphicDevice.lock()->CommandList_SetRenderTargetView();
@@ -197,6 +199,9 @@ void ButiEngine::Camera_Dx12::ShowUI()
 		if (GUI::DragFloat2("##FarClipAndNearClip", &cameraViewProp.farClip, 0.01f, 0.01f, 100000000)) {
 			isEdit = true;
 		}
+		if (GUI::DragFloat("##cameraAngle", cameraViewProp.angle, 0.01f, 5.0f, 360)) {
+			isEdit = true;
+		}
 		if (GUI::Checkbox("isPararell", &cameraViewProp.isPararell)) {
 			isEdit = true;
 		}
@@ -221,6 +226,8 @@ void ButiEngine::Camera_Dx12::ShowUI()
 		}
 
 		GUI::EndChild();
+
+		GUI::ColorEdit4("ClearColor", cameraViewProp.clearColor);
 
 		if (isEdit) {
 			Initialize();

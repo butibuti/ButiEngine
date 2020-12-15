@@ -67,7 +67,14 @@ std::weak_ptr< ButiEngine::GameObjectManager> ButiEngine::Behavior::GetManager()
 	return gameObject.lock()->GetGameObjectManager();
 }
 
-std::unique_ptr< ButiEngine::GameObjectTagManager>& ButiEngine::Behavior::GetTagManager()
+std::shared_ptr< ButiEngine::GameObjectTagManager> ButiEngine::Behavior::GetTagManager()
 {
-	return gameObject.lock()->GetApplication().lock()->GetGameObjectTagManager();
+	auto app = gameObject.lock()->GetApplication().lock();
+	auto manager = app->GetGameObjectTagManager();
+	return manager;
+}
+
+std::weak_ptr<ButiEngine::ICollisionManager> ButiEngine::Behavior::GetCollisionManager()
+{
+	return gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetCollisionManager();
 }

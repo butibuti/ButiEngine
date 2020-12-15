@@ -207,11 +207,11 @@ namespace ButiEngine {
 	}
 
 	enum class SamplerState {
+		LinearClamp,
+		LinearWrap,
 		SamplerNone,
 		PointWrap,
-		PointClamp,
-		LinearWrap,
-		LinearClamp,
+		PointClamp,		
 		AnisotropicWrap,
 		AnisotropicClamp,
 		ComparisonLinear,

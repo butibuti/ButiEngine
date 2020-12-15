@@ -45,12 +45,12 @@ std::weak_ptr< ButiEngine::GameObjectManager> ButiEngine::GameComponent::GetMana
 	return gameObject.lock()->GetGameObjectManager();
 }
 
-std::weak_ptr<ButiEngine::Collision::CollisionManager> ButiEngine::GameComponent::GetCollisionManager()
+std::weak_ptr<ButiEngine::ICollisionManager> ButiEngine::GameComponent::GetCollisionManager()
 {
 	return gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetCollisionManager();
 }
 
-std::unique_ptr<ButiEngine::GameObjectTagManager>& ButiEngine::GameComponent::GetTagManager()
+std::shared_ptr<ButiEngine::GameObjectTagManager> ButiEngine::GameComponent::GetTagManager()
 {
 	return gameObject.lock()->GetApplication().lock()->GetGameObjectTagManager();
 }

@@ -10,7 +10,6 @@ ButiEngine::GameObject::GameObject(std::shared_ptr<Transform> arg_transform, con
 {
 	transform = arg_transform;
 	objectName = arg_objectName;
-	tagName = arg_tagName;
 }
 
 void ButiEngine::GameObject::Update()
@@ -47,7 +46,7 @@ void ButiEngine::GameObject::SetGameObjectManager(std::weak_ptr<GameObjectManage
 	
 	wkp_gameObjManager = arg_wkp_gameObjectManager;
 	
-	gameObjectTag = GetApplication().lock()->GetGameObjectTagManager()->GetObjectTag(tagName);
+
 }
 
 bool ButiEngine::GameObject::GetActive()
@@ -187,6 +186,8 @@ void ButiEngine::GameObject::RemoveGameComponent(const std::string& arg_key)
 void ButiEngine::GameObject::ShowUI()
 {
 	if (GUI::TreeNode("Tag")) {
+		static std::string tagName="";
+		GUI::Text("Now::" + GetApplication().lock()->GetGameObjectTagManager()->GetTagName(gameObjectTag));
 		GUI::InputTextWithHint("##tagname", tagName, GUI::tagName, sizeof(GUI::tagName));
 		if (GUI::Button("Set Tag!!")) {
 			tagName = GUI::tagName;
@@ -334,17 +335,12 @@ std::shared_ptr<ButiEngine::GraphicDevice> ButiEngine::GameObject::GetGraphicDev
 	return wkp_gameObjManager.lock()->GetScene().lock()->GetSceneManager().lock()->GetApplication().lock()->GetGraphicDevice();
 }
 
-void ButiEngine::GameObject::UpdateTagName()
-{
-	if(wkp_gameObjManager.lock())
-	tagName = wkp_gameObjManager.lock()->GetApplication().lock()->GetGameObjectTagManager()->GetTagName(gameObjectTag);
-}
 
 std::shared_ptr<ButiEngine::GameObject> ButiEngine::GameObject::Clone()
 {
 	auto output= ObjectFactory::Create<GameObject>(transform->Clone(), GetGameObjectName());
 	output->SetGameObjectTag(gameObjectTag);
-	output->tagName = tagName;
+	output->gameObjectTag = gameObjectTag;
 	auto componentsEndItr = vec_gameComponents.end();
 	for (auto itr = vec_gameComponents.begin(); itr != componentsEndItr;itr++) {
 		auto cloneComponent = (*itr)->Clone();
@@ -489,7 +485,6 @@ void ButiEngine::OutputCereal(const std::shared_ptr<GameObject>& v)
 
 
 	cereal::BinaryOutputArchive binOutArchive(stream);
-	v->UpdateTagName();
 	binOutArchive(v);
 
 	std::ofstream outputFile(GlobalSettings::GetResourceDirectory()+"GameObject/"+ v->GetGameObjectName()+".gameObject", std::ios::binary);

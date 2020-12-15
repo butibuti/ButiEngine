@@ -3,6 +3,7 @@
 #include "..\..\Header\Scene\Scene.h"
 #include"Header/GameParts/SoundManager.h"
 #include"Header/GameParts/Renderer.h"
+#include"Header/GameParts/CollisionManager.h"
 
 void ButiEngine::Scene::Update() {
 	shp_gameObjectManager->RegistNewGameObject();
@@ -149,10 +150,18 @@ void ButiEngine::Scene::Initialize()
 void ButiEngine::Scene::ActiveCollision(const UINT arg_layerCount)
 {
 	if (!shp_collisionManager) {
-		shp_collisionManager = ObjectFactory::Create<Collision::CollisionManager>(arg_layerCount);
+		std::string path = GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation->GetSceneName() + "/collision.collisionManager";
+		if (Util::IsFileExistence(path)) {
+			auto temp = ObjectFactory::Create<Collision::CollisionManager>();
+			InputCereal(temp, path);
+			temp->ReCreateLayers();
+			shp_collisionManager = temp;
+		}
+		else
+		{
+			shp_collisionManager = ObjectFactory::Create<Collision::CollisionManager>(arg_layerCount);
+		}
 	}
-	else if (arg_layerCount != shp_collisionManager->GetLayerCount())
-		shp_collisionManager = ObjectFactory::Create<Collision::CollisionManager>(arg_layerCount);
 }
 
 void ButiEngine::Scene::PreInitialize()
@@ -254,7 +263,7 @@ std::weak_ptr< ButiEngine::ISceneManager> ButiEngine::Scene::GetSceneManager()
 	return shp_sceneManager;
 }
 
-std::weak_ptr<ButiEngine::Collision::CollisionManager> ButiEngine::Scene::GetCollisionManager()
+std::weak_ptr<ButiEngine::ICollisionManager> ButiEngine::Scene::GetCollisionManager()
 {
 	return shp_collisionManager;
 }

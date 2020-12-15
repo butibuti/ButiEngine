@@ -616,12 +616,12 @@ void ButiEngine::ModelFileConverter::FBXtoB3M(const std::string& arg_fbxFileName
 				}
 
 			}
-			WriteVertex(globalSettings, vertices, transformMatrix, polygonIndex, b3mWriter, UVLayerNode, normalLayerNode);
+			WriteVertex(globalSettings, vertices, transformMatrix, polygonIndex, b3mWriter, UVLayerNode, normalLayerNode,&transformMatrix);
 
 		}
 		else {
 			auto vertices = vertexNode->GetProperty<FBXAnalyze::FBXNode_DoubleArrayProperty>()->CreateVertex<Vertex::Vertex_UV_Normal>(globalSettings, &transformMatrix);
-			WriteVertex(globalSettings, vertices, transformMatrix, polygonIndex, b3mWriter, UVLayerNode, normalLayerNode);
+			WriteVertex(globalSettings, vertices, transformMatrix, polygonIndex, b3mWriter, UVLayerNode, normalLayerNode,&transformMatrix);
 		}
 		auto materialIndex = materialLayerNode->GetChildNode("Materials")->GetProperty<FBXAnalyze::FBXNode_IntArrayProperty>()->nodeProperty;
 

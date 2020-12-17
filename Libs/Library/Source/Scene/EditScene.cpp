@@ -49,7 +49,7 @@ void ButiEngine::EditScene::OnUpdate()
 void ButiEngine::EditScene::UIUpdate()
 {
 	GUI::Begin("top");
-	if (GUI::ArrowButton("##play", GUI::GuiDir_Right)||GameDevice::GetInput()->TriggerKey(Keys::F5)) {
+	if (GUI::ArrowButton("##play", GUI::GuiDir_Right)||(GameDevice::GetInput()->TriggerKey(Keys::F5)&& GameDevice::GetInput()->TriggerKey(Keys::F4))) {
 		isActive =!isActive;
 
 		isPlaying = true;
@@ -63,6 +63,14 @@ void ButiEngine::EditScene::UIUpdate()
 			startCount++;
 			if (startCount==1) {
 				OutputCereal(shp_gameObjectManager,GlobalSettings::GetResourceDirectory()+ "Scene/" + sceneInformation->GetSceneName()+"/objects.gameObjectManager" );
+				shp_renderingInfo->vec_cameraProperty.clear();
+				shp_renderingInfo->vec_cameraTransform.clear();
+				for (int i = 0; i < vec_cameras.size(); i++) {
+					shp_renderingInfo->vec_cameraProperty.push_back(vec_cameras[i]->GetCameraProperty());
+					shp_renderingInfo->vec_cameraTransform.push_back(vec_cameras[i]->shp_transform);
+				}
+				shp_renderingInfo->layerCount = shp_renderer->GetLayerCount();
+				
 				OutputCereal(shp_renderingInfo, GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation->GetSceneName() + "/rendering.renderingInfo");
 				
 				OutputCereal(shp_collisionManager->GetThis<Collision::CollisionManager>(), GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation->GetSceneName() + "/collision.collisionManager");

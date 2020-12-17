@@ -59,6 +59,9 @@ void ButiEngine::TestBehavior::Start()
 {
     auto gameObject = GetManager().lock()->AddObjectFromCereal("test", ObjectFactory::Create<Transform>());
     shp_AABB = ObjectFactory::Create<Collision::CollisionPrimitive_Box_AABB>(Vector3(1,1,1), gameObject.lock()->transform);
+
+    
+
 }
 
 void ButiEngine::TestBehavior::OnCollision(std::weak_ptr<GameObject> arg_other)

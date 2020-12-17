@@ -85,32 +85,17 @@ ButiEngine::Resource_Texture_Dx12_RenderTarget::Resource_Texture_Dx12_RenderTarg
 	auto rtdhHandle = renderTargetDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 
 
-	
-
-	{
-		textureResDesc.MipLevels = static_cast<UINT16>(1);
-		textureResDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		textureResDesc.Width = static_cast<UINT>(width);
-		textureResDesc.Height = static_cast<UINT>(height);
-		textureResDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
-
-		textureResDesc.DepthOrArraySize = static_cast<UINT16>(1);
-		textureResDesc.SampleDesc.Count = 1;
-		textureResDesc.SampleDesc.Quality = 0;
-		textureResDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	}
-
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc = {};
 	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
-	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	desc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
-	desc.Format =  DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	desc.Format =  DXGI_FORMAT_R8G8B8A8_UNORM;
 	hr= wkp_graphicDevice.lock()->GetDevice().CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
 		D3D12_HEAP_FLAG_NONE, &desc,
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
 		nullptr,
-		IID_PPV_ARGS(texture.ReleaseAndGetAddressOf()));
+		IID_PPV_ARGS(texture.GetAddressOf()));
 
 	wkp_graphicDevice.lock()->GetDevice().CreateRenderTargetView(texture.Get(), &rtvDesc, rtdhHandle);
 
@@ -153,10 +138,10 @@ void ButiEngine::Resource_Texture_Dx12_RenderTarget::SetRenderTarget(Vector4& ar
 	wkp_graphicDevice.lock()->GetCommandList().ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(texture.Get(),
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
 		D3D12_RESOURCE_STATE_RENDER_TARGET));
-	wkp_graphicDevice.lock()->GetCommandList().RSSetScissorRects(1, &scissorRect);
-	wkp_graphicDevice.lock()->GetCommandList().OMSetRenderTargets(1, &rtvHandle, true, &dsvHandle); 
-	wkp_graphicDevice.lock()->GetCommandList().ClearRenderTargetView(rtvHandle, arg_clearColor.GetData(), 0, nullptr);
 	wkp_graphicDevice.lock()->GetCommandList().ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+	wkp_graphicDevice.lock()->GetCommandList().ClearRenderTargetView(rtvHandle,arg_clearColor.GetData(), 0, nullptr);
+	wkp_graphicDevice.lock()->GetCommandList().RSSetScissorRects(1, &scissorRect);
+	wkp_graphicDevice.lock()->GetCommandList().OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle); 
 
 
 }
@@ -167,7 +152,7 @@ void ButiEngine::Resource_Texture_Dx12_RenderTarget::SetRenderTargetWithoutDepth
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
 		D3D12_RESOURCE_STATE_RENDER_TARGET));
 	wkp_graphicDevice.lock()->GetCommandList().RSSetScissorRects(1, &scissorRect);
-	wkp_graphicDevice.lock()->GetCommandList().OMSetRenderTargets(1, &rtvHandle, true, nullptr);
+	wkp_graphicDevice.lock()->GetCommandList().OMSetRenderTargets(1, &rtvHandle, false, nullptr);
 	wkp_graphicDevice.lock()->GetCommandList().ClearRenderTargetView(rtvHandle, arg_clearColor.GetData(), 0, nullptr);
 }
 
@@ -195,8 +180,8 @@ void ButiEngine::Resource_Texture_Dx12_RenderTarget::EndRenderTarget()
 {
 
 	wkp_graphicDevice.lock()->GetCommandList().ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(texture.Get(),
-		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-		D3D12_RESOURCE_STATE_RENDER_TARGET));
+		D3D12_RESOURCE_STATE_RENDER_TARGET,
+		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
 }
 
 

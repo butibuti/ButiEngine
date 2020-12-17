@@ -163,7 +163,7 @@ void ButiEngine::Application::InitLoadResources()
 		normalVertices.Clear();
 		uv_normalVertices.Clear();
 
-		MeshHelper::CreateCube(Vector3(1.0f, 1.0f, 1.0f), colors, testVertices, true);
+		MeshHelper::CreateCube(Vector3(1.0f, 1.0f, 1.0f), colors, testVertices, false);
 		Vertex::VertexHelper::VertexConvert(testVertices, uv_normalVertices);
 		container->LoadMesh("Cube_UV_Normal", uv_normalVertices);
 		Vertex::VertexHelper::VertexConvert(testVertices, normalVertices);
@@ -228,7 +228,7 @@ void ButiEngine::Application::InitLoadResources()
 		container->LoadMesh("Bar", uv_normalVertices);
 
 
-		MeshHelper::CreateCameraFrustum(60, 1280,360, 0.1, 50, testVertices);
+		MeshHelper::CreateCameraFrustum(60, 1280,360, 0.1, 2.5, testVertices);
 		Vertex::VertexHelper::VertexConvert(testVertices, uv_normalVertices);
 
 		container->LoadMesh("Camera", uv_normalVertices);

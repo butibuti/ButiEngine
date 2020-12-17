@@ -80,9 +80,9 @@ void ButiEngine::Camera_Dx12::Start()
 	else {
 		wkp_graphicDevice.lock()->CommandList_SetRenderTargetView();
 		wkp_graphicDevice.lock()->CommandList_SetScissorRect();
+		wkp_graphicDevice.lock()->ClearDepthStancil(cameraViewProp.clearDepth);
 	}
 
-	wkp_graphicDevice.lock()->ClearDepthStancil(cameraViewProp.clearDepth);
 	viewMatrix = shp_transform->GetMatrix().GetInverse();
 
 	wkp_graphicDevice.lock()->SetCameraPos(shp_transform->GetWorldPosition());

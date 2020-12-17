@@ -20,11 +20,10 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 //int main()
 {
 #endif
-	auto s = std::sin((0.25) * PI);;
 	auto app = CreateDefaultApplicationInstance("ButiSampleScene", WindowPopType::normal, 1080,720, false);
 	GameDevice::Initialize();
 	GameDevice::GetInput()->Initialize(app);
-	//ComponentsLoader::GetInstance()-> AddGameComponent<CubeTransformAnimation>();
+	ComponentsLoader::GetInstance()-> AddGameComponent<CubeTransformAnimation>();
 	//ModelFileConverter::FBXtoB3M("Player.fbx", "Player.b3m", "Model/");
 	app->InitLoadResources();
 	app->GetSceneManager()->LoadScene_Init_EditMode("CollisionScene");

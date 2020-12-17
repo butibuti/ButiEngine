@@ -36,11 +36,11 @@ void ButiEngine::InputCereal(std::shared_ptr<Transform>& v, const std::string& p
 void ButiEngine::Transform::ShowUI()
 {
 	GUI::BulletText("Position");
-	if (GUI::DragFloat3("##p", &localPosition.x, 0.02f, -500.0f, 500.0f, "%.3f")) {
+	if (GUI::DragFloat3("##p", &localPosition.x, 0.02f, -FLT_MAX, FLT_MAX, "%.3f")) {
 		localMatrix = nullptr;
 	}
 	GUI::BulletText("Scale");
-	if (GUI::DragFloat3("##s", &scale.x, 0.01f, -500.0, 500.0f, "%.3f")) {
+	if (GUI::DragFloat3("##s", &scale.x, 0.01f, -FLT_MAX, FLT_MAX, "%.3f")) {
 		localMatrix = nullptr;
 	}
 	GUI::BulletText("Rotation");
@@ -82,6 +82,18 @@ void ButiEngine::Transform::ShowUI()
 	}
 
 	GUI::PushButtonRepeat(false);
+
+	GUI::BulletText("Look");
+
+	static Vector3 lookTarget;
+
+	GUI::DragFloat3("##lookPosition", lookTarget, 0.01, -FLT_MAX, FLT_MAX);
+
+	GUI::SameLine();
+	if (GUI::Button("Look")) {
+		SetLookAtRotation(lookTarget);
+		lookTarget = Vector3();
+	}
 
 	if (GUI::Button("Identity"))
 	{

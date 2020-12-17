@@ -338,17 +338,17 @@ void ButiEngine::MeshDrawComponent::OnShowUI()
 			ReRegist();
 		}
 		GUI::BulletText("Culling");
-		if (GUI::Button("None")) {
+		if (GUI::Button("None##Culling")) {
 			shp_drawInfo->drawSettings.cullMode = CullMode::none;
 			ReRegist();
 		}
 		GUI::SameLine();
-		if (GUI::Button("Front")) {
+		if (GUI::Button("Front##Culling")) {
 			shp_drawInfo->drawSettings.cullMode = CullMode::front;
 			ReRegist();
 		}
 		GUI::SameLine();
-		if (GUI::Button("Back")) {
+		if (GUI::Button("Back##Culling")) {
 			shp_drawInfo->drawSettings.cullMode = CullMode::back;
 			ReRegist();
 		}

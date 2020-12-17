@@ -14,6 +14,7 @@ void ButiEngine::TestBehavior::OnUpdate()
     }
     if (GameDevice::GetInput()->CheckKey(Keys::W)) {
         gameObject.lock()->transform->TranslateY(1*0.1);
+
     }
     if (GameDevice::GetInput()->CheckKey(Keys::S)) {
 

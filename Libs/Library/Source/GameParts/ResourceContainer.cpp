@@ -74,7 +74,7 @@ void ButiEngine::ResourceContainer::ShowGUI()
 				GUI::Text("File name:");
 				GUI::InputText("##edit", GUI::objectName, 128);
 				if (GUI::Button("OK!!")) {
-					LoadModel(GUI::objectName, "Model/");
+					LoadModel(Util::UTF8ToMultiByte( GUI::objectName), "Model/");
 					GUI::ObjectNameReset();
 					GUI::CloseCurrentPopup();
 				}GUI::SameLine();

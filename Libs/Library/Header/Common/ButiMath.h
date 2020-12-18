@@ -1179,7 +1179,7 @@ namespace ButiEngine {
 
 		inline Quat() :Vector4()
 		{
-			identity();
+			Identity();
 		}
 		inline Quat(const Quat& quat) :
 			Vector4(quat.x, quat.y, quat.z, quat.w)
@@ -1389,103 +1389,37 @@ namespace ButiEngine {
 		inline float Dot(const Quat& quat)const {
 			return ((Quat)XMQuaternionDot(*this, quat)).x;
 		}
-		//--------------------------------------------------------------------------------------
-		/*!
-		@brief	相手との共役を返す
-		@param[in]	quat	相手
-		@return	*thisの参照
-		*/
-		//--------------------------------------------------------------------------------------
-		inline Quat& conj(const Quat& quat) {
+
+		inline Quat& Conj(const Quat& quat) {
 			*this = (Quat)XMQuaternionConjugate(quat);
 			return *this;
 		}
-		//--------------------------------------------------------------------------------------
-		/*!
-		@brief	単位クオータニオンを設定する
-		@return	*thisの参照
-		*/
-		//--------------------------------------------------------------------------------------
-		inline  Quat& identity() {
+		inline Quat& Conj() {
+			this->x = -this->x;
+			this->y = -this->y;
+			this->z = -this->z;
+			return *this;
+		}
+		inline  Quat& Identity() {
 			*this = (Quat)XMQuaternionIdentity();
 			return *this;
 		}
-		//--------------------------------------------------------------------------------------
-		/*!
-		@brief	X軸回転のクオータニオンを設定する
-		@param[in]	radians 回転値
-		@return	*thisの参照
-		*/
-		//--------------------------------------------------------------------------------------
-		inline Quat& rotationX(float radians) {
-			*this = (Quat)XMQuaternionRotationAxis(XMVECTOR(Vector3(1, 0, 0)), radians);
-			return *this;
-		}
-		//--------------------------------------------------------------------------------------
-		/*!
-		@brief	Y軸回転のクオータニオンを設定する
-		@param[in]	radians 回転値
-		@return	*thisの参照
-		*/
-		//--------------------------------------------------------------------------------------
-		inline Quat& rotationY(float radians) {
-			*this = (Quat)XMQuaternionRotationAxis(Vector3(0, 1, 0), radians);
-			return *this;
-		}
-		//--------------------------------------------------------------------------------------
-		/*!
-		@brief	Z軸回転のクオータニオンを設定する
-		@param[in]	radians 回転値
-		@return	*thisの参照
-		*/
-		//--------------------------------------------------------------------------------------
-		inline Quat& rotationZ(float radians) {
-			*this = (Quat)XMQuaternionRotationAxis(Vector3(0, 0, 1), radians);
-			return *this;
-		}
-
-		//--------------------------------------------------------------------------------------
-		/*!
-		@brief	指定の軸回転のクオータニオンを設定する
-		@param[in]	radians 回転値
-		@param[in]	unitVec 回転軸
-		@return	*thisの参照
-		*/
-		//--------------------------------------------------------------------------------------
-		inline Quat& rotation(float radians, const Vector3& unitVec) {
-			*this = (Quat)XMQuaternionRotationAxis(unitVec, radians);
-			return *this;
-		}
-		//--------------------------------------------------------------------------------------
-		/*!
-		@brief	指定の軸回転のクオータニオンを設定する(引数が逆バージョン)
-		@param[in]	unitVec 回転軸
-		@param[in]	radians 回転値
-		@return	*thisの参照
-		*/
-		//--------------------------------------------------------------------------------------
-		inline Quat& rotation(const Vector3& unitVec, float radians) {
+		
+		inline Quat& Rotation(float radians, const Vector3& unitVec) {
 			*this = (Quat)XMQuaternionRotationAxis(unitVec, radians);
 			return *this;
 		}
 
-		/*!
-		@brief	回転ベクトルからクオータニオンを設定する
-		@param[in]	rotVec 回転ベクトル
-		@return	*thisの参照
-		*/
-		//--------------------------------------------------------------------------------------
+		inline Quat& Rotation(const Vector3& unitVec, float radians) {
+			*this = (Quat)XMQuaternionRotationAxis(unitVec, radians);
+			return *this;
+		}
 		inline Quat& rotationRollPitchYawFromVector(const Vector3& rotVec) {
 			*this = (Quat)XMQuaternionRotationRollPitchYawFromVector(rotVec);
 			return *this;
 		}
-		//--------------------------------------------------------------------------------------
-		/*!
-		@brief	クォータニオンを回転ベクトルに変換して返す
-		@return	演算後の値
-		*/
-		//--------------------------------------------------------------------------------------
-		inline const Vector3 toRotVec() const {
+
+		inline const Vector3 ToRotVec() const {
 			Quat Temp = *this;
 			Temp.Normalize();
 			Matrix4x4 mt(Temp);
@@ -1508,25 +1442,11 @@ namespace ButiEngine {
 			return Rot;
 		}
 
-
-		//--------------------------------------------------------------------------------------
-		/*!
-		@brief	*thisの逆クォータニオンを設定する
-		@return	*thisの参照
-		*/
-		//--------------------------------------------------------------------------------------
-		inline Quat& inverse() {
+		inline Quat& Inverse() {
 			*this = (Quat)XMQuaternionInverse(*this);
 			return *this;
 		}
-		//--------------------------------------------------------------------------------------
-		/*!
-		@brief	指定した法線の方向を向く回転を設定する
-		@param[in]	norm 法線
-		@return	*thisの参照
-		*/
-		//--------------------------------------------------------------------------------------
-		inline Quat& facing(const Vector3& norm) {
+		inline Quat& Facing(const Vector3& norm) {
 			Vector3 DefUp(0, 1.0f, 0);
 			Vector3 Temp = norm;
 			Vector2 TempVec2(Temp.x, Temp.z);
@@ -1541,13 +1461,7 @@ namespace ButiEngine {
 			(*this).Normalize();
 			return *this;
 		}
-		//--------------------------------------------------------------------------------------
-		/*!
-		@brief	指定した法線のY軸のみ方向を向く回転を設定する
-		@param[in]	norm 法線
-		@return	*thisの参照
-		*/
-		//--------------------------------------------------------------------------------------
+
 		inline Quat& facingY(const Vector3& norm) {
 			Vector3 Temp = norm;
 			Temp.Normalize();
@@ -1555,22 +1469,11 @@ namespace ButiEngine {
 			(*this).Normalize();
 			return *this;
 		}
-		//--------------------------------------------------------------------------------------
-		/*!
-		@brief	*thisにNaNが含まれるかどうかを返す
-		@return	含まれていたらtrue
-		*/
-		//--------------------------------------------------------------------------------------
-		inline bool isNaN() const {
+
+		inline bool IsNaN() const {
 			return XMQuaternionIsNaN(*this);
 		}
-		//--------------------------------------------------------------------------------------
-		/*!
-		@brief	*thisに無限大が含まれるかどうかを返す
-		@return	含まれていたらtrue
-		*/
-		//--------------------------------------------------------------------------------------
-		inline bool isInfinite() const {
+		inline bool IsInfinite() const {
 			return XMQuaternionIsInfinite(*this);
 		}
 	};

@@ -14,6 +14,9 @@ namespace ButiEngine {
 			return id.get();
 		}
 		bool operator == (const ID& other) {
+			if (other.IsEmpty()||IsEmpty()) {
+				return false;
+			}
 			return *other.id == *id;
 		}
 		bool operator != (const ID& other) {
@@ -99,6 +102,9 @@ namespace ButiEngine {
 		ID<T> IDUpdate(ID<T> arg_id) {
 			if (arg_id.IsEmpty()) {
 				return arg_id;
+			}
+			if (vec_p_id.size() <= * arg_id.GetID()) {
+				return ID<T>();
 			}
 
 			return vec_p_id.at(*arg_id.GetID());

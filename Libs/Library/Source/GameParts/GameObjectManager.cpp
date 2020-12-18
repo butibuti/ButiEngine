@@ -303,9 +303,9 @@ std::weak_ptr<ButiEngine::GameObject> ButiEngine::GameObjectManager::GetGameObje
 }
 
 
-std::vector<std::weak_ptr<ButiEngine::GameObject>> ButiEngine::GameObjectManager::GetGameObjects(const GameObjectTag& arg_objectTag)
+std::vector<std::shared_ptr<ButiEngine::GameObject>> ButiEngine::GameObjectManager::GetGameObjects(const GameObjectTag& arg_objectTag)
 {
-	auto output = std::vector<std::weak_ptr<GameObject>>();
+	auto output = std::vector<std::shared_ptr<GameObject>>();
 	auto endItr = vec_gameObjects.end();
 	for (auto itr = vec_gameObjects.begin(); itr !=endItr; itr++) {
 		if ((*itr)->GetGameObjectTag() == arg_objectTag) {

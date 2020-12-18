@@ -28,7 +28,7 @@ namespace ButiEngine {
 
 		std::weak_ptr<GameObject> GetGameObject(const std::string& arg_objectName);
 		std::weak_ptr<GameObject> GetGameObject(const GameObjectTag& arg_objectTag);
-		std::vector<std::weak_ptr<GameObject>> GetGameObjects(const GameObjectTag& arg_objectTag);
+		std::vector<std::shared_ptr<GameObject>> GetGameObjects(const GameObjectTag& arg_objectTag);
 
 		void Start();
 

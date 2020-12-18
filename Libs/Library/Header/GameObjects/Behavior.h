@@ -33,9 +33,9 @@ namespace ButiEngine {
 	protected:
 		virtual void OnUpdate() {};
 		std::weak_ptr<GameObject> gameObject;
-		std::weak_ptr<ICamera>& GetCamera();
-		std::weak_ptr<ICamera>& GetCamera(const UINT arg_camNum);
-		std::weak_ptr<ICamera>& GetCamera(const std::string& arg_camName);
+		std::weak_ptr<ICamera> GetCamera();
+		std::weak_ptr<ICamera> GetCamera(const UINT arg_camNum);
+		std::weak_ptr<ICamera> GetCamera(const std::string& arg_camName);
 		std::weak_ptr<GameObjectManager> GetManager();
 		std::shared_ptr<GameObjectTagManager> GetTagManager();
 		std::weak_ptr<ICollisionManager> GetCollisionManager();

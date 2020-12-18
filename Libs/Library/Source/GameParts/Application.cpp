@@ -151,7 +151,7 @@ void ButiEngine::Application::InitLoadResources()
 		container->LoadMesh("SphereForParticle_UV_Normal", uv_normalVertices);
 
 
-		MeshHelper::CreateSphere(Vector3(1.0f, 1.0f, 1.0f), 12, colors, testVertices);
+		MeshHelper::CreateSphere(Vector3(1.0f, 1.0f, 1.0f), 24, colors, testVertices);
 		Vertex::VertexHelper::VertexConvert(testVertices, normalVertices);
 		container->LoadMesh("Sphere_Normal", normalVertices);
 
@@ -310,7 +310,6 @@ void ButiEngine::Application::InitLoadResources()
 	ModelFileConverter::FBXtoB3M("sango_another.fbx", "sango_another.b3m", "Model/FBX/");
 	ModelFileConverter::FBXtoB3M("gun.fbx", "gun.b3m", "Model/Maguro/");
 	ModelFileConverter::PMXtoB3M("インパクトドライバー.pmx", "driver.b3m", "Model/");
-	ModelFileConverter::PMXtoB3M("ウルトラマンヒカリ._準ボーン.pmx", "hikari.b3m", "Model/aomoti式_ウルトラマンヒカリ/");
 
 	ModelFileConverter::PMXtoB3M("畳.pmx", "tatami.b3m", "Model/畳/");
 	ModelFileConverter::VMDtoBMD("Alicia_run.vmd", "slash.bmd", "Motion/");

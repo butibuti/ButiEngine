@@ -43,7 +43,6 @@ ButiEngine::MeshDrawComponent::MeshDrawComponent(const ModelTag& arg_modelTag, c
 
 void ButiEngine::MeshDrawComponent::OnUpdate()
 {
-	data->GetPrimitive()->Update();
 }
 
 void ButiEngine::MeshDrawComponent::ChangeFillMode(const bool arg_isFill)
@@ -143,9 +142,12 @@ std::shared_ptr<ButiEngine:: GameComponent> ButiEngine::MeshDrawComponent::Clone
 
 void ButiEngine::MeshDrawComponent::Regist()
 {
-	if (!index)
-	index = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetRenderer()->RegistDrawObject(data,shp_drawInfo->isAlpha, layer);
-}
+	if (!index) {
+
+		index = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetRenderer()->RegistDrawObject(data, shp_drawInfo->isAlpha, layer);
+
+		data->GetPrimitive()->Update();
+	}}
 
 void ButiEngine::MeshDrawComponent::ReRegist()
 {
@@ -417,4 +419,5 @@ void ButiEngine::MeshDrawComponent::CreateData()
 
 	}
 	shp_drawInfo->RemoveExCBuffer("FogParameter");
+
 }

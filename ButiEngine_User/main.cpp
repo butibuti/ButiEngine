@@ -5,8 +5,8 @@
 #include"TestBehavior.h"
 
 #include"Header/Device/ModelFileConverter.h"
-#include"Header/GameObjects/DefaultGameComponent/CubeTransformAnimation.h"
-#include"Header/GameObjects/DefaultGameComponent/ChaseComponent.h"
+//#include"Header/GameObjects/DefaultGameComponent/ChaseComponent.h"
+#include"Header/GameObjects/DefaultGameComponent/ModelDrawComponent.h"
 using namespace::ButiEngine;
 
 #ifdef DEBUG
@@ -23,10 +23,10 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	auto app = CreateDefaultApplicationInstance("ButiSampleScene", WindowPopType::normal, 1080,720, false);
 	GameDevice::Initialize();
 	GameDevice::GetInput()->Initialize(app);
-	ComponentsLoader::GetInstance()-> AddGameComponent<CubeTransformAnimation>();
-	//ModelFileConverter::FBXtoB3M("Player.fbx", "Player.b3m", "Model/");
+
+	//ModelFileConverter::PMXtoB3M("ウルトラマンヒカリ._準ボーン.pmx", "hikari.b3m", "Model/aomoti式_ウルトラマンヒカリ/");
 	app->InitLoadResources();
-	app->GetSceneManager()->LoadScene_Init_EditMode("CollisionScene");
+	app->GetSceneManager()->LoadScene_Init_EditMode("DivisionScene");
 
 	app->GetGraphicDevice()->SetClearColor(Vector4(0.39, 0.58, 0.92, 1));
 	int returnCode = app->Run();

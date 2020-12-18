@@ -98,3 +98,4 @@ BUTI_REGIST_CBUFFER(ButiEngine::TestGSVariable);
 BUTI_REGIST_CBUFFER(ButiEngine::LightVariable);
 
 BUTI_REGIST_CBUFFER(ButiEngine::ParticleParameter);
+BUTI_REGIST_CARRAYBUFFER(ButiEngine::Matrix4x4);

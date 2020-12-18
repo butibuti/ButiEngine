@@ -16,35 +16,32 @@ ButiEngine::ModelDrawComponent::ModelDrawComponent(const ModelTag& arg_modelTag,
 
 }
 
-void ButiEngine::ModelDrawComponent::OnUpdate()
-{
-#ifdef DEBUG
-	if (GameDevice::GetInput()->TriggerKey(Keys::One)) {
-		SwitchFillMode(false);
-	}
-#endif
-}
 void ButiEngine::ModelDrawComponent::OnSet()
 {
 
 	if (!shp_drawInfo) {
 		shp_drawInfo = ObjectFactory::Create<DrawInformation>();
-		
 	}
-	if (!isCereal) {
-		{
+
+	if (!isCereal)
+	{
+		if (!shp_drawInfo->GetExCBuffer("LightBuffer")) {
 			auto lightBuffer_Dx12 = ObjectFactory::Create<CBuffer_Dx12<LightVariable>>(3);
 
 			shp_drawInfo->vec_exCBuffer.push_back(lightBuffer_Dx12);
 
 			auto light = LightVariable();
 			light.lightDir = Vector4(Vector3(-1.0f, -1.0f, 0.0f), 1);
-
+			lightBuffer_Dx12->SetExName("LightBuffer");
 			lightBuffer_Dx12->Get() = light;
 		}
-
 	}
 	else {
+
+		auto graphicDevice = gameObject.lock()->GetGraphicDevice();
+		shaderTag = graphicDevice->GetApplication().lock()->GetResourceContainer()->GetShaderTag(shaderTag);
+		modelTag = graphicDevice->GetApplication().lock()->GetResourceContainer()->GetModelTag(modelTag);
+
 
 		auto endItr = shp_drawInfo->vec_exCBuffer.end();
 		for (auto itr = shp_drawInfo->vec_exCBuffer.begin(); itr != endItr; itr++) {
@@ -90,7 +87,8 @@ void ButiEngine::ModelDrawComponent::OnShowUI()
 		auto tagName = gameObject.lock()->GetResourceContainer()->GetTagNameModel(modelTag);
 
 
-		(GUI::BeginChild("ModelTagWin", Vector2(GUI::GetFontSize() * (tagName.size() + 2), GUI::GetFontSize() * 2), true));
+
+		GUI::BeginChild("ModelTagWin", Vector2(GUI::GetFontSize() * (tagName.size() + 2), GUI::GetFontSize() * 2), true);
 		GUI::Text(Util::ToUTF8(tagName).c_str());
 
 		if (GUI::IsWindowHovered()) {
@@ -122,8 +120,57 @@ void ButiEngine::ModelDrawComponent::OnShowUI()
 
 	}
 
+	if (GUI::ArrowButton("##layerUp", GUI::GuiDir_Left)) {
+
+		UnRegist();
+		layer--;
+		if (layer < 0) {
+			layer = 0;
+		}
+		Regist();
+	}
+	GUI::SameLine();
+	GUI::Text(std::to_string(layer));
+	GUI::SameLine();
+	if (GUI::ArrowButton("##layerDown", GUI::GuiDir_Right)) {
+		UnRegist();
+		layer++;
+		Regist();
+	}
+
 
 	if (GUI::TreeNode("DrawSettings")) {
+
+		GUI::BulletText("IsAlphaObject");
+		if (GUI::Checkbox("##isAlpha", &shp_drawInfo->isAlpha)) {
+			shp_drawInfo->isAlpha = !shp_drawInfo->isAlpha;
+			UnRegist();
+			shp_drawInfo->isAlpha = !shp_drawInfo->isAlpha;
+
+			Regist();
+		}
+
+		GUI::BulletText("TopologyMode");
+
+		if (GUI::Button("Triangle")) {
+			shp_drawInfo->drawSettings.topologyType = TopologyType::triangle;
+			ReRegist();
+		}
+		GUI::SameLine();
+		if (GUI::Button("TriangleList")) {
+			shp_drawInfo->drawSettings.topologyType = TopologyType::triangleList;
+			ReRegist();
+		}
+		GUI::SameLine();
+		if (GUI::Button("Line")) {
+			shp_drawInfo->drawSettings.topologyType = TopologyType::line;
+			ReRegist();
+		}
+		GUI::SameLine();
+		if (GUI::Button("Point")) {
+			shp_drawInfo->drawSettings.topologyType = TopologyType::point;
+			ReRegist();
+		}
 
 		GUI::BulletText("BlendMode");
 
@@ -146,9 +193,23 @@ void ButiEngine::ModelDrawComponent::OnShowUI()
 			shp_drawInfo->drawSettings.blendMode = BlendMode::Reverse;
 			ReRegist();
 		}
+		GUI::BulletText("Culling");
+		if (GUI::Button("None##Culling")) {
+			shp_drawInfo->drawSettings.cullMode = CullMode::none;
+			ReRegist();
+		}
+		GUI::SameLine();
+		if (GUI::Button("Front##Culling")) {
+			shp_drawInfo->drawSettings.cullMode = CullMode::front;
+			ReRegist();
+		}
+		GUI::SameLine();
+		if (GUI::Button("Back##Culling")) {
+			shp_drawInfo->drawSettings.cullMode = CullMode::back;
+			ReRegist();
+		}
 
-
-		GUI::BulletText("BillBoarsMode");
+		GUI::BulletText("BillBoardMode");
 		if (GUI::Button("None")) {
 			shp_drawInfo->drawSettings.billboardMode = BillBoardMode::none;
 			ReRegist();
@@ -185,6 +246,7 @@ void ButiEngine::ModelDrawComponent::OnShowUI()
 		}
 		GUI::TreePop();
 	}
+
 
 }
 

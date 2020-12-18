@@ -5,51 +5,32 @@
 
 void ButiEngine::TestBehavior::OnUpdate()
 {
-    if (GameDevice::GetInput()->CheckKey(Keys::A)) {
-        gameObject.lock()->transform->TranslateX(-1*0.1);
-    }
-    if (GameDevice::GetInput()->CheckKey(Keys::D)) {
 
-        gameObject.lock()->transform->TranslateX(1*0.1);
-    }
-    if (GameDevice::GetInput()->CheckKey(Keys::W)) {
-        gameObject.lock()->transform->TranslateY(1*0.1);
+	Vector2 mouseMove = GameDevice::GetInput()->GetMouseMove();
+	GameDevice::GetInput()->SetMouseCursor(gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneManager().lock()->GetApplication().lock()->GetWindow()->GetWindowCenterPosition());
+	shp_camera->shp_transform->RollLocalRotationX_Degrees(-mouseMove.y / 3.0f);
+	shp_camera->shp_transform->RollWorldRotationY_Degrees(-mouseMove.x / 3.0f);
+	Vector3 moveForce;
+	if (GameDevice::GetInput()->CheckKey(Keys::W)) {
+		moveForce += shp_camera->shp_transform->GetFront();
 
-    }
-    if (GameDevice::GetInput()->CheckKey(Keys::S)) {
+	}
+	if (GameDevice::GetInput()->CheckKey(Keys::S)) {
+		moveForce -= shp_camera->shp_transform->GetFront();
 
-        gameObject.lock()->transform->TranslateY(-1*0.1);
-    }
-    if (GameDevice::GetInput()->CheckKey(Keys::E)) {
-        gameObject.lock()->transform->TranslateZ(1*0.1);
-    }
-    if (GameDevice::GetInput()->CheckKey(Keys::R)) {
+	}
+	if (GameDevice::GetInput()->CheckKey(Keys::A)) {
+		moveForce -=shp_camera->shp_transform->GetRight();
 
-        gameObject.lock()->transform->TranslateZ(-1*0.1);
-    }
+	}
+	if (GameDevice::GetInput()->CheckKey(Keys::D)) {
+		moveForce += shp_camera->shp_transform->GetRight();
 
-    if (GameDevice::GetInput()->TriggerKey(Keys::Space)) {
-        auto AnimPlane = gameObject.lock()->GetGameObjectManager().lock()->GetGameObject("Plane_Target");
-        auto anim = AnimPlane.lock()->GetGameComponent<TransformAnimation>();
+	}
+	moveForce.y = 0;
+	moveForce.Normalize();
+	gameObject.lock()->transform->SetLocalPosition(gameObject.lock()->transform->GetLocalPosition() + moveForce * 0.05f);
 
-        if (!anim) {
-            anim= AnimPlane.lock()->AddGameComponent<TransformAnimation>();
-            anim->SetSpeed(1.0 / 120);
-            anim->SetTargetTransform(gameObject.lock()->transform->Clone());
-            anim->SetReverse(false);
-        }
-    } 
-GUI::Begin("In Visibility!!");
-    shp_AABB->Update();
-    auto mainCamera = GetCamera("main");
-    if (mainCamera.lock()->IsContaineVisibility(shp_AABB)==1) {
-        GUI::Text(u8"Œ©‚¦‚Ä‚é‰J‚¤”„‰J");
-
-    }/*
-    if ( GetCollisionManager().lock()->IsWillHit(shp_AABB,0)) {
-        GUI::Text(u8"“–‚½‚Á‚Ä‰J‚¤”„‰J");
-    }*/
-    GUI::End();
 }
 
 void ButiEngine::TestBehavior::OnSet()
@@ -58,11 +39,12 @@ void ButiEngine::TestBehavior::OnSet()
 
 void ButiEngine::TestBehavior::Start()
 {
-    auto gameObject = GetManager().lock()->AddObjectFromCereal("test", ObjectFactory::Create<Transform>());
-    shp_AABB = ObjectFactory::Create<Collision::CollisionPrimitive_Box_AABB>(Vector3(1,1,1), gameObject.lock()->transform);
+    //auto gameObject = GetManager().lock()->AddObjectFromCereal("test", ObjectFactory::Create<Transform>());
+    //shp_AABB = ObjectFactory::Create<Collision::CollisionPrimitive_Box_AABB>(Vector3(1,1,1), gameObject.lock()->transform);
 
-    
-
+    shp_camera = GetCamera("main").lock();
+	shp_camera->shp_transform->SetWorldPosition(Vector3());
+	shp_camera->shp_transform->SetBaseTransform(gameObject.lock()->transform, true);
 }
 
 void ButiEngine::TestBehavior::OnCollision(std::weak_ptr<GameObject> arg_other)

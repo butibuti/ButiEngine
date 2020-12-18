@@ -95,7 +95,7 @@ std::shared_ptr<ButiEngine::Resource_Material> ButiEngine::ResourceFactory::Crea
 		else if (encodeType) {
 			std::string textureName = materialReader.ReadCharactor(texNameCount);
 
-			textureTags.push_back(resourceContainer->LoadTexture(textureName,StringHelper::GetDirectory( arg_fileDirectory+arg_materialPath)));
+			textureTags.push_back(resourceContainer->LoadTexture(textureName,StringHelper::GetDirectory( arg_fileDirectory+arg_materialPath)+"../"));
 		}
 		else
 		{
@@ -103,7 +103,7 @@ std::shared_ptr<ButiEngine::Resource_Material> ButiEngine::ResourceFactory::Crea
 			std::string textureName;
 			StringHelper::WStringToSafetyConvert(textureNameW);
 			textureName = Util::WStringToString(textureNameW);
-			textureTags.push_back(resourceContainer->LoadTexture(textureName, StringHelper::GetDirectory(arg_fileDirectory + arg_materialPath)));
+			textureTags.push_back(resourceContainer->LoadTexture(textureName, StringHelper::GetDirectory(arg_fileDirectory + arg_materialPath)+"../"));
 		}
 	}
 

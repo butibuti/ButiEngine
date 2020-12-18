@@ -44,19 +44,19 @@ void ButiEngine::Behavior::ShowUI()
 	OnShowUI();
 }
 
-std::weak_ptr< ButiEngine::ICamera>& ButiEngine::Behavior::GetCamera()
+std::weak_ptr< ButiEngine::ICamera> ButiEngine::Behavior::GetCamera()
 {
 	auto out = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetCamera();
 	return out;
 }
 
-std::weak_ptr< ButiEngine::ICamera>& ButiEngine::Behavior::GetCamera(const UINT arg_camNum)
+std::weak_ptr< ButiEngine::ICamera> ButiEngine::Behavior::GetCamera(const UINT arg_camNum)
 {
 	auto out = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetCamera(arg_camNum);
 	return out;
 }
 
-std::weak_ptr< ButiEngine::ICamera>& ButiEngine::Behavior::GetCamera(const std::string& arg_camName)
+std::weak_ptr< ButiEngine::ICamera> ButiEngine::Behavior::GetCamera(const std::string& arg_camName)
 {
 	auto out = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetCamera(arg_camName);
 	return out;

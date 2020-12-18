@@ -22,7 +22,7 @@ namespace ButiEngine {
 			archive(isActive);
 		}
 	private:
-		std::shared_ptr<Collision::CollisionPrimitive_Box_AABB> shp_AABB;
+		std::shared_ptr<ICamera> shp_camera;
 	};
 
 }

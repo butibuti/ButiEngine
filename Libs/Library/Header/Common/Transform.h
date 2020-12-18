@@ -481,7 +481,7 @@ namespace ButiEngine {
 		}
 
 
-		void ShowUI();
+		virtual bool ShowUI();
 
 		template<class Archive>
 		void serialize(Archive& archive)
@@ -535,6 +535,7 @@ namespace ButiEngine {
 				}
 			}
 		}
+		bool ShowUI()override;
 	private:
 		std::shared_ptr<BoneTransform> parentBoneTransform = nullptr;
 	};

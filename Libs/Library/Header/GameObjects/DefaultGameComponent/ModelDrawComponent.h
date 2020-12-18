@@ -37,6 +37,7 @@ namespace ButiEngine {
 	protected:
 		void CreateData()override;
 	private:
+		std::shared_ptr<ModelDrawData> shp_modelData;
 	};
 
 }

@@ -405,6 +405,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\PostEffectParamUpdater.h">
       <Filter>header\GameObjects\DefaultGameComponent</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\IKComponent.h">
+      <Filter>header\GameObjects\DefaultGameComponent</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Common\Camera.cpp">
@@ -686,6 +689,9 @@
       <Filter>source\GameObjects\DefaultGameComponent</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\DefaultGameComponent\MeshDrawComponent_Static.cpp">
+      <Filter>source\GameObjects\DefaultGameComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\DefaultGameComponent\IKComponent.cpp">
       <Filter>source\GameObjects\DefaultGameComponent</Filter>
     </ClCompile>
   </ItemGroup>

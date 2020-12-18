@@ -1,12 +1,12 @@
 #include"stdafx_u.h"
 #include"Header/ApplicationCreater.h"
-#pragma comment(lib,"ButiEngine.lib")
 #include"Header/Scene/ComponentsLoader.h"
 #include"TestBehavior.h"
 
 #include"Header/Device/ModelFileConverter.h"
 //#include"Header/GameObjects/DefaultGameComponent/ChaseComponent.h"
-#include"Header/GameObjects/DefaultGameComponent/ModelDrawComponent.h"
+#include"Header/GameObjects/DefaultGameComponent/IKComponent.h"
+#pragma comment(lib,"ButiEngine.lib")
 using namespace::ButiEngine;
 
 #ifdef DEBUG
@@ -23,7 +23,7 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	auto app = CreateDefaultApplicationInstance("ButiSampleScene", WindowPopType::normal, 1080,720, false);
 	GameDevice::Initialize();
 	GameDevice::GetInput()->Initialize(app);
-
+	//ComponentsLoader::GetInstance()->AddGameComponent<IKComponent>();
 	//ModelFileConverter::PMXtoB3M("ウルトラマンヒカリ._準ボーン.pmx", "hikari.b3m", "Model/aomoti式_ウルトラマンヒカリ/");
 	app->InitLoadResources();
 	app->GetSceneManager()->LoadScene_Init_EditMode("DivisionScene");

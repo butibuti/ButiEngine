@@ -80,44 +80,49 @@ void ButiEngine::ModelDrawComponent::OnShowUI()
 		ReRegist();
 	}
 
-	{
-		GUI::BulletText("ModelTag");
+	if (GUI::TreeNode("Tags")) {
+
+		{
+			GUI::BulletText("ModelTag");
 
 
-		auto tagName = gameObject.lock()->GetResourceContainer()->GetTagNameModel(modelTag);
+			auto tagName = gameObject.lock()->GetResourceContainer()->GetTagNameModel(modelTag);
 
 
 
-		GUI::BeginChild("ModelTagWin", Vector2(GUI::GetFontSize() * (tagName.size() + 2), GUI::GetFontSize() * 2), true);
-		GUI::Text(Util::ToUTF8(tagName).c_str());
+			GUI::BeginChild("ModelTagWin", Vector2(GUI::GetFontSize() * (tagName.size() + 2), GUI::GetFontSize() * 2), true);
+			GUI::Text(Util::ToUTF8(tagName).c_str());
 
-		if (GUI::IsWindowHovered()) {
-			auto tag = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneManager().lock()->GetApplication().lock()->GetGUIController()->GetModelTag();
-			if (!tag.IsEmpty()) {
-				modelTag = tag;
-				ReRegist();
+			if (GUI::IsWindowHovered()) {
+				auto tag = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneManager().lock()->GetApplication().lock()->GetGUIController()->GetModelTag();
+				if (!tag.IsEmpty()) {
+					modelTag = tag;
+					ReRegist();
+				}
 			}
+
+
+			GUI::EndChild();
+		}
+		{
+			GUI::BulletText("ShaderTag");
+			auto tagName = gameObject.lock()->GetResourceContainer()->GetTagNameShader(shaderTag);
+			(GUI::BeginChild("ShaderTagWin", Vector2(GUI::GetFontSize() * (tagName.size() + 2), GUI::GetFontSize() * 2), true));
+			GUI::Text(Util::ToUTF8(tagName).c_str());
+
+			if (GUI::IsWindowHovered()) {
+				auto tag = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneManager().lock()->GetApplication().lock()->GetGUIController()->GetShaderTag();
+				if (!tag.IsEmpty()) {
+					shaderTag = tag;
+					ReRegist();
+				}
+			}
+			GUI::EndChild();
+
+
 		}
 
-
-		GUI::EndChild();
-	}
-	{
-		GUI::BulletText("ShaderTag");
-		auto tagName = gameObject.lock()->GetResourceContainer()->GetTagNameShader(shaderTag);
-		(GUI::BeginChild("ShaderTagWin", Vector2(GUI::GetFontSize() * (tagName.size() + 2), GUI::GetFontSize() * 2), true));
-		GUI::Text(Util::ToUTF8(tagName).c_str());
-
-		if (GUI::IsWindowHovered()) {
-			auto tag = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneManager().lock()->GetApplication().lock()->GetGUIController()->GetShaderTag();
-			if (!tag.IsEmpty()) {
-				shaderTag = tag;
-				ReRegist();
-			}
-		}
-		GUI::EndChild();
-
-
+		GUI::TreePop();
 	}
 
 	if (GUI::ArrowButton("##layerUp", GUI::GuiDir_Left)) {
@@ -136,6 +141,23 @@ void ButiEngine::ModelDrawComponent::OnShowUI()
 		UnRegist();
 		layer++;
 		Regist();
+	}
+
+	if (GUI::TreeNode("Bone")) {
+
+		auto endItr = shp_modelData->vec_bone.end();
+		for (auto itr = shp_modelData->vec_bone.begin(); itr !=endItr ; itr++) {
+			std::string bonenameStr = 
+			Util::WStringToString((*itr)->boneName);
+			if (GUI::TreeNode(Util::ToUTF8( bonenameStr))) {
+
+				(*itr)->transform->ShowUI();
+				GUI::TreePop();
+			}
+
+		}
+
+		GUI::TreePop();
 	}
 
 
@@ -271,8 +293,9 @@ void ButiEngine::ModelDrawComponent::CreateData()
 	auto modelData = ObjectFactory::Create<ModelDrawData_Dx12>(modelTag, shaderTag, renderer, gameObject.lock()->GetGraphicDevice()->GetThis<GraphicDevice_Dx12>(), shp_drawInfo, shp_transform);
 
 	data = modelData;
-
-	for (auto itr = modelData->vec_bone.begin(); itr != modelData->vec_bone.end(); itr++) {
+	shp_modelData = modelData;
+	auto endItr = modelData->vec_bone.end();
+	for (auto itr = modelData->vec_bone.begin(); itr != endItr; itr++) {
 		if (!((*itr)->parentBone)) {
 
 			(*itr)->transform->SetBaseTransform(shp_transform, true);

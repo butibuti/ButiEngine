@@ -9,20 +9,18 @@ void ButiEngine::IKComponent::OnSet()
         shp_modelData = model->GetModelData();
 
 
-        std::map<std::shared_ptr<Bone>, int> map;
-        auto vec_ikBone = shp_modelData->GetIKBones();
-        auto endItr = vec_ikBone.end();
-        for (auto itr = vec_ikBone.begin(); itr != endItr; itr++) {
-            for (auto dataItr = (*itr)->ikDatas.begin(); dataItr != (*itr)->ikDatas.end(); dataItr++) {
-                if (!map.count(dataItr->shp_targetBone)) 
-                    map.emplace(dataItr->shp_targetBone, 0);
-            }
-        }
-        auto endmapItr = map.end();
-        for (auto mapItr = map.begin(); mapItr != endmapItr; mapItr++) {
-            vec_endBones.push_back(mapItr->first);
-        }
+        vec_endBones = shp_modelData->GetIKBones();
     }
+
+    auto bone = shp_modelData->SerchBoneByName(L"¶‘«‚h‚j");
+    auto drawcomp = gameObject.lock()->GetGameComponent<MeshDrawComponent>();
+    if (!drawcomp) {
+        
+        drawcomp = ObjectFactory::Create<MeshDrawComponent>(gameObject.lock()->GetResourceContainer()->GetMeshTag("Cube_UV_Normal"), gameObject.lock()->GetResourceContainer()->GetShaderTag("Shader/Compiled/OnlyMaterial"), gameObject.lock()->GetResourceContainer()->GetMaterialTag("Red"), nullptr,0,bone->transform);
+
+        gameObject.lock()->AddGameComponent(drawcomp);
+    }
+
 }
 
 void ButiEngine::IKComponent::Start()
@@ -34,19 +32,7 @@ void ButiEngine::IKComponent::Start()
     if (model) {
         shp_modelData = model->GetModelData();
 
-        std::map<std::shared_ptr<Bone>, int> map;
-        auto vec_ikBone = shp_modelData->GetIKBones();
-        auto endItr = vec_ikBone.begin();
-        for (auto itr = vec_ikBone.begin(); itr != endItr; itr++) {
-            for (auto dataItr = (*itr)->ikDatas.begin(); dataItr != (*itr)->ikDatas.end(); dataItr++) {
-                if(!map.count(dataItr->shp_targetBone)) map.emplace( dataItr->shp_targetBone,0);
-            }
-        }
-        auto endmapItr = map.end();
-        for (auto mapItr = map.begin(); mapItr != endmapItr; mapItr++) {
-            vec_endBones.push_back(mapItr->first);
-        }
-
+        vec_endBones = shp_modelData->GetIKBones();
     }
 }
 
@@ -68,7 +54,7 @@ void ButiEngine::IKComponent::OnShowUI()
                 GUI::TreePop();
             }
         }
-        if (isEdit) {
+        if (GameDevice::GetInput()->TriggerKey(Keys::A)) {
 
             shp_modelData->InverseKinematic();
             shp_modelData->BonePowerAdd();

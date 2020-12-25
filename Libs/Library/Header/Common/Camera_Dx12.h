@@ -14,6 +14,7 @@ namespace ButiEngine {
 		void Stop() const override;
 		void ChangeMode(const BlendMode& arg_blendMode)override;
 		void ShowUI()override;
+		void End()override;
 	private:
 
 		std::weak_ptr<GraphicDevice_Dx12> wkp_graphicDevice;

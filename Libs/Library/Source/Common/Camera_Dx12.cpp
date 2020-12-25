@@ -112,7 +112,7 @@ void ButiEngine::Camera_Dx12::Start()
 void ButiEngine::Camera_Dx12::Stop() const
 {
 	if (shp_renderTarget) {
-		shp_renderTarget->EndRenderTarget();
+		shp_renderTarget->DisSetRenderTarget();
 	}
 	wkp_graphicDevice.lock()->Set();
 }
@@ -234,4 +234,11 @@ void ButiEngine::Camera_Dx12::ShowUI()
 		}
 
 
+}
+
+void ButiEngine::Camera_Dx12::End()
+{
+	if (shp_renderTarget) {
+		shp_renderTarget->SetIsCleared(false);
+	}
 }

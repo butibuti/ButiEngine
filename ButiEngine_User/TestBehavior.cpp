@@ -5,11 +5,15 @@
 
 void ButiEngine::TestBehavior::OnUpdate()
 {
+	static bool isForcus=false;
 
-	Vector2 mouseMove = GameDevice::GetInput()->GetMouseMove();
-	GameDevice::GetInput()->SetMouseCursor(gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneManager().lock()->GetApplication().lock()->GetWindow()->GetWindowCenterPosition());
-	shp_camera->shp_transform->RollLocalRotationX_Degrees(-mouseMove.y / 3.0f);
-	shp_camera->shp_transform->RollWorldRotationY_Degrees(-mouseMove.x / 3.0f);
+	if (isForcus) {
+
+		Vector2 mouseMove = GameDevice::GetInput()->GetMouseMove();
+		GameDevice::GetInput()->SetMouseCursor(gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneManager().lock()->GetApplication().lock()->GetWindow()->GetWindowCenterPosition());
+		shp_camera->shp_transform->RollLocalRotationX_Degrees(-mouseMove.y / 3.0f);
+		shp_camera->shp_transform->RollWorldRotationY_Degrees(-mouseMove.x / 3.0f);
+	}
 	Vector3 moveForce;
 	if (GameDevice::GetInput()->CheckKey(Keys::W)) {
 		moveForce += shp_camera->shp_transform->GetFront();
@@ -25,6 +29,10 @@ void ButiEngine::TestBehavior::OnUpdate()
 	}
 	if (GameDevice::GetInput()->CheckKey(Keys::D)) {
 		moveForce += shp_camera->shp_transform->GetRight();
+
+	}
+	if (GameDevice::GetInput()->TriggerKey(Keys::Space)) {
+		isForcus = !isForcus;
 
 	}
 	moveForce.y = 0;

@@ -49,7 +49,7 @@ void ButiEngine::EditScene::OnUpdate()
 void ButiEngine::EditScene::UIUpdate()
 {
 	GUI::Begin("top");
-	if (GUI::ArrowButton("##play", GUI::GuiDir_Right)||(GameDevice::GetInput()->TriggerKey(Keys::F5)&& GameDevice::GetInput()->TriggerKey(Keys::F4))) {
+	if (GUI::ArrowButton("##play", GUI::GuiDir_Right)||(GameDevice::GetInput()->TriggerKey(Keys::F5)&& GameDevice::GetInput()->CheckKey(Keys::LeftShift))) {
 		isActive =!isActive;
 
 		isPlaying = true;
@@ -317,6 +317,11 @@ void ButiEngine::EditScene::Draw()
 
 
 	shp_renderer->RenderingEnd();
+
+	for (auto cameraItr = cams.begin(); cameraItr != cams.end(); cameraItr++) {
+
+		(*cameraItr)->End();
+	}
 }
 
 

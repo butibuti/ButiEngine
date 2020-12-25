@@ -11,7 +11,7 @@ void ButiEngine::Particle_3D::OnSet()
 			return;
 		}
 	}
-	auto drawcomp = gameObject.lock()->GetGameComponent("MeshDraw");
+	auto drawcomp = gameObject.lock()->GetGameComponent<MeshDrawComponent>();
 	if (drawcomp) {
 		shp_drawComponent = drawcomp->GetThis<MeshDrawComponent>();
 		

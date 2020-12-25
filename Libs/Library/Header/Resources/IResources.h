@@ -40,7 +40,8 @@ namespace ButiEngine {
 	public:
 		virtual void SetRenderTarget(Vector4& arg_clearColor) = 0;
 		virtual void SetRenderTargetWithoutDepth(Vector4& arg_clearColor) = 0;
-		virtual void EndRenderTarget() = 0;
+		virtual void DisSetRenderTarget() = 0;
+		virtual void SetIsCleared(bool arg_isClear) = 0;
 	};
 
 	class IResource_Motion :public IObject {

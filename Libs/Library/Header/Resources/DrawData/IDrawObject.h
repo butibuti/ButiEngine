@@ -34,12 +34,7 @@ namespace ButiEngine {
 		std::vector<std::shared_ptr<Bone>> vec_IKBone;
 		std::vector<std::shared_ptr<Bone>> vec_addBone;
 
-		inline void InverseKinematic() {
-
-			for (auto itr = vec_IKBone.begin(); itr != vec_IKBone.end(); itr++) {
-				(*itr)->InverseKinematic();
-			}
-		}
+		void InverseKinematic();
 		inline void BonePowerAdd() {
 
 			for (auto itr = vec_addBone.begin(); itr != vec_addBone.end(); itr++) {

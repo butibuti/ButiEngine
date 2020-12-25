@@ -13,10 +13,11 @@ namespace ButiEngine {
 		void SetRenderTargetWithoutDepth(Vector4& arg_clearColor)override;
 		void CreateTextureUploadHeap()override;
 		void Initialize()override;
-		void EndRenderTarget()override;
+		void DisSetRenderTarget()override;
 		void UpdateResourceRelease()override;
 		void ResourceUpdate() override;
 		void Attach(int slot)override;
+		void SetIsCleared(bool arg_isClear)override;
 	private:
 
 		D3D12_RECT     scissorRect;
@@ -27,6 +28,6 @@ namespace ButiEngine {
 		D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle;
 		//void UpdateResourceRelease()override;
 		//void ResourceUpdate() override;
-
+		bool isCleared = false;
 	};
 }

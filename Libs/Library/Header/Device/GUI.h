@@ -828,6 +828,13 @@ namespace ButiEngine {
 
 		void TextUnformatted(const std::string& text, const std::string& text_end = "");
 		void Text(const std::string& fmt, ...);
+		void Text(const Vector2& v);
+		void Text(const Vector3& v);
+		void Text(const Vector4& v);
+		void Text(const int v);
+		void Text(const float v);
+		void Text(const double v);
+		void Text(const unsigned int v);
 		void TextV(const std::string& fmt, va_list args);
 		void TextColored(const Vector4& col, const std::string& fmt, ...);
 		void TextColoredV(const Vector4& col, const std::string& fmt, va_list args);

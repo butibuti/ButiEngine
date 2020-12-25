@@ -14,12 +14,20 @@ void ButiEngine::Bone::SetOtherBoneLinks(const std::vector<std::shared_ptr< Bone
 		for (auto itr = ikDatas.begin(); itr != ikDatas.end(); itr++) {
 			itr->shp_targetBone = arg_vec_bones.at(itr->targetBoneIndex);
 
+			auto bonelinkEnd = itr->links.end();
+			std::shared_ptr<Transform> befTrans = itr->shp_targetBone->transform;
+			bool first = true;
 			for (auto linkItr = itr->links.begin(); linkItr != itr->links.end(); linkItr++) {
 				linkItr->shp_linkBone = arg_vec_bones.at(linkItr->linkBone);
 
+				auto bonePos = linkItr->shp_linkBone->transform->GetWorldPosition();
+				linkItr->bonesLength= ((Vector3)(befTrans->GetWorldPosition() - bonePos)).GetLength();
+				itr->sum_bonesLength += linkItr->bonesLength;
 
+				linkItr->befBoneInitRotation = linkItr->shp_linkBone->transform->GetLookAtRotation(befTrans->GetWorldPosition(),Vector3::YAxis).Inverse().ToQuat();
+
+				befTrans = linkItr->shp_linkBone->transform;
 			}
-
 		}
 	}
 	if (addBoneIndex < 0) {
@@ -46,6 +54,98 @@ void ButiEngine::Bone::AddBonePower()
 }
 
 void ButiEngine::Bone::InverseKinematic()
+{
+	//worldPos
+	auto targetPos = transform->GetWorldPosition();
+
+	for (auto itr = ikDatas.begin(); itr != ikDatas.end(); itr++)
+	{
+		auto extremity = itr->shp_targetBone;
+		auto root = itr->links.end() - 1;
+
+		float rootDis =((Vector3) (targetPos - root->shp_linkBone->transform->GetWorldPosition())).GetLength();
+
+		if (itr->sum_bonesLength <= rootDis) {
+			auto bonelinkEnd = itr->links.rend();
+			for (auto linkItr = itr->links.rbegin(); linkItr != bonelinkEnd; linkItr++) {
+				linkItr->shp_linkBone->transform->SetWorldRotation((linkItr->befBoneInitRotation* linkItr->shp_linkBone->transform->GetLookAtRotation(targetPos, Vector3::YAxis).ToQuat()).ToMatrix() );
+
+			}
+			continue;
+		}
+
+		auto bonelinkEnd = itr->links.end();
+
+		for (int i = 0; i <itr->loopCount;i++) {
+			auto extremityPos = extremity->transform->GetWorldPosition();
+			if ((extremityPos - targetPos).GetLength()<0.005) {
+				break;
+			}
+
+			//worldPos
+			Vector3 nextBonePos = extremityPos;
+			for (auto linkItr = itr->links.begin(); linkItr != bonelinkEnd; linkItr++) {
+
+				auto inv = linkItr->shp_linkBone->transform->GetBoneMatrix().Inverse();
+
+
+				auto nowJointPos = linkItr->shp_linkBone->transform->GetWorldPosition();
+
+
+				auto localnowJointPos = nowJointPos * inv;
+
+				//Vector3 targetVec = Vector3(targetPos-nowJointPos);//transform->GetWorldPosition();
+				//Vector3 boneVec = Vector3(nextBonePos-nowJointPos);
+
+				Vector3 targetVec = Vector3(targetPos*inv- localnowJointPos);//transform->GetWorldPosition();
+				Vector3 boneVec = Vector3(nextBonePos * inv- localnowJointPos);
+				targetVec.Normalize();
+				boneVec.Normalize();
+
+				Vector3 rotationAxis = boneVec.GetCross(targetVec);
+
+				//if (boneName == L"ç∂ë´ÇhÇj") {
+
+				//	GUI::Text(targetVec);
+				//	GUI::Text(boneVec);
+				//}
+				float angle =acos(boneVec.Dot(targetVec));
+				if (abs(angle) <= FLT_MIN*10) {
+
+
+					nextBonePos = linkItr->shp_linkBone->transform->GetWorldPosition();
+					targetPos = targetPos - Vector3(targetPos - nowJointPos).GetNormalize() * linkItr->bonesLength;
+					continue;
+				}
+
+				//
+				//Ç©Ç≠Ç«ÇπÇ¢Ç∞ÇÒÇÒÇÒÇé
+				///
+				//
+				rotationAxis.Normalize();
+
+
+				const Quat initRotation = linkItr->shp_linkBone->transform->GetLocalRotation().ToQuat();
+
+				
+				if(!rotationAxis.isZero())
+				linkItr->shp_linkBone->transform->SetLocalRotation((Quat(rotationAxis, angle).Normalize()*initRotation).ToMatrix());
+				else {
+					int i = 0;
+				}
+
+				nextBonePos = linkItr->shp_linkBone->transform->GetWorldPosition();
+				targetPos = targetPos - Vector3(targetPos - nowJointPos).GetNormalize() * linkItr->bonesLength;
+			}
+			targetPos = transform->GetWorldPosition();
+		}
+
+
+
+	}
+}
+
+void ButiEngine::Bone::CCDInverseKinematic()
 {
 	auto targetPos = transform->GetWorldPosition();
 
@@ -76,7 +176,7 @@ void ButiEngine::Bone::InverseKinematic()
 
 				auto nowJointPos = nowJoint->transform->GetWorldPosition();
 
-				auto inv =nowJoint-> transform->GetBoneMatrix().GetInverse();
+				auto inv = nowJoint->transform->GetBoneMatrix().GetInverse();
 
 				auto localTargetPos = targetPos * inv;
 				auto localnowJointPos = nowJointPos * inv;
@@ -87,7 +187,7 @@ void ButiEngine::Bone::InverseKinematic()
 
 				const Quat initRotationQuat = nowJoint->transform->GetLocalRotation().ToQuat();
 
-				Quat rotationQuat ;
+				Quat rotationQuat;
 
 
 				Vector3 rotationAxis;

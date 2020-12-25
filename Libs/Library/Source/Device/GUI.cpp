@@ -441,6 +441,41 @@ void ButiEngine::GUI::Text(const std::string& fmt, ...)
 	ImGui::Text(fmt.c_str());
 }
 
+void ButiEngine::GUI::Text(const Vector2& v)
+{
+	GUI::Text("X:"+ std::to_string(v.x)+ ",Y:" + std::to_string(v.y));
+}
+
+void ButiEngine::GUI::Text(const Vector3& v)
+{
+	GUI::Text("X:" + std::to_string(v.x) + ",Y:" + std::to_string(v.y) + ",Z:" + std::to_string(v.z));
+}
+
+void ButiEngine::GUI::Text(const Vector4& v)
+{
+	GUI::Text("X:" + std::to_string(v.x) + ",Y:" + std::to_string(v.y) + ",Z:" + std::to_string(v.z) + ",W:" + std::to_string(v.w));
+}
+
+void ButiEngine::GUI::Text(const int v)
+{
+	GUI::Text(std::to_string(v));
+}
+
+void ButiEngine::GUI::Text(const float v)
+{
+	GUI::Text(std::to_string(v));
+}
+
+void ButiEngine::GUI::Text(const double v)
+{
+	GUI::Text(std::to_string(v));
+}
+
+void ButiEngine::GUI::Text(const unsigned int v)
+{
+	GUI::Text(std::to_string(v));
+}
+
 void ButiEngine::GUI::TextV(const std::string& fmt, va_list args)
 {
 	ImGui::TextV(fmt.c_str(),args);

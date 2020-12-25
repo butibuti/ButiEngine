@@ -55,6 +55,11 @@ void ButiEngine::Scene::Draw()
 
 
 	shp_renderer->RenderingEnd();
+
+	for (auto cameraItr = cams.begin(); cameraItr != cams.end(); cameraItr++) {
+
+		(*cameraItr)->End();
+	}
 }
 
 ButiEngine::Scene::Scene(std::weak_ptr<ISceneManager> arg_wkp_sceneManager, std::shared_ptr< SceneInformation> argSceneInformation):sceneInformation(argSceneInformation)

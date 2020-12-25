@@ -115,6 +115,16 @@ float ButiEngine::Input::GetMouseWheelMove()
 	return unq_instance->mouseState.lZ;
 }
 
+void ButiEngine::Input::SetCursorHide(const bool arg_isCursorHide)
+{
+	if (arg_isCursorHide) {
+		ShowCursor(false);
+	}
+	else {
+		ShowCursor(true);
+	}
+}
+
 
 
 Vector2 Input::GetLeftStick()

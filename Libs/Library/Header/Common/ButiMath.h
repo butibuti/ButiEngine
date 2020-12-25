@@ -67,7 +67,7 @@ namespace ButiEngine {
 		bool ShowUI() { return false; }
 		inline Vector4 operator*(const Vector4& vec4);
 
-		inline Matrix4x4 operator*(const Matrix4x4& arg_matrix) {
+		inline Matrix4x4 operator*(const Matrix4x4& arg_matrix)const {
 			return (XMMATRIX)(*this) * (XMMATRIX)arg_matrix;
 		}
 		inline Matrix4x4 operator*=(const Matrix4x4& arg_matrix) {
@@ -584,6 +584,11 @@ namespace ButiEngine {
 			*this = *this - vec;
 			return *this;
 		}
+		inline Vector3 operator -(const Vector3& vec)const
+		{
+			return Vector3(x - vec.x, y - vec.y, z - vec.z);
+			
+		}
 
 		inline Vector3& operator -=(float value)
 		{
@@ -601,6 +606,14 @@ namespace ButiEngine {
 		{
 			*this = *this * value;
 			return *this;
+		}
+		inline Vector3 operator *(float value)const
+		{
+			Vector3 out = *this;
+			out.x *= value;
+			out.y *= value;
+			out.z *= value;
+			return out;
 		}
 
 		inline Vector3& operator *=(Matrix4x4 value)
@@ -763,6 +776,10 @@ namespace ButiEngine {
 		inline bool isInfinite() const
 		{
 			return XMVector3IsInfinite(*this);
+		}
+		inline bool isZero() const
+		{
+			return (abs(x) <= FLT_MIN*2) && (abs(y) <= FLT_MIN * 2) && (abs(z) <= FLT_MIN * 2);
 		}
 
 		inline const Vector3& ToDegrees() {
@@ -1358,7 +1375,7 @@ namespace ButiEngine {
 			return *this;
 		}
 
-		inline Matrix4x4 ToMatrix() {
+		inline Matrix4x4 ToMatrix()const {
 			return Matrix4x4(*this);
 		}
 		inline Quat& CreateFromEular(const Vector3& arg_eular) {

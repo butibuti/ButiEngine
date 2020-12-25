@@ -694,5 +694,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\DefaultGameComponent\IKComponent.cpp">
       <Filter>source\GameObjects\DefaultGameComponent</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Header\Resources\DrawData\IDrawObject.cpp" />
   </ItemGroup>
 </Project>

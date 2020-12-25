@@ -28,7 +28,7 @@ namespace ButiEngine {
 		bool GetMouseReleaseTrigger(const MouseButtons button);
 		bool GetMouseWheel();
 		float GetMouseWheelMove();
-
+		void SetCursorHide(const bool arg_isCursorHide);
 
 		Vector2 GetLeftStick();
 		Vector2 GetRightStick();

@@ -2,6 +2,10 @@
 #include "..\..\Header\Common\Transform.h"
 #include "..\..\Header\Common\CerealUtill.h"
 
+
+CEREAL_REGISTER_TYPE(ButiEngine::BoneTransform);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::Transform, ButiEngine::BoneTransform);
+
 void ButiEngine::OutputCereal(std::shared_ptr<Transform>& v, const std::string& path)
 {
 	std::stringstream stream;
@@ -51,13 +55,13 @@ bool ButiEngine::Transform::ShowUI()
 	(GUI::DragFloat3("##R", euler, 0.01, -360, 360, "%.3f"));
 	if (GUI::Button("Roll")) {
 
-		RollWorldRotation(euler);
+		RollWorldBase(euler);
 		isEdit = true;
 	}
 	GUI::SameLine();
 	if (GUI::Button("SetRotation")) {
 		RollIdentity();
-		RollWorldRotation(euler);
+		RollWorldBase(euler);
 		isEdit = true;
 	}
 
@@ -137,13 +141,13 @@ bool ButiEngine::BoneTransform::ShowUI()
 	(GUI::DragFloat3("##R", euler, 0.01, -360, 360, "%.3f"));
 	if (GUI::Button("Roll")) {
 
-		RollWorldRotation(euler);
+		RollWorldBase(euler);
 		isEdit = true;
 	}
 	GUI::SameLine();
 	if (GUI::Button("SetRotation")) {
 		RollIdentity();
-		RollWorldRotation(euler);
+		RollWorldBase(euler);
 		isEdit = true;
 	}
 

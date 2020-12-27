@@ -450,7 +450,7 @@ namespace ButiEngine {
 		{
 			auto out = scale;
 			if (baseTransform) {
-				out* baseTransform->GetWorldScale();
+				out*= baseTransform->GetWorldScale();
 			}
 			return out;
 		}

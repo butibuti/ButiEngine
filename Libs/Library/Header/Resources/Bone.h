@@ -19,12 +19,14 @@ namespace ButiEngine {
 		Vector3* axis=nullptr;
 	};
 	struct IKData {
+		~IKData();
 		int targetBoneIndex;
 		std::shared_ptr<Bone> shp_targetBone;
 		int loopCount;
 		float maxRadian;
 		float sum_bonesLength=0;
 		std::vector<IKLink> links;
+		Vector3* p_jointPoints=nullptr;
 	}; 
 	struct Bone
 	{

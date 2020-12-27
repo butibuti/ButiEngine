@@ -779,9 +779,19 @@ namespace ButiEngine {
 		}
 		inline bool isZero() const
 		{
-			return (abs(x) <= FLT_MIN*2) && (abs(y) <= FLT_MIN * 2) && (abs(z) <= FLT_MIN * 2);
+			return (abs(x) <= FLT_MIN*10) && (abs(y) <= FLT_MIN * 10) && (abs(z) <= FLT_MIN * 10);
 		}
-
+		inline void RemoveEps() {
+			if ((abs(x) <= 0.000000025)) {
+				x = 0;
+			}
+			if ((abs(y) <= 0.000000025)) {
+				y = 0;
+			}
+			if ((abs(z) <= 0.000000025)) {
+				z = 0;
+			}
+		}
 		inline const Vector3& ToDegrees() {
 			x = XMConvertToDegrees(x);
 			y = XMConvertToDegrees(y);
@@ -1128,22 +1138,36 @@ namespace ButiEngine {
 			return ((Vector3)XMVector3Length(vec)).x;
 		}
 
-		inline static const Vector3 Normalize(const Vector3& vec)
+		inline static Vector3 Normalize(const Vector3& vec)
 		{
 			return (Vector3)XMVector3Normalize(vec);
 		}
 
-		inline static const Vector3 Cross(const Vector3& vec0, const Vector3& vec1)
+		static  Matrix4x4 GetLookAtRotation(const Vector3& arg_lookPos,const Vector3& arg_targetPos, const Vector3& arg_upAxis) {
+			Vector3 z = ((Vector3)(arg_targetPos - arg_lookPos)).GetNormalize();
+			Vector3 x = arg_upAxis.GetCross(z).GetNormalize();
+			Vector3 y = z.GetCross(x).GetNormalize();
+
+			auto out = Matrix4x4();
+			out._11 = x.x; out._12 = x.y; out._13 = x.z;
+			out._21 = y.x; out._22 = y.y; out._23 = y.z;
+			out._31 = z.x; out._32 = z.y; out._33 = z.z;
+
+
+			return out;
+		}
+
+		inline static  Vector3 Cross(const Vector3& vec0, const Vector3& vec1)
 		{
 			return (Vector3)XMVector3Cross(vec0, vec1);
 		}
 
-		inline static const Vector3 Reflect(const Vector3& vec, const Vector3& normal)
+		inline static Vector3 Reflect(const Vector3& vec, const Vector3& normal)
 		{
 			return (Vector3)XMVector3Reflect(vec, normal);
 		}
 
-		inline static const Vector3 Slide(const Vector3& vec, const Vector3& normal)
+		inline static Vector3 Slide(const Vector3& vec, const Vector3& normal)
 		{
 			//vecと法線から直行線の長さ（内積で求める）
 			float Len = Dot(vec, normal);
@@ -1152,7 +1176,7 @@ namespace ButiEngine {
 			//スライドする方向は現在のベクトルから引き算
 			return (vec - Contact);
 		}
-		inline static const Matrix4x4 inverse(const Matrix4x4& mat)
+		inline static Matrix4x4 inverse(const Matrix4x4& mat)
 		{
 			XMVECTOR Vec;
 			return (Matrix4x4)XMMatrixInverse(&Vec, mat);
@@ -1269,6 +1293,10 @@ namespace ButiEngine {
 
 		inline bool operator!=(const Quat& other)const {
 			return !XMQuaternionEqual(*this, other);
+		}
+
+		inline Quat operator/(const Quat& other) {
+			return (Quat)(((XMVECTOR)*this )/ (XMVECTOR)other);
 		}
 
 		inline Quat& setXYZ(const Vector3& vec)

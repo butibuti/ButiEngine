@@ -179,14 +179,29 @@ namespace ButiEngine {
 			if (localMatrix) {
 				localMatrix = nullptr;
 			}
-			return rotation = Matrix4x4::RollX(
-				DirectX::XMConvertToRadians(arg_vec3_rotation.x)
+			return rotation = Matrix4x4::RollZ(
+				DirectX::XMConvertToRadians(arg_vec3_rotation.z)
 			) *
 				Matrix4x4::RollY(
 					DirectX::XMConvertToRadians(arg_vec3_rotation.y)
 				) *
-				Matrix4x4::RollZ(
-					DirectX::XMConvertToRadians(arg_vec3_rotation.z)
+				Matrix4x4::RollX(
+					DirectX::XMConvertToRadians(arg_vec3_rotation.x)
+				);
+		}
+		inline const Matrix4x4& SetLocalRotation_radian(const Vector3& arg_vec3_rotation) {
+
+			if (localMatrix) {
+				localMatrix = nullptr;
+			}
+			return rotation = Matrix4x4::RollZ(
+				(arg_vec3_rotation.z)
+			) *
+				Matrix4x4::RollY(
+					(arg_vec3_rotation.y)
+				) *
+				Matrix4x4::RollX(
+					(arg_vec3_rotation.x)
 				);
 		}
 		inline const Matrix4x4& RollLocalRotationX_Degrees(const float arg_x) {

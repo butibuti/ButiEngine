@@ -43,6 +43,7 @@ bool ButiEngine::Transform::ShowUI()
 	GUI::BulletText("Position");
 	if (GUI::DragFloat3("##p", &localPosition.x, 0.02f, -FLT_MAX, FLT_MAX, "%.3f")) {
 		localMatrix = nullptr;
+
 		isEdit = true;
 	}
 	GUI::BulletText("Scale");
@@ -51,17 +52,22 @@ bool ButiEngine::Transform::ShowUI()
 		isEdit = true;
 	}
 	GUI::BulletText("Rotation");
-	static Vector3 euler;
-	(GUI::DragFloat3("##R", euler, 0.01, -360, 360, "%.3f"));
-	if (GUI::Button("Roll")) {
+	Vector3	euler=	rotation.GetEulerOneValue_local().ToDegrees();
+	
 
-		RollWorldBase(euler);
-		isEdit = true;
-	}
-	GUI::SameLine();
-	if (GUI::Button("SetRotation")) {
-		RollIdentity();
-		RollWorldBase(euler);
+	if(GUI::DragFloat3("##R", euler, 0.05, -360, 360, "%.3f"))
+	 {
+		GUI::Text("Moving");
+		localMatrix = nullptr;
+		rotation = DirectX::XMMatrixRotationZ(
+			DirectX::XMConvertToRadians(euler.z)
+		)* 
+			DirectX::XMMatrixRotationY(
+				DirectX::XMConvertToRadians(euler.y)
+			)*
+			DirectX::XMMatrixRotationX(
+				DirectX::XMConvertToRadians(euler.x)
+			);
 		isEdit = true;
 	}
 

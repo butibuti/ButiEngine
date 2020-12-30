@@ -145,23 +145,12 @@ namespace ButiEngine {
 
 		inline void Decompose(Vector3& rScaling, Quat& rQt, Vector3& rTranslation)const;
 
-		inline Vector3 GetEuler(const bool arg_reverse = false)const;
 		inline Vector3 GetEulerOneValue()const;
+		inline Vector3 GetEulerOneValue_local()const;
 
-		inline Vector3 GetEulerDegrees(const bool arg_reverse = false)const;
 
-		inline Matrix4x4& CreateFromEuler(const float arg_x, const float arg_y, const float arg_z) {
-			*this = DirectX::XMMatrixRotationX(
-				arg_x
-			) *
-				DirectX::XMMatrixRotationY(
-					arg_y
-				) *
-				DirectX::XMMatrixRotationZ(
-					arg_z
-				);
-			return *this;
-		}
+		inline Matrix4x4& CreateFromEuler(const Vector3& arg_euler);
+		inline Matrix4x4& CreateFromEuler_local(const Vector3& arg_euler);
 		inline bool Same(const Matrix4x4& other, const float epsilon = 0.001f) const {
 
 			for (int i = 0; i < 4; i++) {
@@ -877,6 +866,36 @@ namespace ButiEngine {
 			return DirectX::XMVector3Normalize(DirectX::XMVECTOR(*this));
 		}
 
+		inline Vector3& Max(const Vector3& arg_other) {
+			this->x = max(x, arg_other.x);
+			this->y = max(y, arg_other.y);
+			this->z = max(z, arg_other.z);
+			return *this;
+		}
+		inline Vector3& Min(const Vector3& arg_other) {
+			this->x = min(x, arg_other.x);
+			this->y = min(y, arg_other.y);
+			this->z = min(z, arg_other.z);
+			return *this;
+		}
+		inline Vector3 GetMax(const Vector3& arg_other)const {
+			Vector3 output;
+			output.x = max(x, arg_other.x);
+			output.y = max(y, arg_other.y);
+			output.z = max(z, arg_other.z);
+
+			return output;
+		}
+		inline Vector3 GetMin(const Vector3& arg_other)const {
+
+			Vector3 output;
+			output.x = min(x, arg_other.x);
+			output.y = min(y, arg_other.y);
+			output.z = min(z, arg_other.z);
+
+			return output;
+		}
+
 
 		template<class Archive>
 		void serialize(Archive& archive)
@@ -1464,7 +1483,7 @@ namespace ButiEngine {
 			return *this;
 		}
 
-		inline const Vector3 ToRotVec() const {
+		inline  Vector3 ToRotVec() const {
 			Quat Temp = *this;
 			Temp.Normalize();
 			Matrix4x4 mt(Temp);
@@ -1942,111 +1961,82 @@ namespace ButiEngine {
 		}
 	}
 
+	inline Matrix4x4& Matrix4x4::CreateFromEuler(const Vector3& arg_euler)
+	{
+		*this = DirectX::XMMatrixRotationX(
+			arg_euler.x
+		) *
+			DirectX::XMMatrixRotationY(
+				arg_euler.y
+			) *
+			DirectX::XMMatrixRotationZ(
+				arg_euler.z
+			);
+		return *this;
+	}
+	inline Matrix4x4& Matrix4x4::CreateFromEuler_local(const Vector3& arg_euler)
+	{
+		*this = DirectX::XMMatrixRotationZ(
+			arg_euler.z
+		) *
+			DirectX::XMMatrixRotationY(
+				arg_euler.y
+			) *
+			DirectX::XMMatrixRotationX(
+				arg_euler.x
+			);
+		return *this;
+	}
+
 	static const float EulerXLimit = 90.0f / 180.0f * XM_PI;
-	inline Vector3 Matrix4x4::GetEuler(const bool arg_reverse) const
+	inline Vector3 Matrix4x4::GetEulerOneValue_local() const
 	{
 
-		if (fabs(this->m[0][2] - 1) > 0.00001 && fabs(this->m[0][2] + 1) > 0.00001) {
-
-			float yTheta = asin(-this->m[0][2]);///-90~90
-
-
-			if (!arg_reverse)
-			{
-				auto yThetaCos = cos(yTheta);
-
-				float xTheta = atan2(this->_23 / yThetaCos, this->m[2][2] / yThetaCos);///-90~90
-
-
-				float zTheta = atan2(this->m[0][1] / yThetaCos, this->m[0][0] / yThetaCos);///-90~90
-
-				return Vector3(xTheta, yTheta, zTheta);
-			}
-			else {
-				float yTheta2 = XM_PI - yTheta;        ///90~180,-180~-90
-
-				auto yThetaCos = cos(yTheta2);
-				float xTheta2 = atan2(this->_23 / yThetaCos, this->m[2][2] / yThetaCos);///90~180,-180~-90));
-				float zTheta2 = atan2(this->m[0][1] / yThetaCos, this->m[0][0] / yThetaCos);///90~180,-180~-90
-				return Vector3(xTheta2, yTheta2, zTheta2);
-			}
+		Vector3 Rot;
+		if (this->_31 == 1.0f) {
+			Rot.x = atan2(-this->_32,this->_33);
+			Rot.y = XM_PI / 2.0f;
+			Rot.z = 0;
+		}
+		else if (this->_31 == -1.0f) {
+			Rot.x = atan2(-this->_32,this->_33);
+			Rot.y = -XM_PI / 2.0f;
+			Rot.z = 0;
 		}
 		else {
-			float xTheta = 0;
-			float yTheta = 0;
-			float zTheta = 0;
-			if (abs(this->m[0][2] - 1) < 0.00001) {
-				yTheta = -XM_PI / 2;
-			}
-			else {
-				yTheta = XM_PI / 2;
-			}
-			auto ythetaCos = cos(yTheta);
-			zTheta = atan2(this->m[0][1] / ythetaCos, this->m[0][0] / ythetaCos);
-			xTheta = atan2(this->_23 / ythetaCos, this->m[2][2] / ythetaCos);
-			return Vector3(xTheta, yTheta, zTheta);
+
+
+			Rot.x = atan2(-this->_32, this->_33);
+			Rot.y = asin(this->_31);
+			Rot.z = -atan2(this->_21, this->_11);///-90~90
 		}
+
+		return Rot;
 
 
 	}
 	inline Vector3 Matrix4x4::GetEulerOneValue() const
 	{
-
-		if (fabs(this->m[0][2] - 1) > 0.00001 && fabs(this->m[0][2] + 1) > 0.00001) {
-
-			float yTheta = asin(-this->m[0][2]);///-90~90
-
-
-			auto yThetaCos = cos(yTheta);
-
-			float xTheta = atan2(this->_23 / yThetaCos, this->m[2][2] / yThetaCos);///-90~90
-
-
-			float zTheta = atan2(this->m[0][1] / yThetaCos, this->m[0][0] / yThetaCos);///-90~90
-
-
-			Matrix4x4 test;
-			test.CreateFromEuler(xTheta, yTheta, zTheta);
-
-			if (this->Same(test))
-				return  Vector3(xTheta, yTheta, zTheta);
-
-
-
-			float yTheta2 = XM_PI - yTheta;        ///90~180,-180~-90
-
-			yThetaCos = cos(yTheta2);
-			float xTheta2 = atan2(this->_23 / yThetaCos, this->m[2][2] / yThetaCos);///90~180,-180~-90));
-			float zTheta2 = atan2(this->m[0][1] / yThetaCos, this->m[0][0] / yThetaCos);///90~180,-180~-90
-			return Vector3(xTheta2, yTheta2, zTheta2);
-
+		Vector3 Rot;
+		if (this->_13 == 1.0f) {
+			Rot.x = atan2(this->_23 , this->_33);
+			Rot.y = XM_PI / 2.0f;
+			Rot.z = 0;
+		}
+		else if (this->_13 == -1.0f) {
+			Rot.x = atan2(this->_23 , this->_33 );
+			Rot.y = -XM_PI / 2.0f;
+			Rot.z = 0;
 		}
 		else {
-			float xTheta = 0;
-			float yTheta = 0;
-			float zTheta = 0;
-			if (abs(this->m[0][2] - 1) < 0.00001) {
-				yTheta = -XM_PI / 2;
-			}
-			else {
-				yTheta = XM_PI / 2;
-			}
-			auto ythetaCos = cos(yTheta);
-			zTheta = atan2(this->m[0][1] / ythetaCos, this->m[0][0] / ythetaCos);
-			xTheta = atan2(this->_23 / ythetaCos, this->m[2][2] / ythetaCos);
-			return Vector3(xTheta, yTheta, zTheta);
-		}
 
 
-	}
-	inline Vector3 Matrix4x4::GetEulerDegrees(const bool arg_reverse)const {
-		auto outVec = GetEuler(arg_reverse);
+			Rot.x = atan2(this->_23 , this->_33);
+			Rot.y = -asin(this->_13);
+			Rot.z = atan2(this->_12 , this->_11 );///-90~90
+		} 
 
-		outVec.x = XMConvertToDegrees(outVec.x);
-		outVec.y = XMConvertToDegrees(outVec.y);
-		outVec.z = XMConvertToDegrees(outVec.z);
-
-		return outVec;
+		return Rot;
 	}
 
 

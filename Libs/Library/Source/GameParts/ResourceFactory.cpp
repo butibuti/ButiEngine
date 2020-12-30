@@ -1416,15 +1416,20 @@ std::shared_ptr<ButiEngine::Resource_Model> ButiEngine::ResourceFactory::CreateM
 			data.maxRadian = modelReader.ReadVariable<float>();
 
 			int ikLinkCount = modelReader.ReadVariable<int>();
-
+			Matrix4x4 limitCheck;
 			for (int j = 0; j < ikLinkCount; j++) {
 				IKLink link;
 				link.linkBone = modelReader.ReadInt(boneIndexByteCount);
 				char isLimmit = modelReader.ReadVariable<char>();
 				if (isLimmit) {
 					link.radianLimit = true;
+
 					link.downLimmit = modelReader.ReadVariable<Vector3>();
 					link.upLimmit = modelReader.ReadVariable<Vector3>();
+					
+					link.downLimmit = limitCheck.CreateFromEuler_local(link.downLimmit).GetEulerOneValue_local();
+					link.upLimmit = limitCheck.CreateFromEuler_local(link.upLimmit).GetEulerOneValue_local();
+
 				}
 				data.links.push_back(link);
 			}

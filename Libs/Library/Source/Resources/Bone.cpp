@@ -146,7 +146,18 @@ void ButiEngine::Bone::InverseKinematic()
 				}
 
 				linkItr->shp_linkBone->transform->SetWorldRotation(((invRotation.Inverse())*rotation).ToMatrix());
+				
+				
+			}
 
+			if(GameDevice::GetInput()->CheckKey(Keys::Q))
+			for (auto linkItr = itr->links.rbegin(); linkItr != bonelinkEnd; linkItr++) {
+
+				if (linkItr->radianLimit) {
+					auto euler = linkItr->shp_linkBone->transform->GetLocalRotation().GetEulerOneValue_local();
+					euler.SetLimit(linkItr->upLimmit, linkItr->downLimmit);
+					linkItr->shp_linkBone->transform->SetLocalRotation_radian(euler);
+				}
 			}
 
 			targetPos = transform->GetWorldPosition();
@@ -220,7 +231,7 @@ void ButiEngine::Bone::CCDInverseKinematic()
 
 				}
 				if (linkItr->radianLimit) {
-					auto eular = rotationQuat.ToMatrix().GetEuler();
+					auto eular = rotationQuat.ToMatrix().GetEulerOneValue();
 
 					//auto freeze = eular.GetFreeze(linkItr->xFreeze, linkItr->yFreeze, linkItr->zFreeze);
 

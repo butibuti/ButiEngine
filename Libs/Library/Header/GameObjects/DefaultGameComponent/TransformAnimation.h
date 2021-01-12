@@ -1,4 +1,9 @@
 #include"Header/GameComponentHeader.h"
+
+#ifndef TransformAnim_H
+#define TransformAnim_H
+
+
 namespace ButiEngine {
 
 
@@ -12,8 +17,8 @@ namespace ButiEngine {
 		void OnUpdate()override;
 		std::shared_ptr<Transform> GetInitTransform();
 		std::shared_ptr<Transform> GetTargetTransform();
-		void SetInitTransform(std::shared_ptr<Transform> arg_shp_InitTransform);
-		void SetTargetTransform(std::shared_ptr<Transform> arg_shp_targetTransform);
+		virtual void SetInitTransform(std::shared_ptr<Transform> arg_shp_InitTransform);
+		virtual void SetTargetTransform(std::shared_ptr<Transform> arg_shp_targetTransform);
 		void SetEaseType(const Easing::EasingType type);
 		void SetSpeed(const float arg_speed);
 		void SetTime(const float arg_time);
@@ -48,3 +53,6 @@ namespace ButiEngine {
 }
 
 BUTI_REGIST_GAMECOMPONENT(ButiEngine::TransformAnimation)
+
+
+#endif // !TransformAnim_H

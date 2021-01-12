@@ -180,6 +180,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\DefaultGameComponent\SplineCurveMover.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\DefaultGameComponent\SucideComponent.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\DefaultGameComponent\TransformAnimation.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\DefaultGameComponent\UIAnimation.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\DefaultGameComponent\UIComponent.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\GameComponent.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\GameObject.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\GameObjectTagManager.cpp" />

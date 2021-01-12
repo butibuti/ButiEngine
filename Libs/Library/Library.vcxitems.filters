@@ -695,5 +695,11 @@
       <Filter>source\GameObjects\DefaultGameComponent</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)Header\Resources\DrawData\IDrawObject.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\DefaultGameComponent\UIComponent.cpp">
+      <Filter>source\GameObjects\DefaultGameComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\DefaultGameComponent\UIAnimation.cpp">
+      <Filter>source\GameObjects\DefaultGameComponent</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

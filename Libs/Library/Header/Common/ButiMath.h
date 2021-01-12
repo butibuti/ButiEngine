@@ -747,7 +747,9 @@ namespace ButiEngine {
 		{
 			return ((Vector3)XMVector3Dot(*this, vec1)).x;
 		}
-
+		inline Vector2 ToVector2()const {
+			return Vector2(x,y);
+		}
 		inline Vector3& Cross(const Vector3& vec1)
 		{
 			*this = (Vector3)XMVector3Cross(*this, vec1);

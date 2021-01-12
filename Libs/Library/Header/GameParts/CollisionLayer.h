@@ -195,7 +195,6 @@ namespace ButiEngine {
 			void PreInitialize()override{}
 			void Update() {
 				RegistOctree();
-
 			}
 			inline void RegistOctree() {
 				Vector3 minPoint, maxPoint;

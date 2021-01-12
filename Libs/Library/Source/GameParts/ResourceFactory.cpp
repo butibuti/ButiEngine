@@ -1424,11 +1424,11 @@ std::shared_ptr<ButiEngine::Resource_Model> ButiEngine::ResourceFactory::CreateM
 				if (isLimmit) {
 					link.radianLimit = true;
 
-					link.downLimmit = modelReader.ReadVariable<Vector3>();
-					link.upLimmit = modelReader.ReadVariable<Vector3>();
+					link.downLimit = modelReader.ReadVariable<Vector3>();
+					link.upLimit = modelReader.ReadVariable<Vector3>();
 					
-					link.downLimmit = limitCheck.CreateFromEuler_local(link.downLimmit).GetEulerOneValue_local();
-					link.upLimmit = limitCheck.CreateFromEuler_local(link.upLimmit).GetEulerOneValue_local();
+					link.downLimit = limitCheck.CreateFromEuler_local(link.downLimit).GetEulerOneValue_local();
+					link.upLimit = limitCheck.CreateFromEuler_local(link.upLimit).GetEulerOneValue_local();
 
 				}
 				data.links.push_back(link);

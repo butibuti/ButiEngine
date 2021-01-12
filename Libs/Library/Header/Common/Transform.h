@@ -415,6 +415,19 @@ namespace ButiEngine {
 
 			return out;
 		}
+		inline  Matrix4x4 GetLookAtRotation_local(const Vector3& arg_targetPos, const Vector3& arg_upAxis) {
+			Vector3 z = ((Vector3)(arg_targetPos - localPosition)).GetNormalize();
+			Vector3 x = (arg_upAxis*GetLocalMatrix()).GetCross(z).GetNormalize();
+			Vector3 y = z.GetCross(x).GetNormalize();
+
+			auto out = Matrix4x4();
+			out._11 = x.x; out._12 = x.y; out._13 = x.z;
+			out._21 = y.x; out._22 = y.y; out._23 = y.z;
+			out._31 = z.x; out._32 = z.y; out._33 = z.z;
+
+
+			return out;
+		}
 
 		inline Matrix4x4& SetLocalRotation()
 		{
@@ -442,7 +455,7 @@ namespace ButiEngine {
 			if (!baseTransform)
 				return  localPosition = arg_position;
 
-			return  localPosition = arg_position - baseTransform->GetWorldPosition();
+			return  localPosition = arg_position * baseTransform->GetMatrix().Inverse();
 		}
 
 
@@ -501,17 +514,32 @@ namespace ButiEngine {
 		}
 		inline void SetBaseTransform(std::shared_ptr<Transform> argParent, const bool arg_isKeepLocalPosition = false)
 		{
-			baseTransform = argParent;
-			if (argParent == nullptr)
-				return;
+			if (argParent == nullptr) {
+				if (arg_isKeepLocalPosition) {
 
+					baseTransform = argParent;
+					return;
+				}
+				rotation = GetWorldRotation();
+				localPosition= GetWorldPosition();
+
+				localMatrix = nullptr;
+				baseTransform = argParent;
+				return;
+			}
 			if (!arg_isKeepLocalPosition) {
+
+				baseTransform = argParent;
 				localPosition = localPosition - baseTransform->GetWorldPosition();
+				rotation = rotation * baseTransform->GetWorldRotation().Inverse();
 				if (localMatrix) {
 					localMatrix->_41 = localPosition.x;
 					localMatrix->_42 = localPosition.y;
 					localMatrix->_43 = localPosition.z;
 				}
+			}
+			else {
+				baseTransform = argParent;
 			}
 		}
 		inline std::shared_ptr<Transform> GetBaseTransform()

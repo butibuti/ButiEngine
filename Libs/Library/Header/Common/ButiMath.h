@@ -638,6 +638,8 @@ namespace ButiEngine {
 			return  -1 * (*this);
 		}
 
+		inline Vector3 operator*(const Quat& other);
+
 		inline const bool operator==(const Vector3& other)const {
 			if (other.x != this->x || other.y != this->y || other.z != this->z) {
 				return false;
@@ -857,10 +859,48 @@ namespace ButiEngine {
 			return ((Vector3)DirectX::XMVector3Length(DirectX::XMVECTOR(*this))).x;
 		}
 
-		inline void Normalize()
+		inline Vector3& Abs() {
+
+			x = abs(x);
+			y = abs(y);
+			z = abs(z);
+
+			return *this;
+		}
+		inline Vector3 GetAbs()const {
+			Vector3 output;
+			output.x = abs(x);
+			output.y = abs(y);
+			output.z = abs(z);
+
+			return output;
+		}
+
+		inline Vector3& Normalize()
 		{
 			*this = DirectX::XMVector3Normalize(DirectX::XMVECTOR(*this));
+			return *this;
 		}
+		inline Vector3& Scroll()
+		{
+			auto temp = *this;
+
+			x = temp.z;
+			y = temp.x;
+			z = temp.y;
+			return *this;
+		}
+
+		inline Vector3& Scroll_Reverse() {
+
+			auto temp = *this;
+
+			x = temp.y;
+			y = temp.z;
+			z = temp.x;
+			return *this;
+		}
+
 		inline Vector3 GetNormalize() const
 		{
 			return DirectX::XMVector3Normalize(DirectX::XMVECTOR(*this));
@@ -1394,27 +1434,32 @@ namespace ButiEngine {
 		}
 
 
-		inline const Quat operator +(const Quat& quat) const
+		inline Quat operator +(const Quat& quat) const
 		{
 			return (Quat)XMVectorAdd(*this, quat);
 		}
 
 
-		inline const Quat operator -(const Quat& quat) const
+		inline Quat operator -(const Quat& quat) const
 		{
 			return (Quat)XMVectorSubtract(*this, quat);
 		}
 
 
-		inline const Quat operator *(const Quat& quat) const
+		inline Quat operator *(const Quat& quat) const
 		{
 			return (Quat)XMQuaternionMultiply(*this, quat);
 		}
 
-		inline const Quat operator *(float val) const
+		inline Quat operator *(float val) const
 		{
 			Quat temp(val, val, val, val);
 			return (Quat)XMVectorMultiply(*this, temp);
+		}
+		inline const Quat& operator *=(float val) 
+		{
+			Quat temp(val, val, val, val);
+			return *this=(Quat)XMVectorMultiply(*this, temp);
 		}
 
 		inline const Quat& CreateFromAxisRotate(const Vector3& arg_axis, const  float angle) {
@@ -1427,14 +1472,28 @@ namespace ButiEngine {
 		}
 		inline Quat& CreateFromEular(const Vector3& arg_eular) {
 
-			Matrix4x4 rotationMatrix = DirectX::XMMatrixRotationX(
-				arg_eular.x
+			Matrix4x4 rotationMatrix = DirectX::XMMatrixRotationZ(
+				arg_eular.z
 			) *
 				DirectX::XMMatrixRotationY(
 					arg_eular.y
 				) *
-				DirectX::XMMatrixRotationZ(
-					arg_eular.z
+				DirectX::XMMatrixRotationX(
+					arg_eular.x
+				);
+			*this = rotationMatrix.ToQuat();
+			return *this;
+		}
+		inline Quat& CreateFromEular_deg(const Vector3& arg_eular) {
+
+			Matrix4x4 rotationMatrix = DirectX::XMMatrixRotationZ(
+				XMConvertToRadians( arg_eular.z)
+			) *
+				DirectX::XMMatrixRotationY(
+					XMConvertToRadians(arg_eular.y)
+				) *
+				DirectX::XMMatrixRotationX(
+					XMConvertToRadians(arg_eular.x)
 				);
 			*this = rotationMatrix.ToQuat();
 			return *this;
@@ -1510,6 +1569,10 @@ namespace ButiEngine {
 			*this = (Quat)XMQuaternionInverse(*this);
 			return *this;
 		}
+		inline Quat GetInverse()const {
+			return (Quat)XMQuaternionInverse(*this);
+			
+		}
 		inline Quat& Facing(const Vector3& norm) {
 			Vector3 DefUp(0, 1.0f, 0);
 			Vector3 Temp = norm;
@@ -1541,7 +1604,10 @@ namespace ButiEngine {
 			return XMQuaternionIsInfinite(*this);
 		}
 	};
-
+	inline Vector3 ButiEngine::Vector3::operator*(const Quat& other)
+	{
+		return (Vector3)(*this)*(other.ToMatrix());
+	}
 
 	inline Quat MathHelper::LearpQuat(const Quat& arg_firstQuat, const Quat& arg_secondQuat, const float pase)
 	{

@@ -57,7 +57,7 @@ std::shared_ptr<ButiEngine::FBXAnalyze::FBXNodeStructure> ButiEngine::ModelFileC
 
 				auto nodeProperty = ObjectFactory::Create<FBXAnalyze::FBXNode_LongProperty>();
 				nodeProperty->nodeProperty = fbxReader.ReadVariable<long long int>();
-
+				
 
 				multimap_properties.emplace(type, nodeProperty);
 			}
@@ -80,9 +80,9 @@ std::shared_ptr<ButiEngine::FBXAnalyze::FBXNodeStructure> ButiEngine::ModelFileC
 				auto nodeProperty = ObjectFactory::Create<FBXAnalyze::FBXNode_StringProperty>();
 				nodeProperty->nodeProperty = fbxReader.ReadCharactor(propSize);
 
-				/*if (StringHelper::Contains( nodeProperty->nodeProperty, "RotationStiffnessX")) {
-					int f = 0;
-				}*/
+				//if (StringHelper::Contains( nodeProperty->nodeProperty, "inverse")) {
+				//	int f = 0;
+				//}
 				multimap_properties.emplace(type, nodeProperty);
 			}
 														break;
@@ -388,6 +388,16 @@ void ButiEngine::ModelFileConverter::FBXtoB3M(const std::string& arg_fbxFileName
 			textureNode.push_back((*itr)->GetThis<FBXAnalyze::FBXTextureNode>());
 		}
 	}
+	std::vector<std::shared_ptr<FBXAnalyze::FBXAttributeNode>> attributeNode;
+	{
+		auto attribute = FBXScene->SerchNode("NodeAttribute");
+
+		attributeNode.reserve(attribute.size());
+
+		for (auto itr = attribute.begin(); itr != attribute.end(); itr++) {
+			attributeNode.push_back((*itr)->GetThis<FBXAnalyze::FBXAttributeNode>());
+		}
+	}
 
 	std::vector<std::shared_ptr<FBXAnalyze::FBXModelNode>> modelNodes;
 	{
@@ -410,6 +420,13 @@ void ButiEngine::ModelFileConverter::FBXtoB3M(const std::string& arg_fbxFileName
 			bone->boneIndex = i;
 			boneNodes.push_back(bone);
 		}
+	}
+	std::vector<std::shared_ptr<FBXAnalyze::FBXNodeStructure>> armatureNodes;
+	{
+		auto serch = "Armature";
+		auto armatures = FBXScene->SerchNodeWithStringProperty("Model", serch, 0);
+
+		int i = 0;
 	}
 
 	//modelNode、materialNode、geometryNodeのリンク
@@ -527,11 +544,24 @@ void ButiEngine::ModelFileConverter::FBXtoB3M(const std::string& arg_fbxFileName
 		for (auto itr = boneDeformerLink.begin(); itr != boneDeformerLink.end(); itr++) {
 			(*itr)->resieverNode->GetThis<FBXAnalyze::FBXDeformerNode>()->boneIndex = (*itr)->serverNode->GetThis<FBXAnalyze::FBXBoneNode>()->boneIndex;
 		}
+
+
+		std::vector<std::shared_ptr< FBXAnalyze::FBXNodeLinkInfo>> boneBoneLink;
+		itr = connectionNodes.begin();
+		while (itr != connectionNodes.end()) {
+
+			if (((*itr)->GetProperty<FBXAnalyze::FBXNode_LongProperty>(1)->nodeProperty) == 176840693) {
+				int i = 0;
+			}
+
+			itr++;
+		}
+
 		int i = 0;
 	}
 
 
-	//マテリアルの仕様回数
+	//マテリアルの使用回数
 	int materialCount = 0;
 	{
 		for (int i = 0; i < modelNodes.size(); i++) {
@@ -594,9 +624,17 @@ void ButiEngine::ModelFileConverter::FBXtoB3M(const std::string& arg_fbxFileName
 			for (auto defItr = deformerNode.begin(); defItr != deformerNode.end(); defItr++) {
 
 				auto index = (*defItr)->GetBoneIndex();
+
+				if (index.size() == 0) {
+					continue;
+				}
+
 				auto weight= (*defItr)->GetWeight();
 				auto weightItr = weight.begin();
 				for (auto indexItr = index.begin(); indexItr != index.end() && weightItr != weight.end(); indexItr++, weightItr++) {
+					if ((*indexItr) >= vertices.size()|| (*indexItr)<0) {
+						int i = 0;
+					}
 					if (vertices.at(*indexItr).boneIndex_1 == -1) {
 						vertices.at(*indexItr).boneIndex_1 = (*defItr)->boneIndex;
 						vertices.at(*indexItr).weight_01 = *weightItr;
@@ -755,7 +793,7 @@ void ButiEngine::ModelFileConverter::FBXtoB3M(const std::string& arg_fbxFileName
 			{
 				std::string path;
 				if (diffiseTextureNode.lock()) {
-					path ="../"+ diffiseTextureNode.lock()->GetChildNode("RelativeFilename")->GetProperty<FBXAnalyze::FBXNode_StringProperty>()->nodeProperty;
+					path = diffiseTextureNode.lock()->GetChildNode("RelativeFilename")->GetProperty<FBXAnalyze::FBXNode_StringProperty>()->nodeProperty;
 					bmaWriter.WriteVariable<int>(path.size());
 					bmaWriter.WriteCharactor(path);
 
@@ -792,7 +830,7 @@ void ButiEngine::ModelFileConverter::FBXtoB3M(const std::string& arg_fbxFileName
 		bmaWriter.WriteEnd();
 	}
 
-	//マテリアルの仕様情報テーブル
+	//マテリアルの使用情報テーブル
 	std::vector<std::pair< std::string, int>> vec_materialTables;
 	{
 		vec_materialTables.reserve(materialCount);

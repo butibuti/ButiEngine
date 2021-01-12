@@ -14,8 +14,8 @@ namespace ButiEngine {
 		bool radianLimit=false; 
 		float bonesLength = 0;
 		Quat befBoneInitRotation;
-		Vector3 upLimmit;
-		Vector3 downLimmit;
+		Vector3 upLimit;
+		Vector3 downLimit;
 		Vector3* axis=nullptr;
 	};
 	struct IKData {

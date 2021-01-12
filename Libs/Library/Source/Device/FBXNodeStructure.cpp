@@ -156,9 +156,14 @@ std::vector<std::shared_ptr<ButiEngine::FBXAnalyze::FBXNodeStructure>> ButiEngin
 		if (!strProp) {
 			continue;
 		}
-		if (arg_stringProp == strProp->nodeProperty) {
+		auto str = strProp->nodeProperty;
+		str.resize(arg_stringProp.size());
+		if (str==arg_stringProp) {
 
 			out.push_back(*itr);
+		}
+		else {
+			int i = 0;
 		}
 
 	}
@@ -525,10 +530,18 @@ ButiEngine::Matrix4x4 ButiEngine::FBXAnalyze::FBXBoneNode::GetRotation(const std
 
 std::vector<double> ButiEngine::FBXAnalyze::FBXDeformerNode::GetWeight()
 {
-	return GetChildNode("Weights")->GetProperty<FBXNode_DoubleArrayProperty>()->nodeProperty;
+	auto weightsNode = GetChildNode("Weights");
+	if (!weightsNode) {
+		return std::vector<double>();
+	}
+	return weightsNode->GetProperty<FBXNode_DoubleArrayProperty>()->nodeProperty;
 }
 
 std::vector<int> ButiEngine::FBXAnalyze::FBXDeformerNode::GetBoneIndex()
 {
-	return GetChildNode("Indexes")->GetProperty<FBXNode_IntArrayProperty>()->nodeProperty;
+	auto indexNode = GetChildNode("Indexes");
+	if (!indexNode) {
+		return std::vector<int>();
+	}
+	return indexNode->GetProperty<FBXNode_IntArrayProperty>()->nodeProperty;
 }

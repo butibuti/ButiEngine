@@ -117,6 +117,21 @@ void ButiEngine::Camera_Dx12::Stop() const
 	wkp_graphicDevice.lock()->Set();
 }
 
+void ButiEngine::Camera_Dx12::SetProjectionTexture(const TextureTag& arg_tag)
+{
+	cameraViewProp.projectionTexture = arg_tag;
+
+	if ((!cameraViewProp.projectionTexture.IsEmpty())) {
+		auto tex = wkp_graphicDevice.lock()->GetApplication().lock()->GetResourceContainer()->GetTexture(cameraViewProp.projectionTexture);
+		if (tex.lock()->IsThis<IRenderTarget>()) {
+			shp_renderTarget = tex.lock()->GetThis<IRenderTarget>();
+		}
+	}
+	else {
+		shp_renderTarget = nullptr;
+	}
+}
+
 void ButiEngine::Camera_Dx12::ChangeMode(const BlendMode& arg_blendMode)
 {
 }

@@ -47,8 +47,8 @@ namespace ButiEngine {
 	void PreInitialize() {
 
 	}
-	void Attach()const override {
-		wkp_graphicDevice.lock()->GetCommandList().SetGraphicsRootDescriptorTable(TextureTableRegion + SamplerTableRegion + this->slot, gpuDescriptorHandle);
+	void Attach(const UINT slotOffset)const override {
+		wkp_graphicDevice.lock()->GetCommandList().SetGraphicsRootDescriptorTable(slotOffset + this->slot, gpuDescriptorHandle);
 	}
 	void Update()const override {
 

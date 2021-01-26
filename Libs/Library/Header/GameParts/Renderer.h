@@ -39,7 +39,7 @@ namespace ButiEngine {
 		std::weak_ptr<IScene> GetScene()override;
 		void TextureAttach(const TextureTag& arg_textureTag, const UINT slot)override;
 		void ShaderAttach(const ShaderTag& arg_shaderTag)override;
-		void MaterialAttach(const MaterialTag& arg_materialTag)override;
+		void MaterialAttach(const UINT slotOffset, const MaterialTag& arg_materialTag)override;
 
 		std::vector< std::shared_ptr<IDrawObject>> GetHitDrawObjects(std::shared_ptr<Collision::CollisionPrimitive> arg_prim,const int arg_layer)override;
 

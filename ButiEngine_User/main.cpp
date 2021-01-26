@@ -23,7 +23,8 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
 #endif
 
-	auto app = CreateDefaultApplicationInstance("DivisionScene", WindowPopType::max,1080,700, true);
+
+	auto app = CreateDefaultApplicationInstance("DivisionScene", WindowPopType::max,1080,700, false);
 	GameDevice::Initialize();
 	GameDevice::GetInput()->Initialize(app);
 	//ComponentsLoader::GetInstance()->AddGameComponent<IKComponent>();
@@ -32,7 +33,7 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	app->InitLoadResources();
 	app->GetSceneManager()->LoadScene_Init_EditMode("AABBSphereCollision");
 
-	app->GetGraphicDevice()->SetClearColor(Vector4(0.39, 0.58, 0.92, 1));
+	app->GetGraphicDevice()->SetClearColor(Vector4(0,0,0, 1));
 	int returnCode = app->Run();
 
 

@@ -19,7 +19,7 @@ namespace ButiEngine {
 		void SetExName(const std::string& arg_cbufferName) {
 			exName = arg_cbufferName;
 		}
-		virtual void Attach() const = 0;
+		virtual void Attach(const UINT slotOffset) const = 0;
 
 		virtual void Update()const {
 		}

@@ -38,7 +38,7 @@ void ButiEngine::Resource_Material::SetComment(const std::string& arg_comment)
 	comment = arg_comment;
 }
 
-std::shared_ptr<ButiEngine::IResource_Texture> ButiEngine::Resource_Material::GetTexture()
+std::shared_ptr<ButiEngine::IResource_Texture> ButiEngine::Resource_Material::GetTexture(const int index)
 {
 	return std::shared_ptr<IResource_Texture>();
 }

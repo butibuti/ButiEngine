@@ -77,9 +77,14 @@ void ButiEngine::MeshDrawData_Dx12::ChangeSwitchFillMode()
 
 void ButiEngine::MeshDrawData_Dx12::Initialize()
 {
-
-	
-	DrawData_Dx12::Initialize();
+	int srvCount = 0;
+	auto container = wkp_graphicDevice.lock()->GetApplication().lock()->GetResourceContainer();
+	for (int i = 0; i < vec_materialTags.size(); i++) {
+		auto textureCount = container->GetMaterial(vec_materialTags[i]).lock()->GetTextureCount();
+		srvCount = max(srvCount, textureCount);
+	}
+	textureRegion = srvCount;
+	DrawData_Dx12::Initialize(srvCount);
 	
 	CommandListHelper::BundleReset(pipelineState, commandList,wkp_graphicDevice.lock());
 	CommandSet();
@@ -96,10 +101,10 @@ void ButiEngine::MeshDrawData_Dx12::Draw() {
 
 
 
-void ButiEngine::DrawData_Dx12::Initialize()
+void ButiEngine::DrawData_Dx12::Initialize(const UINT srvCount)
 {
 
-	CreatePipeLineState(shp_drawInfo->vec_exCBuffer.size()+1);
+	CreatePipeLineState(shp_drawInfo->vec_exCBuffer.size()+1, srvCount);
 
 	//デスクプリタヒープのハンドルの配列の作成
 
@@ -148,14 +153,14 @@ void ButiEngine::DrawData_Dx12::Initialize()
 	}
 }
 
-void ButiEngine::DrawData_Dx12::CreatePipeLineState(const UINT arg_exCBuffer)
+void ButiEngine::DrawData_Dx12::CreatePipeLineState(const UINT arg_exCBuffer, const UINT srvCount)
 {
 	if (arg_exCBuffer <= cBufferCount)
 		return;
 
 	cBufferCount = arg_exCBuffer;
 	ZeroMemory(&pipeLineDesc, sizeof(pipeLineDesc));
-	rootSignature = RootSignatureHelper::CreateSrvSmpCbvMat(cBufferCount, rootdesc, wkp_graphicDevice.lock());
+	rootSignature = RootSignatureHelper::CreateSrvSmpCbvMat(cBufferCount, srvCount, rootdesc, wkp_graphicDevice.lock());
 
 	rasterizerStateDesc = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
 
@@ -206,11 +211,11 @@ void ButiEngine::DrawData_Dx12::CommandSet()
 	auto heapCount = _countof(ppHeaps);
 	commandList ->SetDescriptorHeaps(heapCount, ppHeaps);
 	//GPUデスクプリタヒープハンドルのセット
-	commandList->SetGraphicsRootDescriptorTable(TextureTableRegion, samplerBufferDescriptorHandle);
-	cbuffer->Attach();
+	commandList->SetGraphicsRootDescriptorTable(textureRegion, samplerBufferDescriptorHandle);
+	cbuffer->Attach(1+ textureRegion);
 
 	for (auto itr =shp_drawInfo-> vec_exCBuffer.begin(); itr !=shp_drawInfo-> vec_exCBuffer.end(); itr++) {
-		(*itr)->Attach();
+		(*itr)->Attach(1+ textureRegion);
 	}
 
 	shp_renderer->Draw(meshTag);
@@ -221,7 +226,7 @@ void ButiEngine::DrawData_Dx12::CommandSet()
 	UINT offset = 0;
 	for (int i = 0; i < subset.size(); i++) {
 
-		shp_renderer->MaterialAttach( vec_materialTags.at(i));
+		shp_renderer->MaterialAttach(1+textureRegion, vec_materialTags.at(i));
 		UINT count = subset.at(i);
 		commandList->DrawIndexedInstanced(count, 1, offset, 0, 0);
 
@@ -234,7 +239,7 @@ void ButiEngine::DrawData_Dx12::CommandSet()
 
 std::shared_ptr<ButiEngine::ICBuffer> ButiEngine::DrawData_Dx12::AddICBuffer(std::shared_ptr<ICBuffer> arg_cbuffer)
 {
-	CreatePipeLineState(arg_cbuffer->GetSlot());
+	CreatePipeLineState(arg_cbuffer->GetSlot(),0);
 
 	auto output= DrawData::AddICBuffer(arg_cbuffer);
 

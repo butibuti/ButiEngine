@@ -142,9 +142,9 @@ void ButiEngine::Renderer::ShaderAttach(const ShaderTag& arg_shaderTag)
 	wkp_resourceContainer.lock()->GetShader(arg_shaderTag).lock()->Attach();
 }
 
-void ButiEngine::Renderer::MaterialAttach(const MaterialTag& arg_materialTag)
+void ButiEngine::Renderer::MaterialAttach(const UINT slotOffset, const MaterialTag& arg_materialTag)
 {
-	wkp_resourceContainer.lock()->GetMaterial(arg_materialTag).lock()->Attach(GetThis<Renderer>());
+	wkp_resourceContainer.lock()->GetMaterial(arg_materialTag).lock()->Attach(slotOffset, GetThis<Renderer>());
 }
 
 std::vector< std::shared_ptr<ButiEngine::IDrawObject>> ButiEngine::Renderer::GetHitDrawObjects(std::shared_ptr<Collision::CollisionPrimitive> arg_prim, const int arg_layer)

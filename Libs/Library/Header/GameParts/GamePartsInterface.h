@@ -60,7 +60,7 @@ namespace ButiEngine
 		virtual std::weak_ptr<IScene> GetScene() = 0;
 		virtual void TextureAttach(const TextureTag& arg_textureTag, const UINT slot) = 0;
 		virtual void ShaderAttach(const ShaderTag& arg_shaderTag) = 0;
-		virtual void MaterialAttach(const MaterialTag& arg_materialTag) = 0;
+		virtual void MaterialAttach(const UINT slotOffset, const MaterialTag& arg_materialTag) = 0;
 		virtual UINT* RegistDrawObject(std::weak_ptr< IDrawObject> arg_wkp_drawObject,const bool arg_afterDraw, const UINT arg_layer = 0) = 0;
 
 		virtual void UnRegistDrawObject(UINT* arg_index, const bool arg_afterDraw, const UINT arg_layer = 0) = 0;

@@ -94,7 +94,7 @@ namespace ButiEngine {
 	};
 	class IResource_Material :public IObject {
 	public:
-		virtual void Attach(std::shared_ptr<IRenderer> arg_shp_renderer) = 0;
+		virtual void Attach(const UINT slotOffset, std::shared_ptr<IRenderer> arg_shp_renderer) = 0;
 		virtual const std::string& GetMaterialName() = 0;
 		virtual const std::string& GetMaterialNameEng() = 0;
 		virtual const std::string& GetMaterialComment() = 0;
@@ -102,11 +102,15 @@ namespace ButiEngine {
 		virtual void SetMaterialNameEng(const std::string& arg_name) = 0;
 		virtual void SetComment(const std::string& arg_comment) = 0;
 		virtual MaterialVariable GetMaterialVariable() const = 0;
-		virtual std::shared_ptr<IResource_Texture> GetTexture() = 0;
+		virtual std::shared_ptr<IResource_Texture> GetTexture(const int index = 0) = 0;
 		virtual std::shared_ptr<IResource_Texture> GetSphereTexture() = 0;
-		virtual TextureTag GetSphereTextureTag() = 0;
-		virtual TextureTag GetTextureTag() = 0;
+		virtual TextureTag GetSphereTextureTag() const= 0;
+		virtual TextureTag GetTextureTag(const int index=0)const = 0;
 		virtual void Update() = 0;
+		virtual UINT GetTextureCount()const =0;
+		virtual void OnShowUI()=0;
+		virtual void SetTextureTag(const UINT index,TextureTag arg_tag)=0;
+		virtual void SetMaterialVariable(const MaterialVariable& arg_var)=0;
 	};
 	class IResource_Mesh :public IObject {
 	public:

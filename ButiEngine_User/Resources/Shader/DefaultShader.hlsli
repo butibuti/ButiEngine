@@ -65,6 +65,11 @@ cbuffer Light : register(b3)
 {
 	float4 lightDir	: packoffset(c0);
 };
+cbuffer GausParameter : register(b4)
+{
+    float3 gausOffset[16]: packoffset(c0);
+    int sampleCount : packoffset(c12);
+};
 cbuffer Bone : register(b4)
 {
     matrix bones[256]: packoffset(c0);
@@ -92,6 +97,11 @@ cbuffer ParticleParameter : register(b4)
 };
 
 Texture2D mainTexture : register(t0);
+Texture2D subTexture_1 : register(t1);
+Texture2D subTexture_2 : register(t2);
+Texture2D subTexture_3 : register(t3);
+Texture2D subTexture_4 : register(t4);
+Texture2D subTexture_5 : register(t5);
 
 
 SamplerState mainSampler : register(s0);

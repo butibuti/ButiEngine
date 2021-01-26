@@ -62,9 +62,9 @@ namespace ButiEngine {
 	};
 
 	struct DrawData_Dx12 :public MeshDrawData {
-		void Initialize();
+		void Initialize(const UINT srvCount);
 
-		void CreatePipeLineState(const UINT arg_exCBuffer);
+		void CreatePipeLineState(const UINT arg_exCBuffer,const UINT srvCount);
 		void CommandExecute();
 		void BufferUpdate();
 		void CommandSet();
@@ -86,7 +86,7 @@ namespace ButiEngine {
 		D3D12_ROOT_SIGNATURE_DESC rootdesc;
 		SamplerState samplerState;
 		std::weak_ptr<GraphicDevice_Dx12> wkp_graphicDevice;
-
+		int textureRegion;
 	protected:
 		std::shared_ptr< IMatrixUpdater >shp_worldMatrixUpdater;
 	};

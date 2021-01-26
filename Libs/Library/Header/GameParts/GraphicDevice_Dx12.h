@@ -5,7 +5,6 @@ namespace ButiEngine {
 	class DescriptorHeapManager;
 	class PipelineStateManager;
 
-	static const unsigned char TextureTableRegion = 1;
 	static const unsigned char SamplerTableRegion = 1;
 	class IApplication;
 	class GraphicDevice_Dx12 :public GraphicDevice

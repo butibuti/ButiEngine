@@ -390,6 +390,20 @@ void ButiEngine::MeshDrawComponent::OnShowUI()
 		for (auto itr = shp_drawInfo->vec_exCBuffer.begin(); itr != endItr; itr++) {
 			(*itr)->ShowUI();
 		}
+
+		static int slot=0;
+
+		if (GUI::Button("Add BlurParam")) {
+			auto shp_gausBuffer = ObjectFactory::Create<CBuffer_Dx12<GausVariable>>(4);
+			shp_gausBuffer->SetExName("GausParam");
+			auto size = gameObject.lock()->GetApplication().lock()->GetWindow()->GetSize();
+			shp_gausBuffer->Get().CalcGaus(size.x,size.y,Vector2(),2.0);
+
+			shp_drawInfo->vec_exCBuffer.push_back(shp_gausBuffer);
+			ReRegist();
+		}
+
+
 		GUI::TreePop();
 	}
 

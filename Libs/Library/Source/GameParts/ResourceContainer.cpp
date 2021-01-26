@@ -42,6 +42,7 @@ void ButiEngine::ResourceContainer::ShowGUI()
 {
 	static bool isShowShader = false;
 	static bool isShowAddMaterial = false;
+	static MaterialTag editMaterial = MaterialTag();
 
 	GUI::Begin("ResourceContainer");
 
@@ -118,6 +119,18 @@ void ButiEngine::ResourceContainer::ShowGUI()
 				isShowAddMaterial = !isShowAddMaterial;
 			}
 
+			GUI::SameLine();
+			GUI::BeginChild("MaterialTagEdit", Vector2(8 * GUI::GetFontSize(), GUI::GetFontSize() * 2), true);
+			GUI::Text("Edit Tag");
+
+			if (GUI::IsWindowHovered()) {
+				auto tag = wkp_graphicDevice.lock()->GetApplication().lock()->GetGUIController()->GetMaterialTag();
+				if (!tag.IsEmpty()) {
+					editMaterial = tag;
+				}
+			}
+
+			GUI::EndChild();
 			GUI::SameLine();
 			GUI::BeginChild("MaterialTagRemove", Vector2(6 * GUI::GetFontSize(), GUI::GetFontSize() * 2), true);
 			GUI::Text("Remove");
@@ -392,6 +405,19 @@ void ButiEngine::ResourceContainer::ShowGUI()
 
 
 	GUI::End();
+
+	if (!editMaterial.IsEmpty()) {
+
+		GUI::Begin("MaterialEditor");
+
+		if (GUI::Button("Exit")) {
+			editMaterial = MaterialTag();
+		}
+
+		GetMaterial(editMaterial).lock()->OnShowUI();
+
+		GUI::End();
+	}
 
 	if (isShowShader) {
 

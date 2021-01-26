@@ -35,8 +35,15 @@ void ButiEngine::ModelDrawData_Dx12::Initialize()
 
 
 
+	int srvCount = 0;
+	auto container = wkp_graphicDevice.lock()->GetApplication().lock()->GetResourceContainer();
+	for (int i = 0; i < vec_materialTags.size(); i++) {
+		auto textureCount = container->GetMaterial(vec_materialTags[i]).lock()->GetTextureCount();
+		srvCount = max(srvCount, textureCount);
+	}
 
-	DrawData_Dx12::Initialize();
+	textureRegion = srvCount;
+	DrawData_Dx12::Initialize(srvCount);
 
 	CommandListHelper::BundleReset(pipelineState, commandList, wkp_graphicDevice.lock());
 

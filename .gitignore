@@ -42,7 +42,7 @@
 Temp/
 output/
 ButiEngine_User/Resources/
-!ButiEngine_User/Resources/Shader
+!ButiEngine_User/Resources/Shader/
 ButiEngine_User/Resources/Shader/Compiled/
 
 Libs/Library/cereal/

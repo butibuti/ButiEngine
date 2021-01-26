@@ -49,7 +49,7 @@ UINT ButiEngine::Resource_Material_Dx12::GetTextureCount() const
 	return textureTag.size();
 }
 
-void ButiEngine::Resource_Material_Dx12::OnShowUI()
+bool ButiEngine::Resource_Material_Dx12::OnShowUI()
 {
 	bool isEdit = false;
 
@@ -103,6 +103,7 @@ void ButiEngine::Resource_Material_Dx12::OnShowUI()
 	if (isEdit) {
 		Update();
 	}
+	return isEdit;
 }
 
 void ButiEngine::Resource_Material_Dx12::SetTextureTag(const UINT index, TextureTag arg_tag)
@@ -118,5 +119,14 @@ void ButiEngine::Resource_Material_Dx12::SetTextureTag(const UINT index, Texture
 void ButiEngine::Resource_Material_Dx12::SetMaterialVariable(const MaterialVariable& arg_var)
 {
 	materialBuffer->Get() = arg_var;
+}
+
+ButiEngine::MaterialVariable& ButiEngine::Resource_Material_Dx12::GetMaterialVariable()
+{
+	if(materialBuffer)
+	return materialBuffer->Get();
+	else {
+		return materialVar;
+	}
 }
 

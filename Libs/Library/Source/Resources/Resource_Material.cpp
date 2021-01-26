@@ -47,8 +47,3 @@ std::shared_ptr<ButiEngine::IResource_Texture> ButiEngine::Resource_Material::Ge
 {
 	return std::shared_ptr<IResource_Texture>();
 }
-
-ButiEngine::MaterialVariable ButiEngine::Resource_Material::GetMaterialVariable() const
-{
-	return materialVar;
-}

@@ -14,8 +14,10 @@ namespace ButiEngine {
 		void SetComment(const std::string& arg_comment);
 		std::shared_ptr<IResource_Texture>GetTexture(const int index = 0);
 		std::shared_ptr<IResource_Texture>GetSphereTexture();
-		MaterialVariable GetMaterialVariable() const;
-
+		
+		std::vector< TextureTag > GetTextureTags()override {
+			return textureTag;
+		}
 		TextureTag GetSphereTextureTag() const{
 			return sphereTextureTag;
 		}

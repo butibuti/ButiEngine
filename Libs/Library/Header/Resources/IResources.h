@@ -101,16 +101,17 @@ namespace ButiEngine {
 		virtual void SetMaterialName(const std::string& arg_name) = 0;
 		virtual void SetMaterialNameEng(const std::string& arg_name) = 0;
 		virtual void SetComment(const std::string& arg_comment) = 0;
-		virtual MaterialVariable GetMaterialVariable() const = 0;
+		virtual MaterialVariable& GetMaterialVariable()  = 0;
 		virtual std::shared_ptr<IResource_Texture> GetTexture(const int index = 0) = 0;
 		virtual std::shared_ptr<IResource_Texture> GetSphereTexture() = 0;
 		virtual TextureTag GetSphereTextureTag() const= 0;
 		virtual TextureTag GetTextureTag(const int index=0)const = 0;
 		virtual void Update() = 0;
 		virtual UINT GetTextureCount()const =0;
-		virtual void OnShowUI()=0;
+		virtual bool OnShowUI()=0;
 		virtual void SetTextureTag(const UINT index,TextureTag arg_tag)=0;
 		virtual void SetMaterialVariable(const MaterialVariable& arg_var)=0;
+		virtual std::vector< TextureTag > GetTextureTags() = 0;
 	};
 	class IResource_Mesh :public IObject {
 	public:

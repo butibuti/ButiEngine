@@ -413,11 +413,16 @@ void ButiEngine::ResourceContainer::ShowGUI()
 		if (GUI::Button("Exit")) {
 			editMaterial = MaterialTag();
 		}
-
-		GetMaterial(editMaterial).lock()->OnShowUI();
+		auto material = GetMaterial(editMaterial).lock();
+		bool isMaterialEdit=material->OnShowUI();
 
 		GUI::End();
+		if (isMaterialEdit) {
+			vec_materialLoadInfos[*editMaterial.GetID()].var = material->GetMaterialVariable();
+			vec_materialLoadInfos[*editMaterial.GetID()].vec_texture = material->GetTextureTags();
+		}
 	}
+
 
 	if (isShowShader) {
 

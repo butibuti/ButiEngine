@@ -13,9 +13,10 @@ namespace ButiEngine {
 		void Attach(const UINT slotOffset, std::shared_ptr<IRenderer> arg_shp_renderer)override;
 		void Update()override;
 		UINT GetTextureCount()const override;
-		void OnShowUI() ;
+		bool OnShowUI() ;
 		void SetTextureTag(const UINT index, TextureTag arg_tag) ;
 		void SetMaterialVariable(const MaterialVariable& arg_var);
+		MaterialVariable& GetMaterialVariable();
 	private:
 		std::weak_ptr<GraphicDevice_Dx12> wkp_graphicDevice;
 		std::shared_ptr< CBuffer_Dx12<MaterialVariable>> materialBuffer;

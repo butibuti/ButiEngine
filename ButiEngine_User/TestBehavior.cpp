@@ -5,7 +5,7 @@
 
 void ButiEngine::TestBehavior::OnUpdate()
 {
-	static bool isForcus=false;
+	/*static bool isForcus = false;
 
 	if (isForcus) {
 
@@ -13,32 +13,39 @@ void ButiEngine::TestBehavior::OnUpdate()
 		GameDevice::GetInput()->SetMouseCursor(gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneManager().lock()->GetApplication().lock()->GetWindow()->GetWindowCenterPosition());
 		shp_camera->shp_transform->RollLocalRotationX_Degrees(-mouseMove.y / 3.0f);
 		shp_camera->shp_transform->RollWorldRotationY_Degrees(-mouseMove.x / 3.0f);
-	}
+	}*/
 	Vector3 moveForce;
 	if (GameDevice::GetInput()->CheckKey(Keys::W)) {
-		moveForce += shp_camera->shp_transform->GetFront();
+		moveForce += gameObject.lock()->transform->GetFront();
 
 	}
 	if (GameDevice::GetInput()->CheckKey(Keys::S)) {
-		moveForce -= shp_camera->shp_transform->GetFront();
+		moveForce -= gameObject.lock()->transform->GetFront();
 
 	}
 	if (GameDevice::GetInput()->CheckKey(Keys::A)) {
-		moveForce -=shp_camera->shp_transform->GetRight();
+		moveForce -= gameObject.lock()->transform->GetRight();
 
 	}
 	if (GameDevice::GetInput()->CheckKey(Keys::D)) {
-		moveForce += shp_camera->shp_transform->GetRight();
+		moveForce += gameObject.lock()->transform->GetRight();
 
 	}
+	if (GameDevice::GetInput()->CheckKey(Keys::LeftShift)) {
+		moveForce += gameObject.lock()->transform->GetUp();
+
+	}
+	if (GameDevice::GetInput()->CheckKey(Keys::Space)) {
+		moveForce -= gameObject.lock()->transform->GetUp();
+
+	}/*
 	if (GameDevice::GetInput()->TriggerKey(Keys::Space)) {
 		isForcus = !isForcus;
 
-	}
-	moveForce.y = 0;
+	}*/
 	moveForce.Normalize();
 	gameObject.lock()->transform->SetLocalPosition(gameObject.lock()->transform->GetLocalPosition() + moveForce * 0.05f);
-
+	
 }
 
 void ButiEngine::TestBehavior::OnSet()
@@ -47,19 +54,24 @@ void ButiEngine::TestBehavior::OnSet()
 
 void ButiEngine::TestBehavior::Start()
 {
-    //auto gameObject = GetManager().lock()->AddObjectFromCereal("test", ObjectFactory::Create<Transform>());
-    //shp_AABB = ObjectFactory::Create<Collision::CollisionPrimitive_Box_AABB>(Vector3(1,1,1), gameObject.lock()->transform);
+	//auto gameObject = GetManager().lock()->AddObjectFromCereal("test", ObjectFactory::Create<Transform>());
+	//shp_AABB = ObjectFactory::Create<Collision::CollisionPrimitive_Box_AABB>(Vector3(1,1,1), gameObject.lock()->transform);
 
-    shp_camera = GetCamera("main").lock();
+	/*shp_camera = GetCamera("main").lock();
 	shp_camera->shp_transform->SetWorldPosition(Vector3());
 	shp_camera->shp_transform->SetBaseTransform(gameObject.lock()->transform, true);
+	auto anim = gameObject.lock()->AddGameComponent<TransformAnimation>();
+	anim->SetTargetTransform(gameObject.lock()->transform->Clone());*/
 }
 
 void ButiEngine::TestBehavior::OnCollision(std::weak_ptr<GameObject> arg_other)
 {
+	GUI::Begin("Collision");
+	GUI::Text(u8"接触中！！！！！");
+	GUI::End();
 }
 
 std::shared_ptr<ButiEngine::Behavior> ButiEngine::TestBehavior::Clone()
 {
-    return ObjectFactory::Create<TestBehavior>();
+	return ObjectFactory::Create<TestBehavior>();
 }

@@ -74,10 +74,13 @@ void ButiEngine::Camera_Dx12::Start()
 	wkp_graphicDevice.lock()->DrawStart();
 	
 	if (shp_renderTarget) {
-
+		auto size = shp_renderTarget->GetSize();
+		shp_renderer->GetFogCBuffer()->Get().pixelScale = Vector2(1.0/size.x,1.0/size.y);
 		shp_renderTarget->SetRenderTarget(cameraViewProp.clearColor);
 	}
 	else {
+		auto size = wkp_graphicDevice.lock()->GetApplication().lock()->GetWindow()->GetSize();
+		shp_renderer->GetFogCBuffer()->Get().pixelScale = Vector2(1.0/size.x,1.0/size.y);
 		wkp_graphicDevice.lock()->CommandList_SetRenderTargetView();
 		wkp_graphicDevice.lock()->CommandList_SetScissorRect();
 		wkp_graphicDevice.lock()->ClearDepthStancil(cameraViewProp.clearDepth);

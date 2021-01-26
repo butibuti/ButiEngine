@@ -15,6 +15,7 @@ namespace ButiEngine {
 		class CollisionPrimitive_PLane;
 		class CollisionPrimitive_Ray;
 		class CollisionPrimitive_Segment;
+		class CollisionPrimitive_Capsule;
 		class CollisionPrimitive :public IObject
 		{
 		public:
@@ -31,6 +32,7 @@ namespace ButiEngine {
 			virtual bool IsHitBox_OBB(CollisionPrimitive_Box_OBB* other) { return false; }
 			virtual bool IsHitRay(CollisionPrimitive_Ray* other) { return false; }
 			virtual bool IsHitSegment(CollisionPrimitive_Segment* other) { return false; }
+			virtual bool IsHitCapsule(CollisionPrimitive_Capsule* other) { return false; }
 			virtual void GetMaxPointAndMinPoint(Vector3& arg_outputMax, Vector3& arg_outputMin) const = 0;
 			virtual std::shared_ptr<CollisionPrimitive> Clone() = 0;
 			virtual void ShowUI() = 0;
@@ -222,6 +224,7 @@ namespace ButiEngine {
 			bool IsHitBox_OBB(CollisionPrimitive_Box_OBB* other)override;
 			bool IsHitPolygon(CollisionPrimitive_Polygon* other)override;
 			bool IsHitSurface(CollisionPrimitive_Surface* other)override;
+			bool IsHitCapsule(CollisionPrimitive_Capsule* other)override;
 			bool IsHitRay(CollisionPrimitive_Ray* other)override;
 			std::shared_ptr<CollisionPrimitive> Clone()override {
 				auto ret = ObjectFactory::Create<CollisionPrimitive_Sphere>();
@@ -245,6 +248,65 @@ namespace ButiEngine {
 				archive(radius);
 			}
 		private:
+		};
+		class CollisionPrimitive_Capsule :public CollisionPrimitive, public Geometry::Capsule
+		{
+		public:
+			inline CollisionPrimitive_Capsule(const float arg_radius, const Segment &arg_segment, std::weak_ptr<Transform> arg_weak_transform)
+				:Geometry::Capsule(arg_segment,arg_radius) {
+				wkp_transform = arg_weak_transform;
+				length = arg_segment.velocity.y;
+			}
+			CollisionPrimitive_Capsule() {}
+			inline void Update()override {
+				auto pos =  wkp_transform.lock()->GetWorldPosition();
+				auto rotation = wkp_transform.lock()->GetWorldRotation();
+				s.endPos = pos + (Vector3::YAxis * length * 0.5) * rotation;
+				s.point = pos - (Vector3::YAxis * length*0.5)*rotation;
+				r = initR * wkp_transform.lock()->GetWorldScale().x;
+			}
+			inline bool IsHit(std::weak_ptr< CollisionPrimitive> other)override
+			{
+				return other.lock()->IsHitCapsule(this);
+
+
+			}
+			inline void GetMaxPointAndMinPoint(Vector3& arg_outputMax, Vector3& arg_outputMin) const {
+				arg_outputMax = s.point + Vector3(r, r, r);
+				arg_outputMin = s.endPos - Vector3(r, r, r);
+			}
+			bool IsHitSphere(CollisionPrimitive_Sphere* other)override;
+			std::shared_ptr<CollisionPrimitive> Clone()override {
+				auto ret = ObjectFactory::Create<CollisionPrimitive_Capsule>();
+				ret->r = r;
+				ret->initR = initR;
+				ret->length = length;
+				ret->s = s;
+				return ret;
+			}
+			void ShowUI() override {
+
+				if (GUI::TreeNode("Capsule")) {
+					GUI::BulletText("radius");
+					GUI::DragFloat("##radius", initR, 0.01, 0, 500);
+					GUI::BulletText("height");
+					
+					GUI::DragFloat("##length", length, 0.01, 0, 500);
+					GUI::TreePop();
+				}
+
+			}
+
+			template<class Archive>
+			void serialize(Archive& archive)
+			{
+				archive(wkp_transform);
+				archive(initR);
+				archive(length);
+			}
+		private:
+			float length;
+			float initR;
 		};
 
 

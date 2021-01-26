@@ -23,6 +23,7 @@ namespace ButiEngine {
 		}
 	private:
 		std::shared_ptr<ICamera> shp_camera;
+		Vector3 accel = Vector3();
 	};
 
 }

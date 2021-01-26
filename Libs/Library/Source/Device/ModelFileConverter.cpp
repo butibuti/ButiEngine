@@ -80,9 +80,9 @@ std::shared_ptr<ButiEngine::FBXAnalyze::FBXNodeStructure> ButiEngine::ModelFileC
 				auto nodeProperty = ObjectFactory::Create<FBXAnalyze::FBXNode_StringProperty>();
 				nodeProperty->nodeProperty = fbxReader.ReadCharactor(propSize);
 
-				//if (StringHelper::Contains( nodeProperty->nodeProperty, "inverse")) {
-				//	int f = 0;
-				//}
+				/*if (StringHelper::Contains( nodeProperty->nodeProperty, "Model")) {
+					int f = 0;
+				}*/
 				multimap_properties.emplace(type, nodeProperty);
 			}
 														break;
@@ -882,6 +882,10 @@ void ButiEngine::ModelFileConverter::FBXtoB3M(const std::string& arg_fbxFileName
 			auto parent = boneNodes.at(i)->parentBoneIndex;
 
 			Vector3 pos = boneNodes.at(i)->GetPosition(boneNodes, globalSettings);
+			Vector3 temp = pos;
+			pos.x *= -1;
+			pos.z =- temp.y;
+			pos.y = temp.z;
 
 			b3mWriter.WriteInt(parent, boneIndexByteSize);
 

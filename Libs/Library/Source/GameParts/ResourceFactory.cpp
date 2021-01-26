@@ -1318,26 +1318,28 @@ std::shared_ptr<ButiEngine::Resource_Model> ButiEngine::ResourceFactory::CreateM
 		{
 			int boneNameCount = modelReader.ReadVariable<int>();
 			if (encodeType) {
-				std::wstring name;
-				Util::MultiBytetoWString(modelReader.ReadCharactor(boneNameCount), name);
-				bone.boneName = name;
+				bone.boneName = modelReader.ReadCharactor(boneNameCount);
 			}
 			else
 			{
-				bone.boneName = modelReader.ReadWCharactor(boneNameCount);
+				std::string name;
+				std::wstring wname = modelReader.ReadWCharactor(boneNameCount);
+				name=Util::WStringToString(wname);
+				bone.boneName =name;
 			}
 		}
 		//É{Å[Éìñºâp
 		{
 			int boneNameCount = modelReader.ReadVariable<int>();
 			if (encodeType) {
-				std::wstring name;
-				name = Util::StringToWString(modelReader.ReadCharactor(boneNameCount));
-				bone.boneNameEng = name;
+				bone.boneNameEng = modelReader.ReadCharactor(boneNameCount);
 			}
 			else
 			{
-				bone.boneNameEng = modelReader.ReadWCharactor(boneNameCount);
+				std::string name;
+				std::wstring wname = modelReader.ReadWCharactor(boneNameCount);
+				name = Util::WStringToString(wname);
+				bone.boneNameEng = name;
 			}
 		}
 		bone.parentBoneIndex = modelReader.ReadInt(boneIndexByteCount);
@@ -1623,8 +1625,9 @@ std::shared_ptr<ButiEngine::Resource_Motion> ButiEngine::ResourceFactory::Create
 			vec_keyFrameData.push_back(bmdReader.ReadVariable<MotionKeyFrameData>());
 
 		}
-
-		output->AddKeyFrameLane(name, vec_keyFrameData);
+		std::string strName;
+		strName=Util::WStringToString(name);
+		output->AddKeyFrameLane(strName, vec_keyFrameData);
 	}
 
 	bmdReader.ReadEnd();

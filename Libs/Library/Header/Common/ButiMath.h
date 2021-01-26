@@ -495,6 +495,12 @@ namespace ButiEngine {
 			this->y = y;
 			this->z = z;
 		}
+		inline Vector3(float v)
+		{
+			this->x = v;
+			this->y = v;
+			this->z = v;
+		}
 		inline Vector3()
 		{
 			x = 0;

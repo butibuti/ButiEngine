@@ -44,20 +44,23 @@ namespace ButiEngine {
 
 
 			UINT vertexBufferSize = (UINT)(sizeof(T) * inputMeshData.vertices.size());
+			auto defDesc = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+			auto vBuffDesc= CD3DX12_RESOURCE_DESC::Buffer(vertexBufferSize);
+			auto updesc = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 			//頂点バッファの作成
 			{
 				shp_graphicDevice_Dx12->GetDevice().CreateCommittedResource(
-					&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+					&defDesc,
 					D3D12_HEAP_FLAG_NONE,
-					&CD3DX12_RESOURCE_DESC::Buffer(vertexBufferSize),
+					&vBuffDesc,
 					D3D12_RESOURCE_STATE_COPY_DEST,
 					nullptr,
 					IID_PPV_ARGS(&vertexBuffer));
 
 				shp_graphicDevice_Dx12->GetDevice().CreateCommittedResource(
-					&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+					&updesc,
 					D3D12_HEAP_FLAG_NONE,
-					&CD3DX12_RESOURCE_DESC::Buffer(vertexBufferSize),
+					&vBuffDesc,
 					D3D12_RESOURCE_STATE_GENERIC_READ,
 					nullptr,
 					IID_PPV_ARGS(&vertexBufferUploadHeap));
@@ -70,19 +73,20 @@ namespace ButiEngine {
 			vertexCount = static_cast<UINT>(inputMeshData.vertices.size());
 			//インデックスバッファの作成
 			UINT indexBufferSize = static_cast<UINT>(sizeof(UINT) * inputMeshData.indices.size());
+			auto indexBuffDesc = CD3DX12_RESOURCE_DESC::Buffer(indexBufferSize);
 			{
 				shp_graphicDevice_Dx12->GetDevice().CreateCommittedResource(
-					&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+					&defDesc,
 					D3D12_HEAP_FLAG_NONE,
-					&CD3DX12_RESOURCE_DESC::Buffer(indexBufferSize),
+					&indexBuffDesc,
 					D3D12_RESOURCE_STATE_COPY_DEST,
 					nullptr,
 					IID_PPV_ARGS(&indexBuffer));
 
 				shp_graphicDevice_Dx12->GetDevice().CreateCommittedResource(
-					&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+					&updesc,
 					D3D12_HEAP_FLAG_NONE,
-					&CD3DX12_RESOURCE_DESC::Buffer(indexBufferSize),
+					&indexBuffDesc,
 					D3D12_RESOURCE_STATE_GENERIC_READ,
 					nullptr,
 					IID_PPV_ARGS(&indexBufferUploadHeap));
@@ -137,20 +141,23 @@ namespace ButiEngine {
 
 
 			UINT vertexBufferSize = (UINT)(sizeof(T) * inputMeshData.vertices.size());
+			auto defDesc = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+			auto updesc= CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+			auto vBuffDesc = CD3DX12_RESOURCE_DESC::Buffer(vertexBufferSize);
 			//頂点バッファの作成
 			{
 				shp_graphicDevice_Dx12->GetDevice().CreateCommittedResource(
-					&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+					&defDesc,
 					D3D12_HEAP_FLAG_NONE,
-					&CD3DX12_RESOURCE_DESC::Buffer(vertexBufferSize),
+					&vBuffDesc,
 					D3D12_RESOURCE_STATE_COPY_DEST,
 					nullptr,
 					IID_PPV_ARGS(&vertexBuffer));
 
 				shp_graphicDevice_Dx12->GetDevice().CreateCommittedResource(
-					&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+					&updesc,
 					D3D12_HEAP_FLAG_NONE,
-					&CD3DX12_RESOURCE_DESC::Buffer(vertexBufferSize),
+					&vBuffDesc,
 					D3D12_RESOURCE_STATE_GENERIC_READ,
 					nullptr,
 					IID_PPV_ARGS(&vertexBufferUploadHeap));
@@ -163,19 +170,20 @@ namespace ButiEngine {
 			vertexCount = static_cast<UINT>(inputMeshData.vertices.size());
 			//インデックスバッファの作成
 			UINT indexBufferSize = static_cast<UINT>(sizeof(UINT) * inputMeshData.indices.size());
+			auto indexDesc = CD3DX12_RESOURCE_DESC::Buffer(indexBufferSize);
 			{
 				shp_graphicDevice_Dx12->GetDevice().CreateCommittedResource(
-					&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+					&defDesc,
 					D3D12_HEAP_FLAG_NONE,
-					&CD3DX12_RESOURCE_DESC::Buffer(indexBufferSize),
+					&indexDesc,
 					D3D12_RESOURCE_STATE_COPY_DEST,
 					nullptr,
 					IID_PPV_ARGS(&indexBuffer));
 
 				shp_graphicDevice_Dx12->GetDevice().CreateCommittedResource(
-					&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+					&updesc,
 					D3D12_HEAP_FLAG_NONE,
-					&CD3DX12_RESOURCE_DESC::Buffer(indexBufferSize),
+					&indexDesc,
 					D3D12_RESOURCE_STATE_GENERIC_READ,
 					nullptr,
 					IID_PPV_ARGS(&indexBufferUploadHeap));

@@ -136,8 +136,8 @@ namespace ButiEngine {
                 : x == 1
                 ? 1
                 : x < 0.5
-                ? -(std::pow(2, 20 * x - 10) * std::sin((20 * x - 11.125) * c5)) / 2
-                : (std::pow(2, -20 * x + 10) * std::sin((20 * x - 11.125) * c5)) / 2 + 1;
+                ? -(std::pow(2, 20 * x - 10) * std::sin((20.0 * x - 11.125) * c5)) / 2
+                : (std::pow(2, -20 * x + 10) * std::sin((20.0 * x - 11.125) * c5)) / 2 + 1;
         }
         static float EaseInQuint(const float x) {
             return x * x * x * x * x;

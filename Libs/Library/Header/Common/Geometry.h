@@ -975,5 +975,13 @@ namespace ButiEngine {
                 return distance <=arg_otherSphere.radius;
             }
         }
+
+        namespace CapsuleHit {
+            inline bool IsHitCapsuleSphere(const Sphere& arg_sphere,const Capsule& arg_capsule) {
+                float distance = LineHit::GetDistancePointSegment(arg_sphere.position, arg_capsule.s).GetLength();
+                return distance <= arg_sphere.radius + arg_capsule.r;
+
+            }
+        }
     }
 }

@@ -156,7 +156,7 @@ void ButiEngine::ModelAnimation::PreMotionStart(std::shared_ptr<Transform> arg_p
 	}
 }
 
-std::shared_ptr<ButiEngine::IMotionTimeLine> ButiEngine::ModelAnimation::AddMotionTimeLine(const std::wstring& arg_name, std::shared_ptr<IMotionTimeLine> arg_motion)
+std::shared_ptr<ButiEngine::IMotionTimeLine> ButiEngine::ModelAnimation::AddMotionTimeLine(const std::string& arg_name, std::shared_ptr<IMotionTimeLine> arg_motion)
 {
 	map_motionTimeLine.emplace(arg_name, arg_motion);
 

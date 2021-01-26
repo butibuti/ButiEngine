@@ -65,7 +65,6 @@ namespace ButiEngine {
 			//ShiftJIS‚©‚çUnicode‚Ö•ÏŠ·
 			MultiByteToWideChar(CP_THREAD_ACP, 0, srcSjis.c_str(), srcSjis.size() + 1, bufUnicode, lenghtUnicode);
 
-
 			//UTF8‚Ö•ÏŠ·Œã‚Ì•¶Žš—ñ’·‚ð“¾‚é
 			int lengthUTF8 = WideCharToMultiByte(CP_UTF8, 0, bufUnicode, -1, NULL, 0, NULL, NULL);
 
@@ -77,8 +76,8 @@ namespace ButiEngine {
 
 			std::string strUTF8(bufUTF8);
 
-			delete bufUnicode;
-			delete bufUTF8;
+			delete []bufUnicode;
+			delete []bufUTF8;
 
 			return strUTF8;
 		}
@@ -103,8 +102,8 @@ namespace ButiEngine {
 
 			std::string strSJis(bufShiftJis);
 
-			delete bufUnicode;
-			delete bufShiftJis;
+			delete []bufUnicode;
+			delete []bufShiftJis;
 
 			return strSJis;
 		}

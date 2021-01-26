@@ -79,7 +79,7 @@ namespace ButiEngine {
 		void IKTest();
 		void Reset();
 		void PreMotionStart(std::shared_ptr<Transform> arg_parentBoneTransform);
-		std::shared_ptr<IMotionTimeLine> AddMotionTimeLine(const std::wstring& arg_name, std::shared_ptr<IMotionTimeLine> arg_motion);
+		std::shared_ptr<IMotionTimeLine> AddMotionTimeLine(const std::string& arg_name, std::shared_ptr<IMotionTimeLine> arg_motion);
 		bool SetLoop(const bool arg_isLoop);
 		void SetBoneDrawObj(std::shared_ptr<IBoneDrawObject> arg_shp_boneDrawObj);
 	private:
@@ -88,7 +88,7 @@ namespace ButiEngine {
 		UINT frame = 1;
 		UINT endFrame = 0;
 		
-		std::map<std::wstring, std::shared_ptr<IMotionTimeLine>> map_motionTimeLine;
+		std::map<std::string, std::shared_ptr<IMotionTimeLine>> map_motionTimeLine;
 
 		std::vector<std::shared_ptr<IMotionTimeLine>> vec_timeLines;
 		std::shared_ptr<IBoneDrawObject> shp_boneDrawObj;

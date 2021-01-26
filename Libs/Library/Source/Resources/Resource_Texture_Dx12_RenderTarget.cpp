@@ -7,7 +7,8 @@ ButiEngine::Resource_Texture_Dx12_RenderTarget::Resource_Texture_Dx12_RenderTarg
 	//:Resource_Texture_Dx12(std::vector<BYTE>(width*height*4,255),width,height,arg_graphicDevice)
 {
 	wkp_graphicDevice = arg_graphicDevice->GetThis<GraphicDevice_Dx12>();
-	
+	image.width = width;
+	image.height = height;
 
 
 	{
@@ -90,8 +91,9 @@ ButiEngine::Resource_Texture_Dx12_RenderTarget::Resource_Texture_Dx12_RenderTarg
 	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	desc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
 	desc.Format =  DXGI_FORMAT_R8G8B8A8_UNORM;
+	auto heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
 	hr= wkp_graphicDevice.lock()->GetDevice().CreateCommittedResource(
-		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+		&heapProp,
 		D3D12_HEAP_FLAG_NONE, &desc,
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
 		nullptr,
@@ -135,9 +137,10 @@ ButiEngine::Resource_Texture_Dx12_RenderTarget::Resource_Texture_Dx12_RenderTarg
 
 void ButiEngine::Resource_Texture_Dx12_RenderTarget::SetRenderTarget(Vector4& arg_clearColor)
 {
-	wkp_graphicDevice.lock()->GetCommandList().ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(texture.Get(),
+	auto trans = CD3DX12_RESOURCE_BARRIER::Transition(texture.Get(),
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-		D3D12_RESOURCE_STATE_RENDER_TARGET));
+		D3D12_RESOURCE_STATE_RENDER_TARGET);
+	wkp_graphicDevice.lock()->GetCommandList().ResourceBarrier(1, &trans);
 	if (!isCleared) {
 		isCleared = true;
 		wkp_graphicDevice.lock()->GetCommandList().ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
@@ -151,9 +154,10 @@ void ButiEngine::Resource_Texture_Dx12_RenderTarget::SetRenderTarget(Vector4& ar
 
 void ButiEngine::Resource_Texture_Dx12_RenderTarget::SetRenderTargetWithoutDepth(Vector4& arg_clearColor)
 {
-	wkp_graphicDevice.lock()->GetCommandList().ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(texture.Get(),
+	auto trans = CD3DX12_RESOURCE_BARRIER::Transition(texture.Get(),
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-		D3D12_RESOURCE_STATE_RENDER_TARGET));
+		D3D12_RESOURCE_STATE_RENDER_TARGET);
+	wkp_graphicDevice.lock()->GetCommandList().ResourceBarrier(1, &trans);
 	wkp_graphicDevice.lock()->GetCommandList().RSSetScissorRects(1, &scissorRect);
 	wkp_graphicDevice.lock()->GetCommandList().OMSetRenderTargets(1, &rtvHandle, false, nullptr);
 	wkp_graphicDevice.lock()->GetCommandList().ClearRenderTargetView(rtvHandle, arg_clearColor.GetData(), 0, nullptr);
@@ -164,11 +168,12 @@ void ButiEngine::Resource_Texture_Dx12_RenderTarget::CreateTextureUploadHeap()
 
 	const UINT64 uploadBufferSize = GetRequiredIntermediateSize(texture.Get(), 0, 1);
 	auto hr = wkp_graphicDevice.lock()->GetDevice().GetDeviceRemovedReason();
-
+	auto desc = CD3DX12_RESOURCE_DESC::Buffer(uploadBufferSize);
+	auto heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 	hr = wkp_graphicDevice.lock()->GetDevice().CreateCommittedResource(
-		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+		&heapProp,
 		D3D12_HEAP_FLAG_NONE,
-		&CD3DX12_RESOURCE_DESC::Buffer(uploadBufferSize),
+		&desc,
 		D3D12_RESOURCE_STATE_RENDER_TARGET,
 		nullptr,
 		IID_PPV_ARGS(&textureUploadHeap));
@@ -181,10 +186,10 @@ void ButiEngine::Resource_Texture_Dx12_RenderTarget::Initialize()
 
 void ButiEngine::Resource_Texture_Dx12_RenderTarget::DisSetRenderTarget()
 {
-
-	wkp_graphicDevice.lock()->GetCommandList().ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(texture.Get(),
+	auto desc = CD3DX12_RESOURCE_BARRIER::Transition(texture.Get(),
 		D3D12_RESOURCE_STATE_RENDER_TARGET,
-		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
+		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+	wkp_graphicDevice.lock()->GetCommandList().ResourceBarrier(1, &desc);
 }
 
 
@@ -224,5 +229,10 @@ void ButiEngine::Resource_Texture_Dx12_RenderTarget::Attach(int slot)
 void ButiEngine::Resource_Texture_Dx12_RenderTarget::SetIsCleared(bool arg_isClear)
 {
 	isCleared = arg_isClear;
+}
+
+ButiEngine::Vector2 ButiEngine::Resource_Texture_Dx12_RenderTarget::GetSize()
+{
+	return Vector2(image.width,image.height);
 }
 

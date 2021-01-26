@@ -418,9 +418,10 @@ void ButiEngine::GraphicDevice_Dx12::Update()
 		int i = 0;
 	}
 	//プレゼント用のバリアを張る
+	auto desc = CD3DX12_RESOURCE_BARRIER::Transition(renderTargets[frameIndex].Get(),
+		D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
 	presentCommandList->ResourceBarrier(1,
-		&CD3DX12_RESOURCE_BARRIER::Transition(renderTargets[frameIndex].Get(),
-			D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+		&desc);
 
 	hr = presentCommandList->Close();
 	SetCommandList(presentCommandList.Get());
@@ -474,9 +475,10 @@ void ButiEngine::GraphicDevice_Dx12::ClearWindow()
 	clearCommandList->SetGraphicsRootSignature(rootSignature.Get());
 
 	// Indicate that the back FrameCount will be used as a render target.
+	auto desc = CD3DX12_RESOURCE_BARRIER::Transition(renderTargets[frameIndex].Get(),
+		D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
 	clearCommandList->ResourceBarrier(1,
-		&CD3DX12_RESOURCE_BARRIER::Transition(renderTargets[frameIndex].Get(),
-			D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+		&desc);
 
 	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(renderTargetDescripterHeap->GetCPUDescriptorHandleForHeapStart(), frameIndex, renderTargetDescriptorSize);
 	CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(depthStencilDescriptorHeap->GetCPUDescriptorHandleForHeapStart());

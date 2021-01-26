@@ -17,21 +17,43 @@ namespace ButiEngine {
 		Vector3 upLimit;
 		Vector3 downLimit;
 		Vector3* axis=nullptr;
+
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(radianLimit);
+			archive(upLimit);
+			archive(downLimit);
+			archive(bonesLength);
+			archive(linkBone);
+		}
 	};
 	struct IKData {
 		~IKData();
 		int targetBoneIndex;
+		int extremityBoneIndex;
 		std::shared_ptr<Bone> shp_targetBone;
 		int loopCount;
 		float maxRadian;
 		float sum_bonesLength=0;
 		std::vector<IKLink> links;
-		Vector3* p_jointPoints=nullptr;
+		//Vector3* p_jointPoints=nullptr;
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(targetBoneIndex);
+			archive(extremityBoneIndex);
+			archive(loopCount);
+			archive(maxRadian);
+			archive(sum_bonesLength);
+			archive(links);
+		}
 	}; 
 	struct Bone
 	{
-		std::wstring boneName;
-		std::wstring boneNameEng;
+		int ownIndex;
+		std::string boneName;
+		std::string boneNameEng;
 
 		Vector3 position;
 

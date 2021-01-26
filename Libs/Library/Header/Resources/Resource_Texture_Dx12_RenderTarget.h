@@ -18,6 +18,7 @@ namespace ButiEngine {
 		void ResourceUpdate() override;
 		void Attach(int slot)override;
 		void SetIsCleared(bool arg_isClear)override;
+		Vector2 GetSize()override;
 	private:
 
 		D3D12_RECT     scissorRect;

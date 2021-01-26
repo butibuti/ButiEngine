@@ -18,6 +18,8 @@ CEREAL_REGISTER_TYPE(ButiEngine::Collision::CollisionPrimitive_Polygon);
 CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::Collision::CollisionPrimitive, ButiEngine::Collision::CollisionPrimitive_Polygon);
 CEREAL_REGISTER_TYPE(ButiEngine::Collision::CollisionPrimitive_Surface);
 CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::Collision::CollisionPrimitive, ButiEngine::Collision::CollisionPrimitive_Surface);
+CEREAL_REGISTER_TYPE(ButiEngine::Collision::CollisionPrimitive_Capsule);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(ButiEngine::Collision::CollisionPrimitive, ButiEngine::Collision::CollisionPrimitive_Capsule);
 
 bool ButiEngine::Collision::CollisionPrimitive_Sphere::IsHitPoint(CollisionPrimitive_Point* other)
 {
@@ -47,6 +49,11 @@ bool ButiEngine::Collision::CollisionPrimitive_Sphere::IsHitPolygon(CollisionPri
 bool ButiEngine::Collision::CollisionPrimitive_Sphere::IsHitSurface(CollisionPrimitive_Surface* other)
 {
     return Geometry::GeometryUtill::IsHitSphere(*this, other->wkp_transform.lock()->GetWorldPosition(), other->normal);
+}
+
+bool ButiEngine::Collision::CollisionPrimitive_Sphere::IsHitCapsule(CollisionPrimitive_Capsule* other)
+{
+    return Geometry::CapsuleHit::IsHitCapsuleSphere(*this, *other);
 }
 
 bool ButiEngine::Collision::CollisionPrimitive_Sphere::IsHitRay(CollisionPrimitive_Ray* other)
@@ -284,4 +291,9 @@ bool ButiEngine::Collision::CollisionPrimitive_Segment::IsHitBox_OBB(CollisionPr
 {
     Vector3 colPos;
     return Geometry::RayHit::IsHitSegmentOBB(*this, *other, other->wkp_transform.lock()->GetMatrix_WithoutScale(), colPos);
+}
+
+bool ButiEngine::Collision::CollisionPrimitive_Capsule::IsHitSphere(CollisionPrimitive_Sphere* other)
+{
+    return Geometry::CapsuleHit::IsHitCapsuleSphere(*other,*this);
 }

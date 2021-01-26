@@ -42,13 +42,14 @@ namespace ButiEngine {
 		virtual void SetRenderTargetWithoutDepth(Vector4& arg_clearColor) = 0;
 		virtual void DisSetRenderTarget() = 0;
 		virtual void SetIsCleared(bool arg_isClear) = 0;
+		virtual Vector2 GetSize() = 0;
 	};
 
 	class IResource_Motion :public IObject {
 	public:
 		virtual std::shared_ptr<ModelAnimation> GetAnimation() = 0;
-		virtual void AddKeyFrame(const std::wstring& arg_boneName, const MotionKeyFrameData& arg_data) = 0;
-		virtual void AddKeyFrameLane(const std::wstring& arg_boneName, const std::vector<MotionKeyFrameData>& arg_datas) = 0;
+		virtual void AddKeyFrame(const std::string& arg_boneName, const MotionKeyFrameData& arg_data) = 0;
+		virtual void AddKeyFrameLane(const std::string& arg_boneName, const std::vector<MotionKeyFrameData>& arg_datas) = 0;
 	};
 	class IResource_VertexShader :public IObject {
 	public:

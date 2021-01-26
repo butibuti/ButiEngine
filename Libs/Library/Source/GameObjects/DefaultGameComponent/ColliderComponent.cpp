@@ -130,6 +130,9 @@ void ButiEngine::Collision::ColliderComponent::OnShowUI()
 		}GUI::SameLine();
 		if (GUI::Button("Surface")) {
 			shp_collisionPrim = ObjectFactory::Create<Collision::CollisionPrimitive_Surface>(Vector3(0, 1, 0), gameObject.lock()->transform);
+		}GUI::SameLine();
+		if (GUI::Button("Capsule")) {
+			shp_collisionPrim = ObjectFactory::Create<Collision::CollisionPrimitive_Capsule>(1.0f,Segment(Vector3(0, -0.5f, 0), Vector3(0, 0.5f, 0)), gameObject.lock()->transform);
 		}
 		if (GUI::Button("Ray")) {
 			shp_collisionPrim = ObjectFactory::Create<Collision::CollisionPrimitive_Ray>( gameObject.lock()->transform, Vector3(0, 0, 1));

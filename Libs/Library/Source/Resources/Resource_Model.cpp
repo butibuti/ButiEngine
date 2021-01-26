@@ -49,6 +49,7 @@ void ButiEngine::Resource_Model::SetEngComment(const std::wstring & arg_engComme
 
 void ButiEngine::Resource_Model::AddBone(Bone & arg_bone)
 {
+	arg_bone.ownIndex = vec_bone.size();
 	vec_bone.push_back(arg_bone);
 }
 

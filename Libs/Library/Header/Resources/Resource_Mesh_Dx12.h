@@ -62,7 +62,8 @@ namespace ButiEngine {
 		vertexData.RowPitch = vertices.size() * sizeof(T);
 		vertexData.SlicePitch = vertexData.RowPitch;
 		UpdateSubresources<1>(&arg_wkp_graphicDevice.lock()->GetCommandList(),arg_resource->GetVertexBuffer().Get(),arg_resource->GetVertexBufferUploadHeap().Get(), 0, 0, 1, &vertexData);
-		arg_wkp_graphicDevice.lock()->GetCommandList().ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(arg_resource->GetVertexBuffer() .Get(),D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER));
+		auto trans = CD3DX12_RESOURCE_BARRIER::Transition(arg_resource->GetVertexBuffer().Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
+		arg_wkp_graphicDevice.lock()->GetCommandList().ResourceBarrier(1, &trans);
 		//インデックスバッファの更新
 		if (indices.size() > 0) {
 			D3D12_SUBRESOURCE_DATA indexData = {};
@@ -70,7 +71,8 @@ namespace ButiEngine {
 			indexData.RowPitch = indices.size() * sizeof(UINT);
 			indexData.SlicePitch = indexData.RowPitch;
 			UpdateSubresources<1>(&arg_wkp_graphicDevice.lock()->GetCommandList(),arg_resource->GetIndexBuffer().Get(),arg_resource-> GetIndexBufferUploadHeap().Get(), 0, 0, 1, &indexData);
-			arg_wkp_graphicDevice.lock()->GetCommandList().ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(arg_resource->GetIndexBuffer().Get() , D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_INDEX_BUFFER));
+			auto tr = CD3DX12_RESOURCE_BARRIER::Transition(arg_resource->GetIndexBuffer().Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_INDEX_BUFFER);
+			arg_wkp_graphicDevice.lock()->GetCommandList().ResourceBarrier(1, &tr);
 		}
 	}
 }

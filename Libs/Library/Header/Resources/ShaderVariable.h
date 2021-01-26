@@ -29,6 +29,7 @@ namespace ButiEngine {
 		Vector4 fogColor;
 		Vector4 cameraPos;
 		Vector2 fogCoord;
+		Vector2 pixelScale;
 		bool ShowUI() { return false; }
 
 		template<class Archive>

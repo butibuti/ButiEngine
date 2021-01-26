@@ -6,6 +6,7 @@ namespace ButiEngine {
 
 	struct ModelDrawData;
 	struct Bone;
+	struct IKData;
 	class IKComponent :public GameComponent
 	{
 	public:
@@ -13,7 +14,7 @@ namespace ButiEngine {
 		std::string GetGameComponentName()override {
 			return "IKComponent";
 		}
-
+		void OnRemove()override;
 		void OnSet()override;
 		void Start()override;
 		std::shared_ptr<GameComponent> Clone()override;
@@ -26,14 +27,16 @@ namespace ButiEngine {
 		void serialize(Archive& archive)
 		{
 			archive(isActive);
+			archive(vec_ikData);
 		}
 
 
 	protected:
-
+		void RegistIK();
 	private:
 		std::shared_ptr<ModelDrawData> shp_modelData;
 		std::vector<std::shared_ptr<Bone>> vec_endBones;
+		std::vector<std::shared_ptr< IKData>> vec_ikData;
 	};
 
 }

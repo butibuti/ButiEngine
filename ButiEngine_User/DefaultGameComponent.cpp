@@ -9,6 +9,7 @@
 #include"Header/GameObjects/DefaultGameComponent/LookAtComponent.h"
 #include"Header/GameObjects/DefaultGameComponent/ChaseComponent.h"
 #include"Header/GameObjects/DefaultGameComponent/CubeTransformAnimation.h"
+#include"Header/GameObjects/DefaultGameComponent/TransformAnimation.h"
 //#include"Header/GameObjects/DefaultGameComponent/UIAnimation.h"
 //#include"Header/GameObjects/DefaultGameComponent/UIComponent.h"
 #include"Header/GameObjects/DefaultGameComponent/PostEffectParamUpdater.h"

@@ -147,9 +147,8 @@ void ButiEngine::ModelDrawComponent::OnShowUI()
 
 		auto endItr = shp_modelData->vec_bone.end();
 		for (auto itr = shp_modelData->vec_bone.begin(); itr !=endItr ; itr++) {
-			std::string bonenameStr = 
-			Util::WStringToString((*itr)->boneName);
-			if (GUI::TreeNode(Util::ToUTF8( bonenameStr))) {
+			
+			if (GUI::TreeNode(Util::ToUTF8( (*itr)->boneName))) {
 
 				(*itr)->transform->ShowUI();
 				GUI::TreePop();

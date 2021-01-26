@@ -27,12 +27,24 @@
     <ClCompile Include="TestBehavior.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MaguroBehavior.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BulletBehavior.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx_u.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TestBehavior.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MaguroBehavior.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletBehavior.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

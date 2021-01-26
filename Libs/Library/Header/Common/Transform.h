@@ -605,6 +605,7 @@ namespace ButiEngine {
 			if (!arg_isKeepLocalPosition) {
 
 				localPosition = localPosition - parentBoneTransform->GetWorldPosition();
+				rotation = rotation * parentBoneTransform->GetWorldRotation().Inverse();
 				if (localMatrix) {
 					localMatrix->_41 = localPosition.x;
 					localMatrix->_42 = localPosition.y;

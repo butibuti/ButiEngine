@@ -189,9 +189,9 @@ void ButiEngine::Application::InitLoadResources()
 		normalVertices.Clear();
 		uv_normalVertices.Clear();
 
-		MeshHelper::CreatePlane(Vector2(1, 1),Vector3(),0, 10.0f, 2, 2, colors, false, testVertices);
+		MeshHelper::CreateCapsule(Vector3(1, 1, 1),  Vector3(0, -0.5, 0), Vector3(0, 0.5, 0), 12, false, std::vector<Vector4>(), testVertices);
 		Vertex::VertexHelper::VertexConvert(testVertices, uv_normalVertices);
-		container->LoadMesh("Plane_UV_Normal_max10", uv_normalVertices);
+		container->LoadMesh("Capsule_UV_Normal", uv_normalVertices);
 		Vertex::VertexHelper::VertexConvert(testVertices, uvVertices);
 		container->LoadMesh("Plane_UV_max10", uvVertices);
 

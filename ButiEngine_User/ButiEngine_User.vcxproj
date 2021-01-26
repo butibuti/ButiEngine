@@ -124,6 +124,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx_u.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -143,6 +144,7 @@
       <PrecompiledHeaderFile>stdafx_u.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)Libs\Library;$(SolutionDir)Libs\Library\cereal\include;$(SolutionDir)..\imgui;$(ProjectDir);$(SolutionDir)ButiEngine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>NotSet</SubSystem>
@@ -154,7 +156,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BulletBehavior.cpp" />
     <ClCompile Include="DefaultGameComponent.cpp" />
+    <ClCompile Include="MaguroBehavior.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -168,6 +172,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BulletBehavior.h" />
+    <ClInclude Include="MaguroBehavior.h" />
     <ClInclude Include="stdafx_u.h" />
     <ClInclude Include="TestBehavior.h" />
   </ItemGroup>

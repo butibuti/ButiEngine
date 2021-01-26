@@ -487,19 +487,24 @@ std::vector<int>& ButiEngine::FBXAnalyze::FBXPolygonVertexIndexNode::CreateTriPo
 
 std::string ButiEngine::FBXAnalyze::FBXBoneNode::GetName()
 {
+	auto boneNameProp = GetProperty<FBXNode_StringProperty>();
+	if (StringHelper::Contains(boneNameProp->nodeProperty, "Model")) {
+		boneNameProp->nodeProperty = StringHelper::Remove(boneNameProp->nodeProperty, "\1Model");
+		boneNameProp->nodeProperty=StringHelper::Remove( boneNameProp->nodeProperty,boneNameProp->nodeProperty.size()-1,1);
 
-	return	GetProperty<FBXNode_StringProperty>()->nodeProperty;
+	}
+	return	boneNameProp->nodeProperty;
 }
 
 ButiEngine::Vector3 ButiEngine::FBXAnalyze::FBXBoneNode::GetPosition(const std::vector<std::shared_ptr<FBXBoneNode>>& arg_bones, const FBXGlobalSettings& settings)
 {
-	auto p = GetChildNode("Properties70") ->GetChildNodeWithStringProperty("P", "Lcl Translation", 0);
+	auto p = GetChildNode("Properties70")->GetChildNodeWithStringProperty("P", "Lcl Translation", 0);
 	auto output = Vector3();
 	if(p)
 		output= Vector3(p->GetProperty<FBXNode_DoubleProperty>(settings.coordAxis)->nodeProperty, p->GetProperty<FBXNode_DoubleProperty>(settings.upAxis)->nodeProperty, settings.frontAxisSign * p->GetProperty<FBXNode_DoubleProperty>(settings.frontAxis)->nodeProperty);
 
-	output *= GetRotation(arg_bones, settings);
 	if (parentBoneIndex >= 0) {
+		output *= arg_bones.at(parentBoneIndex)->GetRotation(arg_bones, settings);
 		output += arg_bones.at(parentBoneIndex)->GetPosition(arg_bones,settings);
 	}
 
@@ -513,7 +518,7 @@ ButiEngine::Matrix4x4 ButiEngine::FBXAnalyze::FBXBoneNode::GetRotation(const std
 	
 	if(p)
 	out=DirectX::XMMatrixRotationX(
-		DirectX::XMConvertToRadians(p->GetProperty<FBXNode_DoubleProperty>(settings.coordAxis)->nodeProperty)
+		DirectX::XMConvertToRadians(settings.coordAxisSign*p->GetProperty<FBXNode_DoubleProperty>(settings.coordAxis)->nodeProperty)
 	) *
 		DirectX::XMMatrixRotationY(
 			DirectX::XMConvertToRadians(settings.upAxisSign * p->GetProperty<FBXNode_DoubleProperty>(settings.upAxis)->nodeProperty)

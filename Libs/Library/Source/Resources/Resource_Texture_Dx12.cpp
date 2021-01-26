@@ -10,8 +10,8 @@ ButiEngine::Resource_Texture_Dx12::Resource_Texture_Dx12(const std::vector<BYTE>
 	image.width = width;
 	image.height = height;
 	image.format = DXGI_FORMAT_B8G8R8A8_UNORM;
-	image.rowPitch = width * 4;
-	image.slicePitch = width * height * 4;
+	image.rowPitch =(size_t) width * 4;
+	image.slicePitch = (size_t)width * height * 4;
 	image.pixels.clear();
 	image.pixels = buffer;
 	TexMetadata texMetadata;
@@ -177,9 +177,9 @@ void ButiEngine::Resource_Texture_Dx12::CreateTexture(Image* srcImages, size_t n
 	texturePixelSize = static_cast<DWORD>(image.rowPitch) / (UINT)textureResDesc.Width;
 
 
-
+	auto heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
 	wkp_graphicDevice.lock()->GetDevice().CreateCommittedResource(
-		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+		&heapProp,
 		D3D12_HEAP_FLAG_NONE, &textureResDesc,
 		D3D12_RESOURCE_STATE_COPY_DEST,
 		nullptr,
@@ -194,11 +194,12 @@ void ButiEngine::Resource_Texture_Dx12::CreateTextureUploadHeap()
 {
 	const UINT64 uploadBufferSize = GetRequiredIntermediateSize(texture.Get(), 0, 1);
 	auto hr = wkp_graphicDevice.lock()->GetDevice().GetDeviceRemovedReason();
-
+	auto buffDesc = CD3DX12_RESOURCE_DESC::Buffer(uploadBufferSize);
+	auto heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 	hr= wkp_graphicDevice.lock()->GetDevice().CreateCommittedResource(
-		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+		&heapProp,
 		D3D12_HEAP_FLAG_NONE,
-		&CD3DX12_RESOURCE_DESC::Buffer(uploadBufferSize),
+		&buffDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
 		IID_PPV_ARGS(&textureUploadHeap));
@@ -241,14 +242,14 @@ void ButiEngine::Resource_Texture_Dx12::ResourceUpdate()
 		texture.Get(),
 		textureUploadHeap.Get(),
 		0, 0, 1, &textureData);
-
+	auto trans = CD3DX12_RESOURCE_BARRIER::Transition(
+		texture.Get(),
+		D3D12_RESOURCE_STATE_COPY_DEST,
+		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
+	);
 	wkp_graphicDevice.lock()->GetCommandList().ResourceBarrier(
 		1,
-		&CD3DX12_RESOURCE_BARRIER::Transition(
-			texture.Get(),
-			D3D12_RESOURCE_STATE_COPY_DEST,
-			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
-		)
+		&trans
 	);
 	image.pixels.clear();
 	dataRefresh = false;

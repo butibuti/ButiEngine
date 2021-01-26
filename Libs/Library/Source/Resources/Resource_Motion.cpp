@@ -17,7 +17,7 @@ std::shared_ptr<ButiEngine::ModelAnimation> ButiEngine::Resource_Motion::GetAnim
 	return output;
 }
 
-void ButiEngine::Resource_Motion::AddKeyFrame(const std::wstring& arg_boneName, const MotionKeyFrameData& arg_data)
+void ButiEngine::Resource_Motion::AddKeyFrame(const std::string& arg_boneName, const MotionKeyFrameData& arg_data)
 {
 	if (!map_boneKeyFrames.count(arg_boneName)) {
 		auto vec_boneName = std::vector<MotionKeyFrameData>();
@@ -30,7 +30,7 @@ void ButiEngine::Resource_Motion::AddKeyFrame(const std::wstring& arg_boneName, 
 	map_boneKeyFrames.at(arg_boneName).push_back(arg_data);
 }
 
-void ButiEngine::Resource_Motion::AddKeyFrameLane(const std::wstring& arg_boneName, const std::vector<MotionKeyFrameData>& arg_datas)
+void ButiEngine::Resource_Motion::AddKeyFrameLane(const std::string& arg_boneName, const std::vector<MotionKeyFrameData>& arg_datas)
 {
 
 	if (map_boneKeyFrames.count(arg_boneName)) {

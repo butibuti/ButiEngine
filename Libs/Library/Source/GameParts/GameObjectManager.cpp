@@ -307,7 +307,13 @@ std::vector<std::shared_ptr<ButiEngine::GameObject>> ButiEngine::GameObjectManag
 {
 	auto output = std::vector<std::shared_ptr<GameObject>>();
 	auto endItr = vec_gameObjects.end();
-	for (auto itr = vec_gameObjects.begin(); itr !=endItr; itr++) {
+	for (auto itr = vec_gameObjects.begin(); itr != endItr; itr++) {
+		if ((*itr)->GetGameObjectTag() == arg_objectTag) {
+			output.push_back(*itr);
+		}
+	}
+	endItr = vec_newGameObjects.end();
+	for (auto itr = vec_newGameObjects.begin(); itr != endItr; itr++) {
 		if ((*itr)->GetGameObjectTag() == arg_objectTag) {
 			output.push_back(*itr);
 		}

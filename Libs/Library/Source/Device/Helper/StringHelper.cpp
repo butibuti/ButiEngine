@@ -58,6 +58,13 @@ std::string StringHelper::Remove(const std::string& source, const std::string& r
 	return output;
 }
 
+std::string StringHelper::Remove(const std::string& source, const unsigned int removeIndex, const unsigned int removeRange)
+{
+	std::string output = source;
+	output.erase(removeIndex, removeRange);
+	return output;
+}
+
 std::string StringHelper::RemoveComment(const std::string& source)
 {
 	std::string output = source;

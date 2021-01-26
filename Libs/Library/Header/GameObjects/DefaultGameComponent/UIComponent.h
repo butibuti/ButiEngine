@@ -26,7 +26,7 @@ namespace ButiEngine {
 	protected:
 		void SetRelativeTransform();
 		Vector2 relativePos;
-		Vector2 relativeScale;
+		Vector2 relativeScale=Vector2(1,1);
 	};
 
 }

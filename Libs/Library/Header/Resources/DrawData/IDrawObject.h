@@ -49,6 +49,7 @@ namespace ButiEngine {
 			return vec_IKBone;
 		}
 		void SetIKBone() {
+			vec_IKBone.clear();
 			for (auto itr = vec_bone.begin(); itr != vec_bone.end(); itr++) {
 				if ((*itr)->isIK) {
 					vec_IKBone.push_back(*itr);
@@ -56,13 +57,14 @@ namespace ButiEngine {
 			}
 		}
 		void SetAddBone() {
+			vec_addBone.clear();
 			for (auto itr = vec_bone.begin(); itr != vec_bone.end(); itr++) {
 				if ((*itr)->addBoneIndex >= 0) {
 					vec_addBone.push_back(*itr);
 				}
 			}
 		}
-		inline std::shared_ptr<Bone> SerchBoneByName(const std::wstring& arg_boneName) {
+		inline std::shared_ptr<Bone> SerchBoneByName(const std::string& arg_boneName) {
 			for (auto itr = vec_bone.begin(); itr != vec_bone.end(); itr++) {
 				if ((*itr)->boneName == arg_boneName) {
 					return (*itr);
@@ -70,7 +72,7 @@ namespace ButiEngine {
 			}
 			return nullptr;
 		}
-		inline std::shared_ptr<Bone> SerchBoneByEngName(const std::wstring& arg_engBoneName) {
+		inline std::shared_ptr<Bone> SerchBoneByEngName(const std::string& arg_engBoneName) {
 			for (auto itr = vec_bone.begin(); itr != vec_bone.end(); itr++) {
 				if ((*itr)->boneNameEng == arg_engBoneName) {
 					return (*itr);

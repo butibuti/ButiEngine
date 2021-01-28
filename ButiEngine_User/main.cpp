@@ -31,7 +31,7 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//ComponentsLoader::GetInstance()->AddGameComponent<UIComponent>();
 	//ModelFileConverter::FBXtoB3M("maguro_leg_joint.fbx", "maguro_leg_joint.b3m", "Model/Maguro/");
 	app->InitLoadResources();
-	app->GetSceneManager()->LoadScene_Init_EditMode("AlphaTest");
+	app->GetSceneManager()->LoadScene_Init_EditMode("AABBSphereCollision");
 
 	app->GetGraphicDevice()->SetClearColor(Vector4(0.25,0.25,0.25, 1));
 	int returnCode = app->Run();

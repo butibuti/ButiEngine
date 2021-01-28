@@ -52,10 +52,14 @@ bool ButiEngine::ParticleParameter::ShowUI()
 	}
 }
 
+float ButiEngine::GausVariable::GaussianDistribution(const Vector2& pos, float rho)
+{
+	return exp(-(pos.x * pos.x + pos.y * pos.y) / (2.0f * rho * rho));
+}
 void ButiEngine::GausVariable::CalcGaus(const int width, const int height, const Vector2& dir, const float deviation)
 {
-	sampleCount = 15;
-	
+	auto tu = 1.0f / float(width);
+	auto tv = 1.0f / float(height);
 	gausOffset[0].z = GaussianDistribution(Vector2(0.0f, 0.0f), deviation);
 	auto total_weight = gausOffset[0].z;
 	
@@ -64,8 +68,8 @@ void ButiEngine::GausVariable::CalcGaus(const int width, const int height, const
 	
 	for (auto i = 1; i < 8; ++i)
 		{
-		  gausOffset[i].x = dir.x * i ;
-	      gausOffset[i].y = dir.y * i ;
+		  gausOffset[i].x = dir.x * i *tu;
+	      gausOffset[i].y = dir.y * i *tv;
 	      gausOffset[i].z = GaussianDistribution(dir * float(i), deviation);
 	      total_weight += gausOffset[i].z * 2.0f;
 	  }

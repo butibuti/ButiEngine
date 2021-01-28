@@ -62,12 +62,9 @@ namespace ButiEngine {
 	};
 	struct GausVariable {
 
-		Vector3 gausOffset[16];
-		int sampleCount = 16;
-		float GaussianDistribution(const Vector2& pos, float rho)
-		{
-			 return exp(-(pos.x * pos.x + pos.y * pos.y) / (2.0f * rho * rho));
-		}
+		Vector4 gausOffset[16];
+		float GaussianDistribution(const Vector2& pos, float rho);
+		
 		void CalcGaus(const int width, const int height, const Vector2& dir, const float deviation);
 		bool ShowUI() {
 			static float deviation=0.0f;
@@ -96,7 +93,6 @@ namespace ButiEngine {
 		template<class Archive>
 		void serialize(Archive& archive)
 		{
-			archive(sampleCount);
 			archive(gausOffset);
 		}
 	};

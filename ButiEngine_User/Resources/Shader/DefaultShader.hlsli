@@ -68,7 +68,6 @@ cbuffer Light : register(b3)
 cbuffer GausParameter : register(b4)
 {
     float3 gausOffset[16]: packoffset(c0);
-    int sampleCount : packoffset(c12);
 };
 cbuffer Bone : register(b4)
 {

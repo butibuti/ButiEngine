@@ -204,12 +204,12 @@ void ButiEngine::EditScene::UIUpdate()
 		}
 		GUI::SameLine();
 		GUI::Text(std::to_string( shp_renderer->GetLayerCount()));
-
+		int i = 0;
 		for (auto camItr = vec_cameras.begin(); camItr != vec_cameras.end(); ) {
 
-			if (GUI::TreeNode(((*camItr)->GetName()))) {
+			if (GUI::TreeNode(((*camItr)->GetName()+"##" + std::to_string(i)))) {
 				static char inputCameraName[128] = {};
-				GUI::InputTextWithHint("##cameraNameInput", (*camItr)->GetName(), inputCameraName, sizeof(inputCameraName));
+				GUI::InputTextWithHint("##cameraNameInput"+std::to_string(i), (*camItr)->GetName(), inputCameraName, sizeof(inputCameraName));
 				GUI::SameLine();
 
 				if (GUI::Button("Rename")) {
@@ -231,11 +231,12 @@ void ButiEngine::EditScene::UIUpdate()
 					camItr = vec_cameras.erase(camItr);
 				}
 				else {
-
+					i++;
 					camItr++;
 				}
 			}
 			else {
+				i++;
 				camItr++;
 			}
 		}

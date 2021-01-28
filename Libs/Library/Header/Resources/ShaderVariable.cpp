@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "ShaderVariable.h"
 
 bool ButiEngine::ParticleParameter::ShowUI()
 {
@@ -49,4 +50,36 @@ bool ButiEngine::ParticleParameter::ShowUI()
 
 		return ret;
 	}
+}
+
+void ButiEngine::GausVariable::CalcGaus(const int width, const int height, const Vector2& dir, const float deviation)
+{
+	sampleCount = 15;
+	
+	gausOffset[0].z = GaussianDistribution(Vector2(0.0f, 0.0f), deviation);
+	auto total_weight = gausOffset[0].z;
+	
+	gausOffset[0].x = 0.0f;
+	gausOffset[0].y = 0.0f;
+	
+	for (auto i = 1; i < 8; ++i)
+		{
+		  gausOffset[i].x = dir.x * i ;
+	      gausOffset[i].y = dir.y * i ;
+	      gausOffset[i].z = GaussianDistribution(dir * float(i), deviation);
+	      total_weight += gausOffset[i].z * 2.0f;
+	  }
+	
+	for (auto i = 0; i < 8; ++i)
+	{
+	     gausOffset[i].z /= total_weight;
+	}
+	//gausOffset[0].z = 1.0f;
+	for (auto i = 8; i < 15; ++i)
+	{
+	    gausOffset[i].x = -gausOffset[i - 7].x;
+	    gausOffset[i].y = -gausOffset[i - 7].y;
+		gausOffset[i].z = gausOffset[i - 7].z;
+	}
+
 }

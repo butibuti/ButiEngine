@@ -67,28 +67,37 @@ bool ButiEngine::Resource_Material_Dx12::OnShowUI()
 	}
 
 	GUI::BulletText("TextureTags");
-	for (int i = 0; i < textureTag.size(); i++) {
+	for (auto itr = textureTag.begin(); itr != textureTag.end();) {
 
-		auto tagName =wkp_graphicDevice.lock()->GetApplication().lock()->GetResourceContainer()->GetTagNameTexture(textureTag[i]);
+		auto tagName =wkp_graphicDevice.lock()->GetApplication().lock()->GetResourceContainer()->GetTagNameTexture(*itr);
 		(GUI::BeginChild("TexTagWin##"+tagName, Vector2(GUI::GetFontSize() * (tagName.size() + 2), GUI::GetFontSize() * 2), true));
 		GUI::Text(Util::ToUTF8(tagName).c_str());
 
 		if (GUI::IsWindowHovered()) {
 			auto tag = wkp_graphicDevice.lock()->GetApplication().lock()->GetGUIController()->GetTextureTag();
 			if (!tag.IsEmpty()) {
-				textureTag[i] = tag;
+				*itr= tag;
 				isEdit = true;
 			}
 		}
 
 
 		GUI::EndChild();
+		GUI::SameLine();
+		if (GUI::Button("Remove")) {
+			isEdit = true;
+			itr = textureTag.erase(itr);
+
+		}
+		else {
+			itr++;
+		}
 	}
 
 	std::string tagName = "newTexture";
 	(GUI::BeginChild("TexTagWin##" + tagName, Vector2(GUI::GetFontSize() * (tagName.size() + 2), GUI::GetFontSize() * 2), true));
-	GUI::Text(Util::ToUTF8(tagName).c_str());
 
+	GUI::Text(Util::ToUTF8(tagName).c_str());
 	if (GUI::IsWindowHovered()) {
 		auto tag = wkp_graphicDevice.lock()->GetApplication().lock()->GetGUIController()->GetTextureTag();
 		if (!tag.IsEmpty()) {

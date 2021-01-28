@@ -544,7 +544,7 @@ void ButiEngine::ResourceContainer::ShowGUI()
 				sn.var = matVar;
 				sn.materialName = GUI::objectName;
 				sn.vec_texture.push_back(textag);
-				LoadMaterial(sn.var, sn.vec_texture.at(0), sn.materialName);
+				LoadMaterial(sn.var, sn.vec_texture, sn.materialName);
 				GUI::ObjectNameReset();
 				GUI::SameLine();
 			}
@@ -556,7 +556,7 @@ void ButiEngine::ResourceContainer::ShowGUI()
 
 
 
-ButiEngine::MaterialTag ButiEngine::ResourceContainer::LoadMaterial(const MaterialVariable& arg_resourceMaterial, const TextureTag& arg_textureTag, const std::string& arg_filePath, const std::string& arg_fileDirectory)
+ButiEngine::MaterialTag ButiEngine::ResourceContainer::LoadMaterial(const MaterialVariable& arg_resourceMaterial, const std::vector< TextureTag>& arg_textureTag, const std::string& arg_filePath, const std::string& arg_fileDirectory)
 {
 
 	if (container_materials.ContainValue(arg_fileDirectory + arg_filePath)) {
@@ -565,7 +565,7 @@ ButiEngine::MaterialTag ButiEngine::ResourceContainer::LoadMaterial(const Materi
 	MaterialLoadInfo info;
 	info.materialName = arg_fileDirectory + arg_filePath;
 	info.var = arg_resourceMaterial;
-	info.vec_texture.push_back(arg_textureTag);
+	info.vec_texture=(arg_textureTag);
 	vec_materialLoadInfos.push_back(info);
 	return container_materials.AddValue(unq_resourceFactory->CreateMaterial(arg_resourceMaterial, arg_textureTag), arg_fileDirectory + arg_filePath);
 }
@@ -592,7 +592,7 @@ std::vector < ButiEngine::MaterialTag> ButiEngine::ResourceContainer::LoadMateri
 		if(itr->fileName!="none")
 		out.push_back(LoadMaterial(itr->fileName));
 		else {
-			out.push_back(LoadMaterial(itr->var,itr->vec_texture.at(0),itr->materialName));
+			out.push_back(LoadMaterial(itr->var,itr->vec_texture,itr->materialName));
 		}
 
 		

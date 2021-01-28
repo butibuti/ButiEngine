@@ -10,5 +10,5 @@ float4 PSMain(Pixel_UV_Normal pixel) : SV_TARGET
 	float4 Tex = (mainTexture.Sample(mainSampler,pixel.uv).rgba);
 	
 	
-	return  float4((Tex * Light).rgb, Tex.a);
+	return  float4((Tex * Light).rgb, ambient.a);
 }

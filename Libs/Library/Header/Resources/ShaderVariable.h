@@ -68,51 +68,22 @@ namespace ButiEngine {
 		{
 			 return exp(-(pos.x * pos.x + pos.y * pos.y) / (2.0f * rho * rho));
 		}
-		void CalcGaus(const int width,const int height,const Vector2& dir,const float deviation) {
-			auto tu = 1.0f / float(width);
-			auto tv = 1.0f / float(height);
-			sampleCount = 15;
-			gausOffset[0].z = GaussianDistribution(Vector2(0.0f, 0.0f), deviation);
-			auto total_weight = gausOffset[0].z;
-			
-			gausOffset[0].x = 0.0f;
-			gausOffset[0].y = 0.0f;
-			
-			for (auto i = 1; i < 8;i++)
-			{
-			        gausOffset[i].x = dir.x * i * tu;
-			        gausOffset[i].y = dir.y * i * tv;
-			        gausOffset[i].z = GaussianDistribution(dir * float(i), deviation);
-			        total_weight += gausOffset[i].z * 2.0f;
-			    }
-			
-			for (auto i = 0; i < 8; i++)
-			{
-			        gausOffset[i].z /= total_weight;
-			}
-			for (auto i = 8; i < 15; i++)
-			{
-			        gausOffset[i].x = -gausOffset[i - 8].x;
-			        gausOffset[i].y = -gausOffset[i - 8].y;
-			        gausOffset[i].z = gausOffset[i - 8].z;
-			}
-			
-		}
+		void CalcGaus(const int width, const int height, const Vector2& dir, const float deviation);
 		bool ShowUI() {
 			static float deviation=0.0f;
 			static Vector2 dir = Vector2(1,0);
 			static Vector2 scale = Vector2(480,270);
 			bool output = false;
 			GUI::Text("Deviation");
-			if (GUI::DragFloat("##deviation", deviation, 0.1f, 0.0f, 100.0f)) {
+			if (GUI::DragFloat("##deviation", deviation, 0.1f, 0.0f, 1000.0f)) {
 				output = true;
 			}
 			GUI::Text("Direction");
-			if (GUI::DragFloat2("##dir", dir, 0.1f, 0.0f, 100.0f)) {
+			if (GUI::DragFloat2("##dir", dir, 0.1f, 0.0f, 1000.0f)) {
 				output = true;
 			}
 			GUI::Text("Scale");
-			if (GUI::DragFloat2("##scale", scale, 0.1f, 0.0f, 100.0f)) {
+			if (GUI::DragFloat2("##scale", scale, 0.1f, 0.0f, 1000.0f)) {
 				output = true;
 			}
 

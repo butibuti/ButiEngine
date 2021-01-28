@@ -5,7 +5,7 @@
 ButiEngine::DescriptorHeapManager::DescriptorHeapManager( std::weak_ptr<GraphicDevice_Dx12> arg_wkp_graphicDevice,const UINT arg_max , const UINT arg_addUint )
 {
 	wkp_graphicDevice= arg_wkp_graphicDevice;
-	maxCbv = 50;//arg_max;
+	maxCbv = 100;//arg_max;
 	addUnit = arg_addUint;
 }
 

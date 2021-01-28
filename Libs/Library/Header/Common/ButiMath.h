@@ -1631,14 +1631,18 @@ namespace ButiEngine {
 			return out;
 
 		const float cos_val = (arg_firstQuat[0] * secQ[0] + arg_firstQuat[1] * secQ[1] + arg_firstQuat[2] * secQ[2] + arg_firstQuat[3] * secQ[3]) / (len1 * len2);
+		
+
+		if (cos_val == 1.0f) {
+			return arg_firstQuat;
+		}
 		const float w = acosf(cos_val);
-
-
 		const float sin_w = sinf(w);
 		const float sin_t_w = sinf(pase * w);
 		const float sin_inv_t_w = sinf((1.0f - pase) * w);
 		const float mult_q1 = sin_inv_t_w / sin_w;
 		const float mult_q2 = sin_t_w / sin_w;
+
 
 		for (int i = 0; i < 4; i++)
 			out[i] = mult_q1 * arg_firstQuat[i] + mult_q2 * secQ[i];

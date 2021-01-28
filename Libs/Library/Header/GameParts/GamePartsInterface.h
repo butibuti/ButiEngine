@@ -169,7 +169,7 @@ namespace ButiEngine
 
 
 
-		virtual MaterialTag LoadMaterial(const MaterialVariable& arg_resourceMaterial, const TextureTag& arg_textureTag, const std::string& arg_filePath, const std::string& arg_fileDirectory = "")=0;
+		virtual MaterialTag LoadMaterial(const MaterialVariable& arg_resourceMaterial, const std::vector< TextureTag>& arg_textureTag, const std::string& arg_filePath, const std::string& arg_fileDirectory = "") =0;
 		virtual MaterialTag LoadMaterial(const std::string& arg_filePath, const std::string& arg_fileDirectory = "")=0;
 
 		virtual std::vector < MaterialTag> LoadMaterial(const std::vector<std::string>& arg_vec_filePathAndDirectory) = 0;

@@ -22,7 +22,7 @@ namespace ButiEngine {
 		MeshTag LoadRealTimeMesh(const std::string& filePath, const BackupData<T>& inputMeshData);
 
 
-		MaterialTag LoadMaterial(const MaterialVariable& arg_resourceMaterial, const TextureTag& arg_textureTag, const std::string& arg_filePath, const std::string& arg_fileDirectory = "")override;
+		MaterialTag LoadMaterial(const MaterialVariable& arg_resourceMaterial, const std::vector< TextureTag>& arg_textureTag, const std::string& arg_filePath, const std::string& arg_fileDirectory = "")override;
 		MaterialTag LoadMaterial(const std::string& arg_filePath, const std::string& arg_fileDirectory = "")override;
 		std::vector < MaterialTag> LoadMaterial(const std::vector<MaterialLoadInfo>& arg_vec_loadInfo)override;
 		std::vector < MaterialTag> LoadMaterial(const std::vector<std::string>& arg_vec_filePathAndDirectory)override;

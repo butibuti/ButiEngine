@@ -6,11 +6,16 @@ void ButiEngine::DrawData::SetBlendMode(const BlendMode& arg_BlendMode)
 {
 }
 
+void ButiEngine::DrawData::MatrixUpdate()
+{
+    shp_worldMatrixUpdater->WorldMatrixUpdate();
+}
+
 std::shared_ptr<ButiEngine::Collision::CollisionPrimitive_Box_AABB> ButiEngine::MeshDrawData::GetMeshAABB()
 {
     const BoxEightCorner& box = shp_renderer->GetScene().lock()->GetSceneManager().lock()->GetApplication().lock()->GetResourceContainer()->GetMesh(meshTag).lock()->GetBackUpdata().GetBoxEightCorner();
     Vector3 length = box.up_right_front - box.down_left_back;
-    auto output = ObjectFactory::Create<Collision::CollisionPrimitive_Box_AABB>(length, transform);
+    auto output = ObjectFactory::Create<Collision::CollisionPrimitive_Box_AABB>(length, shp_transform);
 
     return output;
 }
@@ -19,7 +24,7 @@ std::shared_ptr<ButiEngine::Collision::CollisionPrimitive_Box_OBB> ButiEngine::M
 {
     const BoxEightCorner& box = shp_renderer->GetScene().lock()->GetSceneManager().lock()->GetApplication().lock()->GetResourceContainer()->GetMesh(meshTag).lock()->GetBackUpdata().GetBoxEightCorner();
     Vector3 length = box.up_right_front - box.down_left_back;
-    auto output = ObjectFactory::Create<Collision::CollisionPrimitive_Box_OBB>(length, transform);
+    auto output = ObjectFactory::Create<Collision::CollisionPrimitive_Box_OBB>(length, shp_transform);
 
     return output;
 }

@@ -21,8 +21,6 @@ namespace ButiEngine {
 
 		void LoadScene(const std::string& arg_sceneName, std::shared_ptr<SceneInformation> shp_scene=nullptr) override;
 		void LoadScene_Init(const std::string& arg_sceneName, std::shared_ptr<SceneInformation> shp_scene=nullptr) override;
-		void LoadScene_EditMode(const std::string& arg_sceneName, std::shared_ptr<SceneInformation> shp_scene=nullptr) override;
-		void LoadScene_Init_EditMode(const std::string& arg_sceneName, std::shared_ptr<SceneInformation> shp_scene=nullptr) override;
 		void ReloadScene()override;
 		void ReloadScene(const std::string& arg_sceneName)override;
 		void RenewalScene()override;
@@ -32,10 +30,7 @@ namespace ButiEngine {
 		}
 		void Release()override;
 		~SceneManager();
-		inline void Draw()override {
-			currentScene->Draw();
-		}
-	private:
+	protected:
 		std::shared_ptr<IScene> currentScene;
 		std::shared_ptr<IScene> newScene;
 		std::map<std::string, std::shared_ptr<IScene>> map_iscene;

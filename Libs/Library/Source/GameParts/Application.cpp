@@ -6,7 +6,7 @@
 #include"Header/GameParts/ResourceContainer.h"
 #include"Header/Device/ModelFileConverter.h"
 #include "..\..\Header\GameParts\Application.h"
-#include"..\..\Header/Scene/SceneManager.h"
+#include"..\..\Header/Scene/SceneManager_Edit.h"
 #include"Header/GameParts/GraphicDevice_Dx12.h"
 
 #include"../../Header/Common/Window.h"
@@ -21,7 +21,7 @@ ButiEngine::Vector3 ButiEngine::Vector3::Zero = ButiEngine::Vector3(0, 0, 0);
 
 const float frame_min = (1.0f / 60.0f) * 1000;
 
-void ButiEngine::Application::CreateInstances(const std::string windowName, const WindowPopType arg_windowPopType, const UINT windowWidth , const UINT windowHeight, const bool isFullScreen )
+void ButiEngine::Application::CreateInstances(const std::string windowName, const WindowPopType arg_windowPopType, const UINT windowWidth , const UINT windowHeight, const bool isFullScreen, const bool isEditor)
 {
 	if (!unq_window) {
 		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
@@ -45,6 +45,9 @@ void ButiEngine::Application::CreateInstances(const std::string windowName, cons
 	}
 	
 	if (!shp_sceneManager) {
+		if (isEditor) {
+			shp_sceneManager = std::make_unique<SceneManager_Edit>(GetThis<IApplication>());
+		}else
 		shp_sceneManager = std::make_unique<SceneManager>(GetThis<IApplication>());
 	}
 
@@ -101,7 +104,6 @@ bool ButiEngine::Application::Update()
 {
 	unq_imguiController->Start();
 	shp_sceneManager->Update();
-	shp_sceneManager->Draw();
 	return unq_window->Update();
 }
 

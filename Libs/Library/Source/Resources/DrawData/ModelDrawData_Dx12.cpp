@@ -19,7 +19,8 @@ ButiEngine::ModelDrawData_Dx12::ModelDrawData_Dx12(const ModelTag& arg_model, co
 	shaderTag = arg_shader;
 	subset = wkp_graphicDevice.lock()->GetApplication().lock()->GetResourceContainer()->GetModel(modelTag).lock()->GetSubset();
 	shp_drawInfo = arg_shp_drawInfo;
-	transform = arg_shp_transform;
+	transform = arg_shp_transform->GetMatrix();
+	shp_transform = arg_shp_transform;
 }
 
 void ButiEngine::ModelDrawData_Dx12::Initialize()
@@ -53,6 +54,7 @@ void ButiEngine::ModelDrawData_Dx12::Initialize()
 
 void ButiEngine::ModelDrawData_Dx12::DrawBefore()
 {
+	shp_worldMatrixUpdater->WorldMatrixUpdate();
 	ModelUpdate();
 }
 

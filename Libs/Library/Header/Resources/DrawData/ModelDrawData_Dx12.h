@@ -16,7 +16,7 @@ namespace ButiEngine {
 		void DrawBefore()override;
 
 		void SetTransform(std::shared_ptr<Transform>& arg_transform)override {
-			transform = arg_transform;
+			transform = arg_transform->GetMatrix();
 		}
 		void SetBlendMode(const BlendMode& arg_blendMode)override {
 		}

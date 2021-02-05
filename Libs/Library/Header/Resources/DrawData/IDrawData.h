@@ -4,7 +4,66 @@
 #include"IDrawObject.h"
 #include"../../Common/CArrayBuffer.h"
 namespace ButiEngine {
-	
+
+	class IMatrixUpdater {
+	public:
+		IMatrixUpdater(std::shared_ptr < CBuffer<ShaderVariable>> arg_cbuffer, std::shared_ptr<Transform> arg_transform, std::weak_ptr<GraphicDevice> arg_wkp_graphicDevice, Matrix4x4& arg_mat) {
+			cbuffer = arg_cbuffer;
+			transform = arg_transform;
+			wkp_graphicDevice = arg_wkp_graphicDevice;
+			p_worldMatrix = &arg_mat;
+		}
+		void Release() {
+			cbuffer = nullptr;
+			transform = nullptr;
+		}
+		virtual void WorldMatrixUpdate() = 0;
+	protected:
+		std::shared_ptr < CBuffer<ShaderVariable>> cbuffer;
+		std::shared_ptr<Transform> transform;
+		Matrix4x4* p_worldMatrix;
+		std::weak_ptr<GraphicDevice> wkp_graphicDevice;
+	};
+	class MatrixUpdater_default :public IMatrixUpdater {
+	public:
+		MatrixUpdater_default(std::shared_ptr < CBuffer<ShaderVariable>> arg_cbuffer, std::shared_ptr<Transform> arg_transform, std::weak_ptr<GraphicDevice> arg_wkp_graphicDevice,Matrix4x4& arg_mat) :IMatrixUpdater(arg_cbuffer, arg_transform, arg_wkp_graphicDevice,arg_mat) {
+
+		}
+
+		void WorldMatrixUpdate();
+	};
+	class MatrixUpdater_billBoard :public IMatrixUpdater {
+	public:
+		MatrixUpdater_billBoard(std::shared_ptr < CBuffer<ShaderVariable>> arg_cbuffer, std::shared_ptr<Transform> arg_transform, std::weak_ptr<GraphicDevice> arg_wkp_graphicDevice, Matrix4x4& arg_mat) :IMatrixUpdater(arg_cbuffer, arg_transform, arg_wkp_graphicDevice, arg_mat) {
+
+		}
+
+		void WorldMatrixUpdate();
+	};
+	class MatrixUpdater_billBoardX :public IMatrixUpdater {
+	public:
+		MatrixUpdater_billBoardX(std::shared_ptr < CBuffer<ShaderVariable>> arg_cbuffer, std::shared_ptr<Transform> arg_transform, std::weak_ptr<GraphicDevice> arg_wkp_graphicDevice, Matrix4x4& arg_mat) :IMatrixUpdater(arg_cbuffer, arg_transform, arg_wkp_graphicDevice, arg_mat) {
+
+		}
+
+		void WorldMatrixUpdate();
+	};
+	class MatrixUpdater_billBoardY :public IMatrixUpdater {
+	public:
+		MatrixUpdater_billBoardY(std::shared_ptr < CBuffer<ShaderVariable>> arg_cbuffer, std::shared_ptr<Transform> arg_transform, std::weak_ptr<GraphicDevice> arg_wkp_graphicDevice, Matrix4x4& arg_mat) :IMatrixUpdater(arg_cbuffer, arg_transform, arg_wkp_graphicDevice, arg_mat) {
+
+		}
+
+		void WorldMatrixUpdate();
+	};
+	class MatrixUpdater_billBoardZ :public IMatrixUpdater {
+	public:
+		MatrixUpdater_billBoardZ(std::shared_ptr < CBuffer<ShaderVariable>> arg_cbuffer, std::shared_ptr<Transform> arg_transform, std::weak_ptr<GraphicDevice> arg_wkp_graphicDevice, Matrix4x4& arg_mat) :IMatrixUpdater(arg_cbuffer, arg_transform, arg_wkp_graphicDevice, arg_mat) {
+
+		}
+
+		void WorldMatrixUpdate();
+	};
 
 	struct DrawInformation :public IObject {
 		DrawInformation() {}
@@ -70,12 +129,13 @@ namespace ButiEngine {
 		
 
 		void SetBlendMode(const BlendMode& arg_BlendMode);
-
-		std::shared_ptr<Transform> transform;
+		void MatrixUpdate();
+		Matrix4x4 transform;
+		std::shared_ptr<Transform> shp_transform;
 
 		inline float GetMaxZ(const Matrix4x4& arg_viewMatrix){
 			
-			auto viewPos = transform->GetWorldPosition() * arg_viewMatrix;
+			auto viewPos =transform.GetPosition()  * arg_viewMatrix;
 
 			return viewPos.z;
 		}
@@ -129,6 +189,7 @@ namespace ButiEngine {
 			return nullptr;
 		}
 	protected:
+		std::shared_ptr< IMatrixUpdater >shp_worldMatrixUpdater;
 		UINT cBufferCount = 0;
 		std::shared_ptr < CBuffer<ShaderVariable>> cbuffer;
 		std::shared_ptr<Collision::CollisionPrimitive>shp_primitive;

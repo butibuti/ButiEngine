@@ -125,6 +125,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Scene\Scene.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Scene\SceneInformation.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Scene\SceneManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\Scene\SceneManager_Edit.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)Header\Resources\DrawData\IDrawObject.cpp" />
@@ -226,5 +227,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Scene\Scene.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Scene\SceneInformation.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Scene\SceneManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Source\Scene\SceneManager_Edit.cpp" />
   </ItemGroup>
 </Project>

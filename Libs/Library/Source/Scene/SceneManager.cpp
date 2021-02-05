@@ -15,29 +15,10 @@ ButiEngine::SceneManager::SceneManager(std::weak_ptr<IApplication> arg_wkp_app)
 void ButiEngine::SceneManager::Update()
 {
 	if (isReload) {
-
-		if (currentScene->IsThis<EditScene>()) {
-			RemoveScene(currentScene->GetSceneInformation()->GetSceneName());
-			LoadScene_EditMode(currentScene->GetSceneInformation()->GetSceneName());
-
-			if (!map_iscene.count(currentScene->GetSceneInformation()->GetSceneName())) {
-				return;
-			}
-			newScene = map_iscene.at(currentScene->GetSceneInformation()->GetSceneName());
-
-			if (currentScene != nullptr)
-				currentScene->SceneEnd();
-			currentScene = newScene;
-			newScene = nullptr;
-
-		}
-		else
-			if (currentScene->IsThis<Scene>()) {
-
-				RemoveScene(currentScene->GetSceneInformation()->GetSceneName());
-				LoadScene(currentScene->GetSceneInformation()->GetSceneName());
-				ChangeScene(currentScene->GetSceneInformation()->GetSceneName());
-			}
+		RemoveScene(currentScene->GetSceneInformation()->GetSceneName());
+		LoadScene(currentScene->GetSceneInformation()->GetSceneName());
+		ChangeScene(currentScene->GetSceneInformation()->GetSceneName());
+		
 		isReload = false;
 	}
 
@@ -46,7 +27,11 @@ void ButiEngine::SceneManager::Update()
 		RenewalScene();
 		sceneChangeTimer->Stop();
 	}
-	return currentScene->Update();
+
+	currentScene->UIUpdate();
+
+	currentScene->Update();
+	currentScene->Draw();
 }
 
 void ButiEngine::SceneManager::Initialize()
@@ -112,28 +97,6 @@ void ButiEngine::SceneManager::LoadScene_Init(const std::string& arg_sceneName, 
 		currentScene->Set();
 	}
 }
-void ButiEngine::SceneManager::LoadScene_EditMode(const std::string& arg_sceneName, std::shared_ptr<SceneInformation> shp_sceneInfo)
-{
-	if (!map_iscene.count(arg_sceneName)) {
-		if (!shp_sceneInfo) {
-			shp_sceneInfo = ObjectFactory::Create<SceneInformation>(arg_sceneName);
-		}
-
-		SetScene(arg_sceneName, ObjectFactory::Create<EditScene>(GetThis<ISceneManager>(), shp_sceneInfo));
-	}
-}
-
-void ButiEngine::SceneManager::LoadScene_Init_EditMode(const std::string& arg_sceneName, std::shared_ptr<SceneInformation> shp_sceneInfo)
-{
-
-	if (!map_iscene.count(arg_sceneName)) {
-		if (!shp_sceneInfo) {
-			shp_sceneInfo = ObjectFactory::Create<SceneInformation>(arg_sceneName);
-		}
-
-		SetScene_Init(arg_sceneName, ObjectFactory::Create<EditScene>(GetThis<ISceneManager>(), shp_sceneInfo));
-	}
-}
 
 void ButiEngine::SceneManager::ReloadScene()
 {
@@ -149,19 +112,13 @@ void ButiEngine::SceneManager::ReloadScene(const std::string& arg_sceneName)
 		ReloadScene();
 		return;
 	}
-	if (map_iscene[arg_sceneName]->IsThis<EditScene>()) {
-
-		RemoveScene(map_iscene[arg_sceneName]->GetSceneInformation()->GetSceneName());
-		LoadScene_EditMode(map_iscene[arg_sceneName]->GetSceneInformation()->GetSceneName());
-		ChangeScene(map_iscene[arg_sceneName]->GetSceneInformation()->GetSceneName());
-	}
-	else if (map_iscene[arg_sceneName]->IsThis<Scene>()) {
+	
 
 
-		RemoveScene(map_iscene[arg_sceneName]->GetSceneInformation()->GetSceneName());
-		LoadScene(map_iscene[arg_sceneName]->GetSceneInformation()->GetSceneName());
-		ChangeScene(map_iscene[arg_sceneName]->GetSceneInformation()->GetSceneName());
-	}
+	RemoveScene(map_iscene[arg_sceneName]->GetSceneInformation()->GetSceneName());
+	LoadScene(map_iscene[arg_sceneName]->GetSceneInformation()->GetSceneName());
+	ChangeScene(map_iscene[arg_sceneName]->GetSceneInformation()->GetSceneName());
+	
 }
 
 

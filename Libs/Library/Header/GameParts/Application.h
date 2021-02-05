@@ -14,7 +14,7 @@ namespace ButiEngine {
 		Application() {};
 		void Initialize()override {}
 		void PreInitialize()override {}
-		void CreateInstances(const std::string windowName = "Buti", const WindowPopType arg_windowPopType = WindowPopType::normal, const UINT windowWidth = 720, const UINT windowHeight = 480, const bool isFullScreen = false);
+		void CreateInstances(const std::string windowName = "Buti", const WindowPopType arg_windowPopType = WindowPopType::normal, const UINT windowWidth = 720, const UINT windowHeight = 480, const bool isFullScreen = false,const bool isEditor=false);
 		std::unique_ptr<IWindow>& GetWindow()override;
 		std::shared_ptr<ISceneManager> GetSceneManager()override;
 		std::shared_ptr<GraphicDevice> GetGraphicDevice()override;

@@ -256,6 +256,52 @@ void ButiEngine::ResourceContainer::ShowGUI()
 
 			GUI::EndTabItem();
 		}
+		if (GUI::BeginTabItem("SoundTags", nullptr, GUI::GuiTabItemFlags_None)) {
+			GUI::Button("Add Sound fromFile");
+			auto flags = GUI::GuiPopupFlags_MouseButtonLeft;
+			if (GUI::BeginPopupContextItem("Add Sound", flags))
+			{
+				GUI::Text("File name:");
+				GUI::InputText("##edit", GUI::objectName, 128);
+				if (GUI::Button("OK!!")) {
+					LoadSound(GUI::objectName, "Sound/");
+					GUI::ObjectNameReset();
+					GUI::CloseCurrentPopup();
+				}GUI::SameLine();
+				if (GUI::Button("Cancel")) {
+					GUI::ObjectNameReset();
+					GUI::CloseCurrentPopup();
+				}
+				GUI::EndPopup();
+			}
+			GUI::SameLine(); 
+
+
+			GUI::BeginChild("SoundTagRemove", Vector2(6 * GUI::GetFontSize(), GUI::GetFontSize() * 2), true);
+			GUI::Text("Remove");
+
+			if (GUI::IsWindowHovered()) {
+				auto tag = wkp_graphicDevice.lock()->GetApplication().lock()->GetGUIController()->GetSoundTag();
+				if (!tag.IsEmpty()) {
+					UnLoadSound(tag);
+				}
+			}
+
+
+			GUI::EndChild();
+
+
+			GUI::BeginChild("##SoundTag", Vector2(0, 0), true);
+			{
+				app->GetGUIController()->SetResourceTag(
+					container_sounds.ShowGUI(app->GetGUIController()->GetGUIIO())
+				);
+
+			}
+			GUI::EndChild();
+
+			GUI::EndTabItem();
+		}
 		if (GUI::BeginTabItem("VertexShaderTags", nullptr, GUI::GuiTabItemFlags_None)) {
 			GUI::Button("Add VertexShader");
 			auto flags = GUI::GuiPopupFlags_MouseButtonLeft;

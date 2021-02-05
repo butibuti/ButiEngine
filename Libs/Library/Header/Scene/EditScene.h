@@ -41,6 +41,14 @@ namespace ButiEngine {
 		std::shared_ptr< SceneInformation> GetSceneInformation()override;
 		std::shared_ptr< SceneChangeInformation> GetSceneChangeInformation() override;
 		std::shared_ptr< SceneRenderingInformation> GetSceneRenderingInformation()override;
+
+		void Save() {}
+		void CameraActivation(const bool arg_status) {}
+		void Start() {}
+		void ShowGameObjectManagerUI() {}
+		void ShowRenderingUI() {}
+		void ShowInspectorUI() {}
+		void ShowHeirarcyUI(){}
 	protected:
 		std::shared_ptr<ISceneManager> shp_sceneManager;
 		std::shared_ptr<GameObjectManager> shp_gameObjectManager;

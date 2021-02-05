@@ -4,6 +4,7 @@
 #include"Header/GameParts/SoundManager.h"
 #include"Header/GameParts/Renderer.h"
 #include"Header/GameParts/CollisionManager.h"
+#include"Header/Scene/ComponentsLoader.h"
 
 void ButiEngine::Scene::Update() {
 	shp_gameObjectManager->RegistNewGameObject();
@@ -12,6 +13,33 @@ void ButiEngine::Scene::Update() {
 	shp_collisionManager->Update();
 	OnUpdate();
 	shp_soundManager->Update();
+}
+
+void ButiEngine::Scene::UIUpdate()
+{
+	
+}
+
+void ButiEngine::Scene::EditCameraUpdate()
+{
+	auto editCam = GetCamera("edit").lock();
+	if (GameDevice::GetInput()->GetMouseButton(MouseButtons::RightClick)) {
+		Vector2 move = GameDevice::GetInput()->GetMouseMove();
+		editCam->shp_transform->RollWorldRotationY_Degrees(-move.x);
+		editCam->shp_transform->RollLocalRotationX_Degrees(-move.y);
+	}
+	if (GameDevice::GetInput()->GetMouseButton(MouseButtons::WheelButton)) {
+		Vector2 move = GameDevice::GetInput()->GetMouseMove();
+
+		Vector3 velocity = editCam->shp_transform->GetRight() * move.x * 0.01f + editCam->shp_transform->GetUp() * move.y * -1 * 0.01f;
+
+		editCam->shp_transform->Translate(velocity);
+	}
+	if (GameDevice::GetInput()->GetMouseWheel()) {
+		Vector3 velocity = editCam->shp_transform->GetFront() * 0.001f * GameDevice::GetInput()->GetMouseWheelMove();
+
+		editCam->shp_transform->Translate(velocity);
+	}
 }
 
 void ButiEngine::Scene::Set()
@@ -286,5 +314,149 @@ std::shared_ptr<ButiEngine::SceneChangeInformation> ButiEngine::Scene::GetSceneC
 std::shared_ptr<ButiEngine::SceneRenderingInformation> ButiEngine::Scene::GetSceneRenderingInformation()
 {
 	return shp_renderingInfo;
+}
+
+void ButiEngine::Scene::Save()
+{
+	OutputCereal(shp_gameObjectManager, GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation->GetSceneName() + "/objects.gameObjectManager");
+	shp_renderingInfo->vec_cameraProperty.clear();
+	shp_renderingInfo->vec_cameraTransform.clear();
+	for (int i = 0; i < vec_cameras.size(); i++) {
+		shp_renderingInfo->vec_cameraProperty.push_back(vec_cameras[i]->GetCameraProperty());
+		shp_renderingInfo->vec_cameraTransform.push_back(vec_cameras[i]->shp_transform);
+	}
+	shp_renderingInfo->layerCount = shp_renderer->GetLayerCount();
+
+	OutputCereal(shp_renderingInfo, GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation->GetSceneName() + "/rendering.renderingInfo");
+
+	OutputCereal(shp_collisionManager->GetThis<Collision::CollisionManager>(), GlobalSettings::GetResourceDirectory() + "Scene/" + sceneInformation->GetSceneName() + "/collision.collisionManager");
+	
+}
+
+void ButiEngine::Scene::Start()
+{
+	shp_gameObjectManager->Start();
+}
+
+void ButiEngine::Scene::ShowGameObjectManagerUI()
+{
+	shp_gameObjectManager->ShowUI();
+}
+
+void ButiEngine::Scene::CameraActivation(const bool arg_status)
+{
+	for (auto camItr = vec_cameras.begin(); camItr != vec_cameras.end(); camItr++) {
+		(*camItr)->SetActive(arg_status);
+	}
+	GetCamera("edit").lock()->SetActive(!arg_status);
+}
+
+void ButiEngine::Scene::ShowRenderingUI()
+{
+
+	(GUI::Begin("Camera"));
+
+	if (GUI::Button("Add Layer")) {
+		shp_renderer->AddLayer();
+	}
+	GUI::SameLine();
+	GUI::Text(std::to_string(shp_renderer->GetLayerCount()));
+	int i = 0;
+	for (auto camItr = vec_cameras.begin(); camItr != vec_cameras.end(); ) {
+
+		if (GUI::TreeNode(((*camItr)->GetName() + "##" + std::to_string(i)))) {
+			static char inputCameraName[128] = {};
+			GUI::InputTextWithHint("##cameraNameInput" + std::to_string(i), (*camItr)->GetName(), inputCameraName, sizeof(inputCameraName));
+			GUI::SameLine();
+
+			if (GUI::Button("Rename")) {
+				(*camItr)->SetName(inputCameraName);
+				memset(inputCameraName, 0, sizeof(inputCameraName));
+			}
+			GUI::SameLine();
+			bool isRemove = false;
+			if (GUI::Button("Remove")) {
+				isRemove = true;
+			}
+			else {
+			}
+
+			(*camItr)->ShowUI();
+			GUI::TreePop();
+			if (isRemove) {
+
+				camItr = vec_cameras.erase(camItr);
+			}
+			else {
+				i++;
+				camItr++;
+			}
+		}
+		else {
+			i++;
+			camItr++;
+		}
+	}
+
+	if (GUI::Button("Add Camera")) {
+		auto prop = CameraProjProperty();
+		prop.cameraName = "Camera";
+		auto size = GetSceneManager().lock()->GetApplication().lock()->GetWindow()->GetSize();
+		prop.width = size.x;
+		prop.height = size.y;
+		prop.layer = 0;
+		AddCamera(prop, "Camera", true);
+	}
+
+	GUI::End();
+}
+
+void ButiEngine::Scene::ShowInspectorUI()
+{
+
+	auto selectedGameObject = shp_gameObjectManager->GetSelectedUI();
+	GUI::Begin("Inspector");
+	if (selectedGameObject.lock()) {
+
+
+		if ((GameDevice::GetInput()->CheckKey(Keys::LeftCtrl) || GameDevice::GetInput()->CheckKey(Keys::RightCtrl)) && GameDevice::GetInput()->CheckKey(Keys::F)) {
+			GetCamera("edit").lock()->shp_transform->SetLookAtRotation(selectedGameObject.lock()->transform->GetWorldPosition());
+		}
+
+		GUI::InputTextWithHint("Name", selectedGameObject.lock()->GetGameObjectName().c_str(), GUI::objectName, 64, 64);
+		GUI::SameLine();
+
+		if (GUI::Button("Change")) {
+			selectedGameObject.lock()->SetObjectName(GUI::objectName);
+			GUI::ObjectNameReset();
+
+		}
+
+
+		selectedGameObject.lock()->ShowUI();
+
+		auto addComponent = ComponentsLoader::GetInstance()->ShowAddGameComponentUI();
+
+		if (addComponent)
+			selectedGameObject.lock()->AddGameComponent_Insert(addComponent);
+
+		auto addBehavior = ComponentsLoader::GetInstance()->ShowAddBehaviorUI();
+		if (addBehavior)
+			selectedGameObject.lock()->AddBehavior_Insert(addBehavior);
+
+
+		if (GUI::Button("Save!", Vector2(200, 30))) {
+			OutputCereal(selectedGameObject.lock());
+		}
+	}
+
+
+
+	GUI::End();
+}
+
+void ButiEngine::Scene::ShowHeirarcyUI()
+{
+	shp_gameObjectManager->ShowUI();
 }
 

@@ -119,6 +119,21 @@ void ButiEngine::MeshDrawComponent::SetMaterialTag(MaterialTag arg_materialTag)
 	materialTag.push_back(arg_materialTag);
 }
 
+void ButiEngine::MeshDrawComponent::SetMeshTag(MeshTag arg_meshTag)
+{
+	meshTag = arg_meshTag;
+}
+
+void ButiEngine::MeshDrawComponent::SetModelTag(ModelTag arg_modelTag)
+{
+	modelTag = arg_modelTag;
+}
+
+void ButiEngine::MeshDrawComponent::SetShaderTag(ShaderTag arg_shaderTag)
+{
+	shaderTag = arg_shaderTag;
+}
+
 std::shared_ptr<ButiEngine:: GameComponent> ButiEngine::MeshDrawComponent::Clone()
 {
 	if (shp_drawInfo) {

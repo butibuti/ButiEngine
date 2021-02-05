@@ -73,6 +73,9 @@ std::shared_ptr<WaveDatas> SoundHelper::CreateFromFile(const std::string& filePa
 #endif
 	// Open the file
 	BinaryReader reader = BinaryReader();
+
+	if(Util::CheckFileExistence)
+
 	reader.ReadStart(filePath);
 
 	// RIFFƒwƒbƒ_[‚Ì“Ç‚İ‚İ

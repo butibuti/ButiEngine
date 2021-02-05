@@ -164,6 +164,8 @@ namespace ButiEngine {
 			return true;
 		}
 
+		inline Vector3 GetPosition()const;
+
 		static inline Matrix4x4 Scale(const Vector3& arg_scale);
 
 		static inline Matrix4x4 RollX(const float Angle) {
@@ -1633,7 +1635,7 @@ namespace ButiEngine {
 		const float cos_val = (arg_firstQuat[0] * secQ[0] + arg_firstQuat[1] * secQ[1] + arg_firstQuat[2] * secQ[2] + arg_firstQuat[3] * secQ[3]) / (len1 * len2);
 		
 
-		if (cos_val == 1.0f) {
+		if (abs(cos_val- 1.0f)<0.001) {
 			return arg_firstQuat;
 		}
 		const float w = acosf(cos_val);
@@ -1972,6 +1974,10 @@ namespace ButiEngine {
 			_43 = 0.0f;
 			_44 = 1.0f;
 		}
+	}
+	inline ButiEngine::Vector3 ButiEngine::Matrix4x4::GetPosition()const
+	{
+		return Vector3(_41,_42,_43);
 	}
 	inline Matrix4x4 ButiEngine::Matrix4x4::Scale(const Vector3& arg_scale)
 	{

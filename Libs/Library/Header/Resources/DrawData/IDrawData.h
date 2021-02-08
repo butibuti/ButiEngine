@@ -199,12 +199,8 @@ namespace ButiEngine {
 	struct MeshDrawData:public DrawData,public IDrawObject,public IObject {
 		void PreInitialize() override{}
 
-		virtual void ChangeCullMode(const CullMode& arg_cull) = 0;
-		virtual void ChangeFillMode(const bool isFill) = 0;
-		virtual void ChangeSwitchFillMode() = 0;
 
 		virtual void SetTransform(std::shared_ptr<Transform>& arg_transform) = 0;
-		virtual void SetBlendMode(const BlendMode& arg_blendMode) = 0;
 
 		std::shared_ptr<Collision::CollisionPrimitive_Box_AABB> GetMeshAABB()override;
 		std::shared_ptr<Collision::CollisionPrimitive_Box_OBB> GetMeshOBB()override;

@@ -10,7 +10,7 @@ namespace ButiEngine {
 		Matrix4x4 Projection;
 		Matrix4x4 MVP;
 		ShaderVariable() {
-			memset(this, 0, sizeof(ShaderVariable));
+			memset(this, 0, sizeof(256));
 		};
 		template<class Archive>
 		void serialize(Archive& archive)
@@ -30,6 +30,11 @@ namespace ButiEngine {
 		Vector4 cameraPos;
 		Vector2 fogCoord;
 		Vector2 pixelScale;
+
+		Fog() {
+			memset(this,0,sizeof(256));
+		}
+
 		bool ShowUI() { return false; }
 
 		template<class Archive>
@@ -44,8 +49,12 @@ namespace ButiEngine {
 	struct LightVariable {
 		Vector4 lightDir;// = Vector4(Vector3(-1.0f, -1.0f, 0.0f), 1);
 		LightVariable() {
-			//memset(this, 0, sizeof(LightVariable));
+			memset(this, 0, sizeof(256));
 		};
+		~LightVariable() {
+			int i = 0;
+		}
+
 		template<class Archive>
 		void serialize(Archive& archive)
 		{
@@ -61,6 +70,10 @@ namespace ButiEngine {
 		}
 	};
 	struct GausVariable {
+
+		GausVariable() {
+			memset(this, 0, sizeof(256));
+		}
 
 		Vector4 gausOffset[16];
 		float GaussianDistribution(const Vector2& pos, float rho);
@@ -103,6 +116,7 @@ namespace ButiEngine {
 		Vector4 ambient;
 		Vector4 specular;
 		MaterialVariable() {
+			memset(this, 0, sizeof(256));
 		};
 		template<class Archive>
 		void serialize(Archive& archive)
@@ -135,6 +149,7 @@ namespace ButiEngine {
 		Vector4 pushPower;
 		float bottom = 0;
 		TestGSVariable() {
+			memset(this, 0, sizeof(256));
 		}
 		template<class Archive>
 		void serialize(Archive& archive)
@@ -169,7 +184,9 @@ namespace ButiEngine {
 		float minSize=0.1f;
 		float rotationPase = 5.0f;
 
-		ParticleParameter(){}
+		ParticleParameter() {
+			memset(this, 0, sizeof(256));
+		}
 
 		template<class Archive>
 		void serialize(Archive& archive)

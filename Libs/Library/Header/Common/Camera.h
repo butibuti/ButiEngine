@@ -68,6 +68,7 @@ namespace ButiEngine {
 		virtual int IsContaineVisibility(std::shared_ptr<Geometry::Box_AABB>arg_AABB) = 0;
 		virtual void End() = 0;
 		virtual void SetProjectionTexture(const TextureTag& arg_tag)=0;
+		virtual void BefDraw()=0;
 	protected:
 	};
 
@@ -80,11 +81,13 @@ namespace ButiEngine {
 		void SetActive(const bool arg_active) override;
 		bool GetActive()const override;
 		void Draw()override;
+		void BefDraw()override;
 		CameraProjProperty& GetCameraProperty()override;
 		int IsContaineVisibility(std::shared_ptr<Geometry::Box_AABB>arg_AABB)override;
 	protected:
 		Matrix4x4 projectionMatrix;
 		Matrix4x4 viewMatrix;
+		Vector3 cameraPos;
 		CameraProjProperty cameraViewProp; 
 		std::shared_ptr<IRenderer> shp_renderer;
 		bool isActive = true;

@@ -17,7 +17,7 @@ void ButiEngine::Scene::Update() {
 
 void ButiEngine::Scene::UIUpdate()
 {
-	
+	shp_sceneManager->GetApplication().lock()->GetGUIController()->Update();
 }
 
 void ButiEngine::Scene::EditCameraUpdate()
@@ -42,9 +42,26 @@ void ButiEngine::Scene::EditCameraUpdate()
 	}
 }
 
+void ButiEngine::Scene::RegistGameObjects()
+{
+
+	shp_gameObjectManager->RegistNewGameObject();
+}
+
 void ButiEngine::Scene::Set()
 {
-	shp_gameObjectManager->Start();
+}
+
+void ButiEngine::Scene::BefDraw()
+{
+	shp_renderer->BefRendering();
+	auto camEnd = vec_cameras.end();
+	for (auto cameraItr = vec_cameras.begin(); cameraItr != camEnd; cameraItr++) {
+		if (!(*cameraItr)->GetActive()) {
+			continue;
+		}
+		(*cameraItr)->BefDraw();
+	}
 }
 
 void ButiEngine::Scene::OnSet()
@@ -54,13 +71,13 @@ void ButiEngine::Scene::OnSet()
 void ButiEngine::Scene::Draw()
 {
 
+
 	shp_renderer->RenderingStart();
 
 
-	shp_renderer->BefRendering();
-
 	std::vector<std::shared_ptr<ICamera>> cams;
-	for (auto cameraItr = vec_cameras.begin(); cameraItr != vec_cameras.end(); cameraItr++) {
+	auto camEnd = vec_cameras.end();
+	for (auto cameraItr = vec_cameras.begin(); cameraItr != camEnd; cameraItr++) {
 		if (!(*cameraItr)->GetActive()) {
 			continue;
 		}

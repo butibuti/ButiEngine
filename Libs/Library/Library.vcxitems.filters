@@ -330,9 +330,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameParts\imguiComtroller.h">
       <Filter>header\GameParts</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)Header\Scene\EditScene.h">
-      <Filter>header\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultBehavior\FPSViewBehavior.h">
       <Filter>header\GameObjects\DefaultBehavior</Filter>
     </ClInclude>
@@ -628,9 +625,6 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameParts\imguiComtroller.cpp">
       <Filter>source\GameParts</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)Source\Scene\EditScene.cpp">
-      <Filter>source\Scene</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Common\ButiMath.cpp">
       <Filter>source\Common</Filter>

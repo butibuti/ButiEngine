@@ -15,9 +15,9 @@ namespace ButiEngine {
 	};
 	class DescriptorHeapManager
 	{
-		const UINT DescriptorHeapSize = 5000;
+		const UINT DescriptorHeapSize = 8192;
 	public:
-		DescriptorHeapManager(std::weak_ptr<GraphicDevice_Dx12> arg_wkp_graphicDevice,const UINT arg_max=100,const UINT arg_addUint= 100);
+		DescriptorHeapManager(std::weak_ptr<GraphicDevice_Dx12> arg_wkp_graphicDevice,const UINT arg_max=512);
 		void Initialize(ID3D12Device& device);
 
 		HandleInformation GetSamplerHandle(const UINT key);
@@ -35,13 +35,13 @@ namespace ButiEngine {
 		UINT GetDescriptorHandleIncrementSize();
 		UINT GetIndex();
 		void Release(const BlankSpace& arg_releaseSpace);
+		void Release();
 	private:
 		void ReCreateConstantBuffer();
 		UINT cbvSrvDescriptorHandleIncrementSize = 0;
 		UINT samplerDescriptorHandleIncrementSize=0;
 		UINT index = 0;
 		UINT maxCbv;
-		UINT addUnit;
 		UINT ApplicationKeepRange = 10;
 		UINT cbvSize;
 		///デスクプリタヒープ
@@ -51,7 +51,7 @@ namespace ButiEngine {
 		Microsoft::WRL::ComPtr<ID3D12Resource> constantBufferUploadHeap;
 		struct buffer { char buf[0x100]; };
 		buffer*  mappedConstantBuffer = nullptr;
-		std::vector<BackUpConstantBufferData> vec_cbBackUpData;
+		std::vector<BackUpConstantBufferData*> vec_cbBackUpData;
 		std::weak_ptr<GraphicDevice_Dx12> wkp_graphicDevice;
 	};
 

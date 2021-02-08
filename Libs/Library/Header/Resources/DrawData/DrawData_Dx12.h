@@ -46,15 +46,10 @@ namespace ButiEngine {
 		void SetTransform(std::shared_ptr<Transform>& arg_transform)override {
 			transform = arg_transform->GetMatrix();
 		}
-		void SetBlendMode(const BlendMode& arg_blendMode)override {
-		}
 
 		inline float GetZ()override {
 			return  GetMaxZ(wkp_graphicDevice.lock()->GetRawViewMatrix());
 		}
-		void ChangeCullMode(const CullMode& arg_cull)override ;
-		void ChangeFillMode(const bool isFill)override;
-		void ChangeSwitchFillMode()override;
 
 		void Initialize()override;
 

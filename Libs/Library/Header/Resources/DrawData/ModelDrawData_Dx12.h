@@ -18,13 +18,8 @@ namespace ButiEngine {
 		void SetTransform(std::shared_ptr<Transform>& arg_transform)override {
 			transform = arg_transform->GetMatrix();
 		}
-		void SetBlendMode(const BlendMode& arg_blendMode)override {
-		}
 
 	
-		void ChangeCullMode(const CullMode& arg_cull)override;
-		void ChangeFillMode(const bool isFill)override;
-		void ChangeSwitchFillMode()override;
 		void Draw()override;
 
 		void  ModelUpdate() override;

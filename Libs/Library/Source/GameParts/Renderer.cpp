@@ -52,7 +52,7 @@ void ButiEngine::Renderer::Rendering(const UINT arg_layer)
 
 		auto endDrawItr = vec_drawLayers.at(arg_layer).vec_befDrawObj.end();
 		for (auto itr = vec_drawLayers.at(arg_layer).vec_befDrawObj.begin(); itr != endDrawItr; itr++) {
-			(*itr).lock()->Draw();
+			(*itr)->Draw();
 		}
 	} 
 	{
@@ -61,7 +61,7 @@ void ButiEngine::Renderer::Rendering(const UINT arg_layer)
 		ZSort(afterDrawObjects);
 		auto endDrawItr = afterDrawObjects.end();
 		for (auto itr = afterDrawObjects.begin(); itr != endDrawItr; itr++) {
-			(*itr).lock()->Draw();
+			(*itr)->Draw();
 		}
 	}
 	
@@ -86,7 +86,7 @@ void ButiEngine::Renderer::BefRendering()
 
 void ButiEngine::Renderer::AddLayer()
 {
-	vec_drawLayers.push_back(DrawLayer());
+	vec_drawLayers.push_back(DrawLayer(GetThis<IRenderer>()));
 }
 
 UINT ButiEngine::Renderer::GetLayerCount()
@@ -105,7 +105,7 @@ void ButiEngine::Renderer::ClearDrawObjects()
 
 
 
-UINT* ButiEngine::Renderer::RegistDrawObject(std::weak_ptr<IDrawObject> arg_wkp_drawObject, const bool arg_afterDraw, const UINT arg_layer)
+UINT* ButiEngine::Renderer::RegistDrawObject(std::shared_ptr<IDrawObject> arg_wkp_drawObject, const bool arg_afterDraw, const UINT arg_layer)
 {
 
 	if (arg_layer >= vec_drawLayers.size()) {
@@ -184,8 +184,9 @@ std::shared_ptr< ButiEngine::CBuffer_Dx12< ButiEngine::Fog>> ButiEngine::Rendere
 	return CBuffer_fog;
 }
 
-ButiEngine::DrawLayer::DrawLayer()
+ButiEngine::DrawLayer::DrawLayer(std::weak_ptr<IRenderer> arg_wkp_renderer)
 {
+	wkp_renderer = arg_wkp_renderer;
 	shp_collisionLayer = ObjectFactory::Create<Collision::CollisionLayer<IDrawObject>>(5,Vector3(-500, -500, -500),Vector3(500,500,500));
 }
 
@@ -194,7 +195,7 @@ void ButiEngine::DrawLayer::Clear()
 	vec_afterDrawObj.clear();
 	vec_befDrawObj.clear();
 
-	for (auto itr = vec_index.begin(); itr != vec_index.end(); itr++) {
+	for (auto itr = vec_befIndex.begin(); itr != vec_befIndex.end(); itr++) {
 		delete* itr;
 	}
 	for (auto itr = vec_afterIndex.begin(); itr != vec_afterIndex.end(); itr++) {
@@ -205,49 +206,109 @@ void ButiEngine::DrawLayer::Clear()
 void ButiEngine::DrawLayer::BefRendering()
 {
 	shp_collisionLayer->Update();
+
+
+	//描画オブジェクトの登録解除
+	{
+		auto endItr = vec_registCommandBuff.end();
+		vec_befDrawObj.reserve(vec_befDrawObj.size() + vec_registCommandBuff.size());
+		vec_afterDrawObj.reserve(vec_afterDrawObj.size() + vec_registCommandBuff.size());
+
+		for (auto itr = vec_registCommandBuff.begin(); itr != endItr; itr++) {
+
+			if (itr->shp_obj) {
+
+				itr->shp_obj->CommandSet();
+				(itr->shp_obj)->SetOctRegistPtr(shp_collisionLayer->RegistCollisionObj((itr->shp_obj)->GetPrimitive(), itr->shp_obj));
+
+				if (itr->isAfter) {
+					vec_afterIndex.push_back(itr->p_index);
+					vec_afterDrawObj.push_back(itr->shp_obj);
+				}
+				else {
+
+					vec_befIndex.push_back(itr->p_index);
+					vec_befDrawObj.push_back(itr->shp_obj);
+				}
+
+			}
+			else {
+
+				DeleteDrawObj(itr->p_index, itr->isAfter);
+			}
+
+		}
+
+
+		vec_registCommandBuff.clear();
+		vec_befDrawObj.shrink_to_fit();
+		vec_afterDrawObj.shrink_to_fit();
+
+		nowFrameAdditionObjectCount = 0;
+		nowFrameAdditionObjectCount_after = 0;
+	}
+
+
+	//描画オブジェクトの行列定数バッファ、ボーン定数バッファの更新
 	{
 
 		auto endItr = vec_befDrawObj.end();
 		for (auto itr = vec_befDrawObj.begin(); itr != endItr; itr++) {
-			(*itr).lock()->DrawBefore();
+			(*itr)->DrawBefore();
 		}
 	}
 	{
 
 		auto endItr = vec_afterDrawObj.end();
 		for (auto itr = vec_afterDrawObj.begin(); itr != endItr; itr++) {
-			(*itr).lock()->DrawBefore();
+			(*itr)->DrawBefore();
 		}
 	}
 }
 
-UINT* ButiEngine::DrawLayer::Regist(std::weak_ptr<IDrawObject> arg_wkp_drawObject, const bool arg_isAfterRendering, std::shared_ptr<Collision::CollisionPrimitive_Box_OBB> arg_ret_prim )
+UINT* ButiEngine::DrawLayer::Regist(std::shared_ptr<IDrawObject> arg_wkp_drawObject, const bool arg_isAfterRendering, std::shared_ptr<Collision::CollisionPrimitive_Box_OBB> arg_ret_prim )
 {
 	if (!arg_ret_prim) {
-		arg_ret_prim= arg_wkp_drawObject.lock()->GetMeshOBB();
+		arg_ret_prim= arg_wkp_drawObject->GetMeshOBB();
 	}
-	arg_wkp_drawObject.lock()->SetPrimitive(arg_ret_prim);
-	arg_wkp_drawObject.lock()->SetOctRegistPtr( shp_collisionLayer->RegistCollisionObj(arg_ret_prim,arg_wkp_drawObject.lock()));
+	arg_wkp_drawObject->SetPrimitive(arg_ret_prim);
 
+	UINT* index;
 	if (arg_isAfterRendering) {
 
-		UINT* index = new UINT(vec_afterDrawObj.size());
+		index = new UINT(vec_afterDrawObj.size()+nowFrameAdditionObjectCount_after);
+		nowFrameAdditionObjectCount_after++;
+	}
+	else {
 
-		vec_afterDrawObj.push_back(arg_wkp_drawObject);
-		vec_afterIndex.push_back(index);
-
-		return index;
+		index = new UINT(vec_befDrawObj.size() + nowFrameAdditionObjectCount);
+		nowFrameAdditionObjectCount++;
 	}
 
-	UINT* index = new UINT(vec_befDrawObj.size());
+	RegistCommand cmd;
 
-	vec_befDrawObj.push_back(arg_wkp_drawObject);
-	vec_index.push_back(index);
+	cmd.isAfter = arg_isAfterRendering;
+	cmd.p_index = index;
+	cmd.shp_obj = arg_wkp_drawObject;
+
+	vec_registCommandBuff.push_back(cmd);
 
 	return index;
 }
 
 void ButiEngine::DrawLayer::UnRegist(UINT* arg_index, const bool arg_isAfterRendering)
+{
+	if (arg_isAfterRendering) {
+		nowFrameAdditionObjectCount_after--;
+	}
+	else {
+		nowFrameAdditionObjectCount--;
+	}
+
+	vec_registCommandBuff.push_back({ arg_index,arg_isAfterRendering,nullptr });
+}
+
+void ButiEngine::DrawLayer::DeleteDrawObj(UINT* arg_index, const bool arg_isAfterRendering)
 {
 
 	if (arg_isAfterRendering) {
@@ -259,7 +320,7 @@ void ButiEngine::DrawLayer::UnRegist(UINT* arg_index, const bool arg_isAfterRend
 		auto itr = vec_afterDrawObj.begin() + index;
 
 
-		shp_collisionLayer->UnRegistCollisionObj((*itr).lock()->GetOctRegistPtr());
+		shp_collisionLayer->UnRegistCollisionObj((*itr)->GetOctRegistPtr());
 
 		vec_afterDrawObj.erase(itr);
 
@@ -279,16 +340,16 @@ void ButiEngine::DrawLayer::UnRegist(UINT* arg_index, const bool arg_isAfterRend
 		return;
 	}
 	auto itr = vec_befDrawObj.begin() + index;
-	auto obj = (*itr).lock();
+	auto obj = (*itr);
 	shp_collisionLayer->UnRegistCollisionObj(obj->GetOctRegistPtr());
 
 	vec_befDrawObj.erase(itr);
 
 	delete arg_index;
-	auto numItr = vec_index.begin() + index;
-	numItr = vec_index.erase(numItr);
+	auto numItr = vec_befIndex.begin() + index;
+	numItr = vec_befIndex.erase(numItr);
 
-	for (; numItr != vec_index.end(); numItr++) {
+	for (; numItr != vec_befIndex.end(); numItr++) {
 		*(*numItr) -= 1;
 	}
 }

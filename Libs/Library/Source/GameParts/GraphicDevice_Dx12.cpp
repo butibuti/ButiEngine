@@ -268,6 +268,7 @@ void ButiEngine::GraphicDevice_Dx12::PreInitialize()
 
 void ButiEngine::GraphicDevice_Dx12::Release()
 {
+	shp_descripterManager->Release();
 	shp_descripterManager = nullptr;
 }
 

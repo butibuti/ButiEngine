@@ -20,8 +20,9 @@ namespace ButiEngine {
 		void Update()override final;
 		void UIUpdate()override;
 		void EditCameraUpdate()override;
-
+		void RegistGameObjects()override;
 		void Set()override final;
+		void BefDraw()override final;
 		void Draw()override final;
 		void Initialize()override final;
 		std::weak_ptr<ICamera> GetCamera(const std::string& arg_camName) override final;

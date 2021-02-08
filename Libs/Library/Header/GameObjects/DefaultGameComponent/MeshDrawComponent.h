@@ -19,9 +19,6 @@ namespace ButiEngine {
 			return "MeshDraw";
 		}
 		void OnUpdate()override;
-		void ChangeFillMode(const bool arg_isFill);
-		void SwitchFillMode(const bool arg_isFill);
-		void ChangeCullMode(const CullMode& arg_cullMode);
 		void OnSet()override;
 		void OnRemove() override;
 		void SetBlendMode(const BlendMode& arg_blendMode);

@@ -45,20 +45,6 @@ void ButiEngine::MeshDrawComponent::OnUpdate()
 {
 }
 
-void ButiEngine::MeshDrawComponent::ChangeFillMode(const bool arg_isFill)
-{
-	data->ChangeFillMode(arg_isFill);
-}
-
-void ButiEngine::MeshDrawComponent::SwitchFillMode(const bool arg_isFill)
-{
-	data->ChangeSwitchFillMode();
-}
-
-void ButiEngine::MeshDrawComponent::ChangeCullMode(const CullMode& arg_cullMode)
-{
-	data->ChangeCullMode(arg_cullMode);
-}
 
 void ButiEngine::MeshDrawComponent::OnSet()
 {
@@ -428,8 +414,6 @@ void ButiEngine::MeshDrawComponent::OnShowUI()
 void ButiEngine::MeshDrawComponent::CreateData()
 {
 	auto renderer = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetRenderer();
-	if(!shp_drawInfo->IsContainExCBuffer("FogParameter"))
-	shp_drawInfo->vec_exCBuffer.push_back(renderer->GetFogCBuffer());
 	if (!shp_transform) {
 		shp_transform = gameObject.lock()->transform;
 	}
@@ -447,6 +431,5 @@ void ButiEngine::MeshDrawComponent::CreateData()
 
 
 	}
-	shp_drawInfo->RemoveExCBuffer("FogParameter");
 
 }

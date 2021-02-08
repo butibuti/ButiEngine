@@ -193,241 +193,241 @@ unsigned int ButiEngine::GUI::GetID(const void* ptr_id)
 }
 
 bool ButiEngine::GUI::InputText(const std::string& label, char* buf, size_t buf_size, GuiInputTextFlags flags,  void* user_data)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::InputText(label.c_str(),buf,buf_size,flags, DefaultTextCallBack,user_data);
 }
 
 bool ButiEngine::GUI::InputTextMultiline(const std::string& label, char* buf, size_t buf_size, const Vector2& size, GuiInputTextFlags flags, void* user_data )
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::InputTextMultiline(label.c_str(), buf, buf_size, ImVec2(size.x, size.y), flags, DefaultTextCallBack, user_data);
 }
 
 bool ButiEngine::GUI::InputTextWithHint(const std::string& label, const std::string& hint, char* buf, size_t buf_size, GuiInputTextFlags flags,  void* user_data)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::InputTextWithHint(label.c_str(), hint.c_str(),buf,buf_size, flags, DefaultTextCallBack, user_data);
 }
 
 bool ButiEngine::GUI::InputFloat(const std::string& label, float& v, float step, float step_fast, const std::string& format, GuiInputTextFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::InputFloat(label.c_str(), &v, step, step_fast, format.c_str(), flags);
 }
 
 bool ButiEngine::GUI::InputFloat2(const std::string& label, Vector2& v, const std::string& format, GuiInputTextFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::InputFloat2(label.c_str(), &v.x,  format.c_str(), flags);
 }
 
 bool ButiEngine::GUI::InputFloat3(const std::string& label, Vector3& v, const std::string& format, GuiInputTextFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::InputFloat3(label.c_str(), &v.x, format.c_str(), flags);
 }
 
 bool ButiEngine::GUI::InputFloat4(const std::string& label, Vector4& v, const std::string& format, GuiInputTextFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::InputFloat4(label.c_str(), &v.x, format.c_str(), flags);
 }
 
 bool ButiEngine::GUI::InputFloat(const std::string& label, float* v, float step, float step_fast, const std::string& format, GuiInputTextFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::InputFloat(label.c_str(), v, step, step_fast, format.c_str(), flags);
 }
 
 bool ButiEngine::GUI::InputFloat2(const std::string& label, float* v, const std::string& format, GuiInputTextFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::InputFloat2(label.c_str(), v, format.c_str(), flags);
 }
 
 bool ButiEngine::GUI::InputFloat3(const std::string& label, float* v, const std::string& format, GuiInputTextFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::InputFloat3(label.c_str(), v, format.c_str(), flags);
 }
 
 bool ButiEngine::GUI::InputFloat4(const std::string& label, float* v, const std::string& format, GuiInputTextFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::InputFloat4(label.c_str(), v, format.c_str(), flags);
 }
 
 bool ButiEngine::GUI::InputInt(const std::string& label, int& v, int step, int step_fast, GuiInputTextFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::InputInt(label.c_str(), &v, step, step_fast, flags);
 }
 
 bool ButiEngine::GUI::InputInt2(const std::string& label, int v[2], GuiInputTextFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::InputInt2(label.c_str(), v, flags);
 }
 
 bool ButiEngine::GUI::InputInt3(const std::string& label, int v[3], GuiInputTextFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::InputInt3(label.c_str(), v, flags);
 }
 
 bool ButiEngine::GUI::InputInt4(const std::string& label, int v[4], GuiInputTextFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::InputInt4(label.c_str(), v, flags);
 }
 
 bool ButiEngine::GUI::InputDouble(const std::string& label, double& v, double step, double step_fast, const std::string& format, GuiInputTextFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::InputDouble(label.c_str(), &v, step, step_fast, format.c_str(), flags);
 }
 
 bool ButiEngine::GUI::DragFloat(const std::string& label, float& v, float v_speed, float v_min, float v_max, const std::string& format, GuiSliderFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::DragFloat(label.c_str(), &v, v_speed, v_min, v_max, format.c_str(), flags);
 }
 
 bool ButiEngine::GUI::DragFloat2(const std::string& label, Vector2& v, float v_speed, float v_min, float v_max, const std::string& format, GuiSliderFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::DragFloat2(label.c_str(), &v.x, v_speed, v_min, v_max, format.c_str(), flags);
 }
 
 bool ButiEngine::GUI::DragFloat3(const std::string& label, Vector3& v, float v_speed, float v_min, float v_max, const std::string& format, GuiSliderFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::DragFloat3(label.c_str(), &v.x, v_speed, v_min, v_max, format.c_str(), flags);
 }
 
 bool ButiEngine::GUI::DragFloat4(const std::string& label, Vector4& v, float v_speed, float v_min, float v_max, const std::string& format, GuiSliderFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::DragFloat4(label.c_str(), &v.x, v_speed, v_min, v_max, format.c_str(), flags);
 }
 
 bool ButiEngine::GUI::DragFloat(const std::string& label, float* v, float v_speed, float v_min, float v_max, const std::string& format, GuiSliderFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::DragFloat(label.c_str(), v, v_speed, v_min, v_max, format.c_str(), flags);
 }
 bool ButiEngine::GUI::DragFloat2(const std::string& label, float* v, float v_speed, float v_min, float v_max, const std::string& format, GuiSliderFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::DragFloat2(label.c_str(), v, v_speed, v_min, v_max, format.c_str(), flags);
 }
 
 bool ButiEngine::GUI::DragFloat3(const std::string& label, float* v, float v_speed, float v_min, float v_max, const std::string& format, GuiSliderFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::DragFloat3(label.c_str(), v, v_speed, v_min, v_max, format.c_str(), flags);
 }
 
 bool ButiEngine::GUI::DragFloat4(const std::string& label, float* v, float v_speed, float v_min, float v_max, const std::string& format, GuiSliderFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return  ImGui::DragFloat4(label.c_str(), v, v_speed, v_min, v_max, format.c_str(), flags);
 }
 
 bool ButiEngine::GUI::DragFloatRange2(const std::string& label, float& v_current_min, float& v_current_max, float v_speed, float v_min, float v_max, const std::string& format, const std::string& format_max, GuiSliderFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::DragFloatRange2(label.c_str(), &v_current_min, &v_current_max, v_speed, v_min, v_max, format.c_str(), format_max.c_str(), flags);
 }
 
 bool ButiEngine::GUI::DragInt(const std::string& label, int& v, float v_speed, int v_min, int v_max, const std::string& format, GuiSliderFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::DragInt(label.c_str(), &v, v_speed, v_min, v_max, format.c_str(), flags);
 }
 
 bool ButiEngine::GUI::DragInt(const std::string& label, int* v, float v_speed, int v_min, int v_max, const std::string& format, GuiSliderFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::DragInt(label.c_str(), v, v_speed, v_min, v_max, format.c_str(), flags);
 }
 
 bool ButiEngine::GUI::DragInt2(const std::string& label, int v[2], float v_speed, int v_min, int v_max, const std::string& format, GuiSliderFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::DragInt2(label.c_str(), v, v_speed, v_min, v_max, format.c_str(), flags);
 }
 
 bool ButiEngine::GUI::DragInt3(const std::string& label, int v[3], float v_speed, int v_min, int v_max, const std::string& format, GuiSliderFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::DragInt3(label.c_str(), v, v_speed, v_min, v_max, format.c_str(), flags);
 }
 
 bool ButiEngine::GUI::DragInt4(const std::string& label, int v[4], float v_speed, int v_min, int v_max, const std::string& format, GuiSliderFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::DragInt4(label.c_str(), v, v_speed, v_min, v_max, format.c_str(), flags);
 }
 
 bool ButiEngine::GUI::DragIntRange2(const std::string& label, int& v_current_min, int& v_current_max, float v_speed, int v_min, int v_max, const std::string& format, const std::string& format_max, GuiSliderFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::DragIntRange2(label.c_str(), &v_current_min, &v_current_max, v_speed, v_min, v_max, format.c_str(), format_max.c_str(), flags);
 }
 
 bool ButiEngine::GUI::SliderFloat(const std::string& label, float& v, float v_min, float v_max, const std::string& format, GuiSliderFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::SliderFloat(label.c_str(),&v,v_min,v_max,format.c_str(),flags);
 }
 
 bool ButiEngine::GUI::SliderFloat2(const std::string& label, Vector2& v, float v_min, float v_max, const std::string& format, GuiSliderFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::SliderFloat2(label.c_str(), &v.x, v_min, v_max, format.c_str(), flags);
 }
 
 bool ButiEngine::GUI::SliderFloat3(const std::string& label, Vector3& v, float v_min, float v_max, const std::string& format, GuiSliderFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::SliderFloat3(label.c_str(), &v.x, v_min, v_max, format.c_str(), flags);
 }
 
 bool ButiEngine::GUI::SliderFloat4(const std::string& label, Vector4& v, float v_min, float v_max, const std::string& format, GuiSliderFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::SliderFloat4(label.c_str(), &v.x, v_min, v_max, format.c_str(), flags);
 }
 
 bool ButiEngine::GUI::SliderFloat(const std::string& label, float* v, float v_min, float v_max, const std::string& format, GuiSliderFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::SliderFloat(label.c_str(), v, v_min, v_max, format.c_str(), flags);
 }
 
 bool ButiEngine::GUI::SliderFloat2(const std::string& label, float* v, float v_min, float v_max, const std::string& format, GuiSliderFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::SliderFloat2(label.c_str(), v, v_min, v_max, format.c_str(), flags);
 }
 
 bool ButiEngine::GUI::SliderFloat3(const std::string& label, float* v, float v_min, float v_max, const std::string& format, GuiSliderFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::SliderFloat3(label.c_str(), v, v_min, v_max, format.c_str(), flags);
 }
 
 bool ButiEngine::GUI::SliderFloat4(const std::string& label, float* v, float v_min, float v_max, const std::string& format, GuiSliderFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::SliderFloat4(label.c_str(), v, v_min, v_max, format.c_str(), flags);
 }
 
 bool ButiEngine::GUI::SliderAngle(const std::string& label, float& v_rad, float v_degrees_min, float v_degrees_max, const std::string& format, GuiSliderFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::SliderAngle(label.c_str(), &v_rad, v_degrees_min, v_degrees_max, format.c_str(), flags);
 }
 
 bool ButiEngine::GUI::SliderInt(const std::string& label, int& v, int v_min, int v_max, const std::string& format, GuiSliderFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::SliderInt(label.c_str(), &v, v_min, v_max, format.c_str(), flags);
 }
 
 bool ButiEngine::GUI::SliderInt2(const std::string& label, int v[2], int v_min, int v_max, const std::string& format, GuiSliderFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::SliderInt2(label.c_str(), v, v_min, v_max, format.c_str(), flags);
 }
 
 bool ButiEngine::GUI::SliderInt3(const std::string& label, int v[3], int v_min, int v_max, const std::string& format, GuiSliderFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::SliderInt2(label.c_str(), v, v_min, v_max, format.c_str(), flags);
 }
 
 bool ButiEngine::GUI::SliderInt4(const std::string& label, int v[4], int v_min, int v_max, const std::string& format, GuiSliderFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::SliderInt2(label.c_str(), v, v_min, v_max, format.c_str(), flags);
 }
 
 bool ButiEngine::GUI::SliderScalar(const std::string& label, int data_type, void* p_data, const void* p_min, const void* p_max, const std::string& format, GuiSliderFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::SliderScalar(label.c_str(), data_type, p_data, p_min, p_max, format.c_str(),flags);
 }
 
 bool ButiEngine::GUI::SliderScalarN(const std::string& label, int data_type, void* p_data, int components, const void* p_min, const void* p_max, const std::string& format, GuiSliderFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::SliderScalarN(label.c_str(), data_type, p_data, components, p_min, p_max, format.c_str(), flags);
 }
 
 bool ButiEngine::GUI::VSliderFloat(const std::string& label, const Vector2& size, float& v, float v_min, float v_max, const std::string& format, GuiSliderFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::VSliderFloat(label.c_str(),ImVec2( size.x,size.y),&v,v_min,v_max,format.c_str(),flags);
 }
 
 bool ButiEngine::GUI::VSliderInt(const std::string& label, const Vector2& size, int& v, int v_min, int v_max, const std::string& format, GuiSliderFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::VSliderInt(label.c_str(), ImVec2(size.x, size.y), &v, v_min, v_max, format.c_str(), flags);
 }
 
@@ -537,39 +537,39 @@ bool ButiEngine::GUI::Button(const std::string& label, const Vector2& size)
 }
 
 bool ButiEngine::GUI::SmallButton(const std::string& label)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::SmallButton(label.c_str());
 }
 
 bool ButiEngine::GUI::InvisibleButton(const std::string& str_id, const Vector2& size, GuiButtonFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::InvisibleButton(str_id.c_str(), ImVec2(size.x, size.y),flags);
 }
 
 bool ButiEngine::GUI::ArrowButton(const std::string& str_id, GuiDir dir)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::ArrowButton(str_id.c_str(), dir);
 }
 
 
 
 bool ButiEngine::GUI::Checkbox(const std::string& label, bool* v)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::Checkbox(label.c_str(), v);
 }
 
 bool ButiEngine::GUI::CheckboxFlags(const std::string& label, unsigned int& flags, unsigned int flags_value)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::CheckboxFlags(label.c_str(), &flags,flags_value);
 }
 
 bool ButiEngine::GUI::RadioButton(const std::string& label, bool active)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::RadioButton(label.c_str(), active);
 }
 
 bool ButiEngine::GUI::RadioButton(const std::string& label, int& v, int v_button)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::RadioButton(label.c_str(),& v,v_button);
 }
 
@@ -585,7 +585,7 @@ void ButiEngine::GUI::Bullet()
 }
 
 bool ButiEngine::GUI::BeginCombo(const std::string& label, const std::string& preview_value, GuiComboFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::BeginCombo(label.c_str(), preview_value.c_str(), flags);
 }
 
@@ -595,10 +595,10 @@ void ButiEngine::GUI::EndCombo()
 }
 
 bool ButiEngine::GUI::Combo(const std::string& label, int& current_item, const std::vector<std::string>& arg_item, int items_count, int popup_max_height_in_items)
-{
+{if (state != GUIState::active) {return false;}
 	char** l_items= (char**) malloc(sizeof(char*)*items_count);
 
-	for (int i = 0; i < arg_item.size(); i++) {
+	for (int i = 0; i < arg_item.size(); i++) {if (state != GUIState::active) {return false;}
 		l_items[i] = (char*)malloc(sizeof(char) * arg_item[i].size());
 
 		memcpy_s(l_items[i], arg_item[i].size(), arg_item[i].c_str(), arg_item[i].size());
@@ -607,7 +607,7 @@ bool ButiEngine::GUI::Combo(const std::string& label, int& current_item, const s
 	bool ret= ImGui::Combo(label.c_str(), &current_item,l_items , items_count, popup_max_height_in_items);
 
 
-	for (int i = 0; i < arg_item.size(); i++) {
+	for (int i = 0; i < arg_item.size(); i++) {if (state != GUIState::active) {return false;}
 		free(l_items[i]);
 
 	}
@@ -618,63 +618,63 @@ bool ButiEngine::GUI::Combo(const std::string& label, int& current_item, const s
 }
 
 bool ButiEngine::GUI::Combo(const std::string& label, int& current_item, const std::string& items_separated_by_zeros, int popup_max_height_in_items)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::Combo(label.c_str(), &current_item,  items_separated_by_zeros.c_str(), popup_max_height_in_items);
 }
 
 bool ButiEngine::GUI::Combo(const std::string& label, int& current_item, bool(*items_getter)(void* data, int idx, const char** out_text), void* data, int items_count, int popup_max_height_in_items)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::Combo(label.c_str(), &current_item, items_getter, data, items_count, popup_max_height_in_items);
 }
 
 
 bool ButiEngine::GUI::TreeNode(const std::string& label)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::TreeNode(label.c_str());
 }
 
 bool ButiEngine::GUI::TreeNode(const std::string& str_id, const std::string& fmt, ...)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::TreeNode(str_id.c_str(), fmt.c_str());
 }
 
 bool ButiEngine::GUI::TreeNode(const void* ptr_id, const std::string& fmt, ...)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::TreeNode(ptr_id, fmt.c_str());
 }
 
 bool ButiEngine::GUI::TreeNodeV(const std::string& str_id, const std::string& fmt, va_list args)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::TreeNodeV(str_id.c_str(), fmt.c_str(), args);
 }
 
 bool ButiEngine::GUI::TreeNodeV(const void* ptr_id, const std::string& fmt, va_list args)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::TreeNodeV(ptr_id, fmt.c_str(), args);
 }
 
 bool ButiEngine::GUI::TreeNodeEx(const std::string& label, GuiTreeNodeFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::TreeNodeEx(label.c_str(), flags);
 }
 
 bool ButiEngine::GUI::TreeNodeEx(const std::string& str_id, GuiTreeNodeFlags flags, const std::string& fmt, ...)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::TreeNodeEx(str_id.c_str(), flags,fmt.c_str());
 }
 
 bool ButiEngine::GUI::TreeNodeEx(const void* ptr_id, GuiTreeNodeFlags flags, const std::string& fmt, ...)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::TreeNodeEx(ptr_id, flags, fmt.c_str());
 }
 
 bool ButiEngine::GUI::TreeNodeExV(const std::string& str_id, GuiTreeNodeFlags flags, const std::string& fmt, va_list args)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::TreeNodeEx(str_id.c_str(), flags, fmt.c_str(),args);
 }
 
 bool ButiEngine::GUI::TreeNodeExV(const void* ptr_id, GuiTreeNodeFlags flags, const std::string& fmt, va_list args)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::TreeNodeEx(ptr_id, flags, fmt.c_str(), args);
 }
 
@@ -699,12 +699,12 @@ float ButiEngine::GUI::GetTreeNodeToLabelSpacing()
 }
 
 bool ButiEngine::GUI::CollapsingHeader(const std::string& label, GuiTreeNodeFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::CollapsingHeader(label.c_str(), flags);
 }
 
 bool ButiEngine::GUI::CollapsingHeader(const std::string& label, bool* p_open, GuiTreeNodeFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::CollapsingHeader(label.c_str(), p_open, flags);
 }
 
@@ -714,17 +714,18 @@ void ButiEngine::GUI::SetNextItemOpen(bool is_open, int cond)
 }
 
 bool ButiEngine::GUI::Selectable(const std::string& label, bool selected, GuiSelectableFlags flags, const Vector2& size)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::Selectable(label.c_str(),selected,flags,ImVec2(size.x,size.y));
 }
 
 bool ButiEngine::GUI::Selectable(const std::string& label, bool* p_selected, GuiSelectableFlags flags, const Vector2& size)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::Selectable(label.c_str(), p_selected, flags, ImVec2(size.x, size.y));
 }
 
 bool ButiEngine::GUI::ListBox(const std::string& label, int& current_item, const std::vector<std::string>& arg_item, int height_in_items)
 {
+	if (state != GUIState::active) { return false; }
 	char** list = (char**)malloc(sizeof(char*) * arg_item.size());
 
 	for (int i = 0; i < arg_item.size();i++) {
@@ -745,22 +746,22 @@ bool ButiEngine::GUI::ListBox(const std::string& label, int& current_item, const
 }
 
 bool ButiEngine::GUI::ListBox(const std::string& label, int& current_item, char** arg_item, int items_count, int height_in_items)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::ListBox(label.c_str(), &current_item,arg_item , items_count, height_in_items);
 }
 
 bool ButiEngine::GUI::ListBox(const std::string& label, int& current_item, bool(*items_getter)(void* data, int idx, const char** out_text), void* data, int items_count, int height_in_items)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::ListBox(label.c_str(),&current_item,items_getter,data,items_count,height_in_items);
 }
 
 bool ButiEngine::GUI::ListBoxHeader(const std::string& label, const Vector2& size)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::ListBoxHeader(label.c_str(), ImVec2(size.x, size.y));
 }
 
 bool ButiEngine::GUI::ListBoxHeader(const std::string& label, int items_count, int height_in_items)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::ListBoxHeader(label.c_str(), items_count, height_in_items);
 }
 
@@ -835,12 +836,12 @@ void ButiEngine::GUI::EndMenu()
 }
 
 bool ButiEngine::GUI::MenuItem(const std::string& label, const std::string& shortcut, bool selected, bool enabled)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::MenuItem(label.c_str(), shortcut.c_str(), selected, enabled);
 }
 
 bool ButiEngine::GUI::MenuItem(const std::string& label, const std::string& shortcut, bool* p_selected, bool enabled)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::MenuItem(label.c_str(), shortcut.c_str(), p_selected, enabled);
 }
 
@@ -865,12 +866,12 @@ void ButiEngine::GUI::SetTooltipV(const std::string& fmt, va_list args)
 }
 
 bool ButiEngine::GUI::BeginPopup(const std::string& str_id, GuiPopupFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::BeginPopup(str_id.c_str(), flags);
 }
 
 bool ButiEngine::GUI::BeginPopupModal(const std::string& name, bool* p_open, GuiPopupFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::BeginPopupModal(name.c_str(), p_open, flags);
 }
 void ButiEngine::GUI::EndPopup()
@@ -894,22 +895,22 @@ void ButiEngine::GUI::CloseCurrentPopup()
 }
 
 bool ButiEngine::GUI::BeginPopupContextItem(const std::string& str_id, GuiPopupFlags popup_flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::BeginPopupContextItem(str_id.c_str(), popup_flags);
 }
 
 bool ButiEngine::GUI::BeginPopupContextWindow(const std::string& str_id, GuiPopupFlags popup_flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::BeginPopupContextWindow(str_id.c_str(), popup_flags);
 }
 
 bool ButiEngine::GUI::BeginPopupContextVoid(const std::string& str_id, GuiPopupFlags popup_flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::BeginPopupContextVoid(str_id.c_str(), popup_flags);
 }
 
 bool ButiEngine::GUI::IsPopupOpen(const std::string& str_id, GuiPopupFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::IsPopupOpen(str_id.c_str(), flags);
 }
 
@@ -954,7 +955,7 @@ int ButiEngine::GUI::GetColumnsCount()
 }
 
 bool ButiEngine::GUI::BeginTabBar(const std::string& str_id, GuiTabBarFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::BeginTabBar(str_id.c_str(), flags);
 }
 
@@ -964,7 +965,7 @@ void ButiEngine::GUI::EndTabBar()
 }
 
 bool ButiEngine::GUI::BeginTabItem(const std::string& label, bool* p_open, GuiTabBarFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::BeginTabItem(label.c_str(), p_open, flags);
 }
 
@@ -974,7 +975,7 @@ void ButiEngine::GUI::EndTabItem()
 }
 
 bool ButiEngine::GUI::TabItemButton(const std::string& label, GuiTabBarFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::TabItemButton(label.c_str(), flags);
 }
 
@@ -1034,67 +1035,67 @@ void ButiEngine::GUI::SetKeyboardFocusHere(int offset)
 }
 
 bool ButiEngine::GUI::IsItemHovered(GuiHoveredFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::IsItemHovered(flags);
 }
 
 bool ButiEngine::GUI::IsItemActive()
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::IsItemActive();
 }
 
 bool ButiEngine::GUI::IsItemFocused()
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::IsItemFocused();
 }
 
 bool ButiEngine::GUI::IsItemClicked(int mouse_button)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::IsItemClicked(mouse_button);
 }
 
 bool ButiEngine::GUI::IsItemVisible()
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::IsItemVisible();
 }
 
 bool ButiEngine::GUI::IsItemEdited()
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::IsItemEdited();
 }
 
 bool ButiEngine::GUI::IsItemActivated()
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::IsItemActivated();
 }
 
 bool ButiEngine::GUI::IsItemDeactivated()
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::IsItemDeactivated();
 }
 
 bool ButiEngine::GUI::IsItemDeactivatedAfterEdit()
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::IsItemDeactivatedAfterEdit();
 }
 
 bool ButiEngine::GUI::IsItemToggledOpen()
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::IsItemToggledOpen();
 }
 
 bool ButiEngine::GUI::IsAnyItemHovered()
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::IsAnyItemHovered();
 }
 
 bool ButiEngine::GUI::IsAnyItemActive()
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::IsAnyItemActive();
 }
 
 bool ButiEngine::GUI::IsAnyItemFocused()
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::IsAnyItemFocused();
 }
 
@@ -1122,12 +1123,12 @@ void ButiEngine::GUI::SetItemAllowOverlap()
 }
 
 bool ButiEngine::GUI::IsRectVisible(const Vector2& size)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::IsRectVisible(ImVec2(size.x, size.y));
 }
 
 bool ButiEngine::GUI::IsRectVisible(const Vector2& rect_min, const Vector2& rect_max)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::IsRectVisible(ImVec2(rect_min.x, rect_min.y), ImVec2(rect_max.x, rect_max.y));
 }
 
@@ -1153,7 +1154,7 @@ void ButiEngine::GUI::CalcListClipping(int items_count, float items_height, int&
 }
 
 bool ButiEngine::GUI::BeginChildFrame(unsigned int id, const Vector2& size, GuiWindowFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::BeginChildFrame(id, ImVec2(size.x, size.y), flags);
 }
 
@@ -1307,71 +1308,87 @@ ButiEngine::GUI::GuiIO ButiEngine::GUI::GetIO()
 	return ConvertIO(ImGui::GetIO());
 }
 
+void ButiEngine::GUI::SetState(GUIState arg_state)
+{
+	state = arg_state;
+}
+
 bool ButiEngine::GUI::Begin(const std::string& name, bool* p_open, GuiWindowFlags flags)
 {
-	return ImGui::Begin(name.c_str(),p_open,flags);
+	if (state == GUIState::noActive) {
+		state = GUIState::active;
+		return ImGui::Begin(name.c_str(), p_open, flags);
+	}
+	return false;
 }
 
 void ButiEngine::GUI::End()
 {
-	ImGui::End();
+	if (state == GUIState::active) {
+		state = GUIState::noActive;
+
+		ImGui::End();
+	}
 }
 
 bool ButiEngine::GUI::BeginChild(const std::string& str_id, const Vector2& size, bool border, GuiWindowFlags flags)
 {
+	if (state != GUIState::active) {return false;}
+
 	return ImGui::BeginChild(str_id.c_str(), ImVec2(size.x, size.y), border, flags);
 }
 
 bool ButiEngine::GUI::BeginChild(unsigned int id, const Vector2& size, bool border, GuiWindowFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::BeginChild(id, ImVec2(size.x, size.y), border, flags);
 }
 
 void ButiEngine::GUI::EndChild()
-{
+{if (state != GUIState::active) {return ;}
 	ImGui::EndChild();
 }
 
 bool ButiEngine::GUI::IsWindowAppearing()
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::IsWindowAppearing();
 }
 
 bool ButiEngine::GUI::IsWindowCollapsed()
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::IsWindowCollapsed();
 }
 
 bool ButiEngine::GUI::IsWindowFocused(GuiFocusedFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::IsWindowFocused(flags);
 }
 
 bool ButiEngine::GUI::IsWindowHovered(GuiHoveredFlags flags)
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::IsWindowHovered(flags);
 }
 
 
 ButiEngine::Vector2 ButiEngine::GUI::GetWindowPos()
-{
+{if (state != GUIState::active) {return Vector2();}
 	auto temp = ImGui::GetWindowPos();
 	return Vector2(temp.x,temp.y);
 }
 
 ButiEngine::Vector2 ButiEngine::GUI::GetWindowSize()
 {
+	if (state != GUIState::active) { return Vector2(); }
 	auto temp = ImGui::GetWindowSize();
 	return Vector2(temp.x, temp.y);
 }
 
 float ButiEngine::GUI::GetWindowWidth()
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::GetWindowWidth();
 }
 
 float ButiEngine::GUI::GetWindowHeight()
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::GetWindowHeight();
 }
 
@@ -1455,71 +1472,71 @@ void ButiEngine::GUI::PopButtonRepeat()
 }
 
 void ButiEngine::GUI::Separator()
-{
+{if (state != GUIState::active) {return ;}
 	ImGui::Separator();
 }
 
 void ButiEngine::GUI::SameLine(float offset_from_start_x, float spacing)
-{
+{if (state != GUIState::active) {return ;}
 	ImGui::SameLine(offset_from_start_x, spacing);
 }
 
 void ButiEngine::GUI::NewLine()
-{
+{if (state != GUIState::active) {return ;}
 	ImGui::NewLine();
 }
 
 void ButiEngine::GUI::Spacing()
-{
+{if (state != GUIState::active) {return ;}
 	ImGui::Spacing();
 }
 
 void ButiEngine::GUI::Dummy(const Vector2& size)
-{
+{if (state != GUIState::active) {return ;}
 	ImGui::Dummy(ImVec2(size.x, size.y));
 }
 
 void ButiEngine::GUI::Indent(float indent_w)
-{
+{if (state != GUIState::active) {return ;}
 	ImGui::Indent(indent_w);
 }
 
 void ButiEngine::GUI::Unindent(float indent_w)
-{
+{if (state != GUIState::active) {return ;}
 	ImGui::Unindent(indent_w);
 }
 
 void ButiEngine::GUI::BeginGroup()
-{
+{if (state != GUIState::active) {return ;}
 	ImGui::BeginGroup();
 }
 
 void ButiEngine::GUI::EndGroup()
-{
+{if (state != GUIState::active) {return ;}
 	ImGui::EndGroup();
 }
 
 void ButiEngine::GUI::AlignTextToFramePadding()
-{
+{if (state != GUIState::active) {return ;}
 	ImGui::AlignTextToFramePadding();
 }
 
 float ButiEngine::GUI::GetTextLineHeight()
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::GetTextLineHeight();
 }
 
 float ButiEngine::GUI::GetTextLineHeightWithSpacing()
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::GetTextLineHeightWithSpacing();
 }
 
 float ButiEngine::GUI::GetFrameHeight()
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::GetFrameHeight();
 }
 
 float ButiEngine::GUI::GetFrameHeightWithSpacing()
-{
+{if (state != GUIState::active) {return false;}
 	return ImGui::GetFrameHeightWithSpacing();
 }

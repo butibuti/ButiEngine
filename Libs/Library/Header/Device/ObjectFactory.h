@@ -112,6 +112,7 @@ namespace ButiEngine {
 		bool IsCereal() { return isCereal; }
 		virtual void PreInitialize() = 0;
 		virtual void Initialize() = 0;
+		virtual void ShowGUI() {}
 
 	};
 }

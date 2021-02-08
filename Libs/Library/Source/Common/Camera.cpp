@@ -2,6 +2,7 @@
 #include"Header/Common/Camera_Dx12.h"
 
 #include"Header/Common/CollisionPrimitive.h"
+#include "..\..\Header\Common\Camera.h"
 
 std::string ButiEngine::Camera::GetName() const
 {
@@ -32,6 +33,12 @@ bool ButiEngine::Camera::GetActive() const
 void ButiEngine::Camera::Draw()
 {
 	shp_renderer->Rendering(cameraViewProp.layer);
+}
+
+void ButiEngine::Camera::BefDraw()
+{
+	cameraPos= shp_transform->GetWorldPosition();
+	viewMatrix = shp_transform->GetMatrix().GetInverse();
 }
 
 ButiEngine::CameraProjProperty& ButiEngine::Camera::GetCameraProperty()

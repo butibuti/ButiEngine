@@ -46,9 +46,6 @@ void ButiEngine::ModelDrawData_Dx12::Initialize()
 	textureRegion = srvCount;
 	DrawData_Dx12::Initialize(srvCount);
 
-	CommandListHelper::BundleReset(pipelineState, commandList, wkp_graphicDevice.lock());
-
-	DrawData_Dx12::CommandSet();
 
 }
 
@@ -58,49 +55,6 @@ void ButiEngine::ModelDrawData_Dx12::DrawBefore()
 	ModelUpdate();
 }
 
-void ButiEngine::ModelDrawData_Dx12::ChangeCullMode(const CullMode& arg_cull)
-{
-	rasterizerStateDesc.CullMode = (D3D12_CULL_MODE)arg_cull;
-
-
-	//pipelineState = PipelineStateHelper::CreateDefault3D(rootSignature, pipeLineDesc, rasterizerStateDesc, wkp_graphicDevice.lock()->GetApplication().lock()->GetResourceContainer()->GetShader(shaderTag).lock(),shp_drawInfo->drawSettings. blendMode, wkp_graphicDevice.lock());
-
-	CommandListHelper::BundleReset(pipelineState, commandList, wkp_graphicDevice.lock());
-
-	DrawData_Dx12::CommandSet();
-
-}
-
-void ButiEngine::ModelDrawData_Dx12::ChangeFillMode(const bool isFill)
-{
-	if (isFill)
-		rasterizerStateDesc.FillMode = D3D12_FILL_MODE::D3D12_FILL_MODE_SOLID;
-	else
-		rasterizerStateDesc.FillMode = D3D12_FILL_MODE::D3D12_FILL_MODE_WIREFRAME;
-
-
-	//pipelineState = PipelineStateHelper::CreateDefault3D(rootSignature, pipeLineDesc, rasterizerStateDesc, wkp_graphicDevice.lock()->GetApplication().lock()->GetResourceContainer()->GetShader(shaderTag).lock(),shp_drawInfo->drawSettings. blendMode,wkp_graphicDevice.lock());
-
-	CommandListHelper::BundleReset(pipelineState, commandList, wkp_graphicDevice.lock());
-
-	DrawData_Dx12::CommandSet();
-}
-
-void ButiEngine::ModelDrawData_Dx12::ChangeSwitchFillMode()
-{
-	if (rasterizerStateDesc.FillMode == D3D12_FILL_MODE::D3D12_FILL_MODE_SOLID)
-		rasterizerStateDesc.FillMode = D3D12_FILL_MODE::D3D12_FILL_MODE_WIREFRAME;
-	else
-		rasterizerStateDesc.FillMode = D3D12_FILL_MODE::D3D12_FILL_MODE_SOLID;
-
-
-	//pipelineState = PipelineStateHelper::CreateDefault3D(rootSignature, pipeLineDesc, rasterizerStateDesc, wkp_graphicDevice.lock()->GetApplication().lock()->GetResourceContainer()->GetShader(shaderTag).lock(),shp_drawInfo->drawSettings. blendMode, wkp_graphicDevice.lock());
-
-	CommandListHelper::BundleReset(pipelineState, commandList, wkp_graphicDevice.lock());
-
-	DrawData_Dx12::CommandSet();
-
-}
 
 void ButiEngine::ModelDrawData_Dx12::Draw()
 {

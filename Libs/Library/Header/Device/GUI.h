@@ -593,6 +593,9 @@ namespace ButiEngine {
 			memset(tagName, 0, sizeof(tagName));
 		}
 
+		enum  GUIState {
+			enable , active  , noActive 
+		};
 
 		struct GuiIO
 		{
@@ -692,6 +695,8 @@ namespace ButiEngine {
 			unsigned short   InputQueueSurrogate;      
 		};
 
+		static  GUIState state=GUIState::enable;
+		void SetState(const GUIState arg_state);
 
 		bool          Begin(const std::string& name, bool* p_open = nullptr, GuiWindowFlags flags = 0);
 		void          End();

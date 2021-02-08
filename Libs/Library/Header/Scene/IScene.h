@@ -12,6 +12,8 @@ namespace ButiEngine {
 		virtual void Set()=0;
 		virtual void Update() = 0;
 		virtual void UIUpdate()=0;
+		virtual void BefDraw() = 0;
+		virtual void RegistGameObjects() = 0;
 		virtual void Draw() = 0;
 		virtual void EditCameraUpdate() = 0;
 		virtual void ActiveCollision(const UINT arg_layerCount) = 0;

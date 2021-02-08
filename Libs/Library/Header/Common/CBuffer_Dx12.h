@@ -36,7 +36,7 @@ namespace ButiEngine {
 			return;
 		}
 		mapKeep = arg_mapKeep;
-		auto out= wkp_heapManager.lock()->CreateConstantBufferView(instance.get(), mapKeep, size);
+		auto out= wkp_heapManager.lock()->CreateConstantBufferView(instance.get(), mapKeep, sizeof(T));
 		index= out.index;
 		gpuDescriptorHandle = out.GPUHandle;
 	}
@@ -52,7 +52,7 @@ namespace ButiEngine {
 	}
 	void Update()const override {
 
-		wkp_heapManager.lock()->ConstantBufferUpdate(instance.get(), index, size);
+		wkp_heapManager.lock()->ConstantBufferUpdate(instance.get(), index, sizeof(T));
 	}
 
 	template<class Archive>

@@ -24,6 +24,7 @@ namespace ButiEngine {
 	private:
 		std::shared_ptr<ICamera> shp_camera;
 		Vector3 accel = Vector3();
+		std::shared_ptr<RelativeTimer>shp_timer;
 	};
 
 }

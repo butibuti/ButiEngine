@@ -120,7 +120,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\Vertex.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\WaveDatas.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Scene\ComponentsLoader.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Header\Scene\EditScene.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Scene\IScene.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Scene\Scene.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Scene\SceneInformation.h" />
@@ -223,7 +222,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Resources\Sound.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Resources\WaveDatas.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Scene\ComponentsLoader.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Source\Scene\EditScene.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Scene\Scene.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Scene\SceneInformation.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Scene\SceneManager.cpp" />

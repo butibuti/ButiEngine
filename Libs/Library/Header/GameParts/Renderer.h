@@ -8,18 +8,31 @@ namespace ButiEngine {
 		class CollisionLayer;
 	}
 
+	struct RegistCommand {
+		UINT* p_index = nullptr;
+		bool isAfter;
+		std::shared_ptr< IDrawObject> shp_obj = nullptr;
+	};
 	struct DrawLayer {
-		DrawLayer();
+
+		DrawLayer(std::weak_ptr<IRenderer> arg_wkp_renderer);
 		void Clear();
 		void BefRendering();
-		UINT* Regist(std::weak_ptr< IDrawObject> arg_wkp_drawObject, const bool arg_isAfterRendering, std::shared_ptr<Collision::CollisionPrimitive_Box_OBB> arg_ret_pim=nullptr);
-		void UnRegist(UINT* arg_path,const bool arg_isAfterRendering);
+		UINT* Regist(std::shared_ptr< IDrawObject> arg_wkp_drawObject, const bool arg_isAfterRendering, std::shared_ptr<Collision::CollisionPrimitive_Box_OBB> arg_ret_pim=nullptr);
+		void UnRegist(UINT* arg_path, const bool arg_isAfterRendering);
+		void DeleteDrawObj(UINT* arg_path,const bool arg_isAfterRendering);
 
-		std::vector<std::weak_ptr< IDrawObject>> vec_befDrawObj;
-		std::vector<std::weak_ptr< IDrawObject>> vec_afterDrawObj;
-		std::vector<UINT*> vec_index;
+		std::vector<std::shared_ptr< IDrawObject>> vec_befDrawObj;
+		std::vector<std::shared_ptr< IDrawObject>> vec_afterDrawObj;
+
+		std::vector<RegistCommand> vec_registCommandBuff;
+
+		int nowFrameAdditionObjectCount=0;
+		int nowFrameAdditionObjectCount_after=0;
+		std::vector<UINT*> vec_befIndex;
 		std::vector<UINT*> vec_afterIndex;
 		std::shared_ptr<Collision::CollisionLayer<IDrawObject>> shp_collisionLayer;
+		std::weak_ptr<IRenderer> wkp_renderer;
 	};
 
 	class Renderer:public IRenderer
@@ -43,7 +56,7 @@ namespace ButiEngine {
 
 		std::vector< std::shared_ptr<IDrawObject>> GetHitDrawObjects(std::shared_ptr<Collision::CollisionPrimitive> arg_prim,const int arg_layer)override;
 
-		UINT* RegistDrawObject(std::weak_ptr< IDrawObject> arg_wkp_drawObject, const bool arg_afterDraw,const UINT arg_layer=0)override;
+		UINT* RegistDrawObject(std::shared_ptr< IDrawObject> arg_wkp_drawObject, const bool arg_afterDraw,const UINT arg_layer=0)override;
 
 		void UnRegistDrawObject(UINT* arg_index, const bool arg_afterDraw, const UINT arg_layer = 0)override;
 
@@ -53,10 +66,10 @@ namespace ButiEngine {
 		std::shared_ptr<CBuffer_Dx12<Fog>> GetFogCBuffer()override;
 	private:
 
-		inline void ZSort(std::vector < std::weak_ptr< IDrawObject>>& arg_vec_drawObjects) {
-			sort(arg_vec_drawObjects.begin(), arg_vec_drawObjects.end(), [](const std::weak_ptr< IDrawObject> pmX, const std::weak_ptr<IDrawObject> pmY) {
+		inline void ZSort(std::vector < std::shared_ptr< IDrawObject>>& arg_vec_drawObjects) {
+			sort(arg_vec_drawObjects.begin(), arg_vec_drawObjects.end(), [](const std::shared_ptr< IDrawObject> pmX, const std::shared_ptr<IDrawObject> pmY) {
 				//if(pmX.lock()&&pmY.lock())
-				return pmX.lock()->GetZ() > pmY.lock()->GetZ();
+				return pmX->GetZ() > pmY->GetZ();
 			});
 		}
 

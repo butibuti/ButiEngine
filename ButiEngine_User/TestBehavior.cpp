@@ -46,6 +46,11 @@ void ButiEngine::TestBehavior::OnUpdate()
 	moveForce.Normalize();
 	gameObject.lock()->transform->SetLocalPosition(gameObject.lock()->transform->GetLocalPosition() + moveForce * 0.05f);
 	
+	if (shp_timer->Update()) {
+		shp_timer->Stop();
+		//gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetSceneManager().lock()->ReloadScene();
+	}
+
 }
 
 void ButiEngine::TestBehavior::OnSet()
@@ -54,21 +59,12 @@ void ButiEngine::TestBehavior::OnSet()
 
 void ButiEngine::TestBehavior::Start()
 {
-	//auto gameObject = GetManager().lock()->AddObjectFromCereal("test", ObjectFactory::Create<Transform>());
-	//shp_AABB = ObjectFactory::Create<Collision::CollisionPrimitive_Box_AABB>(Vector3(1,1,1), gameObject.lock()->transform);
-
-	/*shp_camera = GetCamera("main").lock();
-	shp_camera->shp_transform->SetWorldPosition(Vector3());
-	shp_camera->shp_transform->SetBaseTransform(gameObject.lock()->transform, true);
-	auto anim = gameObject.lock()->AddGameComponent<TransformAnimation>();
-	anim->SetTargetTransform(gameObject.lock()->transform->Clone());*/
+	shp_timer = ObjectFactory::Create<RelativeTimer>(5);
+	shp_timer->Start();
 }
 
 void ButiEngine::TestBehavior::OnCollision(std::weak_ptr<GameObject> arg_other)
 {
-	GUI::Begin("Collision");
-	GUI::Text(u8"接触中！！！！！");
-	GUI::End();
 }
 
 std::shared_ptr<ButiEngine::Behavior> ButiEngine::TestBehavior::Clone()

@@ -86,9 +86,8 @@ void ButiEngine::Camera_Dx12::Start()
 		wkp_graphicDevice.lock()->ClearDepthStancil(cameraViewProp.clearDepth);
 	}
 
-	viewMatrix = shp_transform->GetMatrix().GetInverse();
 
-	wkp_graphicDevice.lock()->SetCameraPos(shp_transform->GetWorldPosition());
+	wkp_graphicDevice.lock()->SetCameraPos(cameraPos);
 	wkp_graphicDevice.lock()->SetProjectionMatrix(projectionMatrix);
 	wkp_graphicDevice.lock()->SetRawViewMatrix(viewMatrix);
 

@@ -13,9 +13,10 @@ using namespace::ButiEngine;
 
 #ifdef DEBUG
 
+
+
 int main() {
 	std::cout << "debug" << std::endl;
-
 #else
 
 int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
@@ -24,6 +25,7 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 #endif
 
 
+	//auto app = CreateDefaultApplicationInstance("DivisionScene", WindowPopType::max, 1080, 700, false);
 	auto app = CreateEditorApplicationInstance("DivisionScene", WindowPopType::max,1080,700, false);
 	GameDevice::Initialize();
 	GameDevice::GetInput()->Initialize(app);

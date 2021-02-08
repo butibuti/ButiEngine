@@ -1,12 +1,12 @@
 #include "stdafx.h"
 #include"Header/Device/DescriptorHeapManager.h"
 #include"Header/Device/GraphicResourceUtil_Dx12.h"
+#include "..\..\Header\Device\DescriptorHeapManager.h"
 
-ButiEngine::DescriptorHeapManager::DescriptorHeapManager( std::weak_ptr<GraphicDevice_Dx12> arg_wkp_graphicDevice,const UINT arg_max , const UINT arg_addUint )
+ButiEngine::DescriptorHeapManager::DescriptorHeapManager( std::weak_ptr<GraphicDevice_Dx12> arg_wkp_graphicDevice,const UINT arg_max  )
 {
 	wkp_graphicDevice= arg_wkp_graphicDevice;
-	maxCbv = 100;//arg_max;
-	addUnit = arg_addUint;
+	maxCbv = arg_max;
 }
 
 void ButiEngine::DescriptorHeapManager::Initialize(ID3D12Device& device)
@@ -45,7 +45,7 @@ void ButiEngine::DescriptorHeapManager::Initialize(ID3D12Device& device)
 	D3D12_RANGE readRange = {};
 	HRESULT hr = constantBufferUploadHeap->Map(0, &readRange, (void**)&mappedConstantBuffer);
 
-
+	vec_cbBackUpData.resize(maxCbv);
 }
 
 
@@ -157,7 +157,14 @@ ButiEngine::HandleInformation ButiEngine::DescriptorHeapManager::CreateConstantB
 	//	std::cout << "OK!" << std::endl;
 	//}*/
 
-	vec_cbBackUpData.push_back({ top,sizeAligned,out.CPUHandle });
+	if (vec_cbBackUpData[top]) {
+		delete vec_cbBackUpData[top];
+	}
+
+	BackUpConstantBufferData* backup=new BackUpConstantBufferData();
+	*backup = { top,sizeAligned,out.CPUHandle };
+
+	vec_cbBackUpData[top]=backup;
 
 	return out;
 }
@@ -236,45 +243,51 @@ void ButiEngine::DescriptorHeapManager::Release(const BlankSpace& arg_releaseSpa
 	vec_space.push_back(arg_releaseSpace);
 }
 
+void ButiEngine::DescriptorHeapManager::Release()
+{
+	auto endItr = vec_cbBackUpData.end();
+
+	for (auto itr = vec_cbBackUpData.begin(); itr != endItr; itr++) {
+		delete	*itr;
+	}
+
+}
+
 void ButiEngine::DescriptorHeapManager::ReCreateConstantBuffer()
 {
 	std::reverse(vec_cbBackUpData.begin(), vec_cbBackUpData.end());
-	std::map<UINT, std::string> map_check;
 	for (auto itr = vec_cbBackUpData.begin();itr!= vec_cbBackUpData.end(); ) {
-		if (map_check.count(itr->top)) {
-			itr = vec_cbBackUpData.erase(itr);
+		if (!(*itr)) {
 			continue;
-		}
-		else {
-			map_check.emplace(itr->top, "");
 		}
 
 		D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
 
-		//BackUpConstantBufferData backUpData;
 
-		cbvDesc.BufferLocation = constantBufferUploadHeap->GetGPUVirtualAddress() + ((UINT64)itr->top * 0x100);
+		cbvDesc.BufferLocation = constantBufferUploadHeap->GetGPUVirtualAddress() + ((UINT64)(*itr)->top * 0x100);
 
-		cbvDesc.SizeInBytes = itr->sizeAligned;
+		cbvDesc.SizeInBytes = (*itr)->sizeAligned;
 
 
 		assert((cbvDesc.SizeInBytes & 0xff) == 0);
 
 		wkp_graphicDevice.lock()
-			->GetDevice().CreateConstantBufferView(&cbvDesc, itr->cpuHandle);
+			->GetDevice().CreateConstantBufferView(&cbvDesc, (*itr)->cpuHandle);
 		itr++;
 	}
+	std::reverse(vec_cbBackUpData.begin(), vec_cbBackUpData.end());
 }
 
 void ButiEngine::DescriptorHeapManager::AddHeapRange()
 {
 	std::cout << "AddHeapRange" << std::endl;
-	maxCbv += addUnit;
+	maxCbv *= 2;
 	if (maxCbv > DescriptorHeapSize)
 		throw ButiException(L"", L"", L"");
 
 	UINT64 size = ((UINT64)maxCbv) * 0x100;
 
+	vec_cbBackUpData.resize(maxCbv);
 	
 	D3D12_HEAP_PROPERTIES prop = { D3D12_HEAP_TYPE_UPLOAD, D3D12_CPU_PAGE_PROPERTY_UNKNOWN, D3D12_MEMORY_POOL_UNKNOWN, 1, 1 };
 	D3D12_RESOURCE_DESC desc = constantBufferUploadHeap->GetDesc();

@@ -35,60 +35,17 @@ ButiEngine::MeshDrawData_Dx12::MeshDrawData_Dx12(const ModelTag & arg_model, con
 }
 
 
-void ButiEngine::MeshDrawData_Dx12::ChangeCullMode(const CullMode& arg_cull)
-{
-	rasterizerStateDesc.CullMode = (D3D12_CULL_MODE)arg_cull;
-
-
-	//pipelineState = PipelineStateHelper::CreateDefault3D(rootSignature, pipeLineDesc,rasterizerStateDesc, wkp_graphicDevice.lock()->GetApplication().lock()->GetResourceContainer()->GetShader(shaderTag).lock(),shp_drawInfo->drawSettings. blendMode, wkp_graphicDevice.lock());
-
-
-	CommandListHelper::BundleReset(pipelineState, commandList, wkp_graphicDevice.lock());
-	CommandSet();
-}
-
-void ButiEngine::MeshDrawData_Dx12::ChangeFillMode(const bool isFill)
-{
-	if(isFill)
-	rasterizerStateDesc .FillMode = D3D12_FILL_MODE::D3D12_FILL_MODE_SOLID;
-	else
-	rasterizerStateDesc .FillMode = D3D12_FILL_MODE::D3D12_FILL_MODE_WIREFRAME;
-
-
-	//pipelineState = PipelineStateHelper::CreateDefault3D(rootSignature, pipeLineDesc,rasterizerStateDesc, wkp_graphicDevice.lock()->GetApplication().lock()->GetResourceContainer()->GetShader(shaderTag).lock(), shp_drawInfo->drawSettings.blendMode, wkp_graphicDevice.lock());
-
-
-	CommandListHelper::BundleReset(pipelineState, commandList, wkp_graphicDevice.lock());
-	CommandSet();
-}
-
-void ButiEngine::MeshDrawData_Dx12::ChangeSwitchFillMode()
-{
-	if (rasterizerStateDesc.FillMode == D3D12_FILL_MODE::D3D12_FILL_MODE_SOLID)
-		rasterizerStateDesc.FillMode = D3D12_FILL_MODE::D3D12_FILL_MODE_WIREFRAME;
-	else
-		rasterizerStateDesc.FillMode = D3D12_FILL_MODE::D3D12_FILL_MODE_SOLID;
-
-
-	//pipelineState = PipelineStateHelper::CreateDefault3D(rootSignature, pipeLineDesc, rasterizerStateDesc, wkp_graphicDevice.lock()->GetApplication().lock()->GetResourceContainer()->GetShader(shaderTag).lock(), shp_drawInfo->drawSettings.blendMode, wkp_graphicDevice.lock());
-
-	CommandListHelper::BundleReset(pipelineState, commandList,wkp_graphicDevice.lock());
-	CommandSet();
-}
 
 void ButiEngine::MeshDrawData_Dx12::Initialize()
 {
-	int srvCount = 0;
+	textureRegion = 0;
 	auto container = wkp_graphicDevice.lock()->GetApplication().lock()->GetResourceContainer();
 	for (int i = 0; i < vec_materialTags.size(); i++) {
 		auto textureCount = container->GetMaterial(vec_materialTags[i]).lock()->GetTextureCount();
-		srvCount = max(srvCount, textureCount);
+		textureRegion = max(textureRegion, textureCount);
 	}
-	textureRegion = srvCount;
-	DrawData_Dx12::Initialize(srvCount);
+	//DrawData_Dx12::CommandSet();
 	
-	CommandListHelper::BundleReset(pipelineState, commandList,wkp_graphicDevice.lock());
-	CommandSet();
 
 
 }
@@ -157,6 +114,7 @@ void ButiEngine::DrawData_Dx12::Initialize(const UINT srvCount)
 		shp_worldMatrixUpdater = std::make_shared<MatrixUpdater_default>(cbuffer, shp_transform,wkp_graphicDevice,transform);
 		break;
 	}
+
 }
 
 void ButiEngine::DrawData_Dx12::CreatePipeLineState(const UINT arg_exCBuffer, const UINT srvCount)
@@ -208,6 +166,14 @@ void ButiEngine::DrawData_Dx12::BufferUpdate()
 void ButiEngine::DrawData_Dx12::CommandSet()
 {
 
+	if (!(shp_drawInfo->IsContainExCBuffer("FogParameter"))) {
+		shp_drawInfo->vec_exCBuffer.push_back(shp_renderer->GetFogCBuffer());
+	}
+		
+	Initialize(textureRegion);
+	CommandListHelper::BundleReset(pipelineState, commandList, wkp_graphicDevice.lock());
+
+
 	shp_worldMatrixUpdater->WorldMatrixUpdate();
 	wkp_graphicDevice.lock()->SetCommandList(commandList.Get());
 	//ルートシグネチャのセット
@@ -241,6 +207,9 @@ void ButiEngine::DrawData_Dx12::CommandSet()
 	wkp_graphicDevice.lock()->UnSetCommandList();
 
 	CommandListHelper::Close(commandList);
+
+
+	shp_drawInfo->RemoveExCBuffer("FogParameter");
 }
 
 std::shared_ptr<ButiEngine::ICBuffer> ButiEngine::DrawData_Dx12::AddICBuffer(std::shared_ptr<ICBuffer> arg_cbuffer)

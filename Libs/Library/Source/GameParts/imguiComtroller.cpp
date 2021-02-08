@@ -1,6 +1,6 @@
 #pragma once
-#include"../../Header/GameParts/imguiComtroller.h"
 #include "stdafx.h"
+#include"../../Header/GameParts/imguiComtroller.h"
 
 
 //imgui
@@ -11,6 +11,7 @@
 
 #include "Header/Device/DescriptorHeapManager.h"
 #include"Header/Device/GraphicResourceUtil_Dx12.h"
+#include "..\..\Header\GameParts\imguiComtroller.h"
 
 using namespace ButiEngine;
 
@@ -55,6 +56,14 @@ void ImguiController::Start()
 
 void ImguiController::Update()
 {
+    auto endItr = vec_shp_GUIObjects.end();
+    int size = vec_shp_GUIObjects.size();
+    for (auto itr = vec_shp_GUIObjects.begin(); itr != endItr; itr++) {
+        (*itr)->ShowGUI();
+    }
+
+    vec_shp_GUIObjects.clear();
+    vec_shp_GUIObjects.reserve(size);
 }
 
 void ImguiController::Draw()
@@ -160,6 +169,11 @@ void ImguiController::SetResourceTag(TextureTag arg_tag)
         return;
     }
     unq_instance->currentTextureTag = arg_tag;
+}
+
+void ButiEngine::ImguiController::SetGUIObject(std::shared_ptr<IObject> arg_obj)
+{
+    vec_shp_GUIObjects.push_back(arg_obj);
 }
 
 std::shared_ptr<IObject> ImguiController::GetDraggingObject()

@@ -28,8 +28,8 @@ namespace ButiEngine {
 		void SetResourceTag(GeometryShaderTag arg_tag);
 		void SetResourceTag(TextureTag arg_tag);
 
-
-		
+		void SetGUIObject(std::shared_ptr<IObject>arg_obj);
+		std::vector< std::shared_ptr<IObject>>vec_shp_GUIObjects;
 		
 		std::shared_ptr<IObject> GetDraggingObject();
 

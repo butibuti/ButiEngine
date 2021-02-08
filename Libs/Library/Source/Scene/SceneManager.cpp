@@ -3,8 +3,6 @@
 #include "..\..\Header\Scene\SceneManager.h"
 
 #include"..\..\Header\Scene/Scene.h"
-#include"..\..\Header\Scene/EditScene.h"
-
 
 ButiEngine::SceneManager::SceneManager(std::weak_ptr<IApplication> arg_wkp_app)
 {
@@ -12,6 +10,13 @@ ButiEngine::SceneManager::SceneManager(std::weak_ptr<IApplication> arg_wkp_app)
 	wkp_app = arg_wkp_app;
 }
 
+void SceneUpdate(std::shared_ptr<ButiEngine::IScene> currentScene) {
+	currentScene->Update();
+}
+
+void SceneDraw(std::shared_ptr<ButiEngine::IScene> currentScene) {
+	currentScene->Draw();
+}
 void ButiEngine::SceneManager::Update()
 {
 	if (isReload) {
@@ -25,13 +30,20 @@ void ButiEngine::SceneManager::Update()
 	if (sceneChangeTimer->Update())
 	{
 		RenewalScene();
+		currentScene->Start();
 		sceneChangeTimer->Stop();
 	}
 
+	GUI::SetState(GUI::GUIState::noActive);
 	currentScene->UIUpdate();
 
-	currentScene->Update();
+	GUI::SetState(GUI::GUIState::enable);
+	currentScene->BefDraw();
+
+	auto updateThread = std::thread(SceneUpdate, currentScene);
+
 	currentScene->Draw();
+	updateThread.join();
 }
 
 void ButiEngine::SceneManager::Initialize()
@@ -95,6 +107,7 @@ void ButiEngine::SceneManager::LoadScene_Init(const std::string& arg_sceneName, 
 
 		SetScene_Init(arg_sceneName, ObjectFactory::Create<Scene>(GetThis<ISceneManager>(), shp_sceneInfo));
 		currentScene->Set();
+		currentScene->Start();
 	}
 }
 
@@ -129,6 +142,7 @@ void ButiEngine::SceneManager::RenewalScene()
 	currentScene = newScene;
 	newScene = nullptr;
 	currentScene->Set();
+	currentScene->Start();
 }
 
 std::weak_ptr<ButiEngine::IApplication> ButiEngine::SceneManager::GetApplication()

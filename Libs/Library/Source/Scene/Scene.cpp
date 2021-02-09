@@ -1,7 +1,6 @@
 #pragma once
 #include"stdafx.h"
 #include "..\..\Header\Scene\Scene.h"
-#include"Header/GameParts/SoundManager.h"
 #include"Header/GameParts/Renderer.h"
 #include"Header/GameParts/CollisionManager.h"
 #include"Header/Scene/ComponentsLoader.h"
@@ -12,7 +11,6 @@ void ButiEngine::Scene::Update() {
 	if(shp_collisionManager)
 	shp_collisionManager->Update();
 	OnUpdate();
-	shp_soundManager->Update();
 }
 
 void ButiEngine::Scene::UIUpdate()
@@ -115,7 +113,6 @@ ButiEngine::Scene::Scene(std::weak_ptr<ISceneManager> arg_wkp_sceneManager, std:
 void ButiEngine::Scene::Release()
 {
 	shp_gameObjectManager->Release();
-	shp_soundManager->Release();
 	shp_renderer->ReleaseFogBuffer();
 	shp_renderer->Release();
 	shp_sceneManager = nullptr;
@@ -156,7 +153,6 @@ void ButiEngine::Scene::Initialize()
 
 		shp_renderer->AddLayer();
 	}
-	shp_soundManager = ObjectFactory::Create<SoundManager>(GetThis<IScene>());
 
 	ActiveCollision(1);
 
@@ -303,10 +299,6 @@ std::shared_ptr<ButiEngine::IRenderer> ButiEngine::Scene::GetRenderer()
 	return shp_renderer;
 }
 
-std::shared_ptr<ButiEngine::ISoundManager> ButiEngine::Scene::GetSoundManager()
-{
-	return shp_soundManager;
-}
 
 std::weak_ptr< ButiEngine::ISceneManager> ButiEngine::Scene::GetSceneManager()
 {

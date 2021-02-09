@@ -96,9 +96,17 @@ namespace ButiEngine
 		virtual void StopCheck() = 0;
 		virtual void Update() = 0;
 		virtual void ClearCheck() = 0;
-		virtual void Play(SoundTag tag, float valume) = 0;
-		virtual void PlayBGM(SoundTag tag, float valume) = 0;
+		virtual void PlaySE(SoundTag tag, float volume) = 0;
+		virtual void PlayBGM(SoundTag tag, float volume) = 0;
+		virtual void StopSE() = 0;
+		virtual void StopBGM() = 0;
+		virtual void RestartSE() = 0;
+		virtual void RestartBGM() = 0;
+		virtual void DestroySE() = 0;
+		virtual void DestroyBGM() = 0;
+		virtual void SetBGMVolume( float volume) = 0;
 		virtual void Release() = 0;
+		virtual SoundTag GetNowPlayBGM() = 0;
 	};
 
 	class ISceneManager :public IObject {
@@ -260,10 +268,119 @@ namespace ButiEngine
 		virtual std::shared_ptr<IResourceContainer> GetResourceContainer()=0;
 		virtual std::unique_ptr<ImguiController>& GetGUIController()=0;
 		virtual std::shared_ptr<GameObjectTagManager> GetGameObjectTagManager()=0;
+		virtual std::shared_ptr<ISoundManager> GetSoundManager() = 0;
 		virtual bool Update()=0;
 		virtual int Run()=0;
 		virtual void InitLoadResources()=0;
 		virtual void Exit()=0;
+	};
+
+	struct CameraProjProperty {
+		CameraProjProperty() {};
+		CameraProjProperty(const UINT widthScale, const UINT heightScale, const UINT x, const UINT y, const bool arg_isPararell = false, UINT arg_layer = 0);
+
+		int width = 0;
+		int height = 0;
+		int left = 0;
+		int top = 0;
+		float front = 0.0f;
+		float angle = 60.0f;
+		float farClip = 50.0f;
+		float nearClip = 0.1f;
+		bool isPararell = false;
+		UINT layer = 0;
+		float clearDepth = 1.0f;
+		TextureTag projectionTexture;
+		std::string cameraName;
+		Vector4 clearColor;
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(width);
+			archive(height);
+			archive(left);
+			archive(top);
+			archive(front);
+			archive(angle);
+			archive(farClip);
+			archive(nearClip);
+			archive(isPararell);
+			archive(layer);
+			archive(front);
+			archive(clearDepth);
+			archive(projectionTexture);
+			archive(cameraName);
+			archive(clearColor);
+		}
+
+	};
+	namespace Geometry {
+		class Box_AABB;
+	}
+
+	class ICamera :public IObject {
+	public:
+
+		std::shared_ptr<Transform> shp_transform = ObjectFactory::Create<Transform>(Vector3(0, 0, 0));
+
+
+		virtual void Start() = 0;
+		virtual void Stop()const = 0;
+		virtual void ChangeMode(const BlendMode& arg_blendMode) = 0;
+		virtual void Initialize()override {}
+		virtual void PreInitialize()override {}
+		virtual std::string GetName() const = 0;
+		virtual void SetName(const std::string& arg_name) = 0;
+		virtual void Switch() = 0;
+		virtual void SetActive(const bool arg_active) = 0;
+		virtual bool GetActive()const = 0;
+		virtual void Draw() = 0;
+		virtual void ShowUI() = 0;
+		virtual CameraProjProperty& GetCameraProperty() = 0;
+		virtual int IsContaineVisibility(std::shared_ptr<Geometry::Box_AABB>arg_AABB) = 0;
+		virtual void End() = 0;
+		virtual void SetProjectionTexture(const TextureTag& arg_tag) = 0;
+		virtual void BefDraw() = 0;
+	protected:
+	};
+	class SceneInformation;
+	class SceneChangeInformation;
+	class SceneRenderingInformation;
+
+	class IScene :public IObject
+	{
+	public:
+		virtual void Set() = 0;
+		virtual void Update() = 0;
+		virtual void UIUpdate() = 0;
+		virtual void BefDraw() = 0;
+		virtual void RegistGameObjects() = 0;
+		virtual void Draw() = 0;
+		virtual void EditCameraUpdate() = 0;
+		virtual void ActiveCollision(const UINT arg_layerCount) = 0;
+		virtual std::weak_ptr<ICamera> GetCamera(const std::string& arg_camName) = 0;
+		virtual std::weak_ptr<ICamera> GetCamera(const UINT arg_camNum = 0) = 0;
+		virtual std::weak_ptr<ICamera> AddCamera(CameraProjProperty& arg_prop, const std::string& arg_cameraName, const bool arg_initActive) = 0;
+		virtual std::weak_ptr<ICollisionManager> GetCollisionManager() = 0;
+		virtual void RemoveCamera(const std::string& arg_camName) = 0;
+		virtual void RemoveCamera(const UINT arg_camNum) = 0;
+		virtual std::shared_ptr<IRenderer> GetRenderer() = 0;
+		virtual std::shared_ptr<IResourceContainer> GetResourceContainer() = 0;
+		virtual std::weak_ptr< ISceneManager> GetSceneManager() = 0;
+		virtual std::unique_ptr<IWindow>& GetWindow() = 0;
+		virtual void SceneEnd() = 0;
+		virtual void Release() = 0;
+		virtual std::shared_ptr< SceneInformation> GetSceneInformation() = 0;
+		virtual std::shared_ptr< SceneChangeInformation> GetSceneChangeInformation() = 0;
+		virtual std::shared_ptr< SceneRenderingInformation> GetSceneRenderingInformation() = 0;
+		virtual void Save() = 0;
+		virtual void CameraActivation(const bool arg_status) = 0;
+		virtual void Start() = 0;
+		virtual void ShowGameObjectManagerUI() = 0;
+		virtual void ShowRenderingUI() = 0;
+		virtual void ShowInspectorUI() = 0;
+		virtual void ShowHeirarcyUI() = 0;
+	protected:
 	};
 }
 

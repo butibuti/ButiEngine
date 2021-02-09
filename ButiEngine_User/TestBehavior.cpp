@@ -24,11 +24,11 @@ void ButiEngine::TestBehavior::OnUpdate()
 
 	}
 	if (GameDevice::GetInput()->CheckKey(Keys::A)) {
-		moveForce -= gameObject.lock()->transform->GetRight();
+		gameObject.lock()->transform->RollLocalRotationY_Degrees(1);
 
 	}
 	if (GameDevice::GetInput()->CheckKey(Keys::D)) {
-		moveForce += gameObject.lock()->transform->GetRight();
+		gameObject.lock()->transform->RollLocalRotationY_Degrees(-1);
 
 	}
 	if (GameDevice::GetInput()->CheckKey(Keys::LeftShift)) {
@@ -44,7 +44,7 @@ void ButiEngine::TestBehavior::OnUpdate()
 
 	}*/
 	moveForce.Normalize();
-	gameObject.lock()->transform->SetLocalPosition(gameObject.lock()->transform->GetLocalPosition() + moveForce * 0.05f);
+	gameObject.lock()->transform->SetLocalPosition(gameObject.lock()->transform->GetLocalPosition() + moveForce * 0.1f);
 	
 	if (shp_timer->Update()) {
 		shp_timer->Stop();

@@ -771,7 +771,7 @@ void ButiEngine::ModelFileConverter::FBXtoB3M(const std::string& arg_fbxFileName
 		}
 		Vector4 diffuse = Vector4(diffuseNode->GetVector3(globalSettings), alpha);
 		Vector4 specular = Vector4(specularNode->GetVector3(globalSettings), specularFactorNode->GetFloat());
-		Vector4 ambient = Vector4(ambientNode->GetVector3(globalSettings), ambientFactorNode->GetFloat());
+		Vector4 ambient = Vector4(ambientNode->GetVector3(globalSettings), 1.0f);
 		Vector4 emissive;
 		if (reflectionNode) {
 			emissive = Vector4(reflectionNode->GetVector3(globalSettings), reflectionFactorNode->GetFloat());

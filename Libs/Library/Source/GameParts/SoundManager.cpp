@@ -5,9 +5,9 @@
 #include"Header/GameParts/ResourceContainer.h"
 #include"Header/Resources/Resource_Sound.h"
 #include "..\..\Header\GameParts\SoundManager.h"
-ButiEngine::SoundManager::SoundManager(std::weak_ptr<IScene> arg_wkp_iscene)
+ButiEngine::SoundManager::SoundManager(std::weak_ptr<IApplication> arg_wkp_iscene)
 {
-	wkp_iscene = arg_wkp_iscene;
+	wkp_app = arg_wkp_iscene;
 }
 ButiEngine::SoundManager::~SoundManager()
 {
@@ -58,33 +58,38 @@ void ButiEngine::SoundManager::ClearCheck()
 
 
 
-void ButiEngine::SoundManager::Play(SoundTag tag, float valume)
+void ButiEngine::SoundManager::PlaySE(SoundTag tag, float volume)
 {
 	IXAudio2SourceVoice* pSourceVoice;
 
 	//waveDataPtrs.at(tag)->buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
-	auto waveData = wkp_iscene.lock()->GetSceneManager().lock()->GetApplication().lock()->GetResourceContainer()->GetSound(tag).lock()->GetWavDatas();
+	auto waveData = wkp_app.lock()->GetResourceContainer()->GetSound(tag).lock()->GetWavDatas();
 	waveData->buffer.Flags = XAUDIO2_END_OF_STREAM;
 	HRESULT hr = cmp_pXAudio2->CreateSourceVoice(&pSourceVoice, &waveData->format);
 	hr = pSourceVoice->SubmitSourceBuffer(&(waveData->buffer));
-	pSourceVoice->SetVolume(valume*4);
+	pSourceVoice->SetVolume(volume);
 	hr = pSourceVoice->Start();
 	vec_seVoices.push_back(pSourceVoice);
 
 }
 
-void ButiEngine::SoundManager::PlayBGM(SoundTag tag, float valume)
+void ButiEngine::SoundManager::PlayBGM(SoundTag tag, float volume)
 {
+	if (tag.IsEmpty()) {
+		return;
+	}
+
+	nowBGM = tag;
 	if (cmp_bgm) {
 		cmp_bgm->Stop();
 		cmp_bgm->DestroyVoice();
 	}
-	auto waveData = wkp_iscene.lock()->GetSceneManager().lock()->GetApplication().lock()->GetResourceContainer()->GetSound(tag).lock()->GetWavDatas();
+	auto waveData = wkp_app.lock()->GetResourceContainer()->GetSound(tag).lock()->GetWavDatas();
 	waveData->buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
 	waveData->buffer.Flags = XAUDIO2_END_OF_STREAM;
 	HRESULT hr = cmp_pXAudio2->CreateSourceVoice(&cmp_bgm, &waveData->format);
 	cmp_bgm->SubmitSourceBuffer(&waveData->buffer);
-	cmp_bgm->SetVolume(valume);
+	cmp_bgm->SetVolume(volume);
 	cmp_bgm->Start();
 }
 
@@ -98,4 +103,67 @@ void ButiEngine::SoundManager::Release()
 		cmp_bgm->DestroyVoice();
 	}
 	p_masterVoice->DestroyVoice();
+}
+
+void ButiEngine::SoundManager::StopSE()
+{
+	auto end = vec_seVoices.end();
+	for (auto itr = vec_seVoices.begin(); itr != end;itr++) {
+		(*itr)->Stop();
+	}
+}
+
+void ButiEngine::SoundManager::StopBGM()
+{
+
+	if (cmp_bgm) {
+		cmp_bgm->Stop();
+	}
+}
+
+void ButiEngine::SoundManager::RestartSE()
+{
+	auto end = vec_seVoices.end();
+	for (auto itr = vec_seVoices.begin(); itr != end; itr++) {
+		(*itr)->Start();
+	}
+}
+
+void ButiEngine::SoundManager::RestartBGM()
+{
+	if (cmp_bgm) {
+		cmp_bgm->Start();
+	}
+}
+
+void ButiEngine::SoundManager::DestroySE()
+{
+	auto end = vec_seVoices.end();
+	for (auto itr = vec_seVoices.begin(); itr != end; itr++) {
+		(*itr)->Stop();
+		(*itr)->DestroyVoice();
+	}
+	vec_seVoices.clear();
+}
+
+void ButiEngine::SoundManager::DestroyBGM()
+{
+	if (cmp_bgm) {
+		cmp_bgm->Start();
+		cmp_bgm->DestroyVoice();
+		cmp_bgm = nullptr;
+		nowBGM = SoundTag();
+	}
+}
+
+void ButiEngine::SoundManager::SetBGMVolume(float volume)
+{
+	if (cmp_bgm) {
+		cmp_bgm->SetVolume(volume);
+	}
+}
+
+ButiEngine::SoundTag ButiEngine::SoundManager::GetNowPlayBGM()
+{
+	return nowBGM;
 }

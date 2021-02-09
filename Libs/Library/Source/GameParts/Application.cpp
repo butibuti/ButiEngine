@@ -8,6 +8,7 @@
 #include "..\..\Header\GameParts\Application.h"
 #include"..\..\Header/Scene/SceneManager_Edit.h"
 #include"Header/GameParts/GraphicDevice_Dx12.h"
+#include"Header/GameParts/SoundManager.h"
 
 #include"../../Header/Common/Window.h"
 
@@ -58,6 +59,10 @@ void ButiEngine::Application::CreateInstances(const std::string windowName, cons
 		InputCereal(shp_gameObjTagManager, "Application/GameObjectTagManager.tagmanager");
 	}
 
+	if (!shp_soundManager) {
+		shp_soundManager = ObjectFactory::Create<SoundManager>(GetThis<IApplication>());
+	}
+
 	ButiRandom::Initialize();
 
 
@@ -100,10 +105,17 @@ std::shared_ptr<ButiEngine::GameObjectTagManager> ButiEngine::Application::GetGa
 	return shp_gameObjTagManager;
 }
 
+std::shared_ptr<ButiEngine::ISoundManager> ButiEngine::Application::GetSoundManager()
+{
+	return shp_soundManager;
+}
+
 bool ButiEngine::Application::Update()
 {
 	unq_imguiController->Start();
+
 	shp_sceneManager->Update();
+	shp_soundManager->Update();
 	return unq_window->Update();
 }
 
@@ -357,6 +369,8 @@ void ButiEngine::Application::InitLoadResources()
 
 void ButiEngine::Application::Exit()
 {
+
+	shp_soundManager->Release();
 	shp_sceneManager->Release();
 	unq_window->Release();
 	OutputCereal(shp_resourceContainer->GetThis<ResourceContainer>());

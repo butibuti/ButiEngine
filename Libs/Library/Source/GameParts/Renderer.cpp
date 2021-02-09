@@ -205,7 +205,6 @@ void ButiEngine::DrawLayer::Clear()
 
 void ButiEngine::DrawLayer::BefRendering()
 {
-	shp_collisionLayer->Update();
 
 
 	//•`‰æƒIƒuƒWƒFƒNƒg‚Ì“o˜^‰ðœ
@@ -264,6 +263,7 @@ void ButiEngine::DrawLayer::BefRendering()
 			(*itr)->DrawBefore();
 		}
 	}
+	shp_collisionLayer->Update();
 }
 
 UINT* ButiEngine::DrawLayer::Regist(std::shared_ptr<IDrawObject> arg_wkp_drawObject, const bool arg_isAfterRendering, std::shared_ptr<Collision::CollisionPrimitive_Box_OBB> arg_ret_prim )

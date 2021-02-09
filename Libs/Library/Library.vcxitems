@@ -120,7 +120,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\Vertex.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\WaveDatas.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Scene\ComponentsLoader.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Header\Scene\IScene.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Scene\Scene.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Scene\SceneInformation.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Scene\SceneManager.h" />

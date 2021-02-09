@@ -39,7 +39,6 @@
 #include"GameObjects/Behavior.h"
 #include"GameParts/GameObjectManager.h"
 #include"Scene/SceneInformation.h"
-#include"Scene/IScene.h"
 
 
 #endif // !Common_H

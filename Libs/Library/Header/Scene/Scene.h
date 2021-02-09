@@ -33,7 +33,6 @@ namespace ButiEngine {
 		void SceneEnd()override final;
 		std::shared_ptr<IResourceContainer> GetResourceContainer();
 		std::shared_ptr<IRenderer> GetRenderer()override;
-		std::shared_ptr<ISoundManager> GetSoundManager()override;
 		std::weak_ptr< ISceneManager> GetSceneManager()override;
 		std::weak_ptr<ICollisionManager> GetCollisionManager()override;
 		std::shared_ptr< SceneInformation> GetSceneInformation()override;
@@ -51,7 +50,6 @@ namespace ButiEngine {
 		std::shared_ptr<GameObjectManager> shp_gameObjectManager;
 		std::shared_ptr<ICollisionManager> shp_collisionManager;
 	private:
-		std::shared_ptr<ISoundManager>shp_soundManager;
 		std::shared_ptr<IRenderer>shp_renderer;
 		std::vector< std::shared_ptr<ICamera>> vec_cameras;
 		std::shared_ptr< SceneInformation> sceneInformation;

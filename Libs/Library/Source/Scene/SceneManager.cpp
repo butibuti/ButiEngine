@@ -30,7 +30,6 @@ void ButiEngine::SceneManager::Update()
 	if (sceneChangeTimer->Update())
 	{
 		RenewalScene();
-		currentScene->Start();
 		sceneChangeTimer->Stop();
 	}
 

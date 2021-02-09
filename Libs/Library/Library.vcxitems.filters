@@ -174,9 +174,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Device\Helper\StringHelper.h">
       <Filter>header\Device\Helper</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)Header\Scene\IScene.h">
-      <Filter>header\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Scene\Scene.h">
       <Filter>header\Scene</Filter>
     </ClInclude>

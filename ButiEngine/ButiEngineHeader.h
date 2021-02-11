@@ -13,23 +13,17 @@
 #include<Windows.h>
 
 // C runtime headder
-#include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
 #include <wrl.h>
 
-#include <initguid.h>
 #include <assert.h>
 #include <wchar.h>
 #include <mmsystem.h>
 #include <atlbase.h>
 #include <commctrl.h> // for InitCommonControls() 
-#include <shellapi.h> // for ExtractIcon()
-#include <new.h>      // for placement new
-#include <shlobj.h>
 #include <math.h>
 #include <limits.h>
-#include <time.h>
 #include<direct.h>
 
 
@@ -42,17 +36,10 @@
 #include <list>
 #include <map>
 #include<unordered_map>
-#include <set>
-#include <stack>
-#include <functional>
-#include <algorithm>
 #include <iostream>
-#include <thread>
-#include <mutex>
 #include <fstream>
 #include <sstream>
 #include <string>
-#include <new>
 #include <memory>
 #include <exception>
 #include <stdexcept>
@@ -78,8 +65,7 @@
 
 #pragma comment(lib,"windowscodecs.lib")
 #include"Header/Common.h"
-#include"Header/GameObjects/DefaultGameComponent/CameraMan.h"
-#include"Header/GameObjects/DefaultBehavior/SampleBehavior.h"
+#include"Header/GameObjects/DefaultGameComponent/DefaultGameComponent.h"
 #pragma warning(default:4192)
 
 

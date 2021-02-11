@@ -1,5 +1,4 @@
 #include"stdafx.h"
-#include "..\..\..\Header\GameObjects\DefaultGameComponent\UIComponent.h"
 
 
 std::shared_ptr<ButiEngine::GameComponent> ButiEngine::UIComponent::Clone()

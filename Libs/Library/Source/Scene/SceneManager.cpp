@@ -3,6 +3,7 @@
 #include "..\..\Header\Scene\SceneManager.h"
 
 #include"..\..\Header\Scene/Scene.h"
+#include <thread>
 
 ButiEngine::SceneManager::SceneManager(std::weak_ptr<IApplication> arg_wkp_app)
 {

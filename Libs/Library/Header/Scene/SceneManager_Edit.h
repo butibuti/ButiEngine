@@ -13,7 +13,7 @@ namespace ButiEngine {
 		void Initialize()override;
 		void Update()override;
 		void UIUpdate();
-
+		void RenewalScene()override;
 		void ChangeScene(const std::string& arg_sceneName, float sceneChangeDalay = 0)override;
 		void LoadScene(const std::string& arg_sceneName, std::shared_ptr<SceneInformation> shp_scene = nullptr) override;
 		void LoadScene_Init(const std::string& arg_sceneName, std::shared_ptr<SceneInformation> shp_scene = nullptr) override;

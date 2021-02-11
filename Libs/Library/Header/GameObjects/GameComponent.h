@@ -23,6 +23,9 @@ namespace ButiEngine {
 		virtual void OnShowUI() {}
 		virtual void OnSet();
 		virtual void OnRemove();
+		virtual void OnCollision(std::weak_ptr<GameObject> arg_other){}
+		virtual void OnCollisionEnter(std::weak_ptr<GameObject> arg_other){}
+		virtual void OnCollisionEnd(std::weak_ptr<GameObject> arg_other){}
 		virtual std::string GetGameComponentName() = 0;
 		virtual std::shared_ptr<GameComponent> Clone() = 0;
 		bool IsRemove() {
@@ -32,7 +35,7 @@ namespace ButiEngine {
 			return isActive;
 		}
 	protected:
-		virtual void OnUpdate() = 0;
+		virtual void OnUpdate() {};
 		std::weak_ptr<ICamera>& GetCamera();
 		std::weak_ptr<ICamera>& GetCamera(const UINT arg_camNum);
 		std::weak_ptr<ICamera>& GetCamera(const std::string& arg_camName);

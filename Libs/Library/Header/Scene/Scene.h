@@ -41,7 +41,8 @@ namespace ButiEngine {
 		void Save()override;
 		void Start()override;
 		void ShowGameObjectManagerUI()override;
-		void CameraActivation(const bool arg_status) override;
+		void CameraActivation() override;
+		void CameraEditActivation() override;
 		void ShowRenderingUI()override;
 		void ShowInspectorUI()override;
 		void ShowHeirarcyUI()override;

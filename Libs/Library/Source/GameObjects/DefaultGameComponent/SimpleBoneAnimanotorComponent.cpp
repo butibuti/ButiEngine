@@ -1,5 +1,4 @@
 #include"stdafx.h"
-#include "..\..\..\Header\GameObjects\DefaultGameComponent\SimpleBoneAnimanotorComponent.h"
 #include"Header/Resources/ModelAnimation.h"
 #include"Header/Resources/DrawData/IDrawData.h"
 

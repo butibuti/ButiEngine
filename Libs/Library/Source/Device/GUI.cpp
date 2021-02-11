@@ -1354,17 +1354,17 @@ bool ButiEngine::GUI::IsWindowAppearing()
 }
 
 bool ButiEngine::GUI::IsWindowCollapsed()
-{if (state != GUIState::active) {return false;}
+{
 	return ImGui::IsWindowCollapsed();
 }
 
 bool ButiEngine::GUI::IsWindowFocused(GuiFocusedFlags flags)
-{if (state != GUIState::active) {return false;}
+{
 	return ImGui::IsWindowFocused(flags);
 }
 
 bool ButiEngine::GUI::IsWindowHovered(GuiHoveredFlags flags)
-{if (state != GUIState::active) {return false;}
+{
 	return ImGui::IsWindowHovered(flags);
 }
 

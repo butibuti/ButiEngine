@@ -2,12 +2,8 @@
 #include"Header/ApplicationCreater.h"
 #include"Header/Scene/ComponentsLoader.h"
 #include"TestBehavior.h"
-
+#include"Header/GameObjects/DefaultGameComponent/ModelDrawComponent.h"
 #include"Header/Device/ModelFileConverter.h"
-//#include"Header/GameObjects/DefaultGameComponent/ChaseComponent.h"
-#include"Header/GameObjects/DefaultGameComponent/UIComponent.h"
-#include"Header/GameObjects/DefaultGameComponent/UIAnimation.h"
-#include"Header/GameObjects/DefaultGameComponent/IKComponent.h"
 #pragma comment(lib,"ButiEngine.lib")
 using namespace::ButiEngine;
 
@@ -29,11 +25,10 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	auto app = CreateEditorApplicationInstance("DivisionScene", WindowPopType::max,1080,700, false);
 	GameDevice::Initialize();
 	GameDevice::GetInput()->Initialize(app);
-	//ComponentsLoader::GetInstance()->AddGameComponent<IKComponent>();
-	//ComponentsLoader::GetInstance()->AddBehavior<HitChecker>();
+	//ComponentsLoader::GetInstance()->AddGameComponent<MeshDrawComponent>();
 	//ModelFileConverter::FBXtoB3M("maguro_leg_joint.fbx", "maguro_leg_joint.b3m", "Model/Maguro/");
 	app->InitLoadResources();
-	app->GetSceneManager()->LoadScene_Init("Collision");
+	app->GetSceneManager()->LoadScene_Init("Test");
 
 	app->GetGraphicDevice()->SetClearColor(Vector4(0.25,0.25,0.25, 1));
 	int returnCode = app->Run();

@@ -33,11 +33,6 @@ void ButiEngine::ComponentsLoader::Release()
 	}
 	delete componentNameList;
 
-	for (int i = 0; i < behaviorNameListSize; i++) {
-		delete behaviorNameList[i];
-	}
-	delete behaviorNameList;
-	addBehaviors.clear();
 	addGameComponents.clear();
 }
 
@@ -58,34 +53,6 @@ void ButiEngine::ComponentsLoader::CreateNameList()
 		strcpy_s(componentNameList[i], size + 1, name_c_str);
 	}
 
-	if (behaviorNameList) {
-		delete behaviorNameList;
-	}
-	behaviorNameListSize = addBehaviors.size();
-
-	behaviorNameList = (char**)malloc(sizeof(char*) * behaviorNameListSize);
-
-	for (int i = 0; i < behaviorNameListSize; i++) {
-		auto name = addBehaviors.at(i)->GetBehaviorName();
-		int size = name.size();
-		behaviorNameList[i] = (char*)malloc(size * sizeof(char) + 1);
-		auto name_c_str = name.c_str();
-		strcpy_s(behaviorNameList[i], size + 1, name_c_str);
-	}
-}
-
-void ButiEngine::ComponentsLoader::AddBehavior(std::shared_ptr<Behavior> arg_behavior)
-{
-	bool isContain = false;
-	auto enditr = addBehaviors.end();
-	for (auto itr = addBehaviors.begin(); itr != enditr; itr++) {
-		if ((*itr)->GetBehaviorName() == arg_behavior->GetBehaviorName()) {
-			isContain = true;
-			(*itr) = arg_behavior;
-		}
-	}
-	if(!isContain)
-	addBehaviors.push_back(arg_behavior);
 }
 
 void ButiEngine::ComponentsLoader::AddGameComponent(std::shared_ptr<GameComponent> arg_gamecomponent)
@@ -112,33 +79,6 @@ void ButiEngine::ComponentsLoader::RemoveComponent(const std::string& arg_name)
 	}
 }
 
-void ButiEngine::ComponentsLoader::RemoveBehavior(const std::string& arg_name)
-{
-	for (auto itr = addBehaviors.begin(); itr != addBehaviors.end(); itr++) {
-		if (arg_name == (*itr)->GetBehaviorName()) {
-			addBehaviors.erase(itr);
-			break;
-		}
-	}
-}
-
-std::shared_ptr<ButiEngine::Behavior> ButiEngine::ComponentsLoader::ShowAddBehaviorUI()
-{
-	std::shared_ptr<Behavior> ret = nullptr;
-	if (GUI::TreeNode("Add Behavior")) {
-
-
-		if (GUI::ListBox("##Behaviors",currentIndex_behaviorList,behaviorNameList,behaviorNameListSize,5)) {
-		}
-
-		if (GUI::Button("Add!")) {
-			ret = addBehaviors.at(currentIndex_behaviorList)->Clone();
-		}
-
-		GUI::TreePop();
-	}
-	return ret;
-}
 
 std::shared_ptr<ButiEngine::GameComponent> ButiEngine::ComponentsLoader::ShowAddGameComponentUI()
 {

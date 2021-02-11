@@ -134,18 +134,18 @@ namespace ButiEngine
 	class IResourceContainer :public IObject
 	{
 	public:
-		struct ShaderName {
+		struct ShaderInfo {
 			std::string shaderName;
-			std::string vertexShaderName;
-			std::string pixelShaderName;
-			std::string geometryShaderName = "none";
+			VertexShaderTag vertexShaderTag;
+			PixelShaderTag pixelShaderTag;
+			GeometryShaderTag geometryShaderTag;
 			template<class Archive>
 			void serialize(Archive& archive)
 			{
 				archive(shaderName);
-				archive(vertexShaderName);
-				archive(pixelShaderName);
-				archive(geometryShaderName);
+				archive(vertexShaderTag);
+				archive(pixelShaderTag);
+				archive(geometryShaderTag);
 			}
 		};
 		struct MaterialLoadInfo {
@@ -193,8 +193,8 @@ namespace ButiEngine
 		virtual GeometryShaderTag LoadGeometryShader(const std::string& arg_filePath, const std::string& arg_fileDirectory = "")=0;
 		virtual std::vector < GeometryShaderTag> LoadGeometryShader(const std::vector<std::string>& arg_vec_filePathAndDirectory)=0;
 
-		virtual ShaderTag LoadShader(const  ShaderName& arg_shaderNames)=0;
-		virtual std::vector < ShaderTag> LoadShader(const std::vector<ShaderName>& arg_vec_shaderNames)=0;
+		virtual ShaderTag LoadShader(const  ShaderInfo& arg_shaderInfos)=0;
+		virtual std::vector < ShaderTag> LoadShader(const std::vector<ShaderInfo>& arg_vec_shaderInfos)=0;
 
 		virtual SoundTag LoadSound(const std::string& arg_filePath, const std::string& arg_fileDirectory = "")=0;
 		virtual std::vector < SoundTag> LoadSound(const std::vector<std::string>& arg_vec_filePathAndDirectory)=0;
@@ -293,6 +293,8 @@ namespace ButiEngine
 		TextureTag projectionTexture;
 		std::string cameraName;
 		Vector4 clearColor;
+		bool isInitActive = true;
+		bool isEditActive = true;
 		template<class Archive>
 		void serialize(Archive& archive)
 		{
@@ -311,6 +313,8 @@ namespace ButiEngine
 			archive(projectionTexture);
 			archive(cameraName);
 			archive(clearColor);
+			archive(isInitActive);
+			archive(isEditActive);
 		}
 
 	};
@@ -374,7 +378,8 @@ namespace ButiEngine
 		virtual std::shared_ptr< SceneChangeInformation> GetSceneChangeInformation() = 0;
 		virtual std::shared_ptr< SceneRenderingInformation> GetSceneRenderingInformation() = 0;
 		virtual void Save() = 0;
-		virtual void CameraActivation(const bool arg_status) = 0;
+		virtual void CameraActivation() = 0;
+		virtual void CameraEditActivation() = 0;
 		virtual void Start() = 0;
 		virtual void ShowGameObjectManagerUI() = 0;
 		virtual void ShowRenderingUI() = 0;

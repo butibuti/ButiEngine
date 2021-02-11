@@ -1,6 +1,5 @@
 #pragma once
 #include "stdafx.h"
-#include "..\..\..\Header\GameObjects\DefaultGameComponent\ColliderComponent.h"
 #include"Header/GameParts/CollisionManager.h"
 
 #include "..\..\Header\Common\CerealUtill.h"

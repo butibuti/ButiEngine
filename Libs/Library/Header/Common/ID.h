@@ -3,15 +3,20 @@
 #include<map>
 #include<vector>
 namespace ButiEngine {
-
+	static const std::string noneIDStr = "none";
 	template <class T>
 	class ID {
 	public:
 		ID() {}
-		ID(std::shared_ptr<UINT> arg_id) { id = (arg_id); }
+		ID(std::shared_ptr<std::string> arg_id) { id = (arg_id); }
+		ID(std::string arg_str) { id = std::make_shared<std::string>(arg_str); }
 
-		UINT* GetID()const {
-			return id.get();
+		const std::string& GetID()const {
+			if(id)
+				return *id;
+			else {
+				return noneIDStr;
+			}
 		}
 		bool operator == (const ID& other) {
 			if (other.IsEmpty()||IsEmpty()) {
@@ -31,120 +36,77 @@ namespace ButiEngine {
 			archive(id);
 		}
 	private:
-		std::shared_ptr<UINT> id = nullptr;
+		std::shared_ptr<std::string> id = nullptr;
 	};
 
 	template <class T>
 	class IDContainer {
 	public:
 		void Clear() {
-			map_values.clear();
-			vec_p_resource.clear();
-			vec_p_id.clear();
+			map_shp_resource.clear();
 		}
-		ID<T> GetTag(const std::string& arg_key, const std::string& arg_directory = "")const {
-			if (!map_values.count(arg_directory + arg_key)) {
-				return map_values.begin()->second;
-			}
-			return map_values.at(arg_directory + arg_key);
+		ID<T> GetTag(const std::string& arg_key)const {
+			return ID<T>(std::make_shared<std::string>(arg_key));
 		}
 		std::shared_ptr<T> GetValue(const ID<T>& arg_tag) {
 			if (arg_tag.IsEmpty()) {
-				std::cout << "This tag is unregisted." << std::endl;
-				return vec_p_resource.at(0);
+				std::cout <<arg_tag.GetID() <<": This tag is unregisted." << std::endl;
+				return FailedValue();
 			}
-			if ((*arg_tag.GetID()) < vec_p_resource.size())
-				return vec_p_resource.at((*arg_tag.GetID()));
-			else if (vec_p_resource.size()) 
+			if (map_shp_resource.count(arg_tag.GetID()))
 			{
-				return vec_p_resource.at(0);
-			}
+				return map_shp_resource.at(arg_tag.GetID());
+			}			
 			else
 			{
-				return nullptr;
+				return FailedValue();
 			}
 		}
+		std::shared_ptr<T> FailedValue() {
+
+			if (map_shp_resource.size()) {
+				return map_shp_resource.begin()->second;
+			}
+			else {
+				std::cout << "ResourceContainer is Empty." << std::endl;
+				return nullptr;
+			}
+
+		}
 		std::shared_ptr<T> GetValue(const std::string& arg_key) {
-			auto tag = GetTag(arg_key);
-			return vec_p_resource.at((*(tag.GetID())));
+
+			return map_shp_resource.at(arg_key);
 		}
 		std::string GetIDName(ID<T> arg_id) {
 			if (arg_id.IsEmpty()) {
 				return "none";
 			}
-			auto endItr = map_values.end();
-			for (auto mapItr = map_values.begin(); mapItr!=endItr ; mapItr++) {
-				if(mapItr->second==arg_id)
-				return mapItr->first;
-			}
-			return "none";
+			return arg_id.GetID();
 		}
-		ID<T> AddValue(std::shared_ptr<T> arg_value, const std::string& arg_key, const std::string& arg_directory = "") {
-			if (map_values.count(arg_directory + arg_key)) {
-				auto index = *(map_values.at(arg_directory + arg_key).GetID());
-				if (index >= vec_p_resource.size()) {
-					vec_p_resource.push_back(arg_value);
-				}
-				return map_values.at(arg_directory + arg_key);
+		ID<T> AddValue(std::shared_ptr<T> arg_value, const std::string& arg_key) {
+			ID<T> output(std::make_shared<std::string>(arg_key));
+			if (map_shp_resource.count( arg_key)) {
+				return output;
 			}
-			vec_p_resource.push_back(arg_value);
-			vec_p_id.push_back(std::make_shared<UINT> ((UINT)vec_p_resource.size() - 1));
-			ID<T> output((vec_p_id.at(vec_p_id.size() - 1)));
-
-			map_values.emplace(arg_directory + arg_key, output);
+			map_shp_resource.emplace( arg_key, arg_value);
 			return output;
 		}
 
-		void RecoverValue(std::shared_ptr<T> arg_value) {
-			vec_p_resource.push_back(arg_value);
-		}
-
-		ID<T> IDUpdate(ID<T> arg_id) {
-			if (arg_id.IsEmpty()) {
-				return arg_id;
-			}
-			if (vec_p_id.size() <= * arg_id.GetID()) {
-				return ID<T>();
-			}
-
-			return vec_p_id.at(*arg_id.GetID());
-		}
-
-		bool ContainValue(const std::string& arg_key, const std::string& arg_directory = "") {
-			if (map_values.count(arg_directory + arg_key)) {
-
-				auto index = *(map_values.at(arg_directory + arg_key).GetID());
-				if (index >= vec_p_resource.size()) {
-					return false;
-				}else
+		bool ContainValue(const std::string& arg_key) {
+			if (map_shp_resource.count( arg_key)) {
 
 				return true;
 			}
 			return false;
 		}
-		void Remove(const std::string& arg_key, const std::string& arg_directory = "") {
-			if (!map_values.count(arg_directory + arg_key)) {
+		void Remove(const std::string& arg_key) {
+			if (!map_shp_resource.count( arg_key)) {
 				return;
 			}
-			auto index = *(map_values.at(arg_directory + arg_key).GetID());
-			vec_p_resource.erase(vec_p_resource.begin() + index);
-			map_values.erase(arg_directory + arg_key);
-			vec_p_id.erase(vec_p_id.begin() + index);
-			for (int i = index; i < vec_p_id.size(); i++) {
-				(*vec_p_id.at(i)) = i;
-			}
+			map_shp_resource.erase(arg_key);
 		}
 		void Remove(ID<T> arg_id) {
-			auto idName = GetIDName(arg_id);
-			map_values.erase(idName);
-			auto index = *arg_id.GetID();
-			if(vec_p_resource.size()>index)
-			vec_p_resource.erase(vec_p_resource.begin() + index);
-
-			vec_p_id.erase(vec_p_id.begin() + index);
-			for (int i = index; i < vec_p_id.size(); i++) {
-				(*vec_p_id.at(i)) = i;
-			}
+			Remove(arg_id.GetID());
 		}
 
 		template<class Archive>
@@ -153,31 +115,37 @@ namespace ButiEngine {
 		}
 
 		ID<T> ShowGUI(GUI::GuiIO& arg_io) {
-			auto enditr = map_values.end();
+			auto enditr = map_shp_resource.end();
 			ID<T> out;
-			for (auto itr = map_values.begin(); itr != enditr; itr++) {
+			for (auto itr = map_shp_resource.begin(); itr != enditr; itr++) {
 				if (GUI::Button(Util::ToUTF8( itr->first).c_str())) {
-					out = (itr->second);
+					out = ID<T>(itr->first);
 				}
 
 				if (GUI::IsItemActive()) {
 					auto p1 = arg_io.MouseClickedPos[0];
 					auto p2 = arg_io.MousePos;
 					GUI::Line(Vector2( p1.x,p1.y), Vector2(p2.x, p2.y), GUI::GetColorU32(GUI::GuiCol_::GuiCol_Button), 4.0f); // Draw a line between the button and the mouse cursor
-					out = (itr->second);
+
+					out = ID<T>(itr->first);
 				}
 			}
 			return out;
 		}
 
-		const std::vector< std::shared_ptr<T>>& GetResources() {
-			return vec_p_resource;
+		std::vector< std::shared_ptr<T>> GetResources() {
+			std::vector< std::shared_ptr<T>> output;
+			output.reserve(map_shp_resource.size());
+			auto end = map_shp_resource.end();
+			for (auto itr = map_shp_resource.begin(); itr != end; itr++) {
+				output.push_back(itr->second);
+			}
+
+			return output;
 		}
 
 	private:
-		std::unordered_map<std::string, ID<T>> map_values;
-		std::vector< std::shared_ptr<T>> vec_p_resource;
-		std::vector<std::shared_ptr< UINT>>vec_p_id;
+		std::map< std::string,std::shared_ptr<T>> map_shp_resource;
 
 	};
 	template <class T>
@@ -188,68 +156,47 @@ namespace ButiEngine {
 			}
 			void Clear() {
 				map_values.clear();
-				
-				vec_p_id.clear();
 			}
-			ID<T> GetTag(const std::string& arg_key, const std::string& arg_directory = "") {
-				if (!map_values.count(arg_directory + arg_key)) {
-					return AddTag(arg_directory + arg_key);
+			ID<T> GetTag(const std::string& arg_key) {
+				if (!map_values.count( arg_key)) {
+					return AddTag( arg_key);
 				}
-				return map_values.at(arg_directory + arg_key);
+				return map_values.at( arg_key);
 			}
-			ID<T> AddTag( const std::string& arg_key, const std::string& arg_directory = "") {
-				if (map_values.count(arg_directory + arg_key)) {
-					return map_values.at(arg_directory + arg_key);
+			ID<T> AddTag( const std::string& arg_key) {
+				if (map_values.count( arg_key)) {
+					return map_values.at(  arg_key);
 				}
-				auto p_id = std::make_shared<UINT>(vec_p_id.size());
-				vec_p_id.push_back(p_id);
-				ID<T> output(p_id);
+				ID<T> output(arg_key);
 
-				map_values.emplace(arg_directory + arg_key, output);
+				map_values.emplace(arg_key,output);
 				return output;
 			}
 			std::string GetIDName(ID<T> arg_id) {
 				if (arg_id.IsEmpty()) {
 					return "none";
 				}
-				auto endItr = map_values.end();
-				for (auto mapItr = map_values.begin(); mapItr != endItr; mapItr++) {
-					if (mapItr->second == arg_id)
-						return mapItr->first;
-				}
-				return "none";
+				return arg_id.GetID();
 			}
-			void Remove(const std::string& arg_key, const std::string& arg_directory = "") {
-				if (!map_values.count(arg_directory + arg_key)) {
+			void Remove(const std::string& arg_key) {
+				if (!map_values.count( arg_key)) {
 					return;
 				}
-				auto index = *(map_values.at(arg_directory + arg_key).GetID());
-				map_values.erase(arg_directory + arg_key);
-				vec_p_id.erase(vec_p_id.begin() + index);
-				for (int i = index; i < vec_p_id.size(); i++) {
-					(*vec_p_id.at(i)) = i;
-				}
+				map_values.erase( arg_key);
 			}
 			void Remove(ID<T> arg_id) {
-				auto index = *arg_id.GetID();
-				auto mapItr = map_values.begin();
-				for (auto i = 0; i < index; i++)
-					mapItr++;
-				map_values.erase(mapItr->first);
-				vec_p_id.erase(vec_p_id.begin() + index);
-				for (int i = index; i < vec_p_id.size(); i++) {
-					(*vec_p_id.at(i)) = i;
+				if (!map_values.count(arg_id.GetID())) {
+					return;
 				}
+				map_values.erase(arg_id.GetID());
 			}
 			template<class Archive>
 			void serialize(Archive& archive)
 			{
 				archive(map_values);
-				archive(vec_p_id);
 			}
 		private:
 			std::unordered_map<std::string, ID<T>> map_values;
-			std::vector<std::shared_ptr< UINT>>vec_p_id;
 
 	};
 }

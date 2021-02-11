@@ -1,5 +1,4 @@
 #include"stdafx.h"
-#include "..\..\..\Header\GameObjects\DefaultGameComponent\IKComponent.h"
 #include"Header/Resources/Bone.h"
 #include "..\..\..\Header\GameObjects\DefaultGameComponent\ModelDrawComponent.h"
 

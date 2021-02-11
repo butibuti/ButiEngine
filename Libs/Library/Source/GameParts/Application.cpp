@@ -39,10 +39,16 @@ void ButiEngine::Application::CreateInstances(const std::string windowName, cons
 		
 		auto temp = ObjectFactory::Create<ResourceContainer>();
 		
-		//temp->SetGraphicDevice(shp_graphicDevice);
+		if (Util::CheckFileExistence(GlobalSettings::GetResourceDirectory() + "Application/resourceLoadData.resource")) {
 
-		InputCereal(temp, shp_graphicDevice);
-		shp_resourceContainer = temp;
+			InputCereal(temp, shp_graphicDevice);
+			shp_resourceContainer = temp;
+		}
+		else {
+
+			temp->SetGraphicDevice(shp_graphicDevice);
+			shp_resourceContainer = temp;
+		}
 	}
 	
 	if (!shp_sceneManager) {
@@ -55,8 +61,8 @@ void ButiEngine::Application::CreateInstances(const std::string windowName, cons
 	if (!shp_gameObjTagManager) {
 		shp_gameObjTagManager = std::make_shared<GameObjectTagManager>();
 
-
-		InputCereal(shp_gameObjTagManager, "Application/GameObjectTagManager.tagmanager");
+		if (Util::CheckFileExistence(GlobalSettings::GetResourceDirectory() + "Application/GameObjectTagManager.tagmanager"))
+			InputCereal(shp_gameObjTagManager, "Application/GameObjectTagManager.tagmanager");
 	}
 
 	if (!shp_soundManager) {

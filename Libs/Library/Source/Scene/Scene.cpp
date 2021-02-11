@@ -137,8 +137,12 @@ void ButiEngine::Scene::Initialize()
 			auto prop = CameraProjProperty(windowSize.x, windowSize.y, 0, 0);
 			prop.farClip = 200.0f;
 			prop.cameraName = "main";
+			prop.isEditActive = false;
+			prop.isInitActive = true;
 			shp_renderingInfo->vec_cameraProperty.push_back(prop);
 			prop.cameraName = "edit";
+			prop.isEditActive = true;
+			prop.isInitActive = false;
 			shp_renderingInfo->vec_cameraProperty.push_back(prop);
 
 
@@ -239,17 +243,16 @@ std::weak_ptr<ButiEngine::ICamera> ButiEngine::Scene::GetCamera(const UINT arg_c
 
 std::weak_ptr<ButiEngine::ICamera> ButiEngine::Scene::AddCamera(CameraProjProperty& arg_prop, const std::string& arg_cameraName, const bool arg_initActive)
 {
-	bool isContain = true;
+	bool isContain = false;
 	int count = 0;
 	while (isContain) {
 		for (auto itr = vec_cameras.begin(); itr != vec_cameras.end(); itr++) {
 			if ((*itr)->GetName() == arg_cameraName || (*itr)->GetName() == arg_cameraName + "_" + std::to_string(count)) {
 				count++;
 				isContain = true;
-				break;
+				continue;
 			}
 		}
-		isContain = false;
 	}
 	if (count > 0) {
 		arg_prop.cameraName += "_""_" + std::to_string(count);
@@ -352,12 +355,20 @@ void ButiEngine::Scene::ShowGameObjectManagerUI()
 	shp_gameObjectManager->ShowUI();
 }
 
-void ButiEngine::Scene::CameraActivation(const bool arg_status)
+void ButiEngine::Scene::CameraActivation()
 {
 	for (auto camItr = vec_cameras.begin(); camItr != vec_cameras.end(); camItr++) {
-		(*camItr)->SetActive(arg_status);
+		(*camItr)->SetActive((*camItr)->GetCameraProperty().isInitActive);
 	}
-	GetCamera("edit").lock()->SetActive(!arg_status);
+	GetCamera("edit").lock()->SetActive(false);
+}
+
+void ButiEngine::Scene::CameraEditActivation()
+{
+	for (auto camItr = vec_cameras.begin(); camItr != vec_cameras.end(); camItr++) {
+		(*camItr)->SetActive((*camItr)->GetCameraProperty().isEditActive);
+	}
+	GetCamera("edit").lock()->SetActive(true);
 }
 
 void ButiEngine::Scene::ShowRenderingUI()
@@ -371,7 +382,11 @@ void ButiEngine::Scene::ShowRenderingUI()
 	GUI::SameLine();
 	GUI::Text(std::to_string(shp_renderer->GetLayerCount()));
 	int i = 0;
-	for (auto camItr = vec_cameras.begin(); camItr != vec_cameras.end(); ) {
+	auto cameraEnd = vec_cameras.end();
+	std::vector<std::shared_ptr<ICamera>>::iterator moveItr = cameraEnd;
+	std::vector<std::shared_ptr<ICamera>>::iterator removeItr=cameraEnd;
+	int move;
+	for (std::vector<std::shared_ptr<ICamera>>::iterator camItr = vec_cameras.begin(); camItr !=cameraEnd;i++,camItr++ ) {
 
 		if (GUI::TreeNode(((*camItr)->GetName() + "##" + std::to_string(i)))) {
 			static char inputCameraName[128] = {};
@@ -383,30 +398,47 @@ void ButiEngine::Scene::ShowRenderingUI()
 				memset(inputCameraName, 0, sizeof(inputCameraName));
 			}
 			GUI::SameLine();
-			bool isRemove = false;
 			if (GUI::Button("Remove")) {
-				isRemove = true;
+				removeItr = camItr;
 			}
 			else {
+			}
+			GUI::BulletText("Order:");
+			if (camItr != vec_cameras.begin()) {
+				GUI::SameLine();
+				if (GUI::ArrowButton("##cameraUP", GUI::GuiDir_Up)) {
+					moveItr = camItr;
+					move = -1;
+				}
+			}
+			if (camItr+1 != cameraEnd) {
+				GUI::SameLine();
+				if (GUI::ArrowButton("##cameraDown", GUI::GuiDir_Down)) {
+					moveItr = camItr;
+					move = 1;
+				}
 			}
 
 			(*camItr)->ShowUI();
 			GUI::TreePop();
-			if (isRemove) {
-
-				camItr = vec_cameras.erase(camItr);
-			}
-			else {
-				i++;
-				camItr++;
-			}
-		}
-		else {
-			i++;
-			camItr++;
+			
 		}
 	}
 
+
+	if (cameraEnd!=moveItr) {
+		auto moveTarget = moveItr + move;
+
+		if (cameraEnd != moveTarget) {
+			auto temp = *moveTarget;
+			*moveTarget = *moveItr;
+			*moveItr = temp;
+		}
+	}
+
+	if (cameraEnd != removeItr) {
+		vec_cameras.erase(removeItr);
+	}
 	if (GUI::Button("Add Camera")) {
 		auto prop = CameraProjProperty();
 		prop.cameraName = "Camera";
@@ -449,9 +481,6 @@ void ButiEngine::Scene::ShowInspectorUI()
 		if (addComponent)
 			selectedGameObject.lock()->AddGameComponent_Insert(addComponent);
 
-		auto addBehavior = ComponentsLoader::GetInstance()->ShowAddBehaviorUI();
-		if (addBehavior)
-			selectedGameObject.lock()->AddBehavior_Insert(addBehavior);
 
 
 		if (GUI::Button("Save!", Vector2(200, 30))) {

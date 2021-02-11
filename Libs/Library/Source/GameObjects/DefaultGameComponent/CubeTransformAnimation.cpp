@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "..\..\..\Header\GameObjects\DefaultGameComponent\CubeTransformAnimation.h"
 
 
 void ButiEngine::CubeTransformAnimation::SetXEaseType(const Easing::EasingType type)

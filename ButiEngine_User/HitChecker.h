@@ -1,16 +1,16 @@
 #pragma once
-#include"Header/BehaviorHeader.h"
+#include"Header/GameComponentHeader.h"
 namespace ButiEngine {
-	class HitChecker :public Behavior
+	class HitChecker :public GameComponent
 	{
 	public:
 		HitChecker() {}
 
 		void OnUpdate()override;
-		std::string GetBehaviorName()override {
+		std::string GetGameComponentName()override {
 			return "HitChecker";
 		}
-		std::shared_ptr<Behavior> Clone()override;
+		std::shared_ptr<GameComponent> Clone()override;
 		template<class Archive>
 		void serialize(Archive& archive)
 		{
@@ -25,4 +25,4 @@ namespace ButiEngine {
 	};
 
 }
-BUTI_REGIST_BEHAVIOR(ButiEngine::HitChecker)
+BUTI_REGIST_GAMECOMPONENT(ButiEngine::HitChecker)

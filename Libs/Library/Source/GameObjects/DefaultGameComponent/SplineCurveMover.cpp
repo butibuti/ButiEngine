@@ -1,5 +1,4 @@
 #include"stdafx.h"
-#include "..\..\..\Header\GameObjects\DefaultGameComponent\SplineCurveMover.h"
 
 void ButiEngine::SplineCurveMover::OnUpdate()
 {

@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "Header/GameObjects/DefaultGameComponent/SucideComponent.h"
 
 ButiEngine::SucideComponent::SucideComponent(const float arg_float)
 {

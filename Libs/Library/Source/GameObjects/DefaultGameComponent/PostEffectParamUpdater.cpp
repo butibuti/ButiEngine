@@ -1,5 +1,4 @@
 #include"stdafx.h"
-#include "..\..\..\Header\GameObjects\DefaultGameComponent\PostEffectParamUpdater.h"
 #include "..\..\..\Header\GameObjects\DefaultGameComponent\MeshDrawComponent.h"
 
 ButiEngine::PostEffectParamUpdater::PostEffectParamUpdater(const Vector4& arg_pase)

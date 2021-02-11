@@ -189,8 +189,9 @@ void ButiEngine::Camera_Dx12::ShowUI()
 			GUI::TreePop();
 		}
 
-		if(GetName()!="main"&&GetName()!="edit")
 		GUI::Checkbox("isActive", &isActive);
+		GUI::Checkbox("isInitActive", &cameraViewProp.isInitActive);
+		GUI::Checkbox("isEditActive", &cameraViewProp.isEditActive);
 
 		bool isEdit = false;
 

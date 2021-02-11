@@ -1,5 +1,4 @@
 #include"stdafx.h"
-#include "..\..\..\Header\GameObjects\DefaultGameComponent\UIAnimation.h"
 
 void ButiEngine::UIAnimation::SetInitTransform(std::shared_ptr<Transform> arg_shp_InitTransform)
 {

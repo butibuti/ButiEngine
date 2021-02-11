@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "..\..\..\Header\GameObjects\DefaultGameComponent\CameraMan.h"
 
 float ButiEngine::CameraMan::horizonQuakeMax = 0.25;
 float ButiEngine::CameraMan::vertQuakeMax = 0.25;

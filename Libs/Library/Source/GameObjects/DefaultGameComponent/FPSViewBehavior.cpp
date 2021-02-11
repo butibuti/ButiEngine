@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include"Header/GameParts/SoundManager.h"
-#include "..\..\..\Header\GameObjects\DefaultBehavior\FPSViewBehavior.h"
 
 void ButiEngine::FPSViewBehavior::Start()
 {
@@ -55,7 +54,7 @@ void ButiEngine::FPSViewBehavior::OnSet()
 {
 }
 
-std::shared_ptr<ButiEngine::Behavior> ButiEngine::FPSViewBehavior::Clone()
+std::shared_ptr<ButiEngine::GameComponent> ButiEngine::FPSViewBehavior::Clone()
 {
 	return ObjectFactory::Create<FPSViewBehavior>();
 }

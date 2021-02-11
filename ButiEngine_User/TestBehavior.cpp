@@ -1,6 +1,5 @@
 #include"stdafx_u.h"
 #include "TestBehavior.h"
-#include"Header/GameObjects/DefaultGameComponent/TransformAnimation.h"
 #include"Header/Common/CollisionPrimitive.h"
 
 void ButiEngine::TestBehavior::OnUpdate()
@@ -67,7 +66,7 @@ void ButiEngine::TestBehavior::OnCollision(std::weak_ptr<GameObject> arg_other)
 {
 }
 
-std::shared_ptr<ButiEngine::Behavior> ButiEngine::TestBehavior::Clone()
+std::shared_ptr<ButiEngine::GameComponent> ButiEngine::TestBehavior::Clone()
 {
 	return ObjectFactory::Create<TestBehavior>();
 }

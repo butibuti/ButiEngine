@@ -1,6 +1,5 @@
 #pragma once
 #include"stdafx.h"
-#include "..\..\..\Header\GameObjects\DefaultGameComponent\TransformAnimation.h"
 
 
 void ButiEngine::TransformAnimation::OnUpdate()

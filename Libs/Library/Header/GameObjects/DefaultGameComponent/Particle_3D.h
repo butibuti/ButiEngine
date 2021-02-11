@@ -22,7 +22,7 @@ namespace ButiEngine {
 		void OnUpdate() override;
 	private:
 		std::shared_ptr<MeshDrawComponent> shp_drawComponent;
-		std::shared_ptr<CBuffer_Dx12<ParticleParameter>> shp_particleBuffer;
+		std::shared_ptr<CBuffer<ParticleParameter>> shp_particleBuffer;
 		float time=0;
 	};
 

@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "..\..\..\Header\GameObjects\DefaultGameComponent\ChaseComponent.h"
 
 
 ButiEngine::ChaseComponent::ChaseComponent(std::shared_ptr<Transform> arg_shp_target, const float arg_speed)

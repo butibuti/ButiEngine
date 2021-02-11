@@ -1,6 +1,5 @@
 #pragma once
 #include "stdafx.h"
-#include "..\..\..\Header\GameObjects\DefaultGameComponent\ImmediateParticleController.h"
 #include"../../../Header/Resources/Resource_RealTimeMesh.h"
 
 void ButiEngine::ImmediateParticleController::OnUpdate()

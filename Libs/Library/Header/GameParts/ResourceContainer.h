@@ -40,8 +40,8 @@ namespace ButiEngine {
 		GeometryShaderTag LoadGeometryShader(const std::string& arg_filePath, const std::string& arg_fileDirectory = "")override;
 		std::vector < GeometryShaderTag> LoadGeometryShader(const std::vector<std::string>& arg_vec_filePathAndDirectory)override;
 
-		ShaderTag LoadShader(const  ShaderName& arg_shaderNames)override;
-		std::vector < ShaderTag> LoadShader(const std::vector<ShaderName>& arg_vec_shaderNames)override;
+		ShaderTag LoadShader(const  ShaderInfo& arg_shaderNames)override;
+		std::vector < ShaderTag> LoadShader(const std::vector<ShaderInfo>& arg_vec_shaderNames)override;
 
 		SoundTag LoadSound(const std::string& arg_filePath, const std::string& arg_fileDirectory = "")override;
 		std::vector < SoundTag> LoadSound(const std::vector<std::string>& arg_vec_filePathAndDirectory)override;
@@ -128,16 +128,6 @@ namespace ButiEngine {
 		template<class Archive>
 		void serialize(Archive& archive)
 		{
-			archive(container_meshes);
-			archive(container_textures);
-			archive(container_materials);
-			archive(container_shaders);
-			archive(container_vertexShaders);
-			archive(container_geometryShaders);
-			archive(container_pixelShaders);
-			archive(container_motions);
-			archive(container_sounds);
-			archive(container_models);
 
 			archive(vec_filePathAndDirectory_tex);
 			archive(vec_filePathAndDirectory_ps);
@@ -160,7 +150,7 @@ namespace ButiEngine {
 		std::vector<std::string> vec_filePathAndDirectory_sound;
 		std::vector<std::string> vec_filePathAndDirectory_model;
 		std::vector<std::string> vec_filePathAndDirectory_motion;
-		std::vector<ShaderName> vec_shaderNames;
+		std::vector<ShaderInfo> vec_shaderNames;
 		std::vector<MaterialLoadInfo> vec_materialLoadInfos;
 
 

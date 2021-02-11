@@ -2,6 +2,9 @@
 #include"../Common/Transform.h"
 #include<string>
 namespace ButiEngine {
+
+	struct ModelDrawData;
+	struct Bone;
 	struct Bone;
 	struct IKLink {
 		~IKLink() {
@@ -11,12 +14,12 @@ namespace ButiEngine {
 		}
 		int linkBone;
 		std::shared_ptr<Bone> shp_linkBone;
-		bool radianLimit=false; 
+		bool radianLimit = false;
 		float bonesLength = 0;
 		Quat befBoneInitRotation;
 		Vector3 upLimit;
 		Vector3 downLimit;
-		Vector3* axis=nullptr;
+		Vector3* axis = nullptr;
 
 		template<class Archive>
 		void serialize(Archive& archive)
@@ -35,7 +38,7 @@ namespace ButiEngine {
 		std::shared_ptr<Bone> shp_targetBone;
 		int loopCount;
 		float maxRadian;
-		float sum_bonesLength=0;
+		float sum_bonesLength = 0;
 		std::vector<IKLink> links;
 		//Vector3* p_jointPoints=nullptr;
 		template<class Archive>
@@ -48,7 +51,7 @@ namespace ButiEngine {
 			archive(sum_bonesLength);
 			archive(links);
 		}
-	}; 
+	};
 	struct Bone
 	{
 		int ownIndex;

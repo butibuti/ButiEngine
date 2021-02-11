@@ -1,5 +1,4 @@
 #include"stdafx.h"
-#include "..\..\Header\GameObjects\GameObject.h"
 #include "..\..\Header\Common\CerealUtill.h"
 
 ButiEngine::GameObject::GameObject()
@@ -19,15 +18,11 @@ void ButiEngine::GameObject::Update()
 	}
 	BehaviorHit();
 	GameComponentUpdate();
-	BehaviorUpdate();
 	OnUpdate();
 }
 
 void ButiEngine::GameObject::Start()
 {
-	for (auto itr = vec_behaviors.begin(); itr != vec_behaviors.end(); itr++) {
-		(*itr)->Start();
-	}
 	for (auto itr = vec_gameComponents.begin(); itr != vec_gameComponents.end(); itr++) {
 		(*itr)->Start();
 	}
@@ -83,10 +78,6 @@ void ButiEngine::GameObject::Release()
 		(*itr)->OnRemove();
 	}
 	vec_gameComponents.clear();
-	for (auto itr = vec_behaviors.begin(); itr != vec_behaviors.end(); itr++) {
-		(*itr)->OnRemove();
-	}
-	vec_behaviors.clear();
 	vec_befCollisionObject.clear();
 	vec_collisionObject.clear();
 	vec_childGameObjects.clear();
@@ -102,25 +93,17 @@ void ButiEngine::GameObject::PreInitialize()
 {
 }
 
-std::shared_ptr<ButiEngine::Behavior> ButiEngine::GameObject::AddBehavior(std::shared_ptr<Behavior> arg_shp_behavior)
+void ButiEngine::GameObject::RegistReactionComponent(std::shared_ptr<GameComponent> arg_shp_gameComponent)
 {
-	vec_newBehavior.push_back(arg_shp_behavior);
-	arg_shp_behavior->Set(GetThis<GameObject>());
-	return arg_shp_behavior;
+	vec_collisionReactionComponents.push_back(arg_shp_gameComponent);
 }
+
 
 std::shared_ptr<ButiEngine::GameComponent> ButiEngine::GameObject::AddGameComponent(std::shared_ptr<GameComponent> arg_shp_gameComponent)
 {
 	vec_newGameComponent.push_back(arg_shp_gameComponent);
 	arg_shp_gameComponent->Set(GetThis<GameObject>());
 	return arg_shp_gameComponent;
-}
-
-std::shared_ptr<ButiEngine::Behavior> ButiEngine::GameObject::AddBehavior_Insert(std::shared_ptr<Behavior> arg_shp_behavior)
-{
-	arg_shp_behavior->Set(GetThis<GameObject>());
-	RegisterBehavior(arg_shp_behavior);
-	return arg_shp_behavior;
 }
 
 std::shared_ptr<ButiEngine::GameComponent> ButiEngine::GameObject::AddGameComponent_Insert(std::shared_ptr<GameComponent> arg_shp_gameComponent)
@@ -130,47 +113,30 @@ std::shared_ptr<ButiEngine::GameComponent> ButiEngine::GameObject::AddGameCompon
 	return arg_shp_gameComponent;
 }
 
-std::shared_ptr<ButiEngine::Behavior> ButiEngine::GameObject::GetBehavior(const std::string& arg_behaviorName)
-{
-	for (auto itr = vec_behaviors.begin(); itr != vec_behaviors.end(); itr++) {
-		if ((*itr)->GetBehaviorName() == arg_behaviorName) {
-			return *itr;
-		}
-	}
-	for (auto itr = vec_newBehavior.begin(); itr != vec_newBehavior.end(); itr++) {
-		if ((*itr)->GetBehaviorName() == arg_behaviorName) {
-			return *itr;
-		}
-	}
-	return nullptr;
-}
 
-std::shared_ptr<ButiEngine::GameComponent> ButiEngine::GameObject::GetGameComponent(const std::string& arg_gameComponentName)
+std::shared_ptr<ButiEngine::GameComponent> ButiEngine::GameObject::GetGameComponent(const std::string& arg_gameComponentName,unsigned int index)
 {
+	std::shared_ptr<ButiEngine::GameComponent> output = nullptr;
 	for (auto itr = vec_gameComponents.begin(); itr != vec_gameComponents.end(); itr++) {
 		if ((*itr)->GetGameComponentName() == arg_gameComponentName) {
+			if(index==0)
 			return *itr;
+			index--;
+			output = *itr;
 		}
 	}
 	for (auto itr = vec_newGameComponent.begin(); itr != vec_newGameComponent.end(); itr++) {
 		if ((*itr)->GetGameComponentName() == arg_gameComponentName) {
+			if (index == 0)
 			return *itr;
+			index--;
+			output = *itr;
 		}
 	}
 
-	return nullptr;
+	return output;
 }
 
-void ButiEngine::GameObject::RemoveBehavior(const std::string& arg_key)
-{
-	for (auto itr = vec_behaviors.begin(); itr != vec_behaviors.end();itr++) {
-		if ((*itr)->GetBehaviorName() == arg_key) {
-			(*itr)->OnRemove();
-			(*itr)->SetIsRemove(true);
-			break;
-		}
-	}
-}
 
 void ButiEngine::GameObject::RemoveGameComponent(const std::string& arg_key)
 {
@@ -275,32 +241,6 @@ void ButiEngine::GameObject::ShowUI()
 
 		GUI::TreePop();
 	}
-	if (GUI::TreeNode("Behaivior")) {
-		auto endItr = vec_behaviors.end();
-
-		for (auto itr = vec_behaviors.begin(); itr != endItr; ) {
-			bool isComponentRemove = false;
-			if (GUI::TreeNode((*itr)->GetBehaviorName().c_str())) {
-				if (GUI::Button("Remove")) {
-					isComponentRemove = true;
-				}
-				(*itr)->ShowUI();
-
-				GUI::TreePop();
-			}
-
-			if (isComponentRemove) {
-				(*itr)->OnRemove();
-				itr = vec_behaviors.erase(itr);
-				endItr = vec_behaviors.end();
-			}
-			else {
-				itr++;
-			}
-		}
-
-		GUI::TreePop();
-	}
 }
 
 std::string ButiEngine::GameObject::SetObjectName(const std::string& arg_objectName)
@@ -348,14 +288,6 @@ std::shared_ptr<ButiEngine::GameObject> ButiEngine::GameObject::Clone()
 		output->vec_gameComponents.push_back(cloneComponent);
 	}
 
-	auto behaviorEndItr = vec_behaviors.end();
-	for (auto itr = vec_behaviors.begin(); itr != behaviorEndItr; itr++) {
-		auto cloneBehavior = (*itr)->Clone();
-		if (cloneBehavior)
-			output->vec_behaviors.push_back(cloneBehavior);
-	}
-
-
 	return output;
 }
 
@@ -367,19 +299,6 @@ void ButiEngine::GameObject::Init_RegistGameComponents()
 	}
 }
 
-void ButiEngine::GameObject::Init_RegistBehaviors()
-{
-	auto endItr = vec_behaviors.end();
-	for (auto itr = vec_behaviors.begin(); itr != endItr; itr++) {
-		(*itr)->Set(GetThis<GameObject>());
-	}
-}
-
-std::shared_ptr<ButiEngine::Behavior> ButiEngine::GameObject::RegisterBehavior(std::shared_ptr<Behavior> arg_shp_behavior)
-{
-	vec_behaviors.push_back(arg_shp_behavior);
-	return arg_shp_behavior;
-}
 
 std::shared_ptr<ButiEngine::GameComponent> ButiEngine::GameObject::RegisterGameComponent(std::shared_ptr<GameComponent> arg_shp_gameComponent)
 {
@@ -424,29 +343,12 @@ void ButiEngine::GameObject::GameComponentUpdate()
 	}
 }
 
-void ButiEngine::GameObject::BehaviorUpdate()
-{
-	for (auto itr = vec_newBehavior.begin(); itr != vec_newBehavior.end(); itr++) {
-		RegisterBehavior(*itr);
-		(*itr)->Start();
-	}
-	vec_newBehavior.clear();
-	auto itr = vec_behaviors.begin();
-	while (itr != vec_behaviors.end())
-	{
-		if ((*itr)->IsRemove()) {
-			itr = vec_behaviors.erase(itr);
-		}
-		else {
-			(*itr)->Update();
-			itr++;
-		}
-	}
-}
 
 void ButiEngine::GameObject::BehaviorHit()
 {
-	for (auto itr = vec_collisionObject.begin(); itr != vec_collisionObject.end(); itr++) {
+	auto collisionEndItr = vec_collisionObject.end();
+	auto reactionEnd = vec_collisionReactionComponents.end();
+	for (auto itr = vec_collisionObject.begin(); itr != collisionEndItr; itr++) {
 
 
 		bool isBef=false;
@@ -457,8 +359,7 @@ void ButiEngine::GameObject::BehaviorHit()
 				break;
 			}
 		}
-
-		for (auto behItr = vec_behaviors.begin(); behItr != vec_behaviors.end(); behItr++) {
+		for (auto behItr = vec_collisionReactionComponents.begin(); behItr != reactionEnd; behItr++) {
 			if (isBef) {
 				(*behItr)->OnCollision(*itr);
 			}
@@ -467,8 +368,9 @@ void ButiEngine::GameObject::BehaviorHit()
 			}
 		}
 	}
-	for (auto befItr = vec_befCollisionObject.begin(); befItr != vec_befCollisionObject.end(); befItr++) {
-		for (auto behItr = vec_behaviors.begin(); behItr != vec_behaviors.end(); behItr++) {
+	auto befEnd = vec_befCollisionObject.end();
+	for (auto befItr = vec_befCollisionObject.begin(); befItr != befEnd; befItr++) {
+		for (auto behItr = vec_collisionReactionComponents.begin(); behItr != reactionEnd; behItr++) {
 			(*behItr)->OnCollisionEnd(*befItr);
 		}
 	}

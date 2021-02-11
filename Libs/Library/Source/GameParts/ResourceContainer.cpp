@@ -43,6 +43,7 @@ void ButiEngine::ResourceContainer::ShowGUI()
 	static bool isShowShader = false;
 	static bool isShowAddMaterial = false;
 	static MaterialTag editMaterial = MaterialTag();
+	static MaterialLoadInfo* EditMaterialLoadInfo;
 
 	GUI::Begin("ResourceContainer");
 
@@ -127,6 +128,13 @@ void ButiEngine::ResourceContainer::ShowGUI()
 				auto tag = wkp_graphicDevice.lock()->GetApplication().lock()->GetGUIController()->GetMaterialTag();
 				if (!tag.IsEmpty()) {
 					editMaterial = tag;
+
+					for (int i = 0; i < vec_materialLoadInfos.size(); i++) {
+						if (vec_materialLoadInfos.at(i).fileName == tag.GetID() || vec_materialLoadInfos.at(i).materialName == tag.GetID()) {
+							EditMaterialLoadInfo = &vec_materialLoadInfos.at(i);
+						}
+					}
+
 				}
 			}
 
@@ -464,8 +472,8 @@ void ButiEngine::ResourceContainer::ShowGUI()
 
 		GUI::End();
 		if (isMaterialEdit) {
-			vec_materialLoadInfos[*editMaterial.GetID()].var = material->GetMaterialVariable();
-			vec_materialLoadInfos[*editMaterial.GetID()].vec_texture = material->GetTextureTags();
+			EditMaterialLoadInfo->var = material->GetMaterialVariable();
+			EditMaterialLoadInfo->vec_texture = material->GetTextureTags();
 		}
 	}
 
@@ -535,14 +543,19 @@ void ButiEngine::ResourceContainer::ShowGUI()
 
 			GUI::Text("ShaderName");
 			GUI::InputText("##edit", GUI::objectName, 128);
-			if (GUI::Button("OK!!") && !gstag.IsEmpty() && !vstag.IsEmpty() && !pstag.IsEmpty()) {
+			if (GUI::Button("OK!!") &&  !vstag.IsEmpty() && !pstag.IsEmpty()) {
 
-				ShaderName sn;
+				ShaderInfo sn;
 
 				sn.shaderName = GUI::objectName;
-				sn.geometryShaderName = GetTagNameGeometryShader(gstag);
-				sn.vertexShaderName = GetTagNameVertexShader(vstag);
-				sn.pixelShaderName = GetTagNamePixelShader(pstag);
+				if (gstag.IsEmpty()) {
+					sn.geometryShaderTag= GeometryShaderTag();
+				}
+				else {
+					sn.geometryShaderTag = gstag;
+				}
+				sn.vertexShaderTag = (vstag);
+				sn.pixelShaderTag = (pstag);
 
 				LoadShader(sn);
 
@@ -782,20 +795,24 @@ std::vector< ButiEngine::GeometryShaderTag> ButiEngine::ResourceContainer::LoadG
 	return out;
 }
 
-ButiEngine::ShaderTag ButiEngine::ResourceContainer::LoadShader(const  ShaderName& arg_shaderNames)
+ButiEngine::ShaderTag ButiEngine::ResourceContainer::LoadShader(const  ShaderInfo& arg_shaderNames)
 {
 	if (container_shaders.ContainValue(arg_shaderNames.shaderName)) {
 		return ShaderTag();
 	}
 
 	vec_shaderNames.push_back(arg_shaderNames);
-	return container_shaders.AddValue(ObjectFactory::Create<Resource_Shader>(container_vertexShaders.GetValue(arg_shaderNames.vertexShaderName), container_pixelShaders.GetValue( arg_shaderNames.pixelShaderName), container_geometryShaders.GetValue( arg_shaderNames.geometryShaderName)
-		,  arg_shaderNames.vertexShaderName +  arg_shaderNames.pixelShaderName + arg_shaderNames.geometryShaderName
+	std::shared_ptr<IResource_GeometryShader> gsResource = nullptr;
+	if(!arg_shaderNames.geometryShaderTag.IsEmpty())
+	container_geometryShaders.GetValue(arg_shaderNames.geometryShaderTag);
+
+	return container_shaders.AddValue(ObjectFactory::Create<Resource_Shader>(container_vertexShaders.GetValue(arg_shaderNames.vertexShaderTag), container_pixelShaders.GetValue( arg_shaderNames.pixelShaderTag),gsResource
+		,  arg_shaderNames.vertexShaderTag.GetID() +  arg_shaderNames.pixelShaderTag.GetID() + arg_shaderNames.geometryShaderTag.GetID()
 		), arg_shaderNames.shaderName);
 }
 
 
-std::vector < ButiEngine::ShaderTag> ButiEngine::ResourceContainer::LoadShader(const std::vector<ShaderName>& arg_vec_shaderNames)
+std::vector < ButiEngine::ShaderTag> ButiEngine::ResourceContainer::LoadShader(const std::vector<ShaderInfo>& arg_vec_shaderNames)
 {
 	std::vector<ShaderTag> out;
 	out.reserve(arg_vec_shaderNames.size());
@@ -1125,37 +1142,37 @@ ButiEngine::MotionTag ButiEngine::ResourceContainer::GetMotionTag(const std::str
 
 ButiEngine::MeshTag ButiEngine::ResourceContainer::GetMeshTag(const MeshTag& arg_tag)
 {
-	return container_meshes.IDUpdate(arg_tag);
+	return (arg_tag);
 }
 
 ButiEngine::TextureTag ButiEngine::ResourceContainer::GetTextureTag(const TextureTag& arg_tag)
 {
-	return container_textures.IDUpdate(arg_tag);
+	return (arg_tag);
 }
 
 ButiEngine::ShaderTag ButiEngine::ResourceContainer::GetShaderTag(const ShaderTag& arg_tag)
 {
-	return container_shaders.IDUpdate(arg_tag);
+	return (arg_tag);
 }
 
 ButiEngine::SoundTag ButiEngine::ResourceContainer::GetSoundTag(const SoundTag& arg_tag)
 {
-	return container_sounds.IDUpdate(arg_tag);
+	return (arg_tag);
 }
 
 ButiEngine::MaterialTag ButiEngine::ResourceContainer::GetMaterialTag(const MaterialTag& arg_tag)
 {
-	return container_materials.IDUpdate(arg_tag);
+	return (arg_tag);
 }
 
 ButiEngine::ModelTag ButiEngine::ResourceContainer::GetModelTag(const ModelTag& arg_tag)
 {
-	return container_models.IDUpdate(arg_tag);
+	return (arg_tag);
 }
 
 ButiEngine::MotionTag ButiEngine::ResourceContainer::GetMotionTag(const MotionTag& arg_tag)
 {
-	return container_motions.IDUpdate(arg_tag);
+	return (arg_tag);
 }
 
 void ButiEngine::ResourceContainer::Reload()

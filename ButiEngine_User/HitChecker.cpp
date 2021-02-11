@@ -6,7 +6,7 @@ void ButiEngine::HitChecker::OnUpdate()
     GetManager().lock()->GetApplication().lock()->GetGUIController()->vec_shp_GUIObjects.push_back(GetThis<IObject>());
 }
 
-std::shared_ptr<ButiEngine::Behavior> ButiEngine::HitChecker::Clone()
+std::shared_ptr<ButiEngine::GameComponent> ButiEngine::HitChecker::Clone()
 {
     return ObjectFactory::Create<HitChecker>();
 }

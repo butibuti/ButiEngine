@@ -82,7 +82,6 @@ void ButiEngine::GameObjectManager::ShowUI()
 					auto obj= AddObject((*itr)->Clone());
 
 					obj.lock()->Init_RegistGameComponents();
-					obj.lock()->Init_RegistBehaviors();
 
 					itr++;
 				}
@@ -136,7 +135,6 @@ void ButiEngine::GameObjectManager::Initialize_cereal()
 	for (auto itr = vec_gameObjects.begin(); itr != vec_gameObjects.end(); itr++) {
 		(*itr)->Initialize();
 		(*itr)->SetGameObjectManager(GetThis<GameObjectManager>());
-		(*itr)->Init_RegistBehaviors();
 		(*itr)->Init_RegistGameComponents();
 	}
 }
@@ -222,7 +220,6 @@ std::weak_ptr<ButiEngine::GameObject> ButiEngine::GameObjectManager::AddObjectFr
 	}
 
 	gameObject->Init_RegistGameComponents();
-	gameObject->Init_RegistBehaviors();
 
 	return gameObject;
 }
@@ -253,7 +250,6 @@ std::weak_ptr<ButiEngine::GameObject> ButiEngine::GameObjectManager::AddObjectFr
 	}
 
 	gameObject->Init_RegistGameComponents();
-	gameObject->Init_RegistBehaviors();
 
 	return gameObject;
 }

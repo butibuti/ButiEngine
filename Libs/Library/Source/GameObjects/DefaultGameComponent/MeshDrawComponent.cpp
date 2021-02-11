@@ -411,6 +411,29 @@ void ButiEngine::MeshDrawComponent::OnShowUI()
 
 }
 
+template<class T>
+inline std::shared_ptr<ButiEngine::CBuffer<T>> ButiEngine::MeshDrawComponent::CreateCBuffer(const std::string& arg_cBufferName, const UINT arg_slot, std::weak_ptr<GraphicDevice> arg_wkp_graphicDevice)
+{
+	std::shared_ptr<CBuffer< T>> out = nullptr;
+	out = ObjectFactory::Create<CBuffer_Dx12<T>>(arg_slot);
+
+	out->SetGraphicDevice(arg_wkp_graphicDevice.lock());
+	out->CreateBuffer();
+	out->SetExName(arg_cBufferName);
+	data->GetThis<DrawData>()->AddICBuffer(out);
+
+	return out;
+}
+
+template std::shared_ptr<ButiEngine::CBuffer<ButiEngine::LightVariable>> ButiEngine::MeshDrawComponent::CreateCBuffer<ButiEngine::LightVariable>(const std::string& arg_cBufferName, const UINT arg_slot, std::weak_ptr<GraphicDevice> arg_wkp_graphicDevice);
+template std::shared_ptr<ButiEngine::CBuffer<ButiEngine::Fog>> ButiEngine::MeshDrawComponent::CreateCBuffer<ButiEngine::Fog>(const std::string& arg_cBufferName, const UINT arg_slot, std::weak_ptr<GraphicDevice> arg_wkp_graphicDevice);
+template std::shared_ptr<ButiEngine::CBuffer<ButiEngine::ShaderVariable>> ButiEngine::MeshDrawComponent::CreateCBuffer<ButiEngine::ShaderVariable>(const std::string& arg_cBufferName, const UINT arg_slot, std::weak_ptr<GraphicDevice> arg_wkp_graphicDevice);
+template std::shared_ptr<ButiEngine::CBuffer<ButiEngine::MaterialVariable>> ButiEngine::MeshDrawComponent::CreateCBuffer<ButiEngine::MaterialVariable>(const std::string& arg_cBufferName, const UINT arg_slot, std::weak_ptr<GraphicDevice> arg_wkp_graphicDevice);
+template std::shared_ptr<ButiEngine::CBuffer<ButiEngine::ParticleParameter>> ButiEngine::MeshDrawComponent::CreateCBuffer<ButiEngine::ParticleParameter>(const std::string& arg_cBufferName, const UINT arg_slot, std::weak_ptr<GraphicDevice> arg_wkp_graphicDevice);
+template std::shared_ptr<ButiEngine::CBuffer<ButiEngine::TestGSVariable>> ButiEngine::MeshDrawComponent::CreateCBuffer<ButiEngine::TestGSVariable>(const std::string& arg_cBufferName, const UINT arg_slot, std::weak_ptr<GraphicDevice> arg_wkp_graphicDevice);
+template std::shared_ptr<ButiEngine::CBuffer<ButiEngine::GausVariable>> ButiEngine::MeshDrawComponent::CreateCBuffer<ButiEngine::GausVariable>(const std::string& arg_cBufferName, const UINT arg_slot, std::weak_ptr<GraphicDevice> arg_wkp_graphicDevice);
+
+
 void ButiEngine::MeshDrawComponent::CreateData()
 {
 	auto renderer = gameObject.lock()->GetGameObjectManager().lock()->GetScene().lock()->GetRenderer();

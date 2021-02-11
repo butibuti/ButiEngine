@@ -5,14 +5,12 @@ namespace ButiEngine {
 	class GameObject;
 	using GameObjectTag = ID<GameObject>;
 	class GameComponent;
-	class Behavior;
 	class GameObjectManager;
 	class Application;
 	class ResourceContainer;
 	class GraphicDevice;
 	class GameObject:public IObject
 	{
-		friend class Behavior;
 		friend class GameComponent;
 	public:
 		GameObject();
@@ -45,23 +43,7 @@ namespace ButiEngine {
 
 		virtual void PreInitialize();
 
-		std::shared_ptr<Behavior> AddBehavior(std::shared_ptr<Behavior> arg_shp_behavior);
-
-		template<class T, typename... Ts>
-		inline std::shared_ptr<T> AddBehavior(Ts&&... params) {
-			auto addBehavior = ObjectFactory::Create<T>(params...);
-			vec_newBehavior.push_back(addBehavior);
-			addBehavior->Set(GetThis<GameObject>());
-			return addBehavior;
-		}
-
-		template<class T, typename... Ts>
-		inline std::shared_ptr<T> AddBehavior_Insert(Ts&&... params) {
-			auto addBehavior = ObjectFactory::Create<T>(params...);
-			vec_behaviors.push_back(addBehavior);
-			addBehavior->Set(GetThis<GameObject>());
-			return addBehavior;
-		}
+		void RegistReactionComponent(std::shared_ptr<GameComponent> arg_shp_gameComponent);
 
 		std::shared_ptr<GameComponent> AddGameComponent(std::shared_ptr<GameComponent> arg_shp_gameComponent);
 
@@ -81,38 +63,23 @@ namespace ButiEngine {
 			return addComponet;
 		}
 
-		std::shared_ptr<Behavior> AddBehavior_Insert(std::shared_ptr<Behavior> arg_shp_behavior);
 
 		std::shared_ptr<GameComponent> AddGameComponent_Insert(std::shared_ptr<GameComponent> arg_shp_gameComponent);
 
-		std::shared_ptr<Behavior> GetBehavior(const std::string& arg_behaviorName);
-
-		std::shared_ptr<GameComponent> GetGameComponent(const std::string& arg_gameComponentName);
+		std::shared_ptr<GameComponent> GetGameComponent(const std::string& arg_gameComponentName,unsigned int index);
 
 
 		template <typename T>
-		std::shared_ptr<T> GetGameComponent() {
+		std::shared_ptr<T> GetGameComponent(unsigned int index=0) {
 			std::string arg_gameComponentName = ObjectFactory::Create<T>()->GetGameComponentName();
 
-			auto ret = GetGameComponent(arg_gameComponentName);
+			auto ret = GetGameComponent(arg_gameComponentName,index);
 			if (!ret) {
 				return nullptr;
 			}
 			return ret->GetThis<T>();
 		}
 
-		template <typename T>
-		std::shared_ptr<T> GetBehavior() {
-			std::string arg_gameComponentName = ObjectFactory::Create<T>()->GetBehaviorName();
-
-			auto ret = GetBehavior(arg_gameComponentName);
-			if (!ret) {
-				return nullptr;
-			}
-			return ret->GetThis<T>();
-		}
-
-		void RemoveBehavior(const std::string& arg_key);
 
 		void RemoveGameComponent(const std::string& arg_key);
 
@@ -163,22 +130,15 @@ namespace ButiEngine {
 			archive(transform);
 			archive(objectName);
 			archive(gameObjectTag);
-
-			archive(vec_behaviors);
 			archive(vec_gameComponents);
 		}
 		void Init_RegistGameComponents();
-		void Init_RegistBehaviors();
 
 
 	protected:
-
-		std::shared_ptr<Behavior> RegisterBehavior(std::shared_ptr<Behavior> arg_shp_behavior);
-
 		std::shared_ptr<GameComponent> RegisterGameComponent(std::shared_ptr<GameComponent> arg_shp_gameComponent);
 
 		void GameComponentUpdate();
-		void BehaviorUpdate();
 		void BehaviorHit();
 
 		std::weak_ptr<GameObject> parent;
@@ -189,9 +149,8 @@ namespace ButiEngine {
 		bool isRemove = false;
 		
 		std::vector< std::shared_ptr< GameComponent>>  vec_gameComponents;
-		std::vector< std::shared_ptr< Behavior>>  vec_behaviors;
+		std::vector< std::shared_ptr< GameComponent>>  vec_collisionReactionComponents;
 		std::vector<std::shared_ptr<GameComponent>> vec_newGameComponent;
-		std::vector<std::shared_ptr<Behavior>>vec_newBehavior;
 
 		std::string objectName;
 		GameObjectTag gameObjectTag;

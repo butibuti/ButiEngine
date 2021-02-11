@@ -36,7 +36,6 @@
 
 
 #include"GameObjects/GameComponent.h"
-#include"GameObjects/Behavior.h"
 #include"GameParts/GameObjectManager.h"
 #include"Scene/SceneInformation.h"
 

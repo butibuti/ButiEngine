@@ -1,6 +1,7 @@
 #include"stdafx.h"
 #include "..\..\Header\Scene\SceneManager_Edit.h"
 #include"..\..\Header\Scene/Scene.h"
+#include <thread>
 
 ButiEngine::SceneManager_Edit::SceneManager_Edit(std::weak_ptr<IApplication> arg_wkp_app)
 	:SceneManager(arg_wkp_app)
@@ -9,7 +10,6 @@ ButiEngine::SceneManager_Edit::SceneManager_Edit(std::weak_ptr<IApplication> arg
 
 void ButiEngine::SceneManager_Edit::Initialize()
 {
-	currentScene->CameraActivation(false);
 }
 
 void SceneUpdate_ed(std::shared_ptr<ButiEngine::IScene> currentScene) {
@@ -38,6 +38,8 @@ void ButiEngine::SceneManager_Edit::Update()
 			isPlaying = false;
 			isActive = false;
 			startCount = 0;
+
+			currentScene->CameraEditActivation();
 		}
 		isReload = false;
 	}
@@ -86,7 +88,7 @@ void ButiEngine::SceneManager_Edit::UIUpdate()
 
 		isPlaying = true;
 		if (isActive) {
-			currentScene->CameraActivation(true);
+			currentScene->CameraActivation();
 
 			startCount++;
 			if (startCount == 1) {
@@ -96,7 +98,7 @@ void ButiEngine::SceneManager_Edit::UIUpdate()
 		}
 		else {
 
-			currentScene->CameraActivation(false);
+			currentScene->CameraEditActivation();
 		}
 
 	};
@@ -174,6 +176,17 @@ void ButiEngine::SceneManager_Edit::UIUpdate()
 
 }
 
+void ButiEngine::SceneManager_Edit::RenewalScene()
+{
+	if (currentScene != nullptr)
+		currentScene->SceneEnd();
+	currentScene = newScene;
+	newScene = nullptr;
+	currentScene->Set();
+	if(isPlaying)
+	currentScene->Start();
+}
+
 void ButiEngine::SceneManager_Edit::ChangeScene(const std::string& arg_sceneName, float sceneChangeDalay)
 {
 	if (!map_iscene.count(arg_sceneName)) {
@@ -199,6 +212,8 @@ void ButiEngine::SceneManager_Edit::LoadScene_Init(const std::string& arg_sceneN
 
 		SetScene_Init(arg_sceneName, ObjectFactory::Create<Scene>(GetThis<ISceneManager>(), shp_sceneInfo));
 		currentScene->Set();
+
+		currentScene->CameraEditActivation();
 	}
 }
 

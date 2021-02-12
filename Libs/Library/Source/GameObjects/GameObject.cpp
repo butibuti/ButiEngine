@@ -74,7 +74,8 @@ void ButiEngine::GameObject::Hit(std::shared_ptr<GameObject> shp_other)
 
 void ButiEngine::GameObject::Release()
 {
-	for (auto itr = vec_gameComponents.begin(); itr != vec_gameComponents.end(); itr++) {
+	auto endItr = vec_gameComponents.end();
+	for (auto itr = vec_gameComponents.begin(); itr != endItr; itr++) {
 		(*itr)->OnRemove();
 	}
 	vec_gameComponents.clear();

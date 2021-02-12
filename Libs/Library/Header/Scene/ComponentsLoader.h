@@ -17,7 +17,6 @@ namespace ButiEngine {
 		void AddGameComponent(std::shared_ptr<GameComponent> arg_gamecomponent);
 
 		void RemoveComponent(const std::string& arg_name);
-		void RemoveBehavior(const std::string& arg_name);
 
 		std::shared_ptr<GameComponent> ShowAddGameComponentUI();
 

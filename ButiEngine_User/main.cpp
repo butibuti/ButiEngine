@@ -22,7 +22,7 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 
 	//auto app = CreateDefaultApplicationInstance("CollisionTest", WindowPopType::max, 1080, 700, false);
-	auto app = CreateEditorApplicationInstance("DivisionScene", WindowPopType::max,1080,700, false);
+	auto app = CreateEditorApplicationInstance("DivisionScene", WindowPopType::max,1080,700, true);
 	GameDevice::Initialize();
 	GameDevice::GetInput()->Initialize(app);
 	//ComponentsLoader::GetInstance()->AddGameComponent<MeshDrawComponent>();
@@ -30,7 +30,7 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	app->InitLoadResources();
 	app->GetSceneManager()->LoadScene_Init("Test");
 
-	app->GetGraphicDevice()->SetClearColor(Vector4(0.25,0.25,0.25, 1));
+	app->GetGraphicDevice()->SetClearColor(Vector4(0.125,0.25,0.25, 1));
 	int returnCode = app->Run();
 
 

@@ -87,10 +87,10 @@ ButiEngine::GUI::GuiIO ConvertIO( ImGuiIO& arg_io) {
 	out.SetClipboardTextFn = arg_io.SetClipboardTextFn;
 	out.ClipboardUserData=arg_io.ClipboardUserData;
 
+	
 
-
-	out.eSetInputScreenPosFn = arg_io.ImeSetInputScreenPosFn;
-	out.eWindowHandle = arg_io.ImeWindowHandle;
+	//out.eSetInputScreenPosFn = arg_io.ImeSetInputScreenPosFn;
+	//out.eWindowHandle = arg_io.ImeWindowHandle;
 
 
 	out.MousePos =ButiEngine::Vector2( arg_io.MousePos.x, arg_io.MousePos.y);
@@ -1317,6 +1317,7 @@ bool ButiEngine::GUI::Begin(const std::string& name, bool* p_open, GuiWindowFlag
 {
 	if (state == GUIState::noActive) {
 		state = GUIState::active;
+		//ImGui::DockSpace()
 		return ImGui::Begin(name.c_str(), p_open, flags);
 	}
 	return false;

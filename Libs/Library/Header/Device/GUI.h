@@ -201,13 +201,13 @@ namespace ButiEngine {
 			GuiWindowFlags_NoMove = 1 << 2,   // Disable user moving the window
 			GuiWindowFlags_NoScrollbar = 1 << 3,   // Disable scrollbars (window can still scroll with mouse or programmatically)
 			GuiWindowFlags_NoScrollWithMouse = 1 << 4,   // Disable user vertically scrolling with mouse wheel. On child window, mouse wheel will be forwarded to the parent unless NoScrollbar is also set.
-			GuiWindowFlags_NoCollapse = 1 << 5,   // Disable user collapsing window by double-clicking on it
+			GuiWindowFlags_NoCollapse = 1 << 5,   // Disable user collapsing window by double-clicking on it. Also referred to as "window menu button" within a docking node.
 			GuiWindowFlags_AlwaysAutoResize = 1 << 6,   // Resize every window to its content every frame
-			GuiWindowFlags_NoBackground = 1 << 7,   // Disable drawing background color (WindowBg, etc.) and outside border. Silar as using SetNextWindowBgAlpha(0.0f).
+			GuiWindowFlags_NoBackground = 1 << 7,   // Disable drawing background color (WindowBg, etc.) and outside border. Similar as using SetNextWindowBgAlpha(0.0f).
 			GuiWindowFlags_NoSavedSettings = 1 << 8,   // Never load/save settings in .ini file
 			GuiWindowFlags_NoMouseInputs = 1 << 9,   // Disable catching mouse, hovering test with pass through.
 			GuiWindowFlags_MenuBar = 1 << 10,  // Has a menu-bar
-			GuiWindowFlags_HorizontalScrollbar = 1 << 11,  // Allow horizontal scrollbar to appear (off by default). You may use SetNextWindowContentSize(Vec2(width,0.0f)); prior to calling Begin() to specify width. Read code in gui_demo in the "Horizontal Scrolling" section.
+			GuiWindowFlags_HorizontalScrollbar = 1 << 11,  // Allow horizontal scrollbar to appear (off by default). You may use SetNextWindowContentSize(ImVec2(width,0.0f)); prior to calling Begin() to specify width. Read code in Gui_demo in the "Horizontal Scrolling" section.
 			GuiWindowFlags_NoFocusOnAppearing = 1 << 12,  // Disable taking focus when transitioning from hidden to visible state
 			GuiWindowFlags_NoBringToFrontOnFocus = 1 << 13,  // Disable bringing window to front when taking focus (e.g. clicking on it or programmatically giving it focus)
 			GuiWindowFlags_AlwaysVerticalScrollbar = 1 << 14,  // Always show vertical scrollbar (even if ContentSize.y < Size.y)
@@ -216,6 +216,8 @@ namespace ButiEngine {
 			GuiWindowFlags_NoNavInputs = 1 << 18,  // No gamepad/keyboard navigation within the window
 			GuiWindowFlags_NoNavFocus = 1 << 19,  // No focusing toward this window with gamepad/keyboard navigation (e.g. skipped by CTRL+TAB)
 			GuiWindowFlags_UnsavedDocument = 1 << 20,  // Append '*' to title without affecting the ID, as a convenience to avoid using the ### operator. When used in a tab/docking context, tab is selected on closure and closure is deferred by one frame to allow code to cancel the closure (with a confirmation popup, etc.) without flicker.
+			GuiWindowFlags_NoDocking = 1 << 21,  // Disable docking of this window
+
 			GuiWindowFlags_NoNav = GuiWindowFlags_NoNavInputs | GuiWindowFlags_NoNavFocus,
 			GuiWindowFlags_NoDecoration = GuiWindowFlags_NoTitleBar | GuiWindowFlags_NoResize | GuiWindowFlags_NoScrollbar | GuiWindowFlags_NoCollapse,
 			GuiWindowFlags_NoInputs = GuiWindowFlags_NoMouseInputs | GuiWindowFlags_NoNavInputs | GuiWindowFlags_NoNavFocus,
@@ -226,10 +228,9 @@ namespace ButiEngine {
 			GuiWindowFlags_Tooltip = 1 << 25,  // Don't use! For internal use by BeginTooltip()
 			GuiWindowFlags_Popup = 1 << 26,  // Don't use! For internal use by BeginPopup()
 			GuiWindowFlags_Modal = 1 << 27,  // Don't use! For internal use by BeginPopupModal()
-			GuiWindowFlags_ChildMenu = 1 << 28   // Don't use! For internal use by BeginMenu()
+			GuiWindowFlags_ChildMenu = 1 << 28,  // Don't use! For internal use by BeginMenu()
+			GuiWindowFlags_DockNodeHost = 1 << 29   // Don't use! For internal use by Begin()/NewFrame()
 
-			// [Obsolete]
-			//GuiWindowFlags_ResizeFromAnySide    = 1 << 17,  // --> Set io.ConfigWindowsResizeFromEdges=true and make sure mouse cursors are supported by backend (io.BackendFlags & GuiBackendFlags_HasMouseCursors)
 		};
 
 
@@ -571,7 +572,17 @@ namespace ButiEngine {
 			GuiBackendFlags_HasSetMousePos = 1 << 2,   // Backend Platform supports io.WantSetMousePos requests to reposition the OS mouse position (only used if GuiConfigFlags_NavEnableSetMousePos is set).
 			GuiBackendFlags_RendererHasVtxOffset = 1 << 3    // Backend Renderer supports DrawCmd::VtxOffset. This enables output of large meshes (64K+ vertices) while still using 16-bit indices.
 		};
-
+		enum GuiDockNodeFlags_
+		{
+			GuiDockNodeFlags_None = 0,
+			GuiDockNodeFlags_KeepAliveOnly = 1 << 0,   // Don't display the dockspace node but keep it alive. Windows docked into this dockspace node won't be undocked.
+			GuiDockNodeFlags_NoCentralNode              = 1 << 1,   // Disable Central Node (the node which can stay empty)
+			GuiDockNodeFlags_NoDockingInCentralNode = 1 << 2,   // Disable docking inside the Central Node, which will be always kept empty. Note: when turned off, existing docked nodes will be preserved.
+			GuiDockNodeFlags_NoSplit = 1 << 3,   // Disable splitting the node into smaller nodes. Useful e.g. when embedding dockspaces into a main root one (the root one may have splitting disabled to reduce confusion). Note: when turned off, existing splits will be preserved.
+			GuiDockNodeFlags_NoResize = 1 << 4,   // Disable resizing child nodes using the splitter/separators. Useful with programatically setup dockspaces. 
+			GuiDockNodeFlags_PassthruCentralNode = 1 << 5,   // Enable passthru dockspace: 1) DockSpace() will render a GuiCol_WindowBg background covering everything excepted the Central Node when empty. Meaning the host window should probably use SetNextWindowBgAlpha(0.0f) prior to Begin() when using this. 2) When Central Node is empty: let inputs pass-through + won't display a DockingEmptyBg background. See demo for details.
+			GuiDockNodeFlags_AutoHideTabBar = 1 << 6    // Tab bar will automatically hide when there is a single window in the dock node.
+		};
 		// Enumeration for PushStyleColor() / PopStyleColor()
 		
 

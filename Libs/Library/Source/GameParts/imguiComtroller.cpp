@@ -24,7 +24,7 @@ ImguiController::ImguiController(std::unique_ptr<IWindow>& unq_window, std::shar
     (void)io;
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
     //GUI::StyleColorsClassic();
@@ -52,6 +52,31 @@ void ImguiController::Start()
     ImGui::NewFrame();
     unq_instance->befIo = unq_instance->io;
     unq_instance->io = GUI::GetIO();
+
+    ImGuiViewport* viewport = ImGui::GetMainViewport();
+    ImGui::SetNextWindowPos(viewport->Pos);
+    ImGui::SetNextWindowSize(viewport->Size);
+    ImGui::SetNextWindowViewport(viewport->ID);
+
+    ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+    window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse| ImGuiWindowFlags_NoResize |  ImGuiWindowFlags_NoMove;
+    window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, -10.0f));
+
+    ImGui::SetNextWindowBgAlpha(0.0f);
+    ImGui::Begin("DockSpace", nullptr, window_flags);
+    ImGui::PopStyleVar(3);
+    
+    ImGuiID dockspace_id = ImGui::GetID("DockSpace");
+    ImGuiDockNodeFlags dockspace_flags = GUI::GuiDockNodeFlags_NoSplit;
+
+    ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+
+    ImGui::End();
+
 }
 
 void ImguiController::Update()

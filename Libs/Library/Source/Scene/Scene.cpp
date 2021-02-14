@@ -20,15 +20,23 @@ void ButiEngine::Scene::UIUpdate()
 
 void ButiEngine::Scene::EditCameraUpdate()
 {
+	static Vector2 pos;
 	auto editCam = GetCamera("edit").lock();
 	if (GameDevice::GetInput()->GetMouseButton(MouseButtons::RightClick)) {
 		Vector2 move = GameDevice::GetInput()->GetMouseMove();
+
+		pos = GameDevice::GetInput()->GetMousePos();
+
+		GameDevice::GetInput()->SetMouseCursor(pos);
 		editCam->shp_transform->RollWorldRotationY_Degrees(-move.x);
 		editCam->shp_transform->RollLocalRotationX_Degrees(-move.y);
+
 	}
 	if (GameDevice::GetInput()->GetMouseButton(MouseButtons::WheelButton)) {
 		Vector2 move = GameDevice::GetInput()->GetMouseMove();
 
+		GameDevice::GetInput()->SetMouseCursor(pos);
+		pos = GameDevice::GetInput()->GetMousePos();
 		Vector3 velocity = editCam->shp_transform->GetRight() * move.x * 0.01f + editCam->shp_transform->GetUp() * move.y * -1 * 0.01f;
 
 		editCam->shp_transform->Translate(velocity);
@@ -96,13 +104,13 @@ void ButiEngine::Scene::Draw()
 	}
 
 
-
-	shp_renderer->RenderingEnd();
-
 	for (auto cameraItr = cams.begin(); cameraItr != cams.end(); cameraItr++) {
 
 		(*cameraItr)->End();
 	}
+
+	//shp_renderer->RenderingEnd();
+
 }
 
 ButiEngine::Scene::Scene(std::weak_ptr<ISceneManager> arg_wkp_sceneManager, std::shared_ptr< SceneInformation> argSceneInformation):sceneInformation(argSceneInformation)

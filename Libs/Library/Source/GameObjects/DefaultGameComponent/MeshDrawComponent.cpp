@@ -68,9 +68,6 @@ void ButiEngine::MeshDrawComponent::OnSet()
 	else {
 
 		auto graphicDevice = gameObject.lock()->GetGraphicDevice();
-		meshTag = graphicDevice->GetApplication().lock()->GetResourceContainer()->GetMeshTag(meshTag);
-		shaderTag = graphicDevice->GetApplication().lock()->GetResourceContainer()->GetShaderTag(shaderTag);
-		modelTag = graphicDevice->GetApplication().lock()->GetResourceContainer()->GetModelTag(modelTag);
 
 		auto matEnd = materialTag.end();
 		for (auto itr = materialTag.begin(); itr != matEnd; itr++) {

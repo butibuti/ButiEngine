@@ -597,7 +597,7 @@ void ButiEngine::ResourceContainer::ShowGUI()
 			GUI::ColorEdit4("emissive", matVar.emissive);
 			GUI::ColorEdit4("specular", matVar.specular);
 
-			if (GUI::Button("OK!!")&& !textag.IsEmpty()) {
+			if (GUI::Button("OK!!")) {
 
 				MaterialLoadInfo sn;
 				sn.var = matVar;

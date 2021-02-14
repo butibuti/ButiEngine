@@ -43,6 +43,11 @@ void ButiEngine::SceneManager::Update()
 	auto updateThread = std::thread(SceneUpdate, currentScene);
 
 	currentScene->Draw();
+
+
+	wkp_app.lock()->GetGraphicDevice()->Update();
+
+	wkp_app.lock()->GetGraphicDevice()->ResourceUploadRelease();
 	updateThread.join();
 }
 

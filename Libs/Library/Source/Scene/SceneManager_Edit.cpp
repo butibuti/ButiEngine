@@ -2,6 +2,7 @@
 #include "..\..\Header\Scene\SceneManager_Edit.h"
 #include"..\..\Header\Scene/Scene.h"
 #include <thread>
+#include"Header/Resources/DrawData/DrawData_Dx12.h"
 
 ButiEngine::SceneManager_Edit::SceneManager_Edit(std::weak_ptr<IApplication> arg_wkp_app)
 	:SceneManager(arg_wkp_app)
@@ -10,6 +11,7 @@ ButiEngine::SceneManager_Edit::SceneManager_Edit(std::weak_ptr<IApplication> arg
 
 void ButiEngine::SceneManager_Edit::Initialize()
 {
+	
 }
 
 void SceneUpdate_ed(std::shared_ptr<ButiEngine::IScene> currentScene) {
@@ -38,7 +40,7 @@ void ButiEngine::SceneManager_Edit::Update()
 			isPlaying = false;
 			isActive = false;
 			startCount = 0;
-
+			CreateScreenDrawData();
 			currentScene->CameraEditActivation();
 		}
 		isReload = false;
@@ -61,10 +63,23 @@ void ButiEngine::SceneManager_Edit::Update()
 
 		GUI::SetState(GUI::GUIState::enable);
 		currentScene->BefDraw();
+		screenDrawData->DrawBefore();
 
 		auto updateThread = std::thread(SceneUpdate_ed,currentScene);
 
 		currentScene->Draw();
+
+		shp_camera->BefDraw();
+		shp_camera->Start();
+
+		screenDrawData->Draw();
+
+		shp_camera->Stop();
+		shp_camera->End();
+
+		wkp_app.lock()->GetGraphicDevice()->Update();
+
+		wkp_app.lock()->GetGraphicDevice()->ResourceUploadRelease();
 		updateThread.join();
 	}
 	else {
@@ -72,10 +87,20 @@ void ButiEngine::SceneManager_Edit::Update()
 
 		currentScene->RegistGameObjects();
 		currentScene->BefDraw();
+		screenDrawData->DrawBefore();
 		currentScene->Draw();
-		if ( !GUI::IsWindowHovered(GUI::GuiHoveredFlags_AnyWindow)) {
-			currentScene->EditCameraUpdate();
-		}
+
+		shp_camera->BefDraw();
+		shp_camera->Start();
+		screenDrawData->Draw();
+
+		shp_camera->Stop();
+		shp_camera->End();
+
+		wkp_app.lock()->GetGraphicDevice()->Update();
+
+		wkp_app.lock()->GetGraphicDevice()->ResourceUploadRelease();
+
 	}
 
 }
@@ -172,7 +197,30 @@ void ButiEngine::SceneManager_Edit::UIUpdate()
 	if (showCollisionManager) {
 		currentScene->GetCollisionManager().lock()->ShowGUI();
 	}
+	GUI::GuiWindowFlags window_flags =0;
+	window_flags |=  GUI::GuiWindowFlags_NoCollapse ;
+	window_flags |= GUI::GuiWindowFlags_NoBringToFrontOnFocus | GUI::GuiWindowFlags_NoNavFocus;
+	GUI::PushStyleVar(GUI::GuiStyleVar_WindowRounding, 0.0f);
+	GUI::PushStyleVar(GUI::GuiStyleVar_WindowBorderSize, 0.0f);
+	GUI::PushStyleVar(GUI::GuiStyleVar_WindowPadding, Vector2(0.0f, 0.0f));
+	GUI::SetNextWindowBgAlpha(0.0f);
 
+	GUI::Begin("Scene", nullptr,window_flags);
+
+	GUI::PopStyleVar(3);
+	
+	auto w = GUI::GetWindowWidth();
+	auto h= GUI::GetWindowHeight();
+
+	auto pos= GUI::GetWindowPos();
+	auto windowSize = wkp_app.lock()->GetWindow()->GetSize();
+	screenDrawData->shp_transform->SetLocalScale(Vector3(w, h-20, 1));
+	screenDrawData->shp_transform->SetLocalPosition(Vector3(pos.x-windowSize.x/2+w/2,-10 -pos.y+windowSize.y/2-h/2,1));
+	if (GUI::IsWindowHovered()) {
+		currentScene->EditCameraUpdate();
+	}
+
+	GUI::End();
 
 }
 
@@ -185,6 +233,8 @@ void ButiEngine::SceneManager_Edit::RenewalScene()
 	currentScene->Set();
 	if(isPlaying)
 	currentScene->Start();
+
+	CreateScreenDrawData();
 }
 
 void ButiEngine::SceneManager_Edit::ChangeScene(const std::string& arg_sceneName, float sceneChangeDalay)
@@ -214,6 +264,55 @@ void ButiEngine::SceneManager_Edit::LoadScene_Init(const std::string& arg_sceneN
 		currentScene->Set();
 
 		currentScene->CameraEditActivation();
+
+		CreateScreenDrawData();
 	}
+}
+
+void ButiEngine::SceneManager_Edit::Release()
+{
+	screenDrawData = nullptr;
+	auto itr = map_iscene.begin();
+	while (itr != map_iscene.end())
+	{
+		itr->second->Release();
+		itr = map_iscene.erase(itr);
+	}
+}
+
+void ButiEngine::SceneManager_Edit::CreateScreenDrawData()
+{
+	auto renderer = currentScene->GetRenderer();
+
+	{
+		auto meshTag = wkp_app.lock()->GetResourceContainer()->GetMeshTag("Plane_UV");
+		auto shaderTag = wkp_app.lock()->GetResourceContainer()->GetShaderTag("OnlyMaterial");
+		auto materialTag = wkp_app.lock()->GetResourceContainer()->GetMaterialTag("black");
+		auto shp_drawInfo = ObjectFactory::Create<DrawInformation>();
+		auto lightBuffer_Dx12 = ObjectFactory::Create<CBuffer_Dx12<LightVariable>>(3);
+
+		shp_drawInfo->vec_exCBuffer.push_back(lightBuffer_Dx12);
+
+		auto light = LightVariable();
+		light.lightDir = Vector4(Vector3(-1.0f, -1.0f, 0.0f), 1);
+		lightBuffer_Dx12->SetExName("LightBuffer");
+		lightBuffer_Dx12->Get() = light;
+
+		auto endItr = shp_drawInfo->vec_exCBuffer.end();
+		for (auto itr = shp_drawInfo->vec_exCBuffer.begin(); itr != endItr; itr++) {
+			(*itr)->Initialize();
+		}
+		screenDrawData = ObjectFactory::Create<MeshDrawData_Dx12>(meshTag, shaderTag, materialTag, renderer, wkp_app.lock()->GetGraphicDevice()->GetThis<GraphicDevice_Dx12>(), shp_drawInfo, ObjectFactory::Create<Transform>(Vector3(0,0,1), Vector3(), Vector3(960, 540, 1)));
+		screenDrawData->CommandSet();
+		
+	}
+	auto windowSize = wkp_app.lock()->GetWindow()->GetSize();
+	auto cameraProp = CameraProjProperty(windowSize.x, windowSize.y, 0, 0);
+	cameraProp.farClip = 200.0f;
+	cameraProp.cameraName = "editorMain";
+	cameraProp.isEditActive = false;
+	cameraProp.isInitActive = true;
+	cameraProp.isPararell = true;
+	shp_camera = CameraCreater::CreateCamera(cameraProp, cameraProp.cameraName, true, currentScene->GetRenderer(), wkp_app.lock()->GetGraphicDevice());
 }
 

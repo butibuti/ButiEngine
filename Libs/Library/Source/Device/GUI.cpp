@@ -1332,6 +1332,41 @@ void ButiEngine::GUI::End()
 	}
 }
 
+void ButiEngine::GUI::PushStyleColor(int idx, UINT col)
+{
+	ImGui::PushStyleColor(idx, col);
+}
+
+void ButiEngine::GUI::PushStyleColor(int idx, const Vector4& col)
+{
+	ImGui::PushStyleColor(idx, ImVec4(col.x, col.y, col.z, col.w));
+}
+
+void ButiEngine::GUI::PopStyleColor(int count)
+{
+	ImGui::PopStyleColor(count);
+}
+
+void ButiEngine::GUI::PushStyleVar(int idx, float val)
+{
+	ImGui::PushStyleVar(idx,val);
+}
+
+void ButiEngine::GUI::PushStyleVar(int idx, const Vector2& val)
+{
+	ImGui::PushStyleVar(idx, ImVec2(val.x, val.y));
+}
+
+void ButiEngine::GUI::PopStyleVar(int count)
+{
+	ImGui::PopStyleVar(count);
+}
+
+void ButiEngine::GUI::SetNextWindowBgAlpha(float alpha)
+{
+	ImGui::SetNextWindowBgAlpha(alpha);
+}
+
 bool ButiEngine::GUI::BeginChild(const std::string& str_id, const Vector2& size, bool border, GuiWindowFlags flags)
 {
 	if (state != GUIState::active) {return false;}

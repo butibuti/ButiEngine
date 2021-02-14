@@ -712,6 +712,14 @@ namespace ButiEngine {
 		bool          Begin(const std::string& name, bool* p_open = nullptr, GuiWindowFlags flags = 0);
 		void          End();
 
+		void          PushStyleColor(int idx, UINT col);
+		void          PushStyleColor(int idx, const Vector4& col);
+		void          PopStyleColor(int count = 1);
+		void          PushStyleVar(int idx, float val);
+		void          PushStyleVar(int idx, const Vector2& val);
+		void          PopStyleVar(int count = 1);
+		void          SetNextWindowBgAlpha(float alpha);
+
 		bool          BeginChild(const std::string& str_id, const Vector2& size = Vector2(0, 0), bool border = false, GuiWindowFlags flags = 0);
 		bool          BeginChild(unsigned int id, const Vector2& size = Vector2(0, 0), bool border = false, GuiWindowFlags flags = 0);
 		void          EndChild();

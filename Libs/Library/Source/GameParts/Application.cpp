@@ -57,7 +57,7 @@ void ButiEngine::Application::CreateInstances(const std::string windowName, cons
 		}else
 		shp_sceneManager = std::make_unique<SceneManager>(GetThis<IApplication>());
 	}
-
+	shp_sceneManager->Initialize();
 	if (!shp_gameObjTagManager) {
 		shp_gameObjTagManager = std::make_shared<GameObjectTagManager>();
 

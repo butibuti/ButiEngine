@@ -2,7 +2,8 @@
 #include <wincodec.h>
 #include"../Common/ButiMath.h"
 namespace ButiEngine {
-
+	class IResource_Texture;
+	using TextureTag = ID<IResource_Texture>;
 	struct Resource {
 		virtual void  ResourceUpdate() {}
 		virtual void  UpdateResourceRelease() {}
@@ -141,9 +142,13 @@ namespace ButiEngine {
 
 		void SetClearColor(const Vector4& arg_clearColor);
 		Vector4 GetClearColor();
-
+		TextureTag GetDefaultRenderTarget() { return defaultRenderTarget; }
+		void SetDefaultRenderTarget(TextureTag arg_renderTargetTexture) {
+			defaultRenderTarget = arg_renderTargetTexture
+				;
+		}
 	protected:
-
+		TextureTag defaultRenderTarget;
 		std::weak_ptr<IApplication> wkp_application;
 		Matrix4x4 projectionMatrix;
 

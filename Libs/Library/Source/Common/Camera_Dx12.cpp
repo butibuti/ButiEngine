@@ -61,8 +61,12 @@ void ButiEngine::Camera_Dx12::Initialize()
 	viewport.Height = static_cast<FLOAT>(cameraViewProp.height);
 	viewport.MinDepth = cameraViewProp.front;
 	viewport.MaxDepth = cameraViewProp.clearDepth;
-	if ((!cameraViewProp.projectionTexture.IsEmpty())) {
-		auto tex= wkp_graphicDevice.lock()->GetApplication().lock()->GetResourceContainer()->GetTexture(cameraViewProp.projectionTexture);
+	auto renderTargetTexture = cameraViewProp.projectionTexture;
+	if (renderTargetTexture.IsEmpty()&& cameraViewProp.cameraName!="editorMain") {
+		renderTargetTexture = wkp_graphicDevice.lock()->GetDefaultRenderTarget();
+	}
+	if ((!renderTargetTexture.IsEmpty())) {
+		auto tex= wkp_graphicDevice.lock()->GetApplication().lock()->GetResourceContainer()->GetTexture(renderTargetTexture);
 		if (tex.lock()->IsThis<IRenderTarget>()) {
 			shp_renderTarget = tex.lock()->GetThis<IRenderTarget>();
 		}

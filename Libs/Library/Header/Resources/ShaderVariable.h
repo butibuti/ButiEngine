@@ -111,10 +111,10 @@ namespace ButiEngine {
 	};
 
 	struct MaterialVariable {
-		Vector4 emissive;
-		Vector4 diffuse;
-		Vector4 ambient;
-		Vector4 specular;
+		Vector4 emissive=Vector4(1.0f,1.0f,1.0f,1.0f);
+		Vector4 diffuse = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+		Vector4 ambient = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+		Vector4 specular = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 		MaterialVariable() {
 			memset(this, 0, sizeof(256));
 		};

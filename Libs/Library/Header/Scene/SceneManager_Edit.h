@@ -20,21 +20,13 @@ namespace ButiEngine {
 		void Release()override;
 	private:
 		void CreateScreenDrawData();
-		std::shared_ptr< MeshDrawData > screenDrawData;
-		std::shared_ptr<ICamera> shp_camera;
 		bool isActive = false;
 		bool isPlaying = false;
-		bool showCollisionManager = false;
-
-		bool showHeirarcy = true;
-
-		bool showInspector = true;
-
-		bool showContainer = true;
-
-		bool showCamera = false;
+		std::shared_ptr< MeshDrawData > screenDrawData;
 
 		UINT startCount = 0;
+		TextureTag screenTextureTag;
+		MaterialTag screenMaterialTag;
 	};
 }
 #endif // !_SceneManager_Edit_H_

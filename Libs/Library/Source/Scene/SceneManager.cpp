@@ -24,7 +24,7 @@ void ButiEngine::SceneManager::Update()
 		RemoveScene(currentScene->GetSceneInformation()->GetSceneName());
 		LoadScene(currentScene->GetSceneInformation()->GetSceneName());
 		ChangeScene(currentScene->GetSceneInformation()->GetSceneName());
-		
+
 		isReload = false;
 	}
 
@@ -44,6 +44,11 @@ void ButiEngine::SceneManager::Update()
 
 	currentScene->Draw();
 
+	shp_camera->BefDraw();
+	shp_camera->Start();
+	GetApplication().lock()->GetGUIController()->Draw();
+	shp_camera->Stop();
+	shp_camera->End();
 
 	wkp_app.lock()->GetGraphicDevice()->Update();
 
@@ -113,6 +118,7 @@ void ButiEngine::SceneManager::LoadScene_Init(const std::string& arg_sceneName, 
 		SetScene_Init(arg_sceneName, ObjectFactory::Create<Scene>(GetThis<ISceneManager>(), shp_sceneInfo));
 		currentScene->Set();
 		currentScene->Start();
+		CreateCamera();
 	}
 }
 
@@ -148,6 +154,7 @@ void ButiEngine::SceneManager::RenewalScene()
 	newScene = nullptr;
 	currentScene->Set();
 	currentScene->Start();
+	CreateCamera();
 }
 
 std::weak_ptr<ButiEngine::IApplication> ButiEngine::SceneManager::GetApplication()
@@ -171,6 +178,20 @@ ButiEngine::SceneManager::~SceneManager()
 {
 	currentScene = nullptr;
 	newScene = nullptr;
+}
+
+void ButiEngine::SceneManager::CreateCamera()
+{
+
+	auto windowSize = wkp_app.lock()->GetWindow()->GetSize();
+	auto cameraProp = CameraProjProperty(windowSize.x, windowSize.y, 0, 0);
+	cameraProp.farClip = 200.0f;
+	cameraProp.cameraName = "editorMain";
+	cameraProp.isEditActive = false;
+	cameraProp.isInitActive = true;
+	cameraProp.isPararell = true;
+	shp_camera = CameraCreater::CreateCamera(cameraProp, cameraProp.cameraName, true, currentScene->GetRenderer(), wkp_app.lock()->GetGraphicDevice());
+	shp_camera->shp_transform->TranslateZ(-20.0);
 }
 
 

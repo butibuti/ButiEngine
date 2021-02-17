@@ -31,11 +31,13 @@ namespace ButiEngine {
 		void Release()override;
 		~SceneManager();
 	protected:
+		void CreateCamera();
 		std::shared_ptr<IScene> currentScene;
 		std::shared_ptr<IScene> newScene;
 		std::map<std::string, std::shared_ptr<IScene>> map_iscene;
 		std::shared_ptr<AbsoluteTimer> sceneChangeTimer;
 		std::weak_ptr<IApplication> wkp_app;
+		std::shared_ptr<ICamera> shp_camera;
 		bool isReload;
 	};
 }

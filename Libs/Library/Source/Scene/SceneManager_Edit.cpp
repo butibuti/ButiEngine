@@ -183,11 +183,11 @@ void ButiEngine::SceneManager_Edit::UIUpdate()
 
 	currentScene->GetResourceContainer()->ShowGUI();
 
-	currentScene->ShowInspectorUI();
 	currentScene->ShowRenderingUI();
 	
 	currentScene->GetCollisionManager().lock()->ShowGUI();
-	
+
+	currentScene->ShowInspectorUI();
 	GUI::GuiWindowFlags window_flags =0;
 	window_flags |=  GUI::GuiWindowFlags_NoCollapse ;
 	window_flags |= GUI::GuiWindowFlags_NoBringToFrontOnFocus | GUI::GuiWindowFlags_NoNavFocus;

@@ -13,6 +13,7 @@ namespace ButiEngine {
 		void Start()override;
 		void Stop() const override;
 		void SetProjectionTexture(const TextureTag& arg_tag)override;
+		void SetDepthStencil(const TextureTag& arg_tag)override;
 		void ChangeMode(const BlendMode& arg_blendMode)override;
 		void ShowUI()override;
 		void End()override;
@@ -22,5 +23,6 @@ namespace ButiEngine {
 
 		D3D12_VIEWPORT    viewport;
 		std::shared_ptr<IRenderTarget> shp_renderTarget;
+		std::shared_ptr<IDepthStencil> shp_depthStencil;
 	};
 }

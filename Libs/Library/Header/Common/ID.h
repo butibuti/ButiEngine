@@ -115,19 +115,45 @@ namespace ButiEngine {
 		}
 
 		ID<T> ShowGUI(GUI::GuiIO& arg_io) {
+
+			if (GUI::InputTextWithHint("SerchStr", "serch", serchStrAry, 256)) {
+				serchStr = serchStrAry;
+			}
+
 			auto enditr = map_shp_resource.end();
 			ID<T> out;
-			for (auto itr = map_shp_resource.begin(); itr != enditr; itr++) {
-				if (GUI::Button(Util::ToUTF8( itr->first).c_str())) {
-					out = ID<T>(itr->first);
+			if (serchStr.size() <= 0) {
+
+				for (auto itr = map_shp_resource.begin(); itr != enditr; itr++) {
+					if (GUI::Button(Util::ToUTF8(itr->first).c_str())) {
+						out = ID<T>(itr->first);
+					}
+
+					if (GUI::IsItemActive()) {
+						auto p1 = arg_io.MouseClickedPos[0];
+						auto p2 = arg_io.MousePos;
+						GUI::Line(Vector2(p1.x, p1.y), Vector2(p2.x, p2.y), GUI::GetColorU32(GUI::GuiCol_::GuiCol_Button), 4.0f); // Draw a line between the button and the mouse cursor
+
+						out = ID<T>(itr->first);
+					}
 				}
+			}
+			else {
+				for (auto itr = map_shp_resource.begin(); itr != enditr; itr++) {
+					if (!StringHelper::Contains(itr->first, serchStr)) {
+						continue;
+					}
+					if (GUI::Button(Util::ToUTF8(itr->first).c_str())) {
+						out = ID<T>(itr->first);
+					}
 
-				if (GUI::IsItemActive()) {
-					auto p1 = arg_io.MouseClickedPos[0];
-					auto p2 = arg_io.MousePos;
-					GUI::Line(Vector2( p1.x,p1.y), Vector2(p2.x, p2.y), GUI::GetColorU32(GUI::GuiCol_::GuiCol_Button), 4.0f); // Draw a line between the button and the mouse cursor
+					if (GUI::IsItemActive()) {
+						auto p1 = arg_io.MouseClickedPos[0];
+						auto p2 = arg_io.MousePos;
+						GUI::Line(Vector2(p1.x, p1.y), Vector2(p2.x, p2.y), GUI::GetColorU32(GUI::GuiCol_::GuiCol_Button), 4.0f); // Draw a line between the button and the mouse cursor
 
-					out = ID<T>(itr->first);
+						out = ID<T>(itr->first);
+					}
 				}
 			}
 			return out;
@@ -146,6 +172,8 @@ namespace ButiEngine {
 
 	private:
 		std::map< std::string,std::shared_ptr<T>> map_shp_resource;
+		std::string serchStr;
+		char serchStrAry[256];
 
 	};
 	template <class T>

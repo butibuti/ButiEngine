@@ -62,13 +62,21 @@ void ButiEngine::Camera_Dx12::Initialize()
 	viewport.MinDepth = cameraViewProp.front;
 	viewport.MaxDepth = cameraViewProp.clearDepth;
 	auto renderTargetTexture = cameraViewProp.projectionTexture;
-	if (renderTargetTexture.IsEmpty()&& cameraViewProp.cameraName!="editorMain") {
+	if (renderTargetTexture.IsEmpty() && cameraViewProp.cameraName != "editorMain") {
 		renderTargetTexture = wkp_graphicDevice.lock()->GetDefaultRenderTarget();
 	}
 	if ((!renderTargetTexture.IsEmpty())) {
-		auto tex= wkp_graphicDevice.lock()->GetApplication().lock()->GetResourceContainer()->GetTexture(renderTargetTexture);
+		auto tex = wkp_graphicDevice.lock()->GetApplication().lock()->GetResourceContainer()->GetTexture(renderTargetTexture);
 		if (tex.lock()->IsThis<IRenderTarget>()) {
 			shp_renderTarget = tex.lock()->GetThis<IRenderTarget>();
+		}
+	}
+	auto dsvTexture = cameraViewProp.depthStencilTexture;
+	if ((!dsvTexture.IsEmpty())) {
+		auto tex = wkp_graphicDevice.lock()->GetApplication().lock()->GetResourceContainer()->GetTexture(dsvTexture);
+		if (tex.lock()->IsThis<IDepthStencil>()) {
+			auto IDS = tex.lock()->GetThis<IDepthStencil>();
+			shp_depthStencil = IDS;
 		}
 	}
 }
@@ -76,20 +84,25 @@ void ButiEngine::Camera_Dx12::Initialize()
 void ButiEngine::Camera_Dx12::Start()
 {
 	wkp_graphicDevice.lock()->DrawStart();
-	
-	if (shp_renderTarget) {
-		auto size = shp_renderTarget->GetSize();
-		shp_renderer->GetFogCBuffer()->Get().pixelScale = Vector2(1.0/size.x,1.0/size.y);
-		shp_renderTarget->SetRenderTarget(cameraViewProp.clearColor);
+
+	if (shp_depthStencil) {
+		shp_depthStencil->SetDepthStencil();
 	}
 	else {
-		auto size = wkp_graphicDevice.lock()->GetApplication().lock()->GetWindow()->GetSize();
-		shp_renderer->GetFogCBuffer()->Get().pixelScale = Vector2(1.0/size.x,1.0/size.y);
-		wkp_graphicDevice.lock()->CommandList_SetRenderTargetView();
 		wkp_graphicDevice.lock()->CommandList_SetScissorRect();
 		wkp_graphicDevice.lock()->ClearDepthStancil(cameraViewProp.clearDepth);
 	}
 
+	if (shp_renderTarget) {
+		auto size = shp_renderTarget->GetSize();
+		shp_renderer->GetFogCBuffer()->Get().pixelScale = Vector2(1.0 / size.x, 1.0 / size.y);
+		shp_renderTarget->SetRenderTarget(cameraViewProp.clearColor);
+	}
+	else {
+		auto size = wkp_graphicDevice.lock()->GetApplication().lock()->GetWindow()->GetSize();
+		shp_renderer->GetFogCBuffer()->Get().pixelScale = Vector2(1.0 / size.x, 1.0 / size.y);
+		wkp_graphicDevice.lock()->CommandList_SetRenderTargetView();
+	}
 
 	wkp_graphicDevice.lock()->SetCameraPos(cameraPos);
 	wkp_graphicDevice.lock()->SetProjectionMatrix(projectionMatrix);
@@ -120,6 +133,9 @@ void ButiEngine::Camera_Dx12::Stop() const
 	if (shp_renderTarget) {
 		shp_renderTarget->DisSetRenderTarget();
 	}
+	if (shp_depthStencil) {
+		shp_depthStencil->DisSetDepthStencil();
+	}
 	wkp_graphicDevice.lock()->Set();
 }
 
@@ -135,6 +151,20 @@ void ButiEngine::Camera_Dx12::SetProjectionTexture(const TextureTag& arg_tag)
 	}
 	else {
 		shp_renderTarget = nullptr;
+	}
+}
+
+void ButiEngine::Camera_Dx12::SetDepthStencil(const TextureTag& arg_tag)
+{
+	cameraViewProp.depthStencilTexture = arg_tag;
+	auto dsvTexture = cameraViewProp.depthStencilTexture;
+	if ((!dsvTexture.IsEmpty())) {
+		auto tex = wkp_graphicDevice.lock()->GetApplication().lock()->GetResourceContainer()->GetTexture(dsvTexture);
+		if (tex.lock()->IsThis<IDepthStencil>()) {
+			auto IDS = tex.lock()->GetThis<IDepthStencil>();
+			shp_depthStencil = IDS;
+			int i = 0;
+		}
 	}
 }
 
@@ -231,7 +261,7 @@ void ButiEngine::Camera_Dx12::ShowUI()
 
 		GUI::BulletText("ProjectionTexture");
 		auto tagName =wkp_graphicDevice.lock()->GetApplication().lock()-> GetResourceContainer()->GetTagNameTexture(cameraViewProp.projectionTexture);
-		(GUI::BeginChild("MeshTagWin", Vector2(GUI::GetFontSize() * (tagName.size() + 2), GUI::GetFontSize() * 2), true));
+		(GUI::BeginChild("ProjTexTagWin", Vector2(GUI::GetFontSize() * (tagName.size() + 2), GUI::GetFontSize() * 2), true));
 		GUI::Text(Util::ToUTF8(tagName).c_str());
 
 		if (GUI::IsWindowHovered()) {
@@ -244,6 +274,28 @@ void ButiEngine::Camera_Dx12::ShowUI()
 		GUI::SameLine();
 		if (GUI::Button("Detach")) {
 			cameraViewProp.projectionTexture = TextureTag();
+			isEdit = true;
+		}
+
+		GUI::EndChild();
+
+
+
+		GUI::BulletText("DepthStencilTexture");
+		tagName = wkp_graphicDevice.lock()->GetApplication().lock()->GetResourceContainer()->GetTagNameTexture(cameraViewProp.depthStencilTexture);
+		(GUI::BeginChild("DSVTagWin", Vector2(GUI::GetFontSize()* (tagName.size() + 2), GUI::GetFontSize() * 2), true));
+		GUI::Text(Util::ToUTF8(tagName).c_str());
+
+		if (GUI::IsWindowHovered()) {
+			auto tag = wkp_graphicDevice.lock()->GetApplication().lock()->GetGUIController()->GetTextureTag();
+			if (!tag.IsEmpty()) {
+				cameraViewProp.depthStencilTexture = tag;
+				isEdit = true;
+			}
+		}
+		GUI::SameLine();
+		if (GUI::Button("Detach")) {
+			cameraViewProp.depthStencilTexture = TextureTag();
 			isEdit = true;
 		}
 
@@ -262,5 +314,8 @@ void ButiEngine::Camera_Dx12::End()
 {
 	if (shp_renderTarget) {
 		shp_renderTarget->SetIsCleared(false);
+	}
+	if (shp_depthStencil) {
+		shp_depthStencil->SetIsCleared(false);
 	}
 }

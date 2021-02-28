@@ -86,7 +86,7 @@ namespace ButiEngine {
 
 		CD3DX12_CPU_DESCRIPTOR_HANDLE GetRtvHandle() const;
 
-		CD3DX12_CPU_DESCRIPTOR_HANDLE GetDsvHandle() const;
+		D3D12_CPU_DESCRIPTOR_HANDLE GetDsvHandle() const;
 
 		const D3D12_RECT& GetScissorRect()const;
 
@@ -98,8 +98,13 @@ namespace ButiEngine {
 			return frameIndex;
 		}
 
-	private:
+		void SetDepthStencil(D3D12_CPU_DESCRIPTOR_HANDLE*  arg_dsv);
+		D3D12_CPU_DESCRIPTOR_HANDLE* GetDepthStencil();
+		void DisSetDepthStencil();
 
+	private:
+		D3D12_CPU_DESCRIPTOR_HANDLE* nowDSV = nullptr;
+		D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle;
 		static const UINT FrameCount = 3;
 		Microsoft::WRL::ComPtr<ID3D12Device> device;
 
@@ -123,6 +128,7 @@ namespace ButiEngine {
 		std::shared_ptr<DescriptorHeapManager> shp_descripterManager;
 
 		std::shared_ptr<PipelineStateManager> shp_pipelineStateManager;
+
 
 		ID3D12GraphicsCommandList* currentCommandList;
 

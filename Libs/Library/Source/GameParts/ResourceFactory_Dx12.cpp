@@ -4,6 +4,7 @@
 #include"..\..\Header\Resources\Resource_Shader_Dx12.h"
 #include"..\..\Header\Resources\Resource_Texture_Dx12.h"
 #include"..\..\Header\Resources\Resource_Texture_Dx12_RenderTarget.h"
+#include"..\..\Header\Resources\Resource_Texture_Dx12_DepthStencil.h"
 #include"..\..\Header\Resources\Resource_Material_Dx12.h"
 
 
@@ -22,6 +23,11 @@ std::shared_ptr<ButiEngine::Resource_Texture> ButiEngine::ResourceFactory_Dx12::
 std::shared_ptr<ButiEngine::Resource_Texture> ButiEngine::ResourceFactory_Dx12::CreateRenderTargetTexture(const UINT width, const UINT height)
 {
 	return ObjectFactory::Create<Resource_Texture_Dx12_RenderTarget>( width,height, wkp_graphicDevice.lock());
+}
+
+std::shared_ptr<ButiEngine::Resource_Texture> ButiEngine::ResourceFactory_Dx12::CreateDepthStencilTexture(const UINT width, const UINT height)
+{
+	return ObjectFactory::Create<Resource_Texture_Dx12_DepthStencil>(width, height, wkp_graphicDevice.lock());
 }
 
 std::shared_ptr<ButiEngine::Resource_PixelShader> ButiEngine::ResourceFactory_Dx12::CreatePixelShaderFromFile(const std::string& filePath)

@@ -264,21 +264,23 @@ void ButiEngine::MeshDrawComponent::OnShowUI()
 
 	}
 
-	if (GUI::ArrowButton("##layerUp",GUI::GuiDir_Left)) {
+	if (GUI::ArrowButton("##layerDown",GUI::GuiDir_Left)) {
 
 		UnRegist();
 		layer--;
 		if (layer < 0) {
 			layer = 0;
 		}
+		CreateData();
 		Regist();
 	}
 	GUI::SameLine();
 	GUI::Text(std::to_string(layer));
 	GUI::SameLine();
-	if (GUI::ArrowButton("##layerDown", GUI::GuiDir_Right)) {
+	if (GUI::ArrowButton("##layerUp", GUI::GuiDir_Right)) {
 		UnRegist();
 		layer++;
+		CreateData();
 		Regist();
 	}
 

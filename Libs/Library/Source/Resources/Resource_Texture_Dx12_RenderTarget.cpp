@@ -23,15 +23,6 @@ ButiEngine::Resource_Texture_Dx12_RenderTarget::Resource_Texture_Dx12_RenderTarg
 		{
 		}
 
-		// 深度ステンシルビュー用ディスクリプタヒープの設定.
-		desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
-
-		// 深度ステンシルビュー用ディスクリプタヒープを生成.
-
-		hr = wkp_graphicDevice.lock()->GetDevice().CreateDescriptorHeap(&desc, IID_PPV_ARGS(depthStencilDescriptorHeap.GetAddressOf()));
-		if (FAILED(hr))
-		{
-		}
 	}
 
 	// ヒーププロパティの設定.
@@ -60,27 +51,7 @@ ButiEngine::Resource_Texture_Dx12_RenderTarget::Resource_Texture_Dx12_RenderTarg
 	clearValue.Format = DXGI_FORMAT_D32_FLOAT;
 	clearValue.DepthStencil.Depth = 1.0f;
 	clearValue.DepthStencil.Stencil = 0;
-	// リソースを生成.
-	auto hr =wkp_graphicDevice.lock()->GetDevice().CreateCommittedResource(
-		&prop,
-		D3D12_HEAP_FLAG_NONE,
-		&desc,
-		D3D12_RESOURCE_STATE_DEPTH_WRITE,
-		&clearValue,
-		IID_PPV_ARGS(depthStencil.GetAddressOf()));
-	if (FAILED(hr))
-	{
-		int a = 0;
-	} 
-	// 深度ステンシルビューの設定
-	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
-	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
-	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
-	dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
-
-	// 深度ステンシルビューを生成.
-	wkp_graphicDevice.lock()->GetDevice().CreateDepthStencilView(depthStencil.Get(), &dsvDesc, depthStencilDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
-
+	
 
 
 	auto rtdhHandle = renderTargetDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
@@ -92,7 +63,7 @@ ButiEngine::Resource_Texture_Dx12_RenderTarget::Resource_Texture_Dx12_RenderTarg
 	desc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
 	desc.Format =  DXGI_FORMAT_R8G8B8A8_UNORM;
 	auto heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
-	hr= wkp_graphicDevice.lock()->GetDevice().CreateCommittedResource(
+	auto hr= wkp_graphicDevice.lock()->GetDevice().CreateCommittedResource(
 		&heapProp,
 		D3D12_HEAP_FLAG_NONE, &desc,
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
@@ -122,10 +93,7 @@ ButiEngine::Resource_Texture_Dx12_RenderTarget::Resource_Texture_Dx12_RenderTarg
 	rtvHandle=CD3DX12_CPU_DESCRIPTOR_HANDLE (
 		renderTargetDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), 0,
 		wkp_graphicDevice.lock()->GetDevice().GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV));
-	//デプスステンシルビューのハンドルを取得
-	dsvHandle=CD3DX12_CPU_DESCRIPTOR_HANDLE (
-		depthStencilDescriptorHeap->GetCPUDescriptorHandleForHeapStart()
-	);
+
 
 
 	scissorRect.left = 0;
@@ -143,11 +111,11 @@ void ButiEngine::Resource_Texture_Dx12_RenderTarget::SetRenderTarget(Vector4& ar
 	wkp_graphicDevice.lock()->GetCommandList().ResourceBarrier(1, &trans);
 	if (!isCleared) {
 		isCleared = true;
-		wkp_graphicDevice.lock()->GetCommandList().ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 		wkp_graphicDevice.lock()->GetCommandList().ClearRenderTargetView(rtvHandle, arg_clearColor.GetData(), 0, nullptr);
 	}
 	wkp_graphicDevice.lock()->GetCommandList().RSSetScissorRects(1, &scissorRect);
-	wkp_graphicDevice.lock()->GetCommandList().OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle); 
+	auto dsvHandle = wkp_graphicDevice.lock()->GetDepthStencil();
+	wkp_graphicDevice.lock()->GetCommandList().OMSetRenderTargets(1, &rtvHandle, false, dsvHandle); 
 
 
 }

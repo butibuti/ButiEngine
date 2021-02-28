@@ -291,6 +291,7 @@ namespace ButiEngine
 		UINT layer = 0;
 		float clearDepth = 1.0f;
 		TextureTag projectionTexture;
+		TextureTag depthStencilTexture;
 		std::string cameraName;
 		Vector4 clearColor;
 		bool isInitActive = true;
@@ -311,6 +312,7 @@ namespace ButiEngine
 			archive(front);
 			archive(clearDepth);
 			archive(projectionTexture);
+			archive(depthStencilTexture);
 			archive(cameraName);
 			archive(clearColor);
 			archive(isInitActive);
@@ -344,6 +346,7 @@ namespace ButiEngine
 		virtual int IsContaineVisibility(std::shared_ptr<Geometry::Box_AABB>arg_AABB) = 0;
 		virtual void End() = 0;
 		virtual void SetProjectionTexture(const TextureTag& arg_tag) = 0;
+		virtual void SetDepthStencil(const TextureTag& arg_tag) = 0;
 		virtual void BefDraw() = 0;
 	protected:
 	};

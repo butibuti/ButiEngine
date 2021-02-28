@@ -357,6 +357,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\GameObjects\DefaultGameComponent\DefaultGameComponent.h">
       <Filter>header\GameObjects\DefaultGameComponent</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\Resource_Texture_Dx12_DepthStencil.h">
+      <Filter>header\Resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Common\Camera.cpp">
@@ -643,6 +646,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\GameObjects\DefaultGameComponent\FPSViewBehavior.cpp">
       <Filter>source\GameObjects\DefaultGameComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Source\Resources\Resource_Texture_Dx12_DepthStencil.cpp">
+      <Filter>source\Resources</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

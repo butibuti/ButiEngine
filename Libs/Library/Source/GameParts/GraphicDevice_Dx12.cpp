@@ -63,8 +63,6 @@ void ButiEngine::GraphicDevice_Dx12::Initialize()
 	hr = device->CreateCommandQueue(&commandQueueDesc, IID_PPV_ARGS(commandQueue.GetAddressOf()));
 
 
-
-
 	DXGI_SWAP_CHAIN_DESC swapChaindesc = {};
 	swapChaindesc.BufferCount = FrameCount;
 	swapChaindesc.BufferDesc.Width = wkp_application.lock()->GetWindow()->GetSize().x;
@@ -260,6 +258,10 @@ void ButiEngine::GraphicDevice_Dx12::Initialize()
 	shp_descripterManager->Initialize(*device.Get());
 
 	shp_pipelineStateManager = ObjectFactory::Create<PipelineStateManager>(GetThis<GraphicDevice_Dx12>());
+
+	dsvHandle = CD3DX12_CPU_DESCRIPTOR_HANDLE(
+		GetDsvHeap()->GetCPUDescriptorHandleForHeapStart()
+	);
 }
 
 void ButiEngine::GraphicDevice_Dx12::PreInitialize()
@@ -274,7 +276,7 @@ void ButiEngine::GraphicDevice_Dx12::Release()
 
 void ButiEngine::GraphicDevice_Dx12::ClearDepthStancil(const float arg_depth )
 {
-	currentCommandList->ClearDepthStencilView(depthStencilDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, arg_depth, 0, 0, nullptr);
+	currentCommandList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, arg_depth, 0, 0, nullptr);
 
 }
 
@@ -482,12 +484,12 @@ void ButiEngine::GraphicDevice_Dx12::ClearWindow()
 		&desc);
 
 	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(renderTargetDescripterHeap->GetCPUDescriptorHandleForHeapStart(), frameIndex, renderTargetDescriptorSize);
-	CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(depthStencilDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
+
 	clearCommandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
 	// Record commands.
 
 	clearCommandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
-	clearCommandList->ClearDepthStencilView(depthStencilDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+	clearCommandList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 	clearCommandList->Close();
 	SetCommandList(clearCommandList.Get());
 	InsertCommandList();
@@ -520,10 +522,6 @@ void ButiEngine::GraphicDevice_Dx12::CommandList_SetRenderTargetView()
 		renderTargetDescripterHeap->GetCPUDescriptorHandleForHeapStart(),
 		GetFrameIndex(),
 		renderTargetDescriptorSize);
-	//デプスステンシルビューのハンドルを取得
-	CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(
-		depthStencilDescriptorHeap->GetCPUDescriptorHandleForHeapStart()
-	);
 	//取得したハンドルをセット
 	currentCommandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
 
@@ -600,15 +598,30 @@ CD3DX12_CPU_DESCRIPTOR_HANDLE ButiEngine::GraphicDevice_Dx12::GetRtvHandle() con
 	return rtvHandle;
 }
 
-CD3DX12_CPU_DESCRIPTOR_HANDLE ButiEngine::GraphicDevice_Dx12::GetDsvHandle() const
+D3D12_CPU_DESCRIPTOR_HANDLE ButiEngine::GraphicDevice_Dx12::GetDsvHandle() const
 {
-	CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(
-		GetDsvHeap()->GetCPUDescriptorHandleForHeapStart()
-	);
 	return dsvHandle;
 }
 
 const D3D12_RECT& ButiEngine::GraphicDevice_Dx12::GetScissorRect() const
 {
 	return scissorRect;
+}
+
+void ButiEngine::GraphicDevice_Dx12::SetDepthStencil(D3D12_CPU_DESCRIPTOR_HANDLE* arg_dsv)
+{
+	nowDSV = arg_dsv;
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE* ButiEngine::GraphicDevice_Dx12::GetDepthStencil()
+{
+	if (nowDSV) {
+		return nowDSV;
+	}
+	return &dsvHandle;
+}
+
+void ButiEngine::GraphicDevice_Dx12::DisSetDepthStencil()
+{
+	nowDSV = nullptr;
 }

@@ -17,8 +17,8 @@ namespace ButiEngine {
 		template<class Archive>
 		void serialize(Archive& archive)
 		{
-			//archive(isActive);
-			//archive(cameraName);
+			archive(isActive);
+			archive(cameraName);
 		}
 		std::shared_ptr<GameComponent> Clone()override {
 			return ObjectFactory::Create<CameraMan>();
@@ -185,7 +185,6 @@ namespace ButiEngine {
 			archive(isActive);
 		}
 	private:
-		std::weak_ptr<GameObject> head;
 		bool isCenter = true;
 	};
 	class ChaseComponent :public GameComponent

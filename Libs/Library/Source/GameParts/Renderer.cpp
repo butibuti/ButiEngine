@@ -107,7 +107,6 @@ void ButiEngine::Renderer::ClearDrawObjects()
 
 UINT* ButiEngine::Renderer::RegistDrawObject(std::shared_ptr<IDrawObject> arg_wkp_drawObject, const bool arg_afterDraw, const UINT arg_layer)
 {
-
 	if (arg_layer >= vec_drawLayers.size()) {
 		return nullptr;
 	}

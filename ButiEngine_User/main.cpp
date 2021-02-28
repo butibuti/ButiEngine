@@ -25,7 +25,7 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	auto app = CreateEditorApplicationInstance("Editor", WindowPopType::max,1080,700, false);
 	GameDevice::Initialize();
 	GameDevice::GetInput()->Initialize(app);
-	//ComponentsLoader::GetInstance()->AddGameComponent<MeshDrawComponent>();
+	//ComponentsLoader::GetInstance()->AddGameComponent<CameraMan>();
 	//ModelFileConverter::FBXtoB3M("maguro_leg_joint.fbx", "maguro_leg_joint.b3m", "Model/Maguro/");
 	app->InitLoadResources();
 	app->GetSceneManager()->LoadScene_Init("Test");

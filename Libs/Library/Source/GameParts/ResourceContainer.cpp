@@ -22,16 +22,7 @@ void ButiEngine::ResourceContainer::SetGraphicDevice(std::weak_ptr<GraphicDevice
 }
 
 void ButiEngine::ResourceContainer::Initialize()
-{/*
-	vec_filePathAndDirectory_gs.clear();
-	vec_filePathAndDirectory_model.clear();
-	vec_filePathAndDirectory_motion.clear();
-	vec_filePathAndDirectory_ps.clear();
-	vec_filePathAndDirectory_sound.clear();
-	vec_filePathAndDirectory_tex.clear();
-	vec_filePathAndDirectory_vs.clear();
-	vec_shaderNames.clear();
-	vec_materialLoadInfos.clear();*/
+{
 }
 
 void ButiEngine::ResourceContainer::PreInitialize()
@@ -226,7 +217,29 @@ void ButiEngine::ResourceContainer::ShowGUI()
 				GUI::DragInt("texHeight", texHeight, 1.0, 0, 1000000);
 
 				if (GUI::Button("OK!!")) {
-					LoadTexture(":/"+std::string( GUI::objectName)+"/"+std::to_string(texWidth)+"/"+std::to_string(texHeight));
+					LoadTexture(":/" + std::string(GUI::objectName) + "/" + std::to_string(texWidth) + "/" + std::to_string(texHeight));
+					GUI::ObjectNameReset();
+					GUI::CloseCurrentPopup();
+				}GUI::SameLine();
+				if (GUI::Button("Cancel")) {
+					GUI::ObjectNameReset();
+					GUI::CloseCurrentPopup();
+				}
+				GUI::EndPopup();
+			}
+			GUI::SameLine(); GUI::Button("Add DepthStencilTexture");
+			if (GUI::BeginPopupContextItem("Add DepthStencilTexture", flags))
+			{
+				GUI::Text("Texture name:");
+				GUI::InputText("##edit", GUI::objectName, 128);
+
+				static int texWidth;
+				static int texHeight;
+				GUI::DragInt("texWidth##_d", texWidth, 1.0, 0, 1000000);
+				GUI::DragInt("texHeight##_d", texHeight, 1.0, 0, 1000000);
+
+				if (GUI::Button("OK!!")) {
+					LoadTexture(";/" + std::string(GUI::objectName) + "/" + std::to_string(texWidth) + "/" + std::to_string(texHeight));
 					GUI::ObjectNameReset();
 					GUI::CloseCurrentPopup();
 				}GUI::SameLine();
@@ -487,7 +500,9 @@ void ButiEngine::ResourceContainer::ShowGUI()
 			static GeometryShaderTag gstag;
 
 			{
-
+				if (GUI::Button("exit")) {
+					isShowShader = false;
+				}
 				GUI::BulletText("VertexShaderTag");
 				auto tagName = GetTagNameVertexShader(vstag);
 				(GUI::BeginChild("VSTagWin", Vector2(GUI::GetFontSize() * (tagName.size() + 2), GUI::GetFontSize() * 2), true));
@@ -570,6 +585,10 @@ void ButiEngine::ResourceContainer::ShowGUI()
 
 		GUI::Begin("AddMaterial");
 		{
+
+			if (GUI::Button("exit")) {
+				isShowAddMaterial= false;
+			}
 			static TextureTag textag;
 			static MaterialVariable matVar;
 			{
@@ -696,6 +715,22 @@ ButiEngine::TextureTag ButiEngine::ResourceContainer::LoadTexture(const std::str
 		auto tex = unq_resourceFactory->CreateRenderTargetTexture(std::stoi(split[2]), std::stoi(split[3]));
 		tex->SetFilePath(arg_filePath);
 		return container_textures.AddValue(tex,arg_filePath);
+	}
+	else if (arg_filePath[0] == ';') {
+		if (container_textures.ContainValue(arg_filePath)) {
+			return container_textures.GetTag(arg_filePath);
+		}
+
+
+		auto split = StringHelper::Split(arg_filePath, "/");
+		if (split.size() < 4) {
+			return TextureTag();
+		}
+		vec_filePathAndDirectory_tex.push_back(arg_filePath);
+
+		auto tex = unq_resourceFactory->CreateDepthStencilTexture(std::stoi(split[2]), std::stoi(split[3]));
+		tex->SetFilePath(arg_filePath);
+		return container_textures.AddValue(tex, arg_filePath);
 	}
 
 	if (!Util::CheckFileExistence(GlobalSettings::GetResourceDirectory() + arg_fileDirectory + arg_filePath)) {

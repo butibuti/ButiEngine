@@ -100,6 +100,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\Resource_Sound_XAudio2.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\Resource_Texture.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\Resource_Texture_Dx12.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\Resource_Texture_Dx12_DepthStencil.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\Resource_Texture_Dx12_RenderTarget.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\ShaderVariable.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Header\Resources\Sound.h" />
@@ -201,6 +202,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Resources\Resource_Sound_XAudio2.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Resources\Resource_Texture.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Resources\Resource_Texture_Dx12.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Source\Resources\Resource_Texture_Dx12_DepthStencil.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Resources\Resource_Texture_Dx12_RenderTarget.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Resources\Sound.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Source\Resources\WaveDatas.cpp" />

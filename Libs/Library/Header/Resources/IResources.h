@@ -44,6 +44,13 @@ namespace ButiEngine {
 		virtual void SetIsCleared(bool arg_isClear) = 0;
 		virtual Vector2 GetSize() = 0;
 	};
+	class IDepthStencil {
+	public:
+		virtual void SetDepthStencil() = 0;
+		virtual void DisSetDepthStencil() = 0;
+		virtual void SetIsCleared(bool arg_isClear) = 0;
+		virtual Vector2 GetSize() = 0;
+	};
 
 	class IResource_Motion :public IObject {
 	public:
